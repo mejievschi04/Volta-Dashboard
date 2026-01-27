@@ -1,0 +1,137 @@
+@extends('layouts.app')
+
+@section('title', 'Editează Utilizator – VOLTA')
+
+@section('content')
+<div style="padding: 20px; width: 100%; box-sizing: border-box;">
+  <div style="margin-bottom: 30px;">
+    <a href="{{ route('users.index') }}" style="color: #FFEE00; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: color 0.2s;" onmouseover="this.style.color='#FFEE00'" onmouseout="this.style.color='#FFEE00'">
+      <i class="fas fa-arrow-left"></i> Înapoi la Utilizatori
+    </a>
+  </div>
+  
+  <div style="margin-bottom: 30px;">
+    <h1 style="color: #FFEE00; margin: 0; font-size: 32px; font-weight: 800; text-shadow: 0 0 20px rgba(255, 238, 0, 0.5); display: flex; align-items: center; gap: 12px;">
+      <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); display: flex; align-items: center; justify-content: center;">
+        <i class="fas fa-user-edit" style="color: #000; font-size: 20px;"></i>
+      </div>
+      Editează Utilizator: {{ $user->username }}
+    </h1>
+    <p style="color: #B3B3B3; margin: 10px 0 0 60px; font-size: 14px;">Modifică informațiile utilizatorului</p>
+  </div>
+
+  @if($errors->any())
+  <div style="background: linear-gradient(135deg, #F44336 0%, #EF5350 100%); color: #FFFFFF; padding: 16px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);">
+    <div style="display: flex; align-items: center; margin-bottom: 12px;">
+      <i class="fas fa-exclamation-circle" style="margin-right: 8px; font-size: 20px;"></i>
+      <strong>Erori de validare:</strong>
+    </div>
+    <ul style="margin: 0; padding-left: 28px; list-style: disc;">
+      @foreach($errors->all() as $error)
+      <li style="margin-bottom: 4px;">{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
+  @endif
+
+  <div class="operator-card" style="background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%); border: 1px solid rgba(255, 238, 0, 0.3); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
+    <form action="{{ route('users.update', $user->id) }}" method="POST">
+      @csrf
+      @method('PUT')
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 30px;">
+        <div>
+          <label style="display: block; color: #FFEE00; margin-bottom: 8px; font-weight: 700; font-size: 14px;">
+            <i class="fas fa-user" style="margin-right: 6px;"></i>Username *
+          </label>
+          <input type="text" name="username" value="{{ old('username', $user->username) }}" required 
+                 style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; transition: all 0.2s;"
+                 onfocus="this.style.borderColor='#FFEE00'; this.style.background='rgba(255, 238, 0, 0.15)'"
+                 onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(255, 255, 255, 0.05)'"
+                 placeholder="Introduceți username-ul">
+        </div>
+
+        <div>
+          <label style="display: block; color: #FFEE00; margin-bottom: 8px; font-weight: 700; font-size: 14px;">
+            <i class="fas fa-id-card" style="margin-right: 6px;"></i>Nume Complet
+          </label>
+          <input type="text" name="name" value="{{ old('name', $user->name) }}" 
+                 style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; transition: all 0.2s;"
+                 onfocus="this.style.borderColor='#FFEE00'; this.style.background='rgba(255, 238, 0, 0.15)'"
+                 onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(255, 255, 255, 0.05)'"
+                 placeholder="Introduceți numele complet">
+        </div>
+
+        <div>
+          <label style="display: block; color: #FFEE00; margin-bottom: 8px; font-weight: 700; font-size: 14px;">
+            <i class="fas fa-envelope" style="margin-right: 6px;"></i>Email
+          </label>
+          <input type="email" name="email" value="{{ old('email', $user->email) }}" 
+                 style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; transition: all 0.2s;"
+                 onfocus="this.style.borderColor='#FFEE00'; this.style.background='rgba(255, 238, 0, 0.15)'"
+                 onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(255, 255, 255, 0.05)'"
+                 placeholder="exemplu@email.com">
+        </div>
+
+        <div>
+          <label style="display: block; color: #FFEE00; margin-bottom: 8px; font-weight: 700; font-size: 14px;">
+            <i class="fas fa-shield-alt" style="margin-right: 6px;"></i>Rol
+          </label>
+          <select name="role" 
+                  style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; transition: all 0.2s; cursor: pointer;"
+                  onfocus="this.style.borderColor='#FFEE00'; this.style.background='rgba(255, 238, 0, 0.15)'"
+                  onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(255, 255, 255, 0.05)'">
+            <option value="user" {{ old('role', $user->role) === 'user' ? 'selected' : '' }}>User</option>
+            <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="display: block; color: #FFEE00; margin-bottom: 8px; font-weight: 700; font-size: 14px;">
+            <i class="fas fa-lock" style="margin-right: 6px;"></i>Parolă Nouă
+          </label>
+          <input type="password" name="password" 
+                 style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; transition: all 0.2s;"
+                 onfocus="this.style.borderColor='#FFEE00'; this.style.background='rgba(255, 238, 0, 0.15)'"
+                 onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(255, 255, 255, 0.05)'"
+                 placeholder="Lăsați gol pentru a păstra parola actuală">
+          <p style="color: #B3B3B3; font-size: 12px; margin-top: 6px; margin-bottom: 0;">
+            <i class="fas fa-info-circle" style="margin-right: 4px;"></i>Lăsați gol dacă nu doriți să schimbați parola
+          </p>
+        </div>
+
+        <div>
+          <label style="display: block; color: #FFEE00; margin-bottom: 8px; font-weight: 700; font-size: 14px;">
+            <i class="fas fa-lock" style="margin-right: 6px;"></i>Confirmă Parola Nouă
+          </label>
+          <input type="password" name="password_confirmation" 
+                 style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; transition: all 0.2s;"
+                 onfocus="this.style.borderColor='#FFEE00'; this.style.background='rgba(255, 238, 0, 0.15)'"
+                 onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(255, 255, 255, 0.05)'"
+                 placeholder="Reintroduceți parola nouă">
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+        <button type="submit" 
+                style="background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); color: #000; padding: 14px 28px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 238, 0, 0.3); transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 238, 0, 0.4)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 238, 0, 0.3)'">
+          <i class="fas fa-save"></i> Actualizează Utilizator
+        </button>
+        <a href="{{ route('users.index') }}" 
+           style="background: rgba(255, 255, 255, 0.05); color: #fff; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.2s;"
+           onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'"
+           onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'">
+          <i class="fas fa-times"></i> Anulează
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+@endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ url('css/operatori.css') }}">
+@endpush
+

@@ -1,0 +1,793 @@
+:root {
+    --sidebar-width: 280px;
+}
+.body{
+    color: #ffee00;
+}
+
+/* Asigură că logo-ul este identic cu celelalte pagini - folosim !important pentru a suprascrie orice stil */
+.sidebar .logo {
+  display: flex !important;
+  align-items: center !important;
+  padding: 28px 24px !important;
+  border-bottom: 2px solid rgba(255, 238, 0, 0.15) !important;
+  gap: 14px !important;
+  background: linear-gradient(135deg, rgba(255, 238, 0, 0.1) 0%, transparent 100%) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.sidebar .logo::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: linear-gradient(135deg, rgba(255, 238, 0, 0.05) 0%, transparent 50%) !important;
+  pointer-events: none !important;
+}
+
+.sidebar .logo-mark {
+  width: 42px !important;
+  height: 42px !important;
+  background: transparent !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  object-fit: contain !important;
+  border: none !important;
+  box-shadow: none !important;
+  position: relative !important;
+  z-index: 1 !important;
+  transition: all 0.3s ease !important;
+  filter: none !important;
+}
+
+.sidebar .logo-mark img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  background: transparent !important;
+}
+
+.sidebar .logo:hover .logo-mark {
+  transform: scale(1.05) !important;
+}
+
+.sidebar .logo h1 {
+  font-size: 20px !important;
+  margin: 0 !important;
+  font-weight: 800 !important;
+  color: white !important;
+  letter-spacing: -0.5px !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* === Container principal (conținutul din dreapta sidebarului) === */
+.container {
+  flex: 1;
+  padding: 30px;
+  margin-left: var(--sidebar-width);
+  background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%);
+  min-height: 100vh;
+}
+
+/* === Header (titlu + selector lună) === */
+.container h1 {
+  margin: 0 0 30px;
+  font-size: 32px;
+  font-weight: 800;
+  color: #FFEE00;
+  text-shadow: 0 0 20px rgba(255, 238, 0, 0.5);
+  letter-spacing: -0.5px;
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.mb-4 {
+  margin-bottom: 30px;
+}
+
+.container form input[type="month"] {
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 238, 0, 0.3);
+  background: rgba(43, 43, 43, 0.5);
+  color: #FFEE00;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.container form input[type="month"]:hover {
+  border-color: rgba(255, 238, 0, 0.6);
+  box-shadow: 0 0 15px rgba(255, 238, 0, 0.3);
+}
+
+.container form input[type="month"]:focus {
+  outline: none;
+  border-color: #FFEE00;
+  box-shadow: 0 0 20px rgba(255, 238, 0, 0.5);
+}
+
+/* === Card pentru grafic === */
+.card {
+  background: linear-gradient(135deg, rgba(43, 43, 43, 0.8) 0%, rgba(43, 43, 43, 0.9) 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 238, 0, 0.1);
+  margin-bottom: 25px;
+  border: 1px solid rgba(255, 238, 0, 0.15);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 238, 0, 0.2);
+  border-color: rgba(255, 238, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Card pentru grafic principal - mai mare */
+.card.mb-4 {
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, rgba(43, 43, 43, 0.9) 0%, rgba(43, 43, 43, 0.95) 100%);
+}
+
+.card.mb-4 canvas {
+  flex: 1;
+  max-height: 450px !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
+.card-title {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #FFEE00;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(255, 238, 0, 0.5);
+}
+
+
+/* === Grid pentru cardurile cu statistici === */
+.row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 25px;
+  overflow-x: auto;
+}
+
+@media (max-width: 1600px) {
+  .row {
+    grid-template-columns: repeat(6, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 1200px) {
+  .row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1100px) {
+  .container {
+    margin-left: 0;
+    padding: 20px;
+    padding-top: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+    padding-top: 75px;
+  }
+  
+  .container h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .d-flex {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+  
+  .trafic-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .trafic-controls {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .year-selector-wrapper,
+  .month-selector-wrapper {
+    width: 100%;
+  }
+  
+  .year-select,
+  .month-select {
+    width: 100%;
+    min-width: auto;
+    min-height: 48px; /* Dimensiune minimă pentru touch */
+    padding: 14px 15px;
+    font-size: 16px; /* Previne zoom pe iOS */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    z-index: 10;
+    position: relative;
+    touch-action: manipulation; /* Îmbunătățește răspunsul la touch */
+  }
+  
+  /* Asigură că dropdown-ul se deschide corect pe mobile */
+  .year-select:active,
+  .month-select:active {
+    border-color: #FFEE00;
+    box-shadow: 0 0 20px rgba(255, 238, 0, 0.5);
+  }
+  
+  .year-select:focus,
+  .month-select:focus {
+    border-color: #FFEE00;
+    box-shadow: 0 0 20px rgba(255, 238, 0, 0.5);
+    outline: none;
+    -webkit-tap-highlight-color: rgba(255, 238, 0, 0.3);
+  }
+  
+  .row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .card {
+    padding: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .card.mb-4 {
+    min-height: 350px;
+    padding: 20px;
+  }
+  
+  .card.mb-4 canvas {
+    max-height: 300px !important;
+  }
+  
+  .card h5 {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  
+  .card p {
+    font-size: 28px;
+  }
+  
+  .card small {
+    font-size: 11px;
+  }
+  
+  .sync-btn,
+  .monthly-chart-btn {
+    width: 100%;
+    min-width: auto;
+    padding: 14px 20px;
+  }
+  
+  .modal-content {
+    width: 95%;
+    padding: 20px;
+    max-height: 90vh;
+  }
+  
+  .modal h5 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .modal table {
+    font-size: 12px;
+  }
+  
+  .modal th,
+  .modal td {
+    padding: 8px;
+    font-size: 12px;
+  }
+  
+  .modal-close {
+    top: 10px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+    padding-top: 70px;
+  }
+  
+  .container h1 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .year-select,
+  .month-select {
+    min-height: 44px;
+    padding: 12px 15px;
+    font-size: 16px; /* Previne zoom pe iOS */
+  }
+  
+  .card {
+    padding: 15px;
+  }
+  
+  .card.mb-4 {
+    min-height: 300px;
+    padding: 15px;
+  }
+  
+  .card.mb-4 canvas {
+    max-height: 250px !important;
+  }
+  
+  .card h5 {
+    font-size: 13px;
+  }
+  
+  .card p {
+    font-size: 24px;
+  }
+  
+  .card small {
+    font-size: 10px;
+  }
+  
+  .row {
+    gap: 12px;
+  }
+  
+  .modal-content {
+    padding: 15px;
+  }
+  
+  .modal h5 {
+    font-size: 18px;
+  }
+  
+  .modal table {
+    font-size: 11px;
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .modal th,
+  .modal td {
+    padding: 6px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  
+  #syncStatus {
+    padding: 15px;
+    font-size: 13px;
+  }
+}
+
+.row .card {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.row .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #FFEE00, #FFEE00, #FFEE00);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.row .card:hover::before {
+  transform: scaleX(1);
+}
+
+.row .card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 238, 0, 0.3);
+  border-color: rgba(255, 238, 0, 0.4);
+}
+
+/* === Stil text în carduri === */
+.card h5 {
+  margin: 0 0 15px;
+  font-size: 16px;
+  color: #FFEE00;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 10px rgba(255, 238, 0, 0.4);
+}
+
+.card p {
+  font-size: 32px;
+  margin: 0 0 8px;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  line-height: 1.2;
+}
+
+.card small {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Culori specifice pentru fiecare sursă */
+.row .card[onclick*="total"] {
+  border-left: 4px solid #F90716;
+}
+
+.row .card[onclick*="google"]:not([onclick*="google_cpc"]) {
+  border-left: 4px solid #548CFF;
+}
+
+.row .card[onclick*="google_cpc"] {
+  border-left: 4px solid #06FF00;
+}
+
+.row .card[onclick*="direct"] {
+  border-left: 4px solid #FFEE00;
+}
+
+.row .card[onclick*="yandex"] {
+  border-left: 4px solid #F0F3FF;
+}
+
+.row .card[onclick*="other"] {
+  border-left: 4px solid #888888;
+}
+
+/* === Modal personalizat (fără Bootstrap) === */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(43, 43, 43, 0.85);
+  backdrop-filter: blur(5px);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: linear-gradient(135deg, rgba(43, 43, 43, 0.95) 0%, rgba(43, 43, 43, 0.98) 100%);
+  padding: 30px;
+  border-radius: 16px;
+  width: 700px;
+  max-width: 95%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  color: #f0f0f0;
+  border: 2px solid rgba(255, 238, 0, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 238, 0, 0.2);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 238, 0, 0.3);
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 238, 0, 0.5);
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 28px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 68, 68, 0.1);
+}
+
+.modal-close:hover {
+  color: #ff4444;
+  background: rgba(255, 68, 68, 0.2);
+  transform: rotate(90deg);
+}
+
+.modal h5 {
+  color: #FFEE00;
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 25px;
+  text-shadow: 0 0 15px rgba(255, 238, 0, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.modal table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: rgba(43, 43, 43, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.modal th,
+.modal td {
+  border: 1px solid rgba(255, 238, 0, 0.2);
+  padding: 12px;
+  text-align: center;
+}
+
+.modal th {
+  background: var(--bg-soft);
+  color: #FFEE00;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 13px;
+}
+
+.modal td {
+  color: #ffffff;
+  font-weight: 500;
+  background-color: var(--bg-soft);
+}
+
+.modal tr:hover td {
+  background: var(--bg-soft);
+  color: #FFEE00;
+}
+
+/* === Buton sincronizare === */
+.sync-btn {
+  background: #ffee00;
+  color: #000;
+  border: 2px solid #ffee00;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(255, 238, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  min-width: 160px;
+}
+.sync-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(43, 43, 43, 0.1), transparent);
+  transition: left 0.5s;
+}
+.sync-btn:hover::before {
+  left: 100%;
+}
+.sync-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 238, 0, 0.5);
+  background: #FFEE00;
+  border-color: #FFEE00;
+}
+.sync-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(255, 238, 0, 0.3);
+}
+.sync-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.sync-btn.loading #syncIcon {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* === Buton grafic lunar === */
+.monthly-chart-btn {
+  background: #ffee00;
+  color: #000;
+  border: 2px solid #ffee00;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(255, 238, 0, 0.3);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  min-width: 160px;
+}
+
+.monthly-chart-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(43, 43, 43, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.monthly-chart-btn:hover::before {
+  left: 100%;
+}
+
+.monthly-chart-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 238, 0, 0.5);
+  background: #FFEE00;
+  border-color: #FFEE00;
+}
+
+.monthly-chart-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(255, 238, 0, 0.3);
+}
+
+/* === Status sincronizare === */
+#syncStatus {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(43, 43, 43, 0.4);
+  border: 1px solid rgba(255, 238, 0, 0.2);
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+#syncStatus h6 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+#syncStatus p {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+#syncStatus strong {
+  color: #FFEE00;
+  font-weight: 700;
+}
+
+#syncStatus.success {
+  background: linear-gradient(135deg, rgba(0, 200, 0, 0.15) 0%, rgba(0, 150, 0, 0.1) 100%);
+  color: #90EE90;
+  border: 2px solid rgba(0, 200, 0, 0.4);
+  box-shadow: 0 0 20px rgba(0, 200, 0, 0.2);
+}
+
+#syncStatus.success h6 {
+  color: #00FF00;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+#syncStatus.error {
+  background: linear-gradient(135deg, rgba(255, 0, 0, 0.15) 0%, rgba(200, 0, 0, 0.1) 100%);
+  color: #ffaaaa;
+  border: 2px solid rgba(255, 68, 68, 0.4);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
+}
+
+#syncStatus.error h6 {
+  color: #ff4444;
+  text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+}
+
+#syncStatus.info {
+  background: linear-gradient(135deg, rgba(255, 238, 0, 0.1) 0%, rgba(255, 238, 0, 0.05) 100%);
+  color: #FFEE00;
+  border: 2px solid rgba(255, 238, 0, 0.3);
+  box-shadow: 0 0 20px rgba(255, 238, 0, 0.15);
+}
+
+#syncStatus.info h6 {
+  color: #FFEE00;
+  text-shadow: 0 0 10px rgba(255, 238, 0, 0.5);
+}
+
+#syncStatus small {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
+#syncStatus em {
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+}

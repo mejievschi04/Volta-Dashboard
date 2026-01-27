@@ -1,0 +1,311 @@
+/* === Variabile generale === */
+:root {
+  --bg: #2B2B2B;
+  --bg-soft: #222222;
+  --ink: #ffffff;
+  --muted: #B3B3B3;
+  --brand: #FFEE00;
+  --brand-10: rgba(255,238,0,.1);
+  --brand-20: rgba(255,238,0,.2);
+  --card-radius: 12px;
+  --glow: 0 0 16px rgba(255,238,0,.4), 0 0 32px rgba(255,238,0,.15);
+  --shadow: 0 4px 20px rgba(0,0,0,.08);
+  --transition: all 0.3s ease;
+}
+
+/* Reset */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: 'Montserrat', sans-serif; background: #333; color: var(--ink); }
+body { display: flex; }
+
+/* === Layout principal === */
+.main {
+  flex: 1;
+  padding: 24px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* === Topbar === */
+.topbar {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-soft);
+  border-radius: var(--card-radius);
+  padding: 12px 20px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow);
+}
+
+/* Butoane */
+.topbar button {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  background: var(--brand);
+  color: var(--bg);
+  transition: var(--transition);
+}
+.topbar button:hover {
+  box-shadow: var(--glow);
+  transform: translateY(-2px);
+}
+.topbar button.active {
+  background: var(--brand);
+  color: #000;
+  box-shadow: var(--glow);
+  transform: translateY(-2px);
+}
+
+/* Selector luna */
+.topbar input[type="month"] {
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--brand-20);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+/* === Titluri === */
+h2 {
+  margin-bottom: 16px;
+  color: var(--brand);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* === Grid tabel + grafic === */
+.section-flex {
+  display: flex;
+  width: 100%;
+  gap: 24px; /* 🔥 spațiu între casete */
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+/* Carduri fix 50%-50% */
+.table-container, 
+.chart-container {
+  width: calc(50% - 12px); /* 50% minus jumătate din gap */
+  flex: 0 0 calc(50% - 12px);
+  height: auto;
+  background: var(--bg-soft);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+/* Dimensiuni minime */
+.table-container { min-height: 320px; }
+.chart-container { min-height: 380px; }
+
+/* === Tabel === */
+.table-container table { width: 100%; border-collapse: collapse; }
+th, td {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 15px;
+}
+th {
+  background: var(--bg-soft);
+  color: var(--brand);
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+td {
+  color: var(--ink);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background-color: var(--bg-soft);
+}
+tr:nth-child(even) td { background: var(--bg-soft); }
+tr:hover td { background: var(--bg-soft); }
+
+/* === Grafic === */
+.chart-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: var(--brand);
+}
+#produseChart {
+  flex: 1;
+  width: 100%;
+  min-height: 280px;
+}
+
+/* Fallback când nu sunt date */
+.table-container.empty,
+.chart-container.empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--muted);
+  font-size: 15px;
+  font-style: italic;
+}
+
+/* === Responsive === */
+@media (max-width: 1100px) {
+  .main {
+    padding: 20px;
+    padding-top: 80px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .section-flex { 
+    flex-direction: column; 
+    gap: 24px; 
+  }
+  .table-container, .chart-container {
+    width: 100%;
+    flex: 0 0 100%;
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 15px;
+    padding-top: 75px;
+  }
+  
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    height: auto;
+  }
+  
+  .topbar button {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+  
+  .topbar input[type="month"],
+  .topbar select {
+    width: 100%;
+    padding: 12px 16px;
+    min-height: 48px;
+    font-size: 16px; /* Previne zoom pe iOS */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    touch-action: manipulation;
+    z-index: 10;
+    position: relative;
+  }
+  
+  .topbar input[type="month"]:focus,
+  .topbar select:focus {
+    -webkit-tap-highlight-color: rgba(255, 238, 0, 0.3);
+    outline: none;
+  }
+  
+  h2 {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+  
+  .section-flex {
+    gap: 15px;
+  }
+  
+  .table-container,
+  .chart-container {
+    padding: 15px;
+    min-height: 250px;
+  }
+  
+  .table-container table {
+    font-size: 13px;
+  }
+  
+  th, td {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  
+  th {
+    font-size: 12px;
+  }
+  
+  .chart-container h2 {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+  
+  #produseChart {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 12px;
+    padding-top: 70px;
+  }
+  
+  .topbar {
+    padding: 10px 12px;
+    margin-bottom: 12px;
+  }
+  
+  .topbar button {
+    padding: 10px;
+    font-size: 13px;
+  }
+  
+  h2 {
+    font-size: 18px;
+  }
+  
+  .table-container,
+  .chart-container {
+    padding: 12px;
+    min-height: 220px;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .table-container table {
+    min-width: 500px;
+    font-size: 12px;
+  }
+  
+  th, td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  
+  th {
+    font-size: 11px;
+  }
+  
+  .chart-container h2 {
+    font-size: 15px;
+  }
+  
+  #produseChart {
+    min-height: 220px;
+  }
+}

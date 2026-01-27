@@ -1,0 +1,468 @@
+/* ---------- CONTAINER GENERAL ---------- */
+.operators-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-top: 20px;
+  padding: 0 20px;
+}
+
+/* ---------- CARD STIL GENERAL ---------- */
+.operator-card {
+  background: #2B2B2B;
+  color: #FFEE00;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ---------- TABELURI ---------- */
+#mainTable,
+#detailTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  margin: 0 auto;
+}
+
+#mainTable thead,
+#detailTable thead {
+  background: var(--bg-soft);
+  color: #333;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+#mainTable th, #mainTable td,
+#detailTable th, #detailTable td {
+  padding: 12px 16px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: var(--bg-soft);
+}
+
+#mainTable tbody tr:hover,
+#detailTable tbody tr:hover {
+  background: var(--bg-soft);
+  transition: background 0.2s ease-in-out;
+}
+
+#mainTable tbody tr:last-child td,
+#detailTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------- DIFERENTE ---------- */
+#detailTable td.diff-positive {
+  color: #16a34a;
+  font-weight: 600;
+}
+#detailTable td.diff-negative {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* ---------- GRAFIC ---------- */
+.chart-card {
+  margin-top: 20px;
+  text-align: center;
+  background-color: #2B2B2B !important;
+  color: black;
+}
+
+#trendChart {
+  width: 100%;
+  max-width: 900px;
+  height: 350px;
+  margin: 0 auto;
+}
+
+/* ---------- BUTON ÎNAPOI ---------- */
+.back-button {
+  margin-bottom: 20px;
+}
+
+.back-button a {
+  text-decoration: none;
+  color: #FFEE00;
+  font-weight: 600;
+  padding: 8px 16px;
+  border: 1px solid #FFEE00;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.back-button a:hover {
+  background: #FFEE00;
+  color: #000;
+}
+
+/* ---------- LISTA OPERATORILOR CA CARDURI FLEX ---------- */
+.operators-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  justify-content: space-evenly;
+}
+
+.operator-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2B2B2B;
+  border-radius: 12px;
+  padding: 12px 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+  flex: 1 1 calc(33.333% - 10px);
+  box-sizing: border-box;
+  text-decoration: none;
+  color: #FFEE00;
+  font-weight: 600;
+  text-align: center;
+}
+
+.operator-card:hover {
+  background: #2B2B2B;
+  color: #fffee0;
+}
+
+.operator-card a {
+  text-decoration: none;
+  color: #111827;
+  font-weight: 600;
+}
+
+.operator-card:hover a {
+  color: #111827;
+}
+
+/* ---------- TOP 3 OPERATORI ---------- */
+.top-operators {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: space-between;
+}
+
+.top-card {
+  flex: 1 1 calc(33.333% - 10px);
+  display: flex;
+  align-items: center;
+  background: #2B2B2B;
+  color: #FFEE00;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+}
+
+.top-card .medal {
+  font-size: 24px;
+  font-weight: 700;
+  margin-right: 15px;
+  color: #FFEE00; /* aurie pentru locul 1 */
+  background-color: #dc2626;
+  padding: 5px 5px 5px 5px;
+  border-radius: 100%;
+}
+
+.top-card:nth-child(2) .medal { color: #C0C0C0; } /* argint */
+.top-card:nth-child(3) .medal { color: #663300; } /* bronz */
+
+.top-card .operator-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: #fffee0;
+}
+
+.top-card .operator-info p {
+  margin: 2px 0;
+  font-size: 14px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 1100px) {
+  .operators-container {
+    padding: 0 15px;
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 900px) {
+  .operator-card,
+  .top-card {
+    flex: 1 1 calc(50% - 10px);
+  }
+  
+  .operators-container {
+    padding: 0 12px;
+  }
+  
+  .operator-card {
+    padding: 15px;
+  }
+  
+  #mainTable,
+  #detailTable {
+    font-size: 13px;
+  }
+  
+  #mainTable th, #mainTable td,
+  #detailTable th, #detailTable td {
+    padding: 10px 12px;
+  }
+  
+  #trendChart {
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .operators-container {
+    padding: 0 10px;
+    gap: 20px;
+  }
+  
+  .operator-card {
+    padding: 12px 15px;
+  }
+  
+  .top-card {
+    padding: 12px;
+  }
+  
+  .top-card .medal {
+    font-size: 20px;
+    margin-right: 12px;
+  }
+  
+  .top-card .operator-info h4 {
+    font-size: 14px;
+  }
+  
+  .top-card .operator-info p {
+    font-size: 12px;
+  }
+  
+  #mainTable,
+  #detailTable {
+    font-size: 12px;
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  #mainTable thead,
+  #detailTable thead {
+    display: table;
+    width: 100%;
+  }
+  
+  #mainTable tbody,
+  #detailTable tbody {
+    display: table;
+    width: 100%;
+  }
+  
+  #mainTable th, #mainTable td,
+  #detailTable th, #detailTable td {
+    padding: 8px 10px;
+    white-space: nowrap;
+  }
+  
+  #trendChart {
+    height: 280px;
+  }
+  
+  .back-button {
+    margin-bottom: 15px;
+  }
+  
+  .back-button a {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  .operator-card,
+  .top-card {
+    flex: 1 1 100%;
+  }
+  
+  .operators-container {
+    padding: 0 8px;
+    gap: 15px;
+  }
+  
+  .operator-card {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  
+  .top-card {
+    padding: 10px;
+  }
+  
+  .top-card .medal {
+    font-size: 18px;
+    margin-right: 10px;
+  }
+  
+  #mainTable,
+  #detailTable {
+    font-size: 11px;
+    min-width: 500px;
+  }
+  
+  #mainTable th, #mainTable td,
+  #detailTable th, #detailTable td {
+    padding: 6px 8px;
+  }
+  
+  #trendChart {
+    height: 250px;
+  }
+}
+
+/* ---------- RESPONSIVE PENTRU GRAFIC CIRCULAR ---------- */
+.pie-chart-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: center;
+}
+
+@media (max-width: 1024px) {
+  .pie-chart-container {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  
+  #vanzariPieChart {
+    max-height: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pie-chart-container {
+    gap: 16px !important;
+  }
+  
+  #vanzariPieChart {
+    max-height: 300px;
+  }
+}
+
+/* ---------- KPI CARDS TEXT OVERFLOW FIX ---------- */
+/* Stiluri pentru cardurile KPI din pagina operatori/show */
+.kpi-cards-grid {
+  box-sizing: border-box;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 20px !important;
+}
+
+.kpi-card {
+  overflow: hidden;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Permite flexbox să restrângă elementul */
+  padding: 28px !important; /* Carduri mai mari */
+  min-height: 140px; /* Înălțime minimă pentru carduri mai mari */
+}
+
+/* Asigură că textul din cardurile KPI se încadrează perfect - pe o singură linie */
+.kpi-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+  max-width: 100%;
+  flex-shrink: 0;
+  font-size: 12px !important; /* Text uniform pentru carduri mai mari */
+}
+
+.kpi-value {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  max-width: 100%;
+  flex: 1;
+  min-width: 0; /* Permite flexbox să restrângă elementul */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px !important; /* Text mai mare pentru carduri mai mari */
+  font-weight: 700 !important; /* Greutate uniformă */
+}
+
+/* Asigură că iconițele nu cauzează probleme */
+.kpi-label i {
+  flex-shrink: 0;
+}
+
+/* Responsive pentru cardurile KPI */
+@media (max-width: 1024px) {
+  .kpi-cards-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 16px !important;
+  }
+  
+  .kpi-card {
+    padding: 24px !important;
+    min-height: 130px;
+  }
+}
+
+@media (max-width: 768px) {
+  .kpi-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px !important;
+  }
+  
+  .kpi-card {
+    padding: 20px !important;
+    min-height: 120px;
+  }
+  
+  .kpi-label {
+    font-size: 10px !important;
+  }
+  
+  .kpi-value {
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  
+  .kpi-card {
+    padding: 18px !important;
+    min-height: 110px;
+  }
+  
+  .kpi-label {
+    font-size: 9px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .kpi-value {
+    font-size: 14px !important;
+  }
+}
