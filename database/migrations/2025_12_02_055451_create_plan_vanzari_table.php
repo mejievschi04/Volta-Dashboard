@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::connection('vanzari')->hasTable('plan_vanzari')) {
-            Schema::connection('vanzari')->create('plan_vanzari', function (Blueprint $table) {
+        if (!Schema::hasTable('plan_vanzari')) {
+            Schema::create('plan_vanzari', function (Blueprint $table) {
                 $table->id();
                 $table->integer('an');
                 $table->string('luna', 20);
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::connection('vanzari')->dropIfExists('plan_vanzari');
+        Schema::dropIfExists('plan_vanzari');
     }
 };

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class DateOp extends Model
 {
     protected $table = 'date_op';
-    protected $connection = 'vanzari';
     public $timestamps = false;
     
     protected $fillable = [

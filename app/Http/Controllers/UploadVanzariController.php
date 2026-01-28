@@ -49,7 +49,7 @@ class UploadVanzariController extends Controller
 
         // Verifică conexiunea la baza de date
         try {
-            DB::connection('vanzari')->getPdo();
+            DB::getPdo();
             Log::info('UploadVanzariController: Conexiune la baza de date OK');
         } catch (\Exception $e) {
             Log::error('UploadVanzariController: Eroare conexiune DB', [
@@ -287,7 +287,7 @@ class UploadVanzariController extends Controller
                             
                             // Șterge datele existente ÎNAINTE de a insera noile date
                             if (!empty($datesToDelete)) {
-                                Vanzari::on('vanzari')->whereIn('data', $datesToDelete)->delete();
+                                Vanzari::whereIn('data', $datesToDelete)->delete();
                             }
                         }
 
@@ -350,7 +350,7 @@ class UploadVanzariController extends Controller
                             // Inserează sau actualizează în baza de date
                             try {
                                 // Verifică dacă există deja o înregistrare pentru această dată
-                                $existing = Vanzari::on('vanzari')->where('data', $date)->first();
+                                $existing = Vanzari::where('data', $date)->first();
                                 
                                 if ($existing) {
                                     // Actualizează înregistrarea existentă
@@ -369,7 +369,6 @@ class UploadVanzariController extends Controller
                                 } else {
                                     // Creează o nouă înregistrare
                                     $vanzare = new Vanzari();
-                                    $vanzare->setConnection('vanzari');
                                     $vanzare->data = $date;
                                     $vanzare->suma_fara_tva = $sumaFaraTva;
                                     $vanzare->suma_cu_tva = $sumaCuTva;

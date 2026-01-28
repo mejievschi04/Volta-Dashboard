@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::connection('vanzari')->hasTable('vanzari_1c')) {
-            Schema::connection('vanzari')->table('vanzari_1c', function (Blueprint $table) {
-                if (!Schema::connection('vanzari')->hasColumn('vanzari_1c', 'operator_id')) {
+        if (Schema::hasTable('vanzari_1c')) {
+            Schema::table('vanzari_1c', function (Blueprint $table) {
+                if (!Schema::hasColumn('vanzari_1c', 'operator_id')) {
                     $table->unsignedBigInteger('operator_id')->nullable()->after('id');
                     $table->index('operator_id', 'idx_operator_id');
                 }
@@ -26,9 +26,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (Schema::connection('vanzari')->hasTable('vanzari_1c')) {
-            Schema::connection('vanzari')->table('vanzari_1c', function (Blueprint $table) {
-                if (Schema::connection('vanzari')->hasColumn('vanzari_1c', 'operator_id')) {
+        if (Schema::hasTable('vanzari_1c')) {
+            Schema::table('vanzari_1c', function (Blueprint $table) {
+                if (Schema::hasColumn('vanzari_1c', 'operator_id')) {
                     $table->dropIndex('idx_operator_id');
                     $table->dropColumn('operator_id');
                 }

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::connection('vanzari')->hasTable('date_op')) {
-            Schema::connection('vanzari')->create('date_op', function (Blueprint $table) {
+        if (!Schema::hasTable('date_op')) {
+            Schema::create('date_op', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedBigInteger('operator_id')->nullable();
                 $table->date('data');
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::connection('vanzari')->dropIfExists('date_op');
+        Schema::dropIfExists('date_op');
     }
 };

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Produs extends Model
 {
-    protected $connection = 'produse';
     protected $table = 'produse';
     
     protected $fillable = [

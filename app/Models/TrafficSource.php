@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class TrafficSource extends Model
 {
-    protected $connection = 'trafic';
     protected $table = 'traffic_sources';
     
     // Dezactivăm timestamps pentru că tabelul nu are coloanele created_at și updated_at

@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $connection = 'dashboard';
-        if (Schema::connection($connection)->hasTable('users')) {
-            Schema::connection($connection)->table('users', function (Blueprint $table) use ($connection) {
-                if (!Schema::connection($connection)->hasColumn('users', 'name')) {
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                if (!Schema::hasColumn('users', 'name')) {
                     $table->string('name')->nullable()->after('id');
                 }
             });
@@ -26,10 +25,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $connection = 'dashboard';
-        if (Schema::connection($connection)->hasTable('users')) {
-            Schema::connection($connection)->table('users', function (Blueprint $table) use ($connection) {
-                if (Schema::connection($connection)->hasColumn('users', 'name')) {
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                if (Schema::hasColumn('users', 'name')) {
                     $table->dropColumn('name');
                 }
             });

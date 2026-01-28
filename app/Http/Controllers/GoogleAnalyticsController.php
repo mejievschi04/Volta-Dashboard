@@ -76,7 +76,7 @@ class GoogleAnalyticsController extends Controller
             $errors = [];
             $deletedRows = 0;
 
-            \DB::connection('trafic')->beginTransaction();
+            \DB::beginTransaction();
             
             try {
                 // Ștergem datele existente pentru perioada selectată DOAR dacă avem date noi de inserat
@@ -161,11 +161,11 @@ class GoogleAnalyticsController extends Controller
 
                 // Dacă avem prea multe erori, facem rollback
                 if (count($errors) > 50) {
-                    \DB::connection('trafic')->rollBack();
+                    \DB::rollBack();
                     throw new \Exception("Prea multe erori la inserare (" . count($errors) . "). Datele nu au fost modificate.");
                 }
 
-                \DB::connection('trafic')->commit();
+                \DB::commit();
                 
             } catch (\Exception $e) {
                 \DB::connection('trafic')->rollBack();

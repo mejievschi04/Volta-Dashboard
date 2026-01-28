@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Vanzari extends Model
 {
-    protected $connection = 'vanzari';
     protected $table = 'vanzari_1c';
     
     protected $fillable = [

@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $connection = 'dashboard';
-        if (Schema::connection($connection)->hasTable('users')) {
-            Schema::connection($connection)->table('users', function (Blueprint $table) use ($connection) {
-                if (!Schema::connection($connection)->hasColumn('users', 'created_at')) {
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                if (!Schema::hasColumn('users', 'created_at')) {
                     $table->timestamp('created_at')->nullable();
                 }
-                if (!Schema::connection($connection)->hasColumn('users', 'updated_at')) {
+                if (!Schema::hasColumn('users', 'updated_at')) {
                     $table->timestamp('updated_at')->nullable();
                 }
             });
@@ -29,13 +28,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $connection = 'dashboard';
-        if (Schema::connection($connection)->hasTable('users')) {
-            Schema::connection($connection)->table('users', function (Blueprint $table) use ($connection) {
-                if (Schema::connection($connection)->hasColumn('users', 'created_at')) {
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                if (Schema::hasColumn('users', 'created_at')) {
                     $table->dropColumn('created_at');
                 }
-                if (Schema::connection($connection)->hasColumn('users', 'updated_at')) {
+                if (Schema::hasColumn('users', 'updated_at')) {
                     $table->dropColumn('updated_at');
                 }
             });

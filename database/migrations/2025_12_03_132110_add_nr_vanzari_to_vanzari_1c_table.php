@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::connection('vanzari')->table('vanzari_1c', function (Blueprint $table) {
-            if (!Schema::connection('vanzari')->hasColumn('vanzari_1c', 'nr_vanzari')) {
+        Schema::table('vanzari_1c', function (Blueprint $table) {
+            if (!Schema::hasColumn('vanzari_1c', 'nr_vanzari')) {
                 $table->integer('nr_vanzari')->default(0)->after('profit');
             }
         });
@@ -23,8 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::connection('vanzari')->table('vanzari_1c', function (Blueprint $table) {
-            if (Schema::connection('vanzari')->hasColumn('vanzari_1c', 'nr_vanzari')) {
+        Schema::table('vanzari_1c', function (Blueprint $table) {
+            if (Schema::hasColumn('vanzari_1c', 'nr_vanzari')) {
                 $table->dropColumn('nr_vanzari');
             }
         });

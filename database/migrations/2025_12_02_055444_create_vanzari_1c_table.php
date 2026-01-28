@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::connection('vanzari')->hasTable('vanzari_1c')) {
-            Schema::connection('vanzari')->create('vanzari_1c', function (Blueprint $table) {
+        if (!Schema::hasTable('vanzari_1c')) {
+            Schema::create('vanzari_1c', function (Blueprint $table) {
                 $table->id();
                 $table->date('data');
                 $table->decimal('suma_fara_tva', 15, 2)->default(0);
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::connection('vanzari')->dropIfExists('vanzari_1c');
+        Schema::dropIfExists('vanzari_1c');
     }
 };

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::connection('trafic')->hasTable('traffic_sources')) {
-            Schema::connection('trafic')->create('traffic_sources', function (Blueprint $table) {
+        if (!Schema::hasTable('traffic_sources')) {
+            Schema::create('traffic_sources', function (Blueprint $table) {
                 $table->id();
                 $table->string('source', 50);
                 $table->date('date');
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::connection('trafic')->dropIfExists('traffic_sources');
+        Schema::dropIfExists('traffic_sources');
     }
 };

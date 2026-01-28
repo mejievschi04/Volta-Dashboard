@@ -15,13 +15,11 @@ class VanzariLunareController extends Controller
         try {
             // Obține prima și ultima dată din baza de date folosind query-uri directe
             // pentru a evita probleme cu conexiunea sau formatul
-            $firstDateRow = DB::connection('vanzari')
-                ->table('vanzari_1c')
+            $firstDateRow = DB::table('vanzari_1c')
                 ->selectRaw('MIN(data) as min_date')
                 ->first();
             
-            $lastDateRow = DB::connection('vanzari')
-                ->table('vanzari_1c')
+            $lastDateRow = DB::table('vanzari_1c')
                 ->selectRaw('MAX(data) as max_date')
                 ->first();
             
@@ -30,14 +28,12 @@ class VanzariLunareController extends Controller
             
             // Verifică dacă există date înainte de prima dată găsită
             // Poate există date cu NULL sau cu format diferit
-            $allDates = DB::connection('vanzari')
-                ->table('vanzari_1c')
+            $allDates = DB::table('vanzari_1c')
                 ->selectRaw('MIN(data) as min_date, MAX(data) as max_date, COUNT(DISTINCT DATE_FORMAT(data, "%Y-%m")) as total_months')
                 ->first();
             
             // Verifică și toate datele distincte pentru debugging
-            $allDistinctDates = DB::connection('vanzari')
-                ->table('vanzari_1c')
+            $allDistinctDates = DB::table('vanzari_1c')
                 ->selectRaw('DATE_FORMAT(data, "%Y-%m") as month, MIN(data) as first_date_in_month')
                 ->groupBy(DB::raw('DATE_FORMAT(data, "%Y-%m")'))
                 ->orderBy('month', 'ASC')
