@@ -229,6 +229,227 @@
   color: #999;
   font-size: 16px;
 }
+
+/* === Optimizări Mobile === */
+@media (max-width: 768px) {
+  .istoric-container {
+    padding: 15px;
+  }
+  
+  .istoric-header {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .istoric-header h1 {
+    font-size: 20px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .istoric-header p {
+    font-size: 12px !important;
+  }
+  
+  .istoric-filters {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .filter-group {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  
+  .filter-group label {
+    font-size: 11px;
+  }
+  
+  .filter-group select,
+  .filter-group input {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 16px;
+    min-height: 48px;
+  }
+  
+  .istoric-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .stat-card:last-child:nth-child(odd) {
+    grid-column: span 2;
+  }
+  
+  .stat-card {
+    padding: 12px;
+  }
+  
+  .stat-card h4 {
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+  
+  .stat-card .value {
+    font-size: 18px;
+  }
+  
+  .istoric-charts {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 15px;
+  }
+  
+  .istoric-chart-container {
+    padding: 12px;
+  }
+  
+  .istoric-chart-container h3 {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  
+  .istoric-chart-container canvas {
+    max-height: 250px;
+  }
+  
+  .istoric-table-container {
+    padding: 12px;
+    overflow-x: auto;
+  }
+  
+  .istoric-table-container h3 {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  
+  .istoric-table {
+    font-size: 11px;
+    min-width: 800px;
+  }
+  
+  .istoric-table th {
+    padding: 8px 4px;
+    font-size: 9px;
+  }
+  
+  .istoric-table td {
+    padding: 8px 4px;
+    font-size: 10px;
+  }
+  
+  .loading,
+  .no-data {
+    padding: 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .istoric-container {
+    padding: 10px;
+  }
+  
+  .istoric-header {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .istoric-header h1 {
+    font-size: 18px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .istoric-header p {
+    font-size: 11px !important;
+  }
+  
+  .istoric-filters {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .filter-group label {
+    font-size: 10px;
+  }
+  
+  .filter-group select,
+  .filter-group input {
+    padding: 12px 14px;
+    font-size: 16px;
+  }
+  
+  .istoric-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .stat-card {
+    padding: 10px;
+  }
+  
+  .stat-card h4 {
+    font-size: 9px;
+    margin-bottom: 4px;
+  }
+  
+  .stat-card .value {
+    font-size: 16px;
+  }
+  
+  .istoric-charts {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  
+  .istoric-chart-container {
+    padding: 10px;
+  }
+  
+  .istoric-chart-container h3 {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .istoric-chart-container canvas {
+    max-height: 220px;
+  }
+  
+  .istoric-table-container {
+    padding: 10px;
+  }
+  
+  .istoric-table-container h3 {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .istoric-table {
+    font-size: 10px;
+    min-width: 700px;
+  }
+  
+  .istoric-table th {
+    padding: 6px 3px;
+    font-size: 8px;
+  }
+  
+  .istoric-table td {
+    padding: 6px 3px;
+    font-size: 9px;
+  }
+  
+  .loading,
+  .no-data {
+    padding: 15px;
+    font-size: 12px;
+  }
+}
 </style>
 
 <div class="istoric-container">
@@ -510,15 +731,35 @@ function updateCharts() {
           backgroundColor: "rgba(255, 238, 0, 0.2)",
           fill: true,
           tension: 0.3,
-          pointRadius: 4
+          pointRadius: window.innerWidth <= 768 ? 2 : 4
         }]
       },
       options: {
         responsive: true,
-        plugins: { legend: { labels: { color: "#fff" } } },
+        plugins: { 
+          legend: { 
+            labels: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 10 : 12 }
+            } 
+          } 
+        },
         scales: {
-          x: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" } },
-          y: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" }, beginAtZero: true }
+          x: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" } 
+          },
+          y: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" }, 
+            beginAtZero: true 
+          }
         }
       }
     })
@@ -542,10 +783,30 @@ function updateCharts() {
       },
       options: {
         responsive: true,
-        plugins: { legend: { labels: { color: "#fff" } } },
+        plugins: { 
+          legend: { 
+            labels: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 10 : 12 }
+            } 
+          } 
+        },
         scales: {
-          x: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" } },
-          y: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" }, beginAtZero: true }
+          x: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" } 
+          },
+          y: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" }, 
+            beginAtZero: true 
+          }
         }
       }
     })
@@ -566,15 +827,35 @@ function updateCharts() {
           backgroundColor: "rgba(255, 0, 0, 0.2)",
           fill: true,
           tension: 0.3,
-          pointRadius: 4
+          pointRadius: window.innerWidth <= 768 ? 2 : 4
         }]
       },
       options: {
         responsive: true,
-        plugins: { legend: { labels: { color: "#fff" } } },
+        plugins: { 
+          legend: { 
+            labels: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 10 : 12 }
+            } 
+          } 
+        },
         scales: {
-          x: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" } },
-          y: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" }, beginAtZero: true }
+          x: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" } 
+          },
+          y: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" }, 
+            beginAtZero: true 
+          }
         }
       }
     })
@@ -595,15 +876,35 @@ function updateCharts() {
           backgroundColor: "rgba(0, 255, 255, 0.2)",
           fill: true,
           tension: 0.3,
-          pointRadius: 4
+          pointRadius: window.innerWidth <= 768 ? 2 : 4
         }]
       },
       options: {
         responsive: true,
-        plugins: { legend: { labels: { color: "#fff" } } },
+        plugins: { 
+          legend: { 
+            labels: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 10 : 12 }
+            } 
+          } 
+        },
         scales: {
-          x: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" } },
-          y: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" }, beginAtZero: true }
+          x: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" } 
+          },
+          y: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" }, 
+            beginAtZero: true 
+          }
         }
       }
     })

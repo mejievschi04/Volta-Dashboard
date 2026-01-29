@@ -249,116 +249,225 @@
 /* === Mobile Responsive === */
 @media (max-width: 768px) {
   .stats-page {
-    padding: 15px;
+    padding: 12px;
     padding-top: 75px;
   }
   
   .stats-page h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .stats-page h1 i {
+    font-size: 18px;
+    margin-right: 8px;
   }
   
   .stats-buttons {
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 25px;
+    gap: 10px;
+    margin-bottom: 20px;
   }
   
   .stat-btn {
-    padding: 18px 15px;
-    font-size: 14px;
+    padding: 12px 10px;
+    font-size: 11px;
+    gap: 6px;
+    min-height: 70px;
   }
   
   .stat-btn i {
-    font-size: 24px;
+    font-size: 20px;
+    margin-bottom: 2px;
+  }
+  
+  .stat-btn span {
+    font-size: 11px;
   }
   
   .stats-general-card {
-    padding: 20px;
-    margin-top: 20px;
+    padding: 12px;
+    margin-top: 15px;
   }
   
   .stats-general-card h3 {
-    font-size: 22px;
-    margin-bottom: 20px;
+    font-size: 16px;
+    margin-bottom: 12px;
     flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .stats-general-card h3 i {
+    font-size: 16px;
   }
   
   .stats-general-card h3 span {
-    font-size: 16px;
+    font-size: 12px;
     margin-left: 0;
-    margin-top: 5px;
+    margin-top: 4px;
     width: 100%;
   }
   
   .chart-wrapper-modern {
-    height: 400px !important;
-    padding: 15px;
+    height: 300px !important;
+    padding: 10px;
+    margin-top: 10px;
   }
   
   .back-btn {
-    font-size: 14px;
-    padding: 6px 12px;
-    margin-bottom: 15px;
+    font-size: 12px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    gap: 6px;
+  }
+  
+  .back-btn i {
+    font-size: 12px;
   }
   
   .loading {
-    padding: 30px 20px;
+    padding: 25px 15px;
   }
   
   .loading i {
-    font-size: 36px;
+    font-size: 32px;
+  }
+  
+  .loading p {
+    font-size: 13px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .stat-item {
+    padding: 12px;
+  }
+  
+  .stat-item h4 {
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+  
+  .stat-item .value {
+    font-size: 20px;
+  }
+  
+  .stat-item .change {
+    font-size: 10px;
+    margin-top: 4px;
   }
 }
 
 @media (max-width: 480px) {
   .stats-page {
-    padding: 12px;
+    padding: 10px;
     padding-top: 70px;
   }
   
   .stats-page h1 {
-    font-size: 20px;
-    margin-bottom: 15px;
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  
+  .stats-page h1 i {
+    font-size: 16px;
+    margin-right: 6px;
   }
   
   .stats-buttons {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  
-  .stat-btn {
-    padding: 15px 12px;
-    font-size: 13px;
-  }
-  
-  .stat-btn i {
-    font-size: 20px;
-  }
-  
-  .stats-general-card {
-    padding: 15px;
-    margin-top: 15px;
-  }
-  
-  .stats-general-card h3 {
-    font-size: 18px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
     margin-bottom: 15px;
   }
   
+  .stat-btn {
+    padding: 10px 8px;
+    font-size: 10px;
+    gap: 4px;
+    min-height: 65px;
+  }
+  
+  .stat-btn i {
+    font-size: 18px;
+    margin-bottom: 2px;
+  }
+  
+  .stat-btn span {
+    font-size: 10px;
+  }
+  
+  .stats-general-card {
+    padding: 10px;
+    margin-top: 12px;
+  }
+  
+  .stats-general-card h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    gap: 6px;
+  }
+  
   .stats-general-card h3 i {
-    font-size: 20px;
+    font-size: 14px;
+  }
+  
+  .stats-general-card h3 span {
+    font-size: 11px;
   }
   
   .chart-wrapper-modern {
-    height: 350px !important;
-    padding: 12px;
+    height: 280px !important;
+    padding: 8px;
+    margin-top: 8px;
   }
   
   .back-btn {
-    font-size: 13px;
-    padding: 5px 10px;
+    font-size: 11px;
+    padding: 6px 10px;
+    margin-bottom: 10px;
+    gap: 5px;
+  }
+  
+  .back-btn i {
+    font-size: 11px;
+  }
+  
+  .loading {
+    padding: 20px 12px;
+  }
+  
+  .loading i {
+    font-size: 28px;
+  }
+  
+  .loading p {
+    font-size: 12px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .stat-item {
+    padding: 10px;
+  }
+  
+  .stat-item h4 {
+    font-size: 9px;
+    margin-bottom: 6px;
+  }
+  
+  .stat-item .value {
+    font-size: 18px;
+  }
+  
+  .stat-item .change {
+    font-size: 9px;
+    margin-top: 3px;
   }
 }
 </style>
@@ -596,12 +705,18 @@ function displayStats(data) {
     statsChart.destroy();
   }
   
+  const isMobile = window.innerWidth <= 768;
+  
   // Creăm noul grafic de tendință
   statsChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: labels,
-      datasets: chartDatasets
+      datasets: chartDatasets.map(ds => ({
+        ...ds,
+        borderWidth: isMobile ? (ds.borderWidth === 4 ? 3 : 2) : ds.borderWidth,
+        pointHoverRadius: isMobile ? 6 : 8
+      }))
     },
     options: {
       responsive: true,
@@ -622,15 +737,15 @@ function displayStats(data) {
           labels: {
             color: '#fff',
             font: {
-              size: 13,
+              size: isMobile ? 10 : 13,
               weight: '600',
               family: "'Montserrat', sans-serif"
             },
             usePointStyle: true,
             pointStyle: 'circle',
-            padding: 18,
-            boxWidth: 12,
-            boxHeight: 12,
+            padding: isMobile ? 8 : 18,
+            boxWidth: isMobile ? 8 : 12,
+            boxHeight: isMobile ? 8 : 12,
             generateLabels: function(chart) {
               const original = Chart.defaults.plugins.legend.labels.generateLabels;
               const labels = original.call(this, chart);
@@ -656,13 +771,13 @@ function displayStats(data) {
           backgroundColor: 'rgba(31, 41, 55, 0.95)',
           titleColor: '#FFEE00',
           titleFont: {
-            size: 15,
+            size: isMobile ? 12 : 15,
             weight: 'bold',
             family: "'Montserrat', sans-serif"
           },
           bodyColor: '#fff',
           bodyFont: {
-            size: 14,
+            size: isMobile ? 11 : 14,
             weight: '600',
             family: "'Montserrat', sans-serif"
           },
@@ -724,11 +839,11 @@ function displayStats(data) {
           ticks: {
             color: '#fff',
             font: {
-              size: 13,
+              size: isMobile ? 9 : 13,
               weight: '600',
               family: "'Montserrat', sans-serif"
             },
-            padding: 12,
+            padding: isMobile ? 6 : 12,
             callback: function(value) {
               return formatNumber(value);
             },
@@ -749,7 +864,7 @@ function displayStats(data) {
             text: 'Număr de sesiuni',
             color: '#FFEE00',
             font: {
-              size: 14,
+              size: isMobile ? 11 : 14,
               weight: '700',
               family: "'Montserrat', sans-serif"
             },
@@ -763,13 +878,13 @@ function displayStats(data) {
           ticks: {
             color: '#fff',
             font: {
-              size: 12,
+              size: isMobile ? 9 : 12,
               weight: '600',
               family: "'Montserrat', sans-serif"
             },
-            padding: 10,
-            maxRotation: window.innerWidth <= 768 ? 45 : 30,
-            minRotation: window.innerWidth <= 768 ? 45 : 0,
+            padding: isMobile ? 5 : 10,
+            maxRotation: isMobile ? 45 : 30,
+            minRotation: isMobile ? 45 : 0,
             backdropColor: 'rgba(31, 41, 55, 0.8)',
             backdropPadding: 4
           },
@@ -787,7 +902,7 @@ function displayStats(data) {
             text: 'Perioadă',
             color: '#FFEE00',
             font: {
-              size: 14,
+              size: isMobile ? 11 : 14,
               weight: '700',
               family: "'Montserrat', sans-serif"
             },

@@ -216,6 +216,231 @@
   font-weight: 600;
   background-color: var(--bg-soft);
 }
+
+/* === Optimizări Mobile === */
+@media (max-width: 768px) {
+  .comparare-container {
+    padding: 15px;
+  }
+  
+  .comparare-header {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .comparare-header h1 {
+    font-size: 20px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .comparare-header p {
+    font-size: 12px !important;
+  }
+  
+  .comparare-controls {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 15px;
+  }
+  
+  .control-group label {
+    font-size: 11px;
+  }
+  
+  .control-group select {
+    padding: 14px 16px;
+    font-size: 16px;
+    min-height: 48px;
+  }
+  
+  .comparare-kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .comparare-kpi-card:last-child:nth-child(odd) {
+    grid-column: span 2;
+  }
+  
+  .comparare-kpi-card {
+    padding: 12px;
+  }
+  
+  .comparare-kpi-card h4 {
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+  
+  .comparare-kpi-card .value-current {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+  
+  .comparare-kpi-card .value-compare {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  
+  .comparare-kpi-card .value-diff {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .comparare-charts-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 15px;
+  }
+  
+  .comparare-chart-container {
+    padding: 12px;
+  }
+  
+  .comparare-chart-container h3 {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  
+  .comparare-chart-container canvas {
+    max-height: 250px;
+  }
+  
+  .comparare-table-container {
+    padding: 12px;
+    overflow-x: auto;
+  }
+  
+  .comparare-table-container h3 {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  
+  .comparare-table {
+    font-size: 11px;
+    min-width: 600px;
+  }
+  
+  .comparare-table th {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+  
+  .comparare-table td {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .comparare-container {
+    padding: 10px;
+  }
+  
+  .comparare-header {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .comparare-header h1 {
+    font-size: 18px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .comparare-header p {
+    font-size: 11px !important;
+  }
+  
+  .comparare-controls {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  
+  .control-group label {
+    font-size: 10px;
+  }
+  
+  .control-group select {
+    padding: 12px 14px;
+    font-size: 16px;
+  }
+  
+  .comparare-kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .comparare-kpi-card:last-child:nth-child(odd) {
+    grid-column: span 2;
+  }
+  
+  .comparare-kpi-card {
+    padding: 10px;
+  }
+  
+  .comparare-kpi-card h4 {
+    font-size: 9px;
+    margin-bottom: 6px;
+  }
+  
+  .comparare-kpi-card .value-current {
+    font-size: 16px;
+    margin-bottom: 3px;
+  }
+  
+  .comparare-kpi-card .value-compare {
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+  
+  .comparare-kpi-card .value-diff {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  
+  .comparare-charts-grid {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  
+  .comparare-chart-container {
+    padding: 10px;
+  }
+  
+  .comparare-chart-container h3 {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .comparare-chart-container canvas {
+    max-height: 220px;
+  }
+  
+  .comparare-table-container {
+    padding: 10px;
+  }
+  
+  .comparare-table-container h3 {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .comparare-table {
+    font-size: 10px;
+    min-width: 500px;
+  }
+  
+  .comparare-table th {
+    padding: 6px 8px;
+    font-size: 9px;
+  }
+  
+  .comparare-table td {
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+}
 </style>
 
 <div class="comparare-container">
@@ -460,11 +685,29 @@ function updateCharts(data1, data2, label1, label2) {
       options: {
         responsive: true,
         plugins: {
-          legend: { labels: { color: "#fff" } }
+          legend: { 
+            labels: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 10 : 12 }
+            } 
+          }
         },
         scales: {
-          x: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" } },
-          y: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" }, beginAtZero: true }
+          x: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" } 
+          },
+          y: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" }, 
+            beginAtZero: true 
+          }
         }
       }
     })
@@ -489,11 +732,29 @@ function updateCharts(data1, data2, label1, label2) {
       options: {
         responsive: true,
         plugins: {
-          legend: { labels: { color: "#fff" } }
+          legend: { 
+            labels: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 10 : 12 }
+            } 
+          }
         },
         scales: {
-          x: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" } },
-          y: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" }, beginAtZero: true }
+          x: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" } 
+          },
+          y: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" }, 
+            beginAtZero: true 
+          }
         }
       }
     })
@@ -518,11 +779,29 @@ function updateCharts(data1, data2, label1, label2) {
       options: {
         responsive: true,
         plugins: {
-          legend: { labels: { color: "#fff" } }
+          legend: { 
+            labels: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 10 : 12 }
+            } 
+          }
         },
         scales: {
-          x: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" } },
-          y: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" }, beginAtZero: true }
+          x: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" } 
+          },
+          y: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" }, 
+            beginAtZero: true 
+          }
         }
       }
     })
@@ -544,18 +823,36 @@ function updateCharts(data1, data2, label1, label2) {
           borderWidth: 3,
           fill: true,
           tension: 0.3,
-          pointRadius: 6,
+          pointRadius: window.innerWidth <= 768 ? 2 : 6,
           pointBackgroundColor: "#ffee00"
         }]
       },
       options: {
         responsive: true,
         plugins: {
-          legend: { labels: { color: "#fff" } }
+          legend: { 
+            labels: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 10 : 12 }
+            } 
+          }
         },
         scales: {
-          x: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" } },
-          y: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" }, beginAtZero: true }
+          x: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" } 
+          },
+          y: { 
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            }, 
+            grid: { color: "rgba(255,255,0,0.05)" }, 
+            beginAtZero: true 
+          }
         }
       }
     })

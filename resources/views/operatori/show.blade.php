@@ -477,11 +477,11 @@ document.addEventListener('DOMContentLoaded', function() {
           borderWidth: 3,
           tension: 0.4,
           fill: true,
-          pointRadius: 5,
+          pointRadius: window.innerWidth <= 768 ? 2 : 5,
           pointBackgroundColor: '#3b82f6',
           pointBorderColor: '#fff',
-          pointBorderWidth: 2,
-          pointHoverRadius: 7,
+          pointBorderWidth: window.innerWidth <= 768 ? 1 : 2,
+          pointHoverRadius: window.innerWidth <= 768 ? 4 : 7,
           pointHoverBackgroundColor: '#2563eb',
           pointHoverBorderColor: '#fff',
           pointHoverBorderWidth: 3
@@ -495,11 +495,13 @@ document.addEventListener('DOMContentLoaded', function() {
             labels: {
               color: '#fff',
               font: {
-                size: 14,
+                size: window.innerWidth <= 768 ? 10 : 14,
                 weight: 'bold'
               },
-              padding: 15,
-              usePointStyle: true
+              padding: window.innerWidth <= 768 ? 8 : 15,
+              usePointStyle: true,
+              boxWidth: window.innerWidth <= 768 ? 8 : 12,
+              boxHeight: window.innerWidth <= 768 ? 8 : 12
             },
             display: true,
             position: 'top'
@@ -534,7 +536,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ticks: {
               color: '#fff',
               font: {
-                size: 12
+                size: window.innerWidth <= 768 ? 9 : 12
               }
             },
             grid: {

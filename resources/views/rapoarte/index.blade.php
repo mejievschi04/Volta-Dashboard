@@ -3,11 +3,7 @@
 @section('title', 'Rapoarte – VOLTA')
 
 @section('content')
-<div style="padding: 30px; max-width: 1200px; margin: 0 auto;">
-  <h1 style="color: #ffee00; margin-bottom: 30px; font-size: 32px; text-transform: uppercase; letter-spacing: 2px;">
-    Rapoarte
-  </h1>
-  
+<div style="padding: 0; max-width: 1200px; margin: 0 auto;">
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
     <a href="{{ route('rapoarte.comparare') }}" style="text-decoration: none;">
       <div style="

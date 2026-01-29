@@ -353,11 +353,109 @@
 
 @media (max-width: 768px) {
   .pie-chart-container {
-    gap: 16px !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  
+  /* Card container - padding redus */
+  div[style*="margin-bottom: 30px; background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%)"] {
+    padding: 12px !important;
+    margin-bottom: 15px !important;
+    overflow: hidden !important;
+    word-wrap: break-word !important;
+  }
+  
+  
+  /* Ascunde titlul pe mobile */
+  div[style*="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px"] {
+    display: none !important;
+  }
+  
+  /* Pie chart container wrapper - grid vertical */
+  div[style*="display: grid; grid-template-columns: 1fr 1fr; gap: 30px"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
+    overflow: hidden !important;
+    gap: 10px !important;
+  }
+  
+  /* Cardurile operatorilor inline sus - grid */
+  div[style*="display: flex; flex-direction: column; gap: 12px"] {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+    width: 100% !important;
+    order: 1 !important;
+  }
+  
+  /* Canvas jos - centrat */
+  div[style*="position: relative; height: 400px"] {
+    order: 2 !important;
+    height: 200px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    grid-column: 1 / -1 !important;
   }
   
   #vanzariPieChart {
-    max-height: 300px;
+    max-height: 200px !important;
+    max-width: 200px !important;
+    margin: 0 auto !important;
+  }
+  
+  /* Optimizare pentru lista operatori din pie chart - mai compacte */
+  div[style*="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255, 255, 255, 0.05)"] {
+    padding: 5px 6px !important;
+    flex-wrap: nowrap !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    border-left-width: 2px !important;
+    border-radius: 6px !important;
+    min-height: auto !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 2px !important;
+  }
+  
+  div[style*="color: #fff; font-weight: 600; font-size: 14px"] {
+    font-size: 9px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
+    margin-bottom: 0 !important;
+    line-height: 1.2 !important;
+    width: 100% !important;
+  }
+  
+  div[style*="color: #9CA3AF; font-size: 12px"] {
+    font-size: 8px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+    width: 100% !important;
+  }
+  
+  div[style*="color: #FFEE00; font-weight: 700; font-size: 18px; margin-left: 16px"] {
+    font-size: 10px !important;
+    margin-left: 0 !important;
+    margin-top: 2px !important;
+    align-self: flex-end !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+  }
+  
+  div[style*="flex: 1"] {
+    min-width: 0 !important;
+    overflow: hidden !important;
+    max-width: 100% !important;
+    width: 100% !important;
   }
 }
 
@@ -464,5 +562,770 @@
   
   .kpi-value {
     font-size: 14px !important;
+  }
+  
+  /* Optimizare pentru lista operatori din pie chart pe mobile mic */
+  div[style*="display: flex; flex-direction: column; gap: 12px"] {
+    gap: 6px !important;
+  }
+  
+  div[style*="display: flex; align-items: center; justify-content: space-between; padding: 12px"] {
+    padding: 6px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+  }
+  
+  div[style*="color: #fff; font-weight: 600; font-size: 14px"] {
+    font-size: 10px !important;
+    width: 100% !important;
+  }
+  
+  div[style*="color: #9CA3AF; font-size: 12px"] {
+    font-size: 9px !important;
+    width: 100% !important;
+  }
+  
+  div[style*="color: #FFEE00; font-weight: 700; font-size: 18px; margin-left: 16px"] {
+    font-size: 11px !important;
+    margin-left: 0 !important;
+    margin-top: 2px !important;
+    align-self: flex-end !important;
+  }
+  
+  /* Container pentru pie chart items pe mobile mic */
+  div[style*="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255, 255, 255, 0.05)"] {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+  
+  /* Previne overflow pentru toate textele */
+  div[style*="flex: 1"] {
+    min-width: 0 !important;
+    overflow: hidden !important;
+    max-width: 100% !important;
+  }
+  
+  div[style*="color: #fff; font-weight: 600; font-size: 14px"] {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
+  }
+  
+  div[style*="color: #9CA3AF; font-size: 12px"] {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
+  }
+  
+  /* Card container - padding redus */
+  div[style*="margin-bottom: 30px; background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%)"] {
+    padding: 10px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  /* Ascunde titlul pe mobile mic */
+  div[style*="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px"] {
+    display: none !important;
+  }
+  
+  /* Pie chart container wrapper - grid vertical */
+  div[style*="display: grid; grid-template-columns: 1fr 1fr; gap: 30px"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
+    gap: 8px !important;
+  }
+  
+  /* Cardurile operatorilor inline sus - grid 2 coloane */
+  div[style*="display: flex; flex-direction: column; gap: 12px"] {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 5px !important;
+    order: 1 !important;
+  }
+  
+  /* Canvas jos - centrat */
+  div[style*="position: relative; height: 400px"] {
+    order: 2 !important;
+    height: 180px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    grid-column: 1 / -1 !important;
+  }
+  
+  #vanzariPieChart {
+    max-height: 180px !important;
+    max-width: 180px !important;
+    margin: 0 auto !important;
+  }
+  
+  /* Optimizare pentru lista operatori - mai compacte, vertical layout */
+  div[style*="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255, 255, 255, 0.05)"] {
+    padding: 4px 5px !important;
+    border-left-width: 2px !important;
+    border-radius: 5px !important;
+    min-height: auto !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1px !important;
+  }
+  
+  div[style*="color: #fff; font-weight: 600; font-size: 14px"] {
+    font-size: 8px !important;
+    margin-bottom: 0 !important;
+    line-height: 1.1 !important;
+    width: 100% !important;
+  }
+  
+  div[style*="color: #9CA3AF; font-size: 12px"] {
+    font-size: 7px !important;
+    line-height: 1.1 !important;
+    width: 100% !important;
+  }
+  
+  div[style*="color: #FFEE00; font-weight: 700; font-size: 18px; margin-left: 16px"] {
+    font-size: 9px !important;
+    margin-left: 0 !important;
+    margin-top: 2px !important;
+    align-self: flex-end !important;
+  }
+  
+  div[style*="flex: 1"] {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
+
+/* === Optimizări Mobile Generale === */
+@media (max-width: 768px) {
+  div[style*="padding: 20px; max-width: 1400px"],
+  div[style*="padding: 20px; max-width: 1200px"] {
+    padding: 15px !important;
+  }
+  
+  div[style*="padding: 20px; max-width: 1400px"] h1,
+  div[style*="padding: 20px; max-width: 1200px"] h1 {
+    font-size: 24px !important;
+  }
+  
+  div[style*="padding: 20px; max-width: 1400px"] p,
+  div[style*="padding: 20px; max-width: 1200px"] p {
+    font-size: 12px !important;
+  }
+  
+  div[style*="display: flex; justify-content: space-between"] {
+    flex-direction: column !important;
+    gap: 15px !important;
+    align-items: flex-start !important;
+  }
+  
+  div[style*="display: grid; grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  
+  div[style*="display: grid; grid-template-columns: 300px 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+  
+  div[style*="height: 320px"] {
+    height: 200px !important;
+  }
+  
+  div[style*="width: 160px; height: 160px"] {
+    width: 100px !important;
+    height: 100px !important;
+    font-size: 40px !important;
+  }
+  
+  div[style*="bottom: -80px"] {
+    bottom: -50px !important;
+    left: 20px !important;
+  }
+  
+  div[style*="font-size: 36px"] {
+    font-size: 24px !important;
+  }
+  
+  div[style*="grid-template-columns: 1fr 1fr; gap: 30px"] {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+  
+  div[style*="height: 400px"] {
+    height: 250px !important;
+  }
+  
+  table[style*="width: 100%"] {
+    font-size: 12px !important;
+    min-width: 600px;
+  }
+  
+  table[style*="width: 100%"] th,
+  table[style*="width: 100%"] td {
+    padding: 10px 8px !important;
+    font-size: 11px !important;
+  }
+  
+  div[style*="padding: 24px"] {
+    padding: 15px !important;
+  }
+  
+  div[style*="font-size: 24px"] {
+    font-size: 18px !important;
+  }
+  
+  div[style*="width: 48px; height: 48px"] {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  
+  div[style*="font-size: 20px"] {
+    font-size: 16px !important;
+  }
+  
+  div[style*="margin-top: 100px"] {
+    margin-top: 60px !important;
+  }
+  
+  /* Layout sidebar și main content pe mobile - unul sub altul */
+  div[style*="display: grid; grid-template-columns: 300px 1fr"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+    margin-top: 60px !important;
+  }
+  
+  /* Sidebar profile - width pe mobile */
+  div[style*="display: flex; flex-direction: column; gap: 20px"]:first-of-type {
+    width: 100% !important;
+    order: 1 !important;
+  }
+  
+  /* Main feed - width pe mobile */
+  div[style*="display: flex; flex-direction: column; gap: 20px"]:last-of-type {
+    width: 100% !important;
+    order: 2 !important;
+  }
+  
+  /* Card Luna Curentă - width optimizat */
+  div[style*="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 480px) {
+  div[style*="padding: 20px; max-width: 1400px"],
+  div[style*="padding: 20px; max-width: 1200px"] {
+    padding: 10px !important;
+  }
+  
+  div[style*="padding: 20px; max-width: 1400px"] h1,
+  div[style*="padding: 20px; max-width: 1200px"] h1 {
+    font-size: 20px !important;
+  }
+  
+  div[style*="padding: 20px; max-width: 1400px"] p,
+  div[style*="padding: 20px; max-width: 1200px"] p {
+    font-size: 11px !important;
+  }
+  
+  div[style*="height: 320px"] {
+    height: 150px !important;
+  }
+  
+  div[style*="width: 160px; height: 160px"] {
+    width: 80px !important;
+    height: 80px !important;
+    font-size: 32px !important;
+  }
+  
+  div[style*="bottom: -80px"] {
+    bottom: -40px !important;
+    left: 15px !important;
+  }
+  
+  div[style*="font-size: 36px"] {
+    font-size: 20px !important;
+  }
+  
+  div[style*="height: 400px"] {
+    height: 220px !important;
+  }
+  
+  table[style*="width: 100%"] {
+    font-size: 11px !important;
+    min-width: 500px;
+  }
+  
+  table[style*="width: 100%"] th,
+  table[style*="width: 100%"] td {
+    padding: 8px 6px !important;
+    font-size: 10px !important;
+  }
+  
+  div[style*="padding: 24px"] {
+    padding: 12px !important;
+  }
+  
+  div[style*="font-size: 24px"] {
+    font-size: 16px !important;
+  }
+  
+  div[style*="width: 48px; height: 48px"] {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  
+  div[style*="font-size: 20px"] {
+    font-size: 14px !important;
+  }
+  
+  div[style*="margin-top: 100px"] {
+    margin-top: 50px !important;
+  }
+  
+  a[style*="padding: 12px 24px"] {
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+  }
+  
+  /* Layout sidebar și main content pe mobile mic - unul sub altul */
+  div[style*="display: grid; grid-template-columns: 300px 1fr"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    margin-top: 50px !important;
+  }
+  
+  /* Sidebar profile - width pe mobile mic */
+  div[style*="display: flex; flex-direction: column; gap: 20px"]:first-of-type {
+    width: 100% !important;
+    order: 1 !important;
+  }
+  
+  /* Main feed - width pe mobile mic */
+  div[style*="display: flex; flex-direction: column; gap: 20px"]:last-of-type {
+    width: 100% !important;
+    order: 2 !important;
+  }
+  
+  /* Card Luna Curentă - width optimizat pe mobile mic */
+  div[style*="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* === Optimizări Mobile Suplimentare === */
+@media (max-width: 768px) {
+  /* Pie chart container și elemente */
+  div[style*="margin-bottom: 30px"] {
+    margin-bottom: 15px !important;
+  }
+  
+  div[style*="margin-bottom: 24px"] {
+    margin-bottom: 12px !important;
+  }
+  
+  div[style*="padding-bottom: 16px"] {
+    padding-bottom: 10px !important;
+  }
+  
+  div[style*="gap: 30px"] {
+    gap: 15px !important;
+  }
+  
+  div[style*="gap: 12px"] {
+    gap: 8px !important;
+  }
+  
+  div[style*="gap: 20px"] {
+    gap: 12px !important;
+  }
+  
+  div[style*="gap: 15px"] {
+    gap: 10px !important;
+  }
+  
+  div[style*="gap: 8px"] {
+    gap: 6px !important;
+  }
+  
+  /* Pie chart sidebar items */
+  div[style*="padding: 12px; background: rgba(255, 255, 255, 0.05)"] {
+    padding: 8px !important;
+  }
+  
+  div[style*="font-size: 14px; margin-bottom: 4px"] {
+    font-size: 11px !important;
+    margin-bottom: 2px !important;
+  }
+  
+  div[style*="font-size: 12px"] {
+    font-size: 10px !important;
+  }
+  
+  div[style*="font-size: 18px; margin-left: 16px"] {
+    font-size: 14px !important;
+    margin-left: 8px !important;
+  }
+  
+  /* Tabel header și cells */
+  th[style*="padding: 16px"],
+  td[style*="padding: 16px"] {
+    padding: 10px 8px !important;
+  }
+  
+  a[style*="font-size: 16px"] {
+    font-size: 13px !important;
+  }
+  
+  span[style*="font-size: 16px"],
+  span[style*="font-size: 15px"],
+  span[style*="font-size: 14px"] {
+    font-size: 12px !important;
+  }
+  
+  /* Butoane acțiuni */
+  a[style*="padding: 8px 16px"] {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+  
+  /* Sidebar profile - Card Luna Curentă */
+  div[style*="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px"] {
+    padding: 12px !important;
+    border-radius: 12px !important;
+  }
+  
+  h3[style*="color: #fff; margin: 0 0 20px 0; font-size: 20px"] {
+    font-size: 14px !important;
+    margin-bottom: 12px !important;
+    gap: 6px !important;
+  }
+  
+  h3[style*="color: #fff; margin: 0 0 20px 0; font-size: 20px"] i {
+    font-size: 12px !important;
+  }
+  
+  div[style*="display: flex; flex-direction: column; gap: 16px"] {
+    gap: 10px !important;
+  }
+  
+  div[style*="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(59, 130, 246, 0.1)"] {
+    padding: 8px !important;
+    gap: 8px !important;
+    border-radius: 8px !important;
+  }
+  
+  div[style*="width: 40px; height: 40px"][style*="border-radius: 50%"] {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+  div[style*="width: 40px; height: 40px"][style*="border-radius: 50%"] i {
+    font-size: 12px !important;
+  }
+  
+  div[style*="color: #9CA3AF; font-size: 12px; margin-bottom: 4px"] {
+    font-size: 9px !important;
+    margin-bottom: 2px !important;
+  }
+  
+  div[style*="color: #fff; font-size: 16px; font-weight: 700"],
+  div[style*="color: #10B981; font-size: 16px; font-weight: 700"] {
+    font-size: 12px !important;
+  }
+  
+  div[style*="color: #fff; font-size: 14px; font-weight: 500"] {
+    font-size: 11px !important;
+  }
+  
+  /* Badges și spans */
+  span[style*="padding: 8px 16px"] {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+  
+  /* Chart canvas containers */
+  div[style*="position: relative; height: 400px"] {
+    height: 250px !important;
+  }
+  
+  div[style*="height: 350px"] {
+    height: 250px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Pie chart container și elemente */
+  div[style*="margin-bottom: 30px"] {
+    margin-bottom: 12px !important;
+  }
+  
+  div[style*="margin-bottom: 24px"] {
+    margin-bottom: 10px !important;
+  }
+  
+  div[style*="padding-bottom: 16px"] {
+    padding-bottom: 8px !important;
+  }
+  
+  div[style*="gap: 30px"] {
+    gap: 12px !important;
+  }
+  
+  div[style*="gap: 12px"] {
+    gap: 6px !important;
+  }
+  
+  div[style*="gap: 20px"] {
+    gap: 10px !important;
+  }
+  
+  div[style*="gap: 15px"] {
+    gap: 8px !important;
+  }
+  
+  div[style*="gap: 8px"] {
+    gap: 4px !important;
+  }
+  
+  /* Pie chart sidebar items */
+  div[style*="padding: 12px; background: rgba(255, 255, 255, 0.05)"] {
+    padding: 6px !important;
+  }
+  
+  div[style*="font-size: 14px; margin-bottom: 4px"] {
+    font-size: 10px !important;
+    margin-bottom: 2px !important;
+  }
+  
+  div[style*="font-size: 12px"] {
+    font-size: 9px !important;
+  }
+  
+  div[style*="font-size: 18px; margin-left: 16px"] {
+    font-size: 12px !important;
+    margin-left: 6px !important;
+  }
+  
+  /* Tabel header și cells */
+  th[style*="padding: 16px"],
+  td[style*="padding: 16px"] {
+    padding: 8px 6px !important;
+  }
+  
+  a[style*="font-size: 16px"] {
+    font-size: 12px !important;
+  }
+  
+  span[style*="font-size: 16px"],
+  span[style*="font-size: 15px"],
+  span[style*="font-size: 14px"] {
+    font-size: 11px !important;
+  }
+  
+  /* Butoane acțiuni */
+  a[style*="padding: 8px 16px"] {
+    padding: 5px 8px !important;
+    font-size: 10px !important;
+  }
+  
+  /* Sidebar profile - Card Luna Curentă */
+  div[style*="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px"] {
+    padding: 10px !important;
+    border-radius: 10px !important;
+  }
+  
+  h3[style*="color: #fff; margin: 0 0 20px 0; font-size: 20px"] {
+    font-size: 12px !important;
+    margin-bottom: 10px !important;
+    gap: 5px !important;
+  }
+  
+  h3[style*="color: #fff; margin: 0 0 20px 0; font-size: 20px"] i {
+    font-size: 11px !important;
+  }
+  
+  div[style*="display: flex; flex-direction: column; gap: 16px"] {
+    gap: 8px !important;
+  }
+  
+  div[style*="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(59, 130, 246, 0.1)"] {
+    padding: 6px !important;
+    gap: 6px !important;
+    border-radius: 6px !important;
+  }
+  
+  div[style*="width: 40px; height: 40px"][style*="border-radius: 50%"] {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  div[style*="width: 40px; height: 40px"][style*="border-radius: 50%"] i {
+    font-size: 10px !important;
+  }
+  
+  div[style*="color: #9CA3AF; font-size: 12px; margin-bottom: 4px"] {
+    font-size: 8px !important;
+    margin-bottom: 1px !important;
+  }
+  
+  div[style*="color: #fff; font-size: 16px; font-weight: 700"],
+  div[style*="color: #10B981; font-size: 16px; font-weight: 700"] {
+    font-size: 11px !important;
+  }
+  
+  div[style*="color: #fff; font-size: 14px; font-weight: 500"] {
+    font-size: 10px !important;
+  }
+  
+  /* Badges și spans */
+  span[style*="padding: 8px 16px"] {
+    padding: 5px 8px !important;
+    font-size: 10px !important;
+  }
+  
+  /* Chart canvas containers */
+  div[style*="position: relative; height: 400px"] {
+    height: 220px !important;
+  }
+  
+  div[style*="height: 350px"] {
+    height: 220px !important;
+  }
+  
+  /* Success/Error messages */
+  div[style*="padding: 16px"] {
+    padding: 12px !important;
+    font-size: 13px !important;
+  }
+  
+  /* Layout flex pentru header */
+  div[style*="display: flex; justify-content: space-between"] {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  /* Buton adaugă operator */
+  a[style*="padding: 12px 24px"][style*="background: linear-gradient(135deg, #FFEE00"] {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  
+  /* Iconițe mai mici */
+  i[style*="font-size: 20px"] {
+    font-size: 16px !important;
+  }
+  
+  i[style*="font-size: 14px"] {
+    font-size: 12px !important;
+  }
+  
+  /* Avatar border mai mic */
+  div[style*="border: 6px solid"] {
+    border-width: 4px !important;
+  }
+  
+  /* Font size 64px pentru avatar */
+  div[style*="font-size: 64px"] {
+    font-size: 40px !important;
+  }
+  
+  /* Spacing pentru badges */
+  div[style*="gap: 15px; align-items: center"] {
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+  }
+  
+  /* Padding pentru carduri sidebar */
+  div[style*="padding-bottom: 20px"] {
+    padding-bottom: 10px !important;
+  }
+  
+  /* H3 titles */
+  h3[style*="font-size: 20px"] {
+    font-size: 16px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  /* Paragraph text */
+  p[style*="font-size: 14px"] {
+    font-size: 12px !important;
+  }
+  
+  /* H2 titles în carduri */
+  h2[style*="font-size: 24px"] {
+    font-size: 18px !important;
+  }
+  
+  /* Iconițe în header cards */
+  i[style*="font-size: 20px"][style*="color: #000"] {
+    font-size: 16px !important;
+  }
+  
+  /* Flex items cu gap */
+  div[style*="display: flex"][style*="align-items: center"] {
+    flex-wrap: wrap !important;
+  }
+  
+  /* Margin bottom pentru header */
+  div[style*="margin-bottom: 30px"][style*="display: flex"] {
+    margin-bottom: 15px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Optimizări suplimentare pentru 768px */
+  div[style*="left: 40px"] {
+    left: 15px !important;
+  }
+  
+  div[style*="gap: 10px"] {
+    gap: 8px !important;
+  }
+  
+  div[style*="gap: 6px"] {
+    gap: 4px !important;
+  }
+  
+  /* Iconițe mai mici în general */
+  i[class*="fas"] {
+    font-size: 0.9em !important;
+  }
+  
+  /* Butoane flex */
+  div[style*="display: flex; gap: 8px; justify-content: center"] {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+  
+  /* Text în tabele */
+  td[style*="font-size: 14px"],
+  td[style*="font-size: 15px"],
+  td[style*="font-size: 16px"] {
+    font-size: 12px !important;
+  }
+  
+  /* Links în tabele */
+  a[style*="font-size: 16px"][class*="row-link"] {
+    font-size: 13px !important;
+  }
+  
+  /* Departament text */
+  div[style*="font-size: 12px"][style*="margin-top: 4px"] {
+    font-size: 10px !important;
+    margin-top: 2px !important;
   }
 }

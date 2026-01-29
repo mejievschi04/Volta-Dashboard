@@ -179,6 +179,11 @@ document.addEventListener('DOMContentLoaded', function() {
         plugins: {
           legend: {
             display: false, // Ascundem legenda pentru că o avem în sidebar
+            labels: {
+              font: {
+                size: window.innerWidth <= 768 ? 10 : 12
+              }
+            }
           },
           tooltip: {
             backgroundColor: 'rgba(0, 0, 0, 0.9)',

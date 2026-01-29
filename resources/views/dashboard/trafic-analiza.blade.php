@@ -420,12 +420,71 @@
   touch-action: manipulation;
 }
 
-/* === Mobile Responsive pentru select-uri === */
+/* === Mobile Responsive === */
 @media (max-width: 768px) {
+  .analiza-page {
+    padding: 12px;
+    padding-top: 75px;
+  }
+  
+  .analiza-page h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+  }
+  
+  .analiza-page h1 i {
+    font-size: 18px;
+    margin-right: 8px;
+  }
+  
+  .back-btn {
+    font-size: 12px;
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    gap: 6px;
+  }
+  
+  .back-btn i {
+    font-size: 12px;
+  }
+  
+  .analiza-container {
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+  }
+  
+  .analiza-menu {
+    width: 100%;
+    position: relative;
+    top: 0;
+    padding: 15px;
+  }
+  
+  .menu-header {
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+  }
+  
+  .menu-header h3 {
+    font-size: 16px;
+  }
+  
+  .date-selector-menu {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .date-selector-menu label {
+    font-size: 11px;
+  }
+  
   .date-selector-menu .date-input {
-    min-height: 48px;
-    font-size: 16px; /* Previne zoom pe iOS */
-    padding: 14px 18px;
+    min-height: 42px;
+    font-size: 14px;
+    padding: 10px 12px;
     z-index: 10;
     position: relative;
   }
@@ -434,23 +493,280 @@
     -webkit-tap-highlight-color: rgba(255, 238, 0, 0.3);
   }
   
-  .menu-btn {
-    min-height: 48px;
-    padding: 14px 20px;
-    touch-action: manipulation;
-  }
-}
-
-@media (max-width: 480px) {
-  .date-selector-menu .date-input {
-    min-height: 44px;
-    font-size: 16px;
-    padding: 12px 16px;
+  .menu-buttons {
+    gap: 8px;
   }
   
   .menu-btn {
     min-height: 44px;
-    padding: 12px 18px;
+    padding: 10px 14px;
+    font-size: 12px;
+    gap: 10px;
+    touch-action: manipulation;
+  }
+  
+  .menu-btn i {
+    font-size: 16px;
+    width: 22px;
+  }
+  
+  .section {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+  }
+  
+  .section h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    gap: 10px;
+  }
+  
+  .section h2 i {
+    font-size: 18px;
+  }
+  
+  .data-table {
+    font-size: 11px;
+    margin-top: 15px;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+  
+  .data-table th {
+    font-size: 9px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .stat-card {
+    padding: 12px;
+  }
+  
+  .stat-card h4 {
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+  
+  .stat-card .value {
+    font-size: 20px;
+  }
+  
+  .no-selection {
+    padding: 60px 20px;
+  }
+  
+  .no-selection i {
+    font-size: 50px;
+    margin-bottom: 15px;
+  }
+  
+  .no-selection h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .no-selection p {
+    font-size: 13px;
+  }
+  
+  .btn-show-more {
+    padding: 10px 18px;
+    font-size: 11px;
+    margin-top: 15px;
+    gap: 6px;
+  }
+  
+  .loading {
+    padding: 40px 20px;
+  }
+  
+  .loading i {
+    font-size: 40px;
+    margin-bottom: 15px;
+  }
+  
+  .loading p {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .analiza-page {
+    padding: 10px;
+    padding-top: 70px;
+  }
+  
+  .analiza-page h1 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+  }
+  
+  .analiza-page h1 i {
+    font-size: 16px;
+    margin-right: 6px;
+  }
+  
+  .back-btn {
+    font-size: 11px;
+    padding: 6px 10px;
+    margin-bottom: 12px;
+    gap: 5px;
+  }
+  
+  .back-btn i {
+    font-size: 11px;
+  }
+  
+  .analiza-container {
+    gap: 12px;
+    margin-top: 12px;
+  }
+  
+  .analiza-menu {
+    padding: 12px;
+  }
+  
+  .menu-header {
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+  
+  .menu-header h3 {
+    font-size: 14px;
+  }
+  
+  .date-selector-menu {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .date-selector-menu label {
+    font-size: 10px;
+  }
+  
+  .date-selector-menu .date-input {
+    min-height: 40px;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+  
+  .menu-buttons {
+    gap: 6px;
+  }
+  
+  .menu-btn {
+    min-height: 40px;
+    padding: 8px 12px;
+    font-size: 11px;
+    gap: 8px;
+  }
+  
+  .menu-btn i {
+    font-size: 14px;
+    width: 20px;
+  }
+  
+  .section {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+  }
+  
+  .section h2 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    gap: 8px;
+  }
+  
+  .section h2 i {
+    font-size: 16px;
+  }
+  
+  .data-table {
+    font-size: 10px;
+    margin-top: 12px;
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 6px 8px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  
+  .data-table th {
+    font-size: 8px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  
+  .stat-card {
+    padding: 10px;
+  }
+  
+  .stat-card h4 {
+    font-size: 9px;
+    margin-bottom: 6px;
+  }
+  
+  .stat-card .value {
+    font-size: 18px;
+  }
+  
+  .no-selection {
+    padding: 40px 15px;
+  }
+  
+  .no-selection i {
+    font-size: 40px;
+    margin-bottom: 12px;
+  }
+  
+  .no-selection h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  
+  .no-selection p {
+    font-size: 12px;
+  }
+  
+  .btn-show-more {
+    padding: 8px 14px;
+    font-size: 10px;
+    margin-top: 12px;
+    gap: 5px;
+  }
+  
+  .loading {
+    padding: 30px 15px;
+  }
+  
+  .loading i {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+  
+  .loading p {
+    font-size: 12px;
   }
 }
 

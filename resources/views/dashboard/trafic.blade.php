@@ -249,7 +249,7 @@
   <h1 style="margin: 0; font-size: 32px; font-weight: 800; color: #FFEE00; text-shadow: 0 0 20px rgba(255, 238, 0, 0.15); letter-spacing: -0.5px;">Trafic</h1>
   
   <div class="trafic-controls">
-    <form method="get" action="{{ route('trafic') }}" id="traficFilterForm" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+    <form method="get" action="{{ route('trafic') }}" id="traficFilterForm" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; width: 100%;">
       <div class="year-selector-wrapper">
         <label for="selectAnTrafic" style="color: #fff; font-weight: 600; margin-right: 10px; white-space: nowrap;">
           <i class="fas fa-calendar" style="margin-right: 5px;"></i>An:
@@ -322,7 +322,9 @@
 <!-- Grafic principal -->
 <div class="card mb-4" style="min-height: 500px;">
   <h5 class="card-title">Overview - toate sursele</h5>
-  <canvas id="trafficChart" style="max-height: 450px; width: 100% !important;"></canvas>
+  <div style="position: relative; height: 450px;">
+    <canvas id="trafficChart" style="max-height: 450px; width: 100% !important;"></canvas>
+  </div>
 </div>
 
 <!-- Carduri -->
@@ -502,9 +504,16 @@ function drawChart() {
     window.trafficChartInstance.destroy();
   }
 
+  const isMobile = window.innerWidth <= 768;
+  
   window.trafficChartInstance = new Chart(chartCtx, {
     type: 'line',
-    data: { labels: labels, datasets },
+    data: { labels: labels, datasets: datasets.map(ds => ({
+      ...ds,
+      pointRadius: isMobile ? 2 : 4,
+      pointBorderWidth: isMobile ? 1 : 2,
+      pointHoverRadius: isMobile ? 4 : 6
+    })) },
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -513,9 +522,11 @@ function drawChart() {
           position: 'bottom',
           labels: {
             font: {
-              size: 14
+              size: isMobile ? 10 : 14
             },
-            padding: 15
+            padding: isMobile ? 8 : 15,
+            boxWidth: isMobile ? 8 : 12,
+            boxHeight: isMobile ? 8 : 12
           }
         }
       },
@@ -524,7 +535,7 @@ function drawChart() {
           beginAtZero: true,
           ticks: {
             font: {
-              size: 12
+              size: isMobile ? 9 : 12
             }
           },
           grid: {
@@ -534,7 +545,7 @@ function drawChart() {
         x: {
           ticks: {
             font: {
-              size: 12
+              size: isMobile ? 9 : 12
             }
           },
           grid: {

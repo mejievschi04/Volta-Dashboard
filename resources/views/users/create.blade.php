@@ -129,5 +129,126 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ url('css/operatori.css') }}">
+<style>
+@media (max-width: 768px) {
+  div[style*="padding: 20px"] {
+    padding: 12px !important;
+    padding-top: 75px !important;
+  }
+  
+  div[style*="margin-bottom: 30px"] {
+    margin-bottom: 20px !important;
+  }
+  
+  h1[style*="font-size: 32px"] {
+    font-size: 18px !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  
+  div[style*="width: 48px; height: 48px"] {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  
+  i[style*="font-size: 20px"] {
+    font-size: 14px !important;
+  }
+  
+  p[style*="font-size: 14px"] {
+    font-size: 11px !important;
+    margin-left: 0 !important;
+    margin-top: 8px !important;
+  }
+  
+  div[style*="padding: 16px"] {
+    padding: 12px !important;
+    font-size: 12px !important;
+  }
+  
+  .operator-card {
+    padding: 15px !important;
+  }
+  
+  div[style*="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))"] {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  label[style*="font-size: 14px"] {
+    font-size: 11px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  label[style*="font-size: 14px"] i {
+    font-size: 10px !important;
+    margin-right: 4px !important;
+  }
+  
+  input[style*="padding: 12px 16px"],
+  select[style*="padding: 12px 16px"] {
+    padding: 10px 12px !important;
+    font-size: 13px !important;
+    min-height: 44px !important;
+  }
+  
+  div[style*="display: flex; gap: 12px"] {
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding-top: 15px !important;
+  }
+  
+  button[style*="padding: 14px 28px"],
+  a[style*="padding: 14px 28px"] {
+    width: 100% !important;
+    padding: 10px 16px !important;
+    font-size: 12px !important;
+    justify-content: center !important;
+  }
+  
+  button[style*="padding: 14px 28px"] i,
+  a[style*="padding: 14px 28px"] i {
+    font-size: 11px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  div[style*="padding: 20px"] {
+    padding: 10px !important;
+    padding-top: 70px !important;
+  }
+  
+  h1[style*="font-size: 32px"] {
+    font-size: 16px !important;
+  }
+  
+  div[style*="width: 48px; height: 48px"] {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+  i[style*="font-size: 20px"] {
+    font-size: 12px !important;
+  }
+  
+  label[style*="font-size: 14px"] {
+    font-size: 10px !important;
+  }
+  
+  input[style*="padding: 12px 16px"],
+  select[style*="padding: 12px 16px"] {
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+    min-height: 42px !important;
+  }
+  
+  button[style*="padding: 14px 28px"],
+  a[style*="padding: 14px 28px"] {
+    padding: 8px 12px !important;
+    font-size: 11px !important;
+  }
+}
+</style>
 @endpush
 

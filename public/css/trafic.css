@@ -150,8 +150,15 @@
   background: linear-gradient(135deg, rgba(31, 41, 55, 0.9) 0%, rgba(31, 41, 55, 0.95) 100%);
 }
 
-.card.mb-4 canvas {
+.card.mb-4 > div[style*="position: relative"] {
   flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card.mb-4 canvas {
   max-height: 450px !important;
   width: 100% !important;
   height: auto !important;
@@ -198,52 +205,80 @@
 
 @media (max-width: 768px) {
   .container {
-    padding: 15px;
+    padding: 12px;
     padding-top: 75px;
   }
   
   .container h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 20px;
+    margin-bottom: 15px;
   }
   
   .d-flex {
     flex-direction: column;
     align-items: stretch;
-    gap: 15px;
+    gap: 12px;
   }
   
   .trafic-header {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .trafic-header h1 {
+    font-size: 20px !important;
+    margin-bottom: 10px !important;
   }
   
   .trafic-controls {
     flex-direction: column;
     width: 100%;
+    gap: 10px;
   }
   
   .year-selector-wrapper,
   .month-selector-wrapper {
     width: 100%;
+    padding: 5px 8px;
+    gap: 8px;
+  }
+  
+  .year-selector-wrapper label,
+  .month-selector-wrapper label {
+    font-size: 11px !important;
+    margin-right: 6px !important;
+    white-space: nowrap;
+  }
+  
+  .year-selector-wrapper label i,
+  .month-selector-wrapper label i {
+    font-size: 10px !important;
+    margin-right: 3px !important;
   }
   
   .year-select,
   .month-select {
     width: 100%;
     min-width: auto;
-    min-height: 48px; /* Dimensiune minimă pentru touch */
-    padding: 14px 15px;
-    font-size: 16px; /* Previne zoom pe iOS */
+    min-height: 40px;
+    padding: 10px 12px;
+    font-size: 13px;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     z-index: 10;
     position: relative;
-    touch-action: manipulation; /* Îmbunătățește răspunsul la touch */
+    touch-action: manipulation;
+    flex: 1;
   }
   
-  /* Asigură că dropdown-ul se deschide corect pe mobile */
+  form#traficFilterForm {
+    width: 100%;
+    gap: 10px !important;
+  }
+  
   .year-select:active,
   .month-select:active {
     border-color: #FFEE00;
@@ -258,146 +293,275 @@
     -webkit-tap-highlight-color: rgba(255, 238, 0, 0.3);
   }
   
-  .row {
-    grid-template-columns: 1fr;
-    gap: 15px;
+  .stat-btn-main {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 11px;
+    gap: 5px;
+    min-height: 44px;
   }
   
-  .card {
-    padding: 20px;
-    margin-bottom: 15px;
+  .stat-btn-main i {
+    font-size: 12px;
   }
   
-  .card.mb-4 {
-    min-height: 350px;
-    padding: 20px;
-  }
-  
-  .card.mb-4 canvas {
-    max-height: 300px !important;
-  }
-  
-  .card h5 {
-    font-size: 14px;
-    margin-bottom: 12px;
-  }
-  
-  .card p {
-    font-size: 28px;
-  }
-  
-  .card small {
+  .stat-btn-main span {
     font-size: 11px;
   }
   
-  .sync-btn,
-  .monthly-chart-btn {
+  .sync-btn {
     width: 100%;
     min-width: auto;
-    padding: 14px 20px;
+    padding: 10px 16px;
+    font-size: 12px;
+    min-height: 44px;
+  }
+  
+  .sync-btn i,
+  .sync-btn span {
+    font-size: 12px;
+  }
+  
+  .stats-btn-link {
+    width: 100%;
+  }
+  
+  .row {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px;
+  }
+  
+  .card {
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  
+  .card.mb-4 {
+    min-height: 280px !important;
+    padding: 10px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .card.mb-4 > div[style*="position: relative"] {
+    height: 240px !important;
+    min-height: 240px !important;
+  }
+  
+  .card.mb-4 canvas {
+    max-height: 240px !important;
+    height: 240px !important;
+  }
+  
+  .card.mb-4 .card-title {
+    font-size: 12px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .card h5 {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  
+  .card p {
+    font-size: 20px;
+  }
+  
+  .card small {
+    font-size: 9px;
   }
   
   .modal-content {
     width: 95%;
-    padding: 20px;
+    padding: 15px;
     max-height: 90vh;
   }
   
   .modal h5 {
-    font-size: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .modal table {
-    font-size: 12px;
-  }
-  
-  .modal th,
-  .modal td {
-    padding: 8px;
-    font-size: 12px;
-  }
-  
-  .modal-close {
-    top: 10px;
-    right: 15px;
-    width: 30px;
-    height: 30px;
-    font-size: 24px;
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 12px;
-    padding-top: 70px;
-  }
-  
-  .container h1 {
-    font-size: 20px;
+    font-size: 16px;
     margin-bottom: 15px;
-  }
-  
-  .year-select,
-  .month-select {
-    min-height: 44px;
-    padding: 12px 15px;
-    font-size: 16px; /* Previne zoom pe iOS */
-  }
-  
-  .card {
-    padding: 15px;
-  }
-  
-  .card.mb-4 {
-    min-height: 300px;
-    padding: 15px;
-  }
-  
-  .card.mb-4 canvas {
-    max-height: 250px !important;
-  }
-  
-  .card h5 {
-    font-size: 13px;
-  }
-  
-  .card p {
-    font-size: 24px;
-  }
-  
-  .card small {
-    font-size: 10px;
-  }
-  
-  .row {
-    gap: 12px;
-  }
-  
-  .modal-content {
-    padding: 15px;
-  }
-  
-  .modal h5 {
-    font-size: 18px;
   }
   
   .modal table {
     font-size: 11px;
-    display: block;
-    overflow-x: auto;
   }
   
   .modal th,
   .modal td {
     padding: 6px;
     font-size: 11px;
+  }
+  
+  .modal-close {
+    top: 8px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+    padding-top: 70px;
+  }
+  
+  .container h1 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  
+  .trafic-header {
+    margin-bottom: 15px;
+    gap: 10px;
+  }
+  
+  .trafic-header h1 {
+    font-size: 18px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .trafic-controls {
+    gap: 8px;
+  }
+  
+  .year-selector-wrapper,
+  .month-selector-wrapper {
+    padding: 4px 6px;
+    gap: 6px;
+  }
+  
+  .year-selector-wrapper label,
+  .month-selector-wrapper label {
+    font-size: 10px !important;
+    margin-right: 4px !important;
+  }
+  
+  .year-selector-wrapper label i,
+  .month-selector-wrapper label i {
+    font-size: 9px !important;
+    margin-right: 2px !important;
+  }
+  
+  .year-select,
+  .month-select {
+    min-height: 38px;
+    padding: 8px 10px;
+    font-size: 12px;
+    flex: 1;
+  }
+  
+  form#traficFilterForm {
+    gap: 8px !important;
+  }
+  
+  .stat-btn-main {
+    padding: 8px 10px;
+    font-size: 10px;
+    gap: 4px;
+    min-height: 42px;
+  }
+  
+  .stat-btn-main i {
+    font-size: 11px;
+  }
+  
+  .stat-btn-main span {
+    font-size: 10px;
+  }
+  
+  .sync-btn {
+    padding: 8px 14px;
+    font-size: 11px;
+    min-height: 42px;
+  }
+  
+  .sync-btn i,
+  .sync-btn span {
+    font-size: 11px;
+  }
+  
+  .stats-btn-link {
+    width: 100%;
+  }
+  
+  .row {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px;
+  }
+  
+  .card {
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+  
+  .card.mb-4 {
+    min-height: 260px !important;
+    padding: 8px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .card.mb-4 > div[style*="position: relative"] {
+    height: 220px !important;
+    min-height: 220px !important;
+  }
+  
+  .card.mb-4 canvas {
+    max-height: 220px !important;
+    height: 220px !important;
+  }
+  
+  .card.mb-4 .card-title {
+    font-size: 11px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .card h5 {
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+  
+  .card p {
+    font-size: 18px;
+  }
+  
+  .card small {
+    font-size: 8px;
+  }
+  
+  .modal-content {
+    padding: 12px;
+  }
+  
+  .modal h5 {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  
+  .modal table {
+    font-size: 10px;
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .modal th,
+  .modal td {
+    padding: 5px;
+    font-size: 10px;
     white-space: nowrap;
   }
   
+  .modal-close {
+    top: 6px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    font-size: 18px;
+  }
+  
   #syncStatus {
-    padding: 15px;
-    font-size: 13px;
+    padding: 12px;
+    font-size: 12px;
   }
 }
 

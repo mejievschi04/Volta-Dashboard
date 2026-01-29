@@ -16,7 +16,19 @@ class GoogleAnalyticsService
     {
         $this->propertyId = config('google-analytics.property_id');
         $this->credentialsPath = config('google-analytics.credentials_path');
-        $this->loadCredentials();
+        
+        // Nu încărcăm credențialele în constructor pentru a evita erori fatale
+        // Vom încărca credențialele doar când sunt necesare
+    }
+    
+    /**
+     * Verifică și încarcă credențialele dacă nu sunt deja încărcate
+     */
+    private function ensureCredentialsLoaded()
+    {
+        if ($this->credentials === null) {
+            $this->loadCredentials();
+        }
     }
 
     /**
@@ -55,6 +67,8 @@ class GoogleAnalyticsService
      */
     private function getAccessToken()
     {
+        $this->ensureCredentialsLoaded();
+        
         $url = 'https://oauth2.googleapis.com/token';
 
         $jwt = $this->createJWT();
@@ -149,6 +163,8 @@ class GoogleAnalyticsService
      */
     private function createJWT()
     {
+        $this->ensureCredentialsLoaded();
+        
         $now = time();
         $exp = $now + 3600; // Expiră în 1 oră
 
@@ -188,7 +204,7 @@ class GoogleAnalyticsService
         }
 
         openssl_sign($data, $signature, $keyResource, OPENSSL_ALGO_SHA256);
-        openssl_free_key($keyResource);
+        // openssl_free_key() este deprecated în PHP 8.0+, nu mai este necesar
 
         $signatureEncoded = $this->base64UrlEncode($signature);
 

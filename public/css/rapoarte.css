@@ -178,3 +178,77 @@ td input{width:60px;padding:3px;border-radius:6px;border:1px solid rgba(255,255,
     max-height: 180px;
   }
 }
+
+/* Optimizare carduri rapoarte pe mobile */
+@media (max-width: 768px) {
+  div[style*="linear-gradient(135deg, #111827"] {
+    padding: 10px !important;
+    border-width: 1px !important;
+    min-height: auto !important;
+  }
+  
+  div[style*="linear-gradient(135deg, #111827"] div[style*="font-size: 48px"] {
+    font-size: 28px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  div[style*="linear-gradient(135deg, #111827"] h2 {
+    font-size: 14px !important;
+    margin-bottom: 4px !important;
+  }
+  
+  div[style*="linear-gradient(135deg, #111827"] p {
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+    margin: 0 !important;
+  }
+  
+  div[style*="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))"] {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  
+  div[style*="padding: 0; max-width: 1200px"] {
+    padding: 0 !important;
+  }
+  
+  div[style*="padding: 0; max-width: 1200px"] h1 {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  div[style*="linear-gradient(135deg, #111827"] {
+    padding: 8px !important;
+    border-width: 1px !important;
+    min-height: auto !important;
+  }
+  
+  div[style*="linear-gradient(135deg, #111827"] div[style*="font-size: 48px"] {
+    font-size: 24px !important;
+    margin-bottom: 4px !important;
+  }
+  
+  div[style*="linear-gradient(135deg, #111827"] h2 {
+    font-size: 12px !important;
+    margin-bottom: 3px !important;
+  }
+  
+  div[style*="linear-gradient(135deg, #111827"] p {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+  }
+  
+  div[style*="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))"] {
+    gap: 10px !important;
+  }
+  
+  div[style*="padding: 0; max-width: 1200px"] {
+    padding: 0 !important;
+  }
+  
+  div[style*="padding: 0; max-width: 1200px"] h1 {
+    display: none !important;
+  }
+}

@@ -128,6 +128,201 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ url('css/operatori.css') }}">
+<style>
+@media (max-width: 768px) {
+  div[style*="padding: 20px"] {
+    padding: 12px !important;
+    padding-top: 75px !important;
+  }
+  
+  div[style*="display: flex; justify-content: space-between"] {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  h1[style*="font-size: 32px"] {
+    font-size: 20px !important;
+    margin-bottom: 5px !important;
+  }
+  
+  p[style*="font-size: 14px"] {
+    font-size: 11px !important;
+  }
+  
+  a[style*="padding: 12px 24px"] {
+    width: 100% !important;
+    padding: 10px 16px !important;
+    font-size: 12px !important;
+    justify-content: center !important;
+  }
+  
+  a[style*="padding: 12px 24px"] i {
+    font-size: 12px !important;
+  }
+  
+  div[style*="padding: 16px"] {
+    padding: 12px !important;
+    font-size: 12px !important;
+  }
+  
+  .operator-card {
+    padding: 12px !important;
+    margin-bottom: 15px !important;
+  }
+  
+  table#usersTable {
+    font-size: 11px !important;
+    min-width: 700px !important;
+  }
+  
+  table#usersTable th {
+    padding: 10px 8px !important;
+    font-size: 10px !important;
+  }
+  
+  table#usersTable th i {
+    font-size: 10px !important;
+    margin-right: 4px !important;
+  }
+  
+  table#usersTable td {
+    padding: 10px 8px !important;
+    font-size: 11px !important;
+  }
+  
+  div[style*="width: 40px; height: 40px"] {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 14px !important;
+  }
+  
+  div[style*="font-size: 16px"] {
+    font-size: 13px !important;
+  }
+  
+  span[style*="padding: 6px 12px"] {
+    padding: 4px 8px !important;
+    font-size: 10px !important;
+  }
+  
+  span[style*="padding: 6px 12px"] i {
+    font-size: 9px !important;
+  }
+  
+  a[style*="padding: 8px 16px"],
+  button[style*="padding: 8px 16px"],
+  span[style*="padding: 8px 16px"] {
+    padding: 6px 10px !important;
+    font-size: 10px !important;
+  }
+  
+  a[style*="padding: 8px 16px"] i,
+  button[style*="padding: 8px 16px"] i {
+    font-size: 9px !important;
+  }
+  
+  div[style*="display: flex; gap: 8px"] {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+  
+  div[style*="padding: 60px 20px"] {
+    padding: 40px 15px !important;
+  }
+  
+  i[style*="font-size: 64px"] {
+    font-size: 40px !important;
+    margin-bottom: 15px !important;
+  }
+  
+  p[style*="font-size: 18px"] {
+    font-size: 14px !important;
+    margin-bottom: 15px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  div[style*="padding: 20px"] {
+    padding: 10px !important;
+    padding-top: 70px !important;
+  }
+  
+  h1[style*="font-size: 32px"] {
+    font-size: 18px !important;
+  }
+  
+  p[style*="font-size: 14px"] {
+    font-size: 10px !important;
+  }
+  
+  a[style*="padding: 12px 24px"] {
+    padding: 8px 12px !important;
+    font-size: 11px !important;
+  }
+  
+  div[style*="padding: 16px"] {
+    padding: 10px !important;
+    font-size: 11px !important;
+  }
+  
+  .operator-card {
+    padding: 10px !important;
+  }
+  
+  table#usersTable {
+    font-size: 10px !important;
+    min-width: 600px !important;
+  }
+  
+  table#usersTable th {
+    padding: 8px 6px !important;
+    font-size: 9px !important;
+  }
+  
+  table#usersTable td {
+    padding: 8px 6px !important;
+    font-size: 10px !important;
+  }
+  
+  div[style*="width: 40px; height: 40px"] {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
+  }
+  
+  div[style*="font-size: 16px"] {
+    font-size: 12px !important;
+  }
+  
+  span[style*="padding: 6px 12px"] {
+    padding: 3px 6px !important;
+    font-size: 9px !important;
+  }
+  
+  a[style*="padding: 8px 16px"],
+  button[style*="padding: 8px 16px"],
+  span[style*="padding: 8px 16px"] {
+    padding: 5px 8px !important;
+    font-size: 9px !important;
+  }
+  
+  div[style*="padding: 60px 20px"] {
+    padding: 30px 12px !important;
+  }
+  
+  i[style*="font-size: 64px"] {
+    font-size: 32px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  p[style*="font-size: 18px"] {
+    font-size: 12px !important;
+    margin-bottom: 12px !important;
+  }
+}
+</style>
 @endpush
 
 @push('scripts')

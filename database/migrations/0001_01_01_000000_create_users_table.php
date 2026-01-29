@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Folosim conexiunea default (volta_db) - nu mai specificăm conexiunea
         if (!Schema::hasTable('users')) {
             Schema::create('users', function (Blueprint $table) {
                 $table->id();
@@ -51,6 +52,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Folosim conexiunea default (volta_db) - nu mai specificăm conexiunea
         Schema::dropIfExists('sessions');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('users');

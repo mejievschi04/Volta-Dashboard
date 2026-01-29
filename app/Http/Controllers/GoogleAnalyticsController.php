@@ -28,6 +28,37 @@ class GoogleAnalyticsController extends Controller
                 'user_id' => auth()->id()
             ]);
 
+            // Verifică dacă serviciul GA este disponibil
+            try {
+                $credentialsPath = config('google-analytics.credentials_path');
+                $propertyId = config('google-analytics.property_id');
+                
+                \Log::info('GA Configuration check', [
+                    'credentials_path' => $credentialsPath,
+                    'property_id' => $propertyId,
+                    'credentials_exists' => file_exists($credentialsPath),
+                    'credentials_readable' => file_exists($credentialsPath) ? is_readable($credentialsPath) : false
+                ]);
+
+                if (empty($propertyId) || $propertyId === 'YOUR_PROPERTY_ID_HERE') {
+                    throw new \Exception("Property ID nu este configurat! Verifică config/google-analytics.php sau variabila de mediu GA_PROPERTY_ID");
+                }
+
+                if (!file_exists($credentialsPath)) {
+                    throw new \Exception("Fișierul de credențiale nu există pe server: {$credentialsPath}. Asigură-te că fișierul service-account-credentials.json este încărcat pe server.");
+                }
+
+                if (!is_readable($credentialsPath)) {
+                    throw new \Exception("Fișierul de credențiale nu poate fi citit. Verifică permisiunile pentru: {$credentialsPath}");
+                }
+            } catch (\Exception $configError) {
+                \Log::error('GA Configuration error', [
+                    'error' => $configError->getMessage(),
+                    'trace' => $configError->getTraceAsString()
+                ]);
+                throw $configError;
+            }
+
             // Determină perioada de sincronizare
             if ($request->has('start_date') && $request->has('end_date')) {
                 $startDate = $request->input('start_date');
@@ -168,7 +199,7 @@ class GoogleAnalyticsController extends Controller
                 \DB::commit();
                 
             } catch (\Exception $e) {
-                \DB::connection('trafic')->rollBack();
+                \DB::rollBack();
                 \Log::error("GA Sync transaction failed", [
                     'error' => $e->getMessage(),
                     'errors_count' => count($errors)
@@ -192,15 +223,44 @@ class GoogleAnalyticsController extends Controller
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
+                'credentials_path' => config('google-analytics.credentials_path'),
+                'property_id' => config('google-analytics.property_id'),
+                'credentials_exists' => file_exists(config('google-analytics.credentials_path')),
+                'credentials_readable' => file_exists(config('google-analytics.credentials_path')) ? is_readable(config('google-analytics.credentials_path')) : false
             ]);
 
-            return response()->json([
+            // Returnează un mesaj mai clar pentru utilizator
+            $errorMessage = $e->getMessage();
+            
+            // Adaugă informații suplimentare pentru probleme comune
+            if (strpos($errorMessage, 'Fișierul de credențiale nu există') !== false) {
+                $errorMessage .= ' Pentru a rezolva: încarcă fișierul service-account-credentials.json în storage/app/google-analytics/ pe server.';
+            } elseif (strpos($errorMessage, 'Property ID') !== false) {
+                $errorMessage .= ' Verifică fișierul .env pe server și asigură-te că GA_PROPERTY_ID este setat corect.';
+            }
+
+            // Construiește răspunsul cu detalii pentru debugging
+            $response = [
                 'success' => false,
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
+                'message' => 'Server Error',
+                'error' => $errorMessage,
+                'file' => basename($e->getFile()),
                 'line' => $e->getLine(),
-            ], 500, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            ];
+
+            // În modul de dezvoltare sau dacă APP_DEBUG este true, adaugă mai multe detalii
+            if (config('app.debug') || env('APP_DEBUG', false)) {
+                $response['debug'] = [
+                    'exception_class' => get_class($e),
+                    'trace' => array_slice($e->getTrace(), 0, 5), // Primele 5 niveluri
+                    'credentials_path' => config('google-analytics.credentials_path'),
+                    'credentials_exists' => file_exists(config('google-analytics.credentials_path')),
+                    'property_id' => config('google-analytics.property_id'),
+                ];
+            }
+
+            return response()->json($response, 500, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         }
     }
 }

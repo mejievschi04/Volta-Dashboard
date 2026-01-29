@@ -131,8 +131,8 @@ function initChart(chartId, label, color="#FFEE00") {
   const ctx = canvas.getContext("2d");
   const chartInstance = new Chart(ctx, {
     type: "line",
-    data: { labels: [], datasets: [{ label, data: [], borderColor: color, backgroundColor: `${color}33`, tension: 0.3, pointRadius: 2 }] },
-    options: { responsive: true, plugins: { legend: { display: true, labels: { color: "#fff" } } }, scales: { x: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" } }, y: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" }, beginAtZero: true } } }
+    data: { labels: [], datasets: [{ label, data: [], borderColor: color, backgroundColor: `${color}33`, tension: 0.3, pointRadius: window.innerWidth <= 768 ? 1 : 2 }] },
+    options: { responsive: true, plugins: { legend: { display: true, labels: { color: "#fff", font: { size: window.innerWidth <= 768 ? 10 : 12 } } } }, scales: { x: { ticks: { color: "#fff", font: { size: window.innerWidth <= 768 ? 9 : 11 } }, grid: { color: "rgba(255,255,0,0.05)" } }, y: { ticks: { color: "#fff", font: { size: window.innerWidth <= 768 ? 9 : 11 } }, grid: { color: "rgba(255,255,0,0.05)" }, beginAtZero: true } } }
   });
   charts[chartId] = { instance: chartInstance };
 }
@@ -205,7 +205,7 @@ async function loadVanzariTotale() {
             backgroundColor: "rgba(239, 68, 68, 0.1)",
             borderWidth: 3,
             tension: 0.3,
-            pointRadius: 5,
+            pointRadius: window.innerWidth <= 768 ? 2 : 5,
             pointBackgroundColor: "#EF4444",
             pointBorderColor: "#ffffff",
             pointBorderWidth: 2,
@@ -259,7 +259,7 @@ async function loadVanzariTotale() {
           x: {
             ticks: { 
               color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 11 : 12 },
+              font: { size: window.innerWidth <= 768 ? 9 : 12 },
               maxRotation: window.innerWidth <= 768 ? 45 : 0,
               minRotation: window.innerWidth <= 768 ? 45 : 0
             },
@@ -518,7 +518,7 @@ async function loadVanzariZilniceByLuna(luna) {
           backgroundColor: "rgba(255,238,0,0.2)", 
           fill: true, 
           tension: 0.35, 
-          pointRadius: 3, 
+            pointRadius: window.innerWidth <= 768 ? 1.5 : 3,
           pointBackgroundColor: "#ffee00" 
         }] 
       },
@@ -555,7 +555,7 @@ async function loadVanzariZilniceByLuna(luna) {
           x: { 
             ticks: { 
               color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 11 : 12 },
+              font: { size: window.innerWidth <= 768 ? 9 : 12 },
               maxRotation: window.innerWidth <= 768 ? 45 : 0,
               minRotation: window.innerWidth <= 768 ? 45 : 0
             }, 
@@ -605,7 +605,7 @@ async function loadSesiuniZilniceByLuna(luna) {
           backgroundColor: "rgba(255,238,0,0.2)", 
           fill: true, 
           tension: 0.35, 
-          pointRadius: 3, 
+            pointRadius: window.innerWidth <= 768 ? 1.5 : 3,
           pointBackgroundColor: "#ffee00" 
         }] 
       },
@@ -642,7 +642,7 @@ async function loadSesiuniZilniceByLuna(luna) {
           x: { 
             ticks: { 
               color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 11 : 12 },
+              font: { size: window.innerWidth <= 768 ? 9 : 12 },
               maxRotation: window.innerWidth <= 768 ? 45 : 0,
               minRotation: window.innerWidth <= 768 ? 45 : 0
             }, 
@@ -702,7 +702,7 @@ async function loadRaportComenziSesiuniByLuna(luna) {
             backgroundColor: "rgba(255,0,0,0.1)", 
             fill: true, 
             tension: 0.35, 
-            pointRadius: 2,
+            pointRadius: window.innerWidth <= 768 ? 1 : 2,
             yAxisID: 'y1'
           }
         ]
@@ -741,7 +741,7 @@ async function loadRaportComenziSesiuniByLuna(luna) {
           x: { 
             ticks: { 
               color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 11 : 12 },
+              font: { size: window.innerWidth <= 768 ? 9 : 12 },
               maxRotation: window.innerWidth <= 768 ? 45 : 0,
               minRotation: window.innerWidth <= 768 ? 45 : 0
             }, 
@@ -767,7 +767,7 @@ async function loadRaportComenziSesiuniByLuna(luna) {
             position: 'right',
             ticks: { 
               color: "#EF4444",
-              font: { size: window.innerWidth <= 768 ? 11 : 12 }
+              font: { size: window.innerWidth <= 768 ? 9 : 12 }
             },
             grid: { drawOnChartArea: false }
           }

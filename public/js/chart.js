@@ -50,10 +50,39 @@ function initChart(chartId, label, color="#FFD700") {
   const canvas = document.getElementById(chartId);
   if(!canvas) return;
   const ctx = canvas.getContext("2d");
+  const isMobile = window.innerWidth <= 768;
   const chartInstance = new Chart(ctx, {
     type: "line",
-    data: { labels: [], datasets: [{ label, data: [], borderColor: color, backgroundColor: `${color}33`, tension: 0.3, pointRadius: 2 }] },
-    options: { responsive: true, plugins: { legend: { display: true, labels: { color: "#fff" } } }, scales: { x: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" } }, y: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,0,0.05)" }, beginAtZero: true } } }
+    data: { labels: [], datasets: [{ label, data: [], borderColor: color, backgroundColor: `${color}33`, tension: 0.3, pointRadius: isMobile ? 1 : 2 }] },
+    options: { 
+      responsive: true, 
+      plugins: { 
+        legend: { 
+          display: true, 
+          labels: { 
+            color: "#fff",
+            font: { size: isMobile ? 10 : 12 }
+          } 
+        } 
+      }, 
+      scales: { 
+        x: { 
+          ticks: { 
+            color: "#fff",
+            font: { size: isMobile ? 9 : 11 }
+          }, 
+          grid: { color: "rgba(255,255,0,0.05)" } 
+        }, 
+        y: { 
+          ticks: { 
+            color: "#fff",
+            font: { size: isMobile ? 9 : 11 }
+          }, 
+          grid: { color: "rgba(255,255,0,0.05)" }, 
+          beginAtZero: true 
+        } 
+      } 
+    }
   });
   charts[chartId] = { instance: chartInstance };
 }
@@ -140,10 +169,10 @@ async function loadVanzariTotale() {
             backgroundColor: "rgba(255, 0, 0, 0.1)",
             borderWidth: 3,
             tension: 0.3,
-            pointRadius: 5,
+            pointRadius: window.innerWidth <= 768 ? 2 : 5,
             pointBackgroundColor: "#EF4444",
             pointBorderColor: "#ffffff",
-            pointBorderWidth: 2,
+            pointBorderWidth: window.innerWidth <= 768 ? 1 : 2,
             fill: false,
             order: 1
           },
@@ -163,17 +192,26 @@ async function loadVanzariTotale() {
         responsive: true,
         plugins: {
           legend: { 
-            labels: { color: "#fff" },
+            labels: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 10 : 12 }
+            },
             display: true
           }
         },
         scales: {
           x: {
-            ticks: { color: "#fff" },
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            },
             grid: { color: "rgba(255,255,0,0.05)" }
           },
           y: {
-            ticks: { color: "#fff" },
+            ticks: { 
+              color: "#fff",
+              font: { size: window.innerWidth <= 768 ? 9 : 11 }
+            },
             grid: { color: "rgba(255,255,0,0.05)" },
             beginAtZero: true
           }
