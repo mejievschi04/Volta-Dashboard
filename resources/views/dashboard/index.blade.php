@@ -193,12 +193,12 @@ async function loadVanzariTotale() {
             type: "line",
             label: "Plan",
             data: plan,
-            borderColor: "#ff0000",
-            backgroundColor: "rgba(255, 0, 0, 0.1)",
+            borderColor: "#EF4444",
+            backgroundColor: "rgba(239, 68, 68, 0.1)",
             borderWidth: 3,
             tension: 0.3,
             pointRadius: 5,
-            pointBackgroundColor: "#ff0000",
+            pointBackgroundColor: "#EF4444",
             pointBorderColor: "#ffffff",
             pointBorderWidth: 2,
             fill: false,
@@ -235,7 +235,7 @@ async function loadVanzariTotale() {
             position: 'top'
           },
           tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            backgroundColor: 'rgba(31, 41, 55, 0.9)',
             titleColor: '#FFEE00',
             bodyColor: '#fff',
             borderColor: '#FFEE00',
@@ -393,7 +393,7 @@ async function loadVanzariZilniceByLuna(luna) {
             position: 'top'
           },
           tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            backgroundColor: 'rgba(31, 41, 55, 0.9)',
             titleColor: '#FFEE00',
             bodyColor: '#fff',
             borderColor: '#FFEE00',
@@ -480,7 +480,7 @@ async function loadSesiuniZilniceByLuna(luna) {
             position: 'top'
           },
           tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            backgroundColor: 'rgba(31, 41, 55, 0.9)',
             titleColor: '#FFEE00',
             bodyColor: '#fff',
             borderColor: '#FFEE00',
@@ -551,7 +551,7 @@ async function loadRaportComenziSesiuniByLuna(luna) {
           { 
             label: "Conversie (%)", 
             data: data.conversie, 
-            borderColor: "#ff0000ff", 
+            borderColor: "#EF4444", 
             backgroundColor: "rgba(255,0,0,0.1)", 
             fill: true, 
             tension: 0.35, 
@@ -578,7 +578,7 @@ async function loadRaportComenziSesiuniByLuna(luna) {
             position: 'top'
           },
           tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            backgroundColor: 'rgba(31, 41, 55, 0.9)',
             titleColor: '#FFEE00',
             bodyColor: '#fff',
             borderColor: '#FFEE00',
@@ -619,7 +619,7 @@ async function loadRaportComenziSesiuniByLuna(luna) {
             display: true,
             position: 'right',
             ticks: { 
-              color: "#ff0000",
+              color: "#EF4444",
               font: { size: window.innerWidth <= 768 ? 11 : 12 }
             },
             grid: { drawOnChartArea: false }
@@ -644,82 +644,95 @@ async function openVanzariDetaliiModal(luna) {
     
     const modal = document.createElement('div');
     modal.id = 'vanzariDetaliiModal';
+    const isMobile = window.innerWidth <= 768;
     modal.style.cssText = `
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(17, 24, 39, 0.9);
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: ${isMobile ? 'flex-start' : 'center'};
       z-index: 10000;
-      padding: 20px;
+      padding: ${isMobile ? '10px' : '20px'};
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     `;
     
     const modalContent = document.createElement('div');
     modalContent.style.cssText = `
-      background: #2B2B2B;
-      border-radius: 12px;
-      padding: 30px;
-      max-width: 900px;
+      background: #111827;
+      border-radius: ${isMobile ? '16px' : '12px'};
+      padding: ${isMobile ? '20px 16px' : '30px'};
+      max-width: ${isMobile ? '100%' : '900px'};
       width: 100%;
-      max-height: 90vh;
+      max-height: ${isMobile ? '95vh' : '90vh'};
       overflow-y: auto;
       color: #fff;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      margin-top: ${isMobile ? '10px' : '0'};
     `;
     
     const monthName = new Date(luna + '-01').toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
     
+    const gridCols = isMobile ? '1fr' : 'repeat(3, 1fr)';
+    const cardPadding = isMobile ? '16px' : '20px';
+    const titleSize = isMobile ? '18px' : '24px';
+    const valueSize = isMobile ? '20px' : '24px';
+    const headerFlex = isMobile ? 'column' : 'row';
+    const headerGap = isMobile ? '12px' : '0';
+    
     modalContent.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2 style="margin: 0; color: #ffee00;">Detalii Vânzări - ${monthName}</h2>
+      <div style="display: flex; flex-direction: ${headerFlex}; justify-content: space-between; align-items: ${isMobile ? 'flex-start' : 'center'}; gap: ${headerGap}; margin-bottom: ${isMobile ? '16px' : '20px'};">
+        <h2 style="margin: 0; color: #ffee00; font-size: ${titleSize}; line-height: 1.3;">Detalii Vânzări - ${monthName}</h2>
         <button id="closeModal" style="
-          background: #ff4444;
+          background: #EF4444;
           color: white;
           border: none;
-          padding: 10px 20px;
+          padding: ${isMobile ? '10px 16px' : '10px 20px'};
           border-radius: 8px;
           cursor: pointer;
-          font-size: 16px;
+          font-size: ${isMobile ? '14px' : '16px'};
           font-weight: 600;
-        ">✕ Închide</button>
+          min-width: ${isMobile ? 'auto' : '100px'};
+          align-self: ${isMobile ? 'flex-end' : 'auto'};
+        ">✕ ${isMobile ? '' : 'Închide'}</button>
       </div>
       
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
-        <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; text-align: center;">
-          <div style="color: #888; font-size: 14px; margin-bottom: 8px;">Total fără TVA</div>
-          <div style="color: #ffee00; font-size: 24px; font-weight: 700;">${formatNumber(data.total_fara_tva)} MDL</div>
+      <div style="display: grid; grid-template-columns: ${gridCols}; gap: ${isMobile ? '12px' : '15px'}; margin-bottom: ${isMobile ? '20px' : '25px'};">
+        <div style="background: #1F2937; padding: ${cardPadding}; border-radius: 8px; text-align: center;">
+          <div style="color: #9CA3AF; font-size: ${isMobile ? '12px' : '14px'}; margin-bottom: ${isMobile ? '6px' : '8px'};">Total fără TVA</div>
+          <div style="color: #ffee00; font-size: ${valueSize}; font-weight: 700; word-break: break-word;">${formatNumber(data.total_fara_tva)} MDL</div>
         </div>
-        <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; text-align: center;">
-          <div style="color: #888; font-size: 14px; margin-bottom: 8px;">Total cu TVA</div>
-          <div style="color: #ffee00; font-size: 24px; font-weight: 700;">${formatNumber(data.total_cu_tva)} MDL</div>
+        <div style="background: #1F2937; padding: ${cardPadding}; border-radius: 8px; text-align: center;">
+          <div style="color: #9CA3AF; font-size: ${isMobile ? '12px' : '14px'}; margin-bottom: ${isMobile ? '6px' : '8px'};">Total cu TVA</div>
+          <div style="color: #ffee00; font-size: ${valueSize}; font-weight: 700; word-break: break-word;">${formatNumber(data.total_cu_tva)} MDL</div>
         </div>
-        <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; text-align: center;">
-          <div style="color: #888; font-size: 14px; margin-bottom: 8px;">Total Profit</div>
-          <div style="color: #ffee00; font-size: 24px; font-weight: 700;">${formatNumber(data.total_profit)} MDL</div>
+        <div style="background: #1F2937; padding: ${cardPadding}; border-radius: 8px; text-align: center;">
+          <div style="color: #9CA3AF; font-size: ${isMobile ? '12px' : '14px'}; margin-bottom: ${isMobile ? '6px' : '8px'};">Total Profit</div>
+          <div style="color: #ffee00; font-size: ${valueSize}; font-weight: 700; word-break: break-word;">${formatNumber(data.total_profit)} MDL</div>
         </div>
       </div>
       
-      <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse;">
+      <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+        <table style="width: 100%; border-collapse: collapse; min-width: ${isMobile ? '600px' : 'auto'};">
           <thead>
-            <tr style="background: #2a2a2a;">
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ffee00;">Data</th>
-              <th style="padding: 12px; text-align: right; border-bottom: 2px solid #ffee00;">Fără TVA</th>
-              <th style="padding: 12px; text-align: right; border-bottom: 2px solid #ffee00;">Cu TVA</th>
-              <th style="padding: 12px; text-align: right; border-bottom: 2px solid #ffee00;">Profit</th>
+            <tr style="background: #1F2937;">
+              <th style="padding: ${isMobile ? '10px 8px' : '12px'}; text-align: left; border-bottom: 2px solid #ffee00; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">Data</th>
+              <th style="padding: ${isMobile ? '10px 8px' : '12px'}; text-align: right; border-bottom: 2px solid #ffee00; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">Fără TVA</th>
+              <th style="padding: ${isMobile ? '10px 8px' : '12px'}; text-align: right; border-bottom: 2px solid #ffee00; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">Cu TVA</th>
+              <th style="padding: ${isMobile ? '10px 8px' : '12px'}; text-align: right; border-bottom: 2px solid #ffee00; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">Profit</th>
             </tr>
           </thead>
           <tbody>
             ${data.data.map(row => `
-              <tr style="border-bottom: 1px solid #333;">
-                <td style="padding: 10px;">${row.data}</td>
-                <td style="padding: 10px; text-align: right;">${formatNumber(row.fara_tva)} MDL</td>
-                <td style="padding: 10px; text-align: right;">${formatNumber(row.cu_tva)} MDL</td>
-                <td style="padding: 10px; text-align: right; color: #ffee00;">${formatNumber(row.profit)} MDL</td>
+              <tr style="border-bottom: 1px solid #9CA3AF;">
+                <td style="padding: ${isMobile ? '10px 8px' : '10px'}; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">${row.data}</td>
+                <td style="padding: ${isMobile ? '10px 8px' : '10px'}; text-align: right; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">${formatNumber(row.fara_tva)} MDL</td>
+                <td style="padding: ${isMobile ? '10px 8px' : '10px'}; text-align: right; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">${formatNumber(row.cu_tva)} MDL</td>
+                <td style="padding: ${isMobile ? '10px 8px' : '10px'}; text-align: right; color: #ffee00; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">${formatNumber(row.profit)} MDL</td>
               </tr>
             `).join('')}
           </tbody>

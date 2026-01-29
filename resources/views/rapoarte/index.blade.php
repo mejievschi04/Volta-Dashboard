@@ -11,7 +11,7 @@
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
     <a href="{{ route('rapoarte.comparare') }}" style="text-decoration: none;">
       <div style="
-        background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        background: linear-gradient(135deg, #111827 0%, #1F2937 100%);
         border: 2px solid #ffee00;
         border-radius: 12px;
         padding: 30px;
@@ -34,15 +34,15 @@
     
     <a href="{{ route('istoric') }}" style="text-decoration: none;">
       <div style="
-        background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-        border: 2px solid #333;
+        background: linear-gradient(135deg, #111827 0%, #1F2937 100%);
+        border: 2px solid #9CA3AF;
         border-radius: 12px;
         padding: 30px;
         transition: all 0.3s ease;
         cursor: pointer;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       " onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#ffee00'; this.style.boxShadow='0 8px 30px rgba(255, 238, 0, 0.2)';" 
-         onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='#333'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.3)';">
+         onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='#9CA3AF'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.3)';">
         <div style="color: #888; font-size: 48px; margin-bottom: 15px; text-align: center;">
           <i class="fas fa-history"></i>
         </div>

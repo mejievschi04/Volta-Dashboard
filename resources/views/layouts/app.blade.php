@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Dashboard – VOLTA')</title>
+  <link rel="icon" type="image/png" href="{{ asset('images/volta-logo.png') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -65,20 +66,28 @@
 
     <!-- MAIN -->
     <section class="main">
-      <!-- Hamburger button pentru mobile -->
-      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
-        <span class="bar"></span>
-      </button>
+      <!-- Top bar fixă pentru mobile -->
+      <div class="top-bar" id="topBar">
+        <div class="top-bar-content">
+          <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+            <span class="bar"></span>
+          </button>
+          <div class="top-bar-brand">
+            <img src="{{ asset('images/volta-logo.png') }}" alt="VOLTA Logo" class="top-bar-logo">
+            <h2 class="top-bar-title">VOLTA Dashboard</h2>
+          </div>
+        </div>
+      </div>
 
       <!-- TOPBAR - doar pe pagina home -->
       @if(request()->routeIs('dashboard'))
       <div class="header">
         <h1>@yield('header-title', 'Dashboard')</h1>
         <div class="user-menu">
-          <div class="notifications">
-            <i class="fas fa-bell fa-lg"></i>
-            <span class="badge">1</span>
-          </div>
+          <button type="button" class="sync-btn" id="syncBtn" title="Sincronizare vânzări 1C">
+            <i class="fas fa-sync-alt fa-lg"></i>
+            <span class="sync-text">Sincronizare</span>
+          </button>
           <div class="user-info">
             <div class="name">{{ Auth::check() ? Auth::user()->username : 'User' }}</div>
             <div class="role">{{ Auth::check() ? (Auth::user()->role ?? 'User') : 'User' }}</div>
@@ -180,6 +189,27 @@
           hamburgerBtn: !!hamburgerBtn,
           sidebar: !!sidebar,
           overlay: !!overlay
+        });
+      }
+    });
+
+    // Buton sincronizare 1C - pregătit pentru funcționalitate viitoare
+    document.addEventListener('DOMContentLoaded', function() {
+      const syncBtn = document.getElementById('syncBtn');
+      if (syncBtn) {
+        syncBtn.addEventListener('click', function() {
+          // Funcționalitatea de sincronizare va fi implementată aici
+          console.log('Sincronizare 1C - funcționalitate în dezvoltare');
+          
+          // Pregătit pentru animație de sincronizare
+          syncBtn.classList.add('syncing');
+          syncBtn.disabled = true;
+          
+          // Simulare - va fi înlocuită cu API call real
+          setTimeout(() => {
+            syncBtn.classList.remove('syncing');
+            syncBtn.disabled = false;
+          }, 2000);
         });
       }
     });

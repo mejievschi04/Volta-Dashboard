@@ -13,14 +13,14 @@
 </script>
 <div style="padding: 20px; max-width: 1200px; margin: 0 auto;">
   @if(session('success'))
-  <div style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); color: #fff; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 12px rgba(74, 222, 128, 0.3);">
+  <div style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%); color: #fff; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
     <i class="fas fa-check-circle" style="font-size: 20px;"></i>
     <span style="font-weight: 600;">{{ session('success') }}</span>
   </div>
   @endif
   
   @if(session('error'))
-  <div style="background: linear-gradient(135deg, #f87171 0%, #ef4444 100%); color: #fff; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 12px rgba(248, 113, 113, 0.3);">
+  <div style="background: linear-gradient(135deg, #F87171 0%, #EF4444 100%); color: #fff; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);">
     <i class="fas fa-exclamation-circle" style="font-size: 20px;"></i>
     <span style="font-weight: 600;">{{ session('error') }}</span>
   </div>
@@ -36,7 +36,7 @@
   <div style="background: linear-gradient(135deg, rgba(255, 238, 0, 0.3) 0%, rgba(255, 238, 0, 0.2) 50%, rgba(255, 238, 0, 0.1) 100%); background-color: var(--bg-soft); border-radius: 16px 16px 0 0; height: 320px; position: relative; margin-bottom: 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
     <div style="position: absolute; bottom: -80px; left: 40px; display: flex; align-items: flex-end; gap: 20px;">
       <!-- Avatar -->
-      <div style="width: 160px; height: 160px; border-radius: 50%; background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); background-color: var(--bg-soft); display: flex; align-items: center; justify-content: center; font-size: 64px; font-weight: 700; color: #000; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); border: 6px solid #2B2B2B; position: relative;">
+      <div style="width: 160px; height: 160px; border-radius: 50%; background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); background-color: var(--bg-soft); display: flex; align-items: center; justify-content: center; font-size: 64px; font-weight: 700; color: #000; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); border: 6px solid #111827; position: relative;">
         {{ strtoupper(substr($operator->nume, 0, 1)) }}
       </div>
       <!-- Name & Status -->
@@ -74,7 +74,7 @@
         $vanzariLunaCurentaProfit = $vanzariLunaCurenta->sum('profit');
         $vanzariLunaCurentaCount = $vanzariLunaCurenta->count();
       @endphp
-      <div style="background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
         <h3 style="color: #fff; margin: 0 0 20px 0; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
           <i class="fas fa-calendar-check" style="color: #3b82f6;"></i>Luna Curentă
         </h3>
@@ -84,18 +84,18 @@
               <i class="fas fa-shopping-cart" style="color: #3b82f6;"></i>
             </div>
             <div style="flex: 1;">
-              <div style="color: #B3B3B3; font-size: 12px; margin-bottom: 4px;">Vânzări (fără TVA)</div>
+              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Vânzări (fără TVA)</div>
               <div style="color: #fff; font-size: 16px; font-weight: 700;">{{ number_format($vanzariLunaCurentaSuma, 2, ',', '.') }} LEI</div>
             </div>
           </div>
           
           <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(74, 222, 128, 0.1); border-radius: 10px; border: 1px solid rgba(74, 222, 128, 0.2);">
             <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(74, 222, 128, 0.2); display: flex; align-items: center; justify-content: center;">
-              <i class="fas fa-trophy" style="color: #4ade80;"></i>
+              <i class="fas fa-trophy" style="color: #10B981;"></i>
             </div>
             <div style="flex: 1;">
-              <div style="color: #B3B3B3; font-size: 12px; margin-bottom: 4px;">Profit</div>
-              <div style="color: #4ade80; font-size: 16px; font-weight: 700;">{{ number_format($vanzariLunaCurentaProfit, 2, ',', '.') }} LEI</div>
+              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Profit</div>
+              <div style="color: #10B981; font-size: 16px; font-weight: 700;">{{ number_format($vanzariLunaCurentaProfit, 2, ',', '.') }} LEI</div>
             </div>
           </div>
           
@@ -104,7 +104,7 @@
               <i class="fas fa-list" style="color: #FFEE00;"></i>
             </div>
             <div style="flex: 1;">
-              <div style="color: #B3B3B3; font-size: 12px; margin-bottom: 4px;">Comenzi</div>
+              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Comenzi</div>
               <div style="color: #fff; font-size: 16px; font-weight: 700;">{{ $vanzariLunaCurentaCount }}</div>
             </div>
           </div>
@@ -112,10 +112,10 @@
           @if($vanzariLunaCurentaCount > 0)
           <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(255, 255, 255, 0.03); border-radius: 10px;">
             <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(168, 85, 247, 0.2); display: flex; align-items: center; justify-content: center;">
-              <i class="fas fa-calculator" style="color: #a855f7;"></i>
+              <i class="fas fa-calculator" style="color: #8B5CF6;"></i>
             </div>
             <div style="flex: 1;">
-              <div style="color: #B3B3B3; font-size: 12px; margin-bottom: 4px;">Medie/Comandă</div>
+              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Medie/Comandă</div>
               <div style="color: #fff; font-size: 14px; font-weight: 500;">{{ number_format($vanzariLunaCurentaSuma / $vanzariLunaCurentaCount, 2, ',', '.') }} LEI</div>
             </div>
           </div>
@@ -125,11 +125,11 @@
 
       @if($operator->observatii)
       <!-- Notes Card -->
-      <div style="background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
         <h3 style="color: #fff; margin: 0 0 16px 0; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
           <i class="fas fa-sticky-note" style="color: #FFEE00;"></i>Observații
         </h3>
-        <p style="color: #d1d5db; font-size: 14px; line-height: 1.6; margin: 0;">{{ $operator->observatii }}</p>
+        <p style="color: #9CA3AF; font-size: 14px; line-height: 1.6; margin: 0;">{{ $operator->observatii }}</p>
       </div>
       @endif
     </div>
@@ -139,7 +139,7 @@
       
       <!-- Sales Stats Card -->
       @if(isset($vanzariStats))
-      <div style="background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
           <h2 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px;">
             <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); display: flex; align-items: center; justify-content: center;">
@@ -150,37 +150,37 @@
         </div>
         <div class="kpi-cards-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
           <div class="kpi-card" style="background: rgba(59, 130, 246, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2); text-align: center;">
-            <div class="kpi-label" style="color: #B3B3B3; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+            <div class="kpi-label" style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
               <i class="fas fa-shopping-cart" style="margin-right: 6px;"></i>Total Vânzări
             </div>
             <div class="kpi-value" style="color: #fff; font-size: 28px; font-weight: 800;">{{ $vanzariStats['total_vanzari'] }}</div>
           </div>
           <div class="kpi-card" style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
-            <div class="kpi-label" style="color: #B3B3B3; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+            <div class="kpi-label" style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
               <i class="fas fa-money-bill-wave" style="margin-right: 6px;"></i>Suma (fără TVA)
             </div>
             <div class="kpi-value" style="color: #fff; font-size: 22px; font-weight: 700;">{{ number_format($vanzariStats['total_suma_fara_tva'], 2, ',', '.') }} LEI</div>
           </div>
           <div class="kpi-card" style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
-            <div class="kpi-label" style="color: #B3B3B3; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+            <div class="kpi-label" style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
               <i class="fas fa-receipt" style="margin-right: 6px;"></i>Suma (cu TVA)
             </div>
             <div class="kpi-value" style="color: #fff; font-size: 22px; font-weight: 700;">{{ number_format($vanzariStats['total_suma_cu_tva'], 2, ',', '.') }} LEI</div>
           </div>
           <div class="kpi-card" style="background: rgba(74, 222, 128, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(74, 222, 128, 0.2); text-align: center;">
-            <div class="kpi-label" style="color: #B3B3B3; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+            <div class="kpi-label" style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
               <i class="fas fa-trophy" style="margin-right: 6px;"></i>Total Profit
             </div>
-            <div class="kpi-value" style="color: #4ade80; font-size: 28px; font-weight: 800;">{{ number_format($vanzariStats['total_profit'], 2, ',', '.') }} LEI</div>
+            <div class="kpi-value" style="color: #10B981; font-size: 28px; font-weight: 800;">{{ number_format($vanzariStats['total_profit'], 2, ',', '.') }} LEI</div>
           </div>
           <div class="kpi-card" style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
-            <div class="kpi-label" style="color: #B3B3B3; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+            <div class="kpi-label" style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
               <i class="fas fa-list" style="margin-right: 6px;"></i>Număr Vânzări
             </div>
             <div class="kpi-value" style="color: #fff; font-size: 28px; font-weight: 800;">{{ $vanzariStats['total_nr_vanzari'] }}</div>
           </div>
           <div class="kpi-card" style="background: rgba(255, 238, 0, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(255, 238, 0, 0.2); text-align: center;">
-            <div class="kpi-label" style="color: #B3B3B3; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+            <div class="kpi-label" style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
               <i class="fas fa-calendar-alt" style="margin-right: 6px;"></i>Medie/Lună
             </div>
             <div class="kpi-value" style="color: #FFEE00; font-size: 22px; font-weight: 700;">{{ number_format($vanzariStats['medie_vanzari_luna'], 2, ',', '.') }} LEI</div>
@@ -191,7 +191,7 @@
 
       <!-- Sales Chart (fără TVA) -->
       @if(isset($vanzariLunare) && $vanzariLunare->count() > 0)
-      <div style="background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
           <h2 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px;">
             <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); display: flex; align-items: center; justify-content: center;">
@@ -208,7 +208,7 @@
 
       <!-- Monthly Sales Table -->
       @if(isset($vanzariLunare) && $vanzariLunare->count() > 0)
-      <div style="background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
           <h2 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px;">
             <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); display: flex; align-items: center; justify-content: center;">
@@ -234,7 +234,7 @@
                 <td class="row-text" style="padding: 16px; color: #fff; font-weight: 600;">{{ $luna->luna_label }}</td>
                 <td class="row-text" style="padding: 16px; text-align: center; color: #fff;">{{ $luna->comenzi }}</td>
                 <td class="row-text" style="padding: 16px; text-align: center; color: #fff; font-weight: 600;">{{ number_format($luna->vanzari_luna, 2, ',', '.') }} LEI</td>
-                <td style="padding: 16px; text-align: center; color: #4ade80; font-weight: 700; font-size: 16px;">{{ number_format($luna->profit, 2, ',', '.') }} LEI</td>
+                <td style="padding: 16px; text-align: center; color: #10B981; font-weight: 700; font-size: 16px;">{{ number_format($luna->profit, 2, ',', '.') }} LEI</td>
                 <td class="row-text" style="padding: 16px; text-align: center; color: #fff;">{{ $luna->nr_vanzari }}</td>
               </tr>
               @endforeach
@@ -246,7 +246,7 @@
 
       <!-- Tabel Vânzări pe Luni (cu posibilitate de editare) -->
       @if(isset($vanzariLunare))
-      <div style="background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
           <h2 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px;">
             <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); display: flex; align-items: center; justify-content: center;">
@@ -285,7 +285,7 @@
                 <td class="row-text" style="padding: 16px; color: #fff; font-weight: 600;">{{ $luna->luna_label }}</td>
                 <td class="row-text" style="padding: 16px; text-align: center; color: #fff;">{{ $luna->comenzi }}</td>
                 <td class="row-text" style="padding: 16px; text-align: center; color: #fff; font-weight: 600;">{{ number_format($luna->vanzari_luna, 2, ',', '.') }} LEI</td>
-                <td style="padding: 16px; text-align: center; color: #4ade80; font-weight: 700; font-size: 16px;">{{ number_format($luna->profit, 2, ',', '.') }} LEI</td>
+                <td style="padding: 16px; text-align: center; color: #10B981; font-weight: 700; font-size: 16px;">{{ number_format($luna->profit, 2, ',', '.') }} LEI</td>
                 <td class="row-text" style="padding: 16px; text-align: center; color: #fff;">{{ $luna->nr_vanzari }}</td>
                 @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
                 <td style="padding: 16px; text-align: center;">
@@ -293,7 +293,7 @@
                     <button onclick="openVanzareModal('{{ $luna->luna }}')" style="background: rgba(59, 130, 246, 0.2); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; transition: all 0.2s;" onmouseover="this.style.background='rgba(59, 130, 246, 0.3)'" onmouseout="this.style.background='rgba(59, 130, 246, 0.2)'">
                       <i class="fas fa-edit"></i>
                     </button>
-                    <button onclick="deleteVanzareLuna('{{ $luna->luna }}')" style="background: rgba(248, 113, 113, 0.2); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.3); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; transition: all 0.2s;" onmouseover="this.style.background='rgba(248, 113, 113, 0.3)'" onmouseout="this.style.background='rgba(248, 113, 113, 0.2)'">
+                    <button onclick="deleteVanzareLuna('{{ $luna->luna }}')" style="background: rgba(239, 68, 68, 0.2); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.3)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.2)'">
                       <i class="fas fa-trash"></i>
                     </button>
                   </div>
@@ -302,7 +302,7 @@
               </tr>
               @empty
               <tr>
-                <td colspan="{{ auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator') ? '6' : '5' }}" style="padding: 40px; text-align: center; color: #B3B3B3;">
+                <td colspan="{{ auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator') ? '6' : '5' }}" style="padding: 40px; text-align: center; color: #9CA3AF;">
                   <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5; display: block;"></i>
                   Nu există vânzări înregistrate
                 </td>
@@ -321,7 +321,7 @@
 <!-- Modal pentru Adăugare/Editare Vânzare -->
 @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
 <div id="vanzareModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 10000; align-items: center; justify-content: center;">
-  <div style="background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%); border-radius: 16px; padding: 32px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); position: relative;">
+  <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 32px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); position: relative;">
     <button onclick="closeVanzareModal()" style="position: absolute; top: 16px; right: 16px; background: rgba(255, 255, 255, 0.1); color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'">
       <i class="fas fa-times"></i>
     </button>

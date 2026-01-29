@@ -26,7 +26,7 @@
 }
 
 .stat-btn {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(31, 41, 55, 0.4);
   color: #FFEE00;
   border: 2px solid rgba(255, 238, 0, 0.3);
   padding: 25px 20px;
@@ -79,7 +79,7 @@
 }
 
 .stats-general-card {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%);
+  background: linear-gradient(135deg, rgba(31, 41, 55, 0.8) 0%, rgba(31, 41, 55, 0.9) 100%);
   border-radius: 16px;
   padding: 30px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 238, 0, 0.1);
@@ -103,7 +103,7 @@
   position: relative;
   height: 550px;
   margin-top: 20px;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(10, 10, 10, 0.6) 100%);
+  background: linear-gradient(135deg, rgba(31, 41, 55, 0.4) 0%, rgba(31, 41, 55, 0.6) 100%);
   border-radius: 12px;
   padding: 20px;
   border: 1px solid rgba(255, 238, 0, 0.1);
@@ -170,7 +170,7 @@
 }
 
 .stat-item {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(31, 41, 55, 0.4);
   padding: 25px;
   border-radius: 12px;
   border-left: 4px solid #FFEE00;
@@ -178,13 +178,13 @@
 }
 
 .stat-item:hover {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(31, 41, 55, 0.6);
   transform: translateY(-3px);
   box-shadow: 0 5px 15px rgba(255, 238, 0, 0.2);
 }
 
 .stat-item h4 {
-  color: #999;
+  color: #9CA3AF;
   font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
@@ -202,7 +202,7 @@
 }
 
 .stat-item .change {
-  color: #999;
+  color: #9CA3AF;
   font-size: 12px;
   margin-top: 8px;
 }
@@ -217,7 +217,7 @@
   margin-bottom: 20px;
   padding: 8px 15px;
   border-radius: 8px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(31, 41, 55, 0.3);
   border: 1px solid rgba(255, 238, 0, 0.2);
   transition: all 0.3s ease;
 }
@@ -231,7 +231,7 @@
 .loading {
   text-align: center;
   padding: 40px;
-  color: #999;
+  color: #9CA3AF;
 }
 
 .loading i {
@@ -397,7 +397,7 @@
       <h3>
         <i class="fas fa-chart-pie"></i>
         Statistici Generale
-        <span id="statsPeriodLabel" style="font-size: 20px; color: #999; font-weight: 600; margin-left: 10px;"></span>
+        <span id="statsPeriodLabel" style="font-size: 20px; color: #9CA3AF; font-weight: 600; margin-left: 10px;"></span>
       </h3>
       <div class="chart-wrapper-modern">
         <canvas id="statsChart"></canvas>
@@ -507,34 +507,34 @@ function displayStats(data) {
       shadow: '0 0 15px rgba(255, 238, 0, 0.4)'
     },
     'google': { 
-      border: '#4CAF50', 
-      background: 'linear-gradient(180deg, rgba(76, 175, 80, 0.25) 0%, rgba(76, 175, 80, 0.05) 100%)',
-      glow: 'rgba(76, 175, 80, 0.5)',
-      shadow: '0 0 12px rgba(76, 175, 80, 0.3)'
+      border: '#10B981', 
+      background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.05) 100%)',
+      glow: 'rgba(16, 185, 129, 0.5)',
+      shadow: '0 0 12px rgba(16, 185, 129, 0.3)'
     },
     'google_cpc': { 
-      border: '#9C27B0', 
-      background: 'linear-gradient(180deg, rgba(156, 39, 176, 0.25) 0%, rgba(156, 39, 176, 0.05) 100%)',
-      glow: 'rgba(156, 39, 176, 0.5)',
-      shadow: '0 0 12px rgba(156, 39, 176, 0.3)'
+      border: '#8B5CF6', 
+      background: 'linear-gradient(180deg, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0.05) 100%)',
+      glow: 'rgba(139, 92, 246, 0.5)',
+      shadow: '0 0 12px rgba(139, 92, 246, 0.3)'
     },
     'direct': { 
-      border: '#2196F3', 
-      background: 'linear-gradient(180deg, rgba(33, 150, 243, 0.25) 0%, rgba(33, 150, 243, 0.05) 100%)',
-      glow: 'rgba(33, 150, 243, 0.5)',
-      shadow: '0 0 12px rgba(33, 150, 243, 0.3)'
+      border: '#3B82F6', 
+      background: 'linear-gradient(180deg, rgba(59, 130, 246, 0.25) 0%, rgba(59, 130, 246, 0.05) 100%)',
+      glow: 'rgba(59, 130, 246, 0.5)',
+      shadow: '0 0 12px rgba(59, 130, 246, 0.3)'
     },
     'yandex': { 
-      border: '#F44336', 
-      background: 'linear-gradient(180deg, rgba(244, 67, 54, 0.25) 0%, rgba(244, 67, 54, 0.05) 100%)',
-      glow: 'rgba(244, 67, 54, 0.5)',
-      shadow: '0 0 12px rgba(244, 67, 54, 0.3)'
+      border: '#EF4444', 
+      background: 'linear-gradient(180deg, rgba(239, 68, 68, 0.25) 0%, rgba(239, 68, 68, 0.05) 100%)',
+      glow: 'rgba(239, 68, 68, 0.5)',
+      shadow: '0 0 12px rgba(239, 68, 68, 0.3)'
     },
     'other': { 
-      border: '#00BCD4', 
-      background: 'linear-gradient(180deg, rgba(0, 188, 212, 0.25) 0%, rgba(0, 188, 212, 0.05) 100%)',
-      glow: 'rgba(0, 188, 212, 0.5)',
-      shadow: '0 0 12px rgba(0, 188, 212, 0.3)'
+      border: '#06B6D4', 
+      background: 'linear-gradient(180deg, rgba(6, 182, 212, 0.25) 0%, rgba(6, 182, 212, 0.05) 100%)',
+      glow: 'rgba(6, 182, 212, 0.5)',
+      shadow: '0 0 12px rgba(6, 182, 212, 0.3)'
     }
   };
   
@@ -653,7 +653,7 @@ function displayStats(data) {
         },
         tooltip: {
           enabled: true,
-          backgroundColor: 'rgba(0, 0, 0, 0.95)',
+          backgroundColor: 'rgba(31, 41, 55, 0.95)',
           titleColor: '#FFEE00',
           titleFont: {
             size: 15,
@@ -732,7 +732,7 @@ function displayStats(data) {
             callback: function(value) {
               return formatNumber(value);
             },
-            backdropColor: 'rgba(0, 0, 0, 0.8)',
+            backdropColor: 'rgba(31, 41, 55, 0.8)',
             backdropPadding: 4
           },
           grid: {
@@ -770,7 +770,7 @@ function displayStats(data) {
             padding: 10,
             maxRotation: window.innerWidth <= 768 ? 45 : 30,
             minRotation: window.innerWidth <= 768 ? 45 : 0,
-            backdropColor: 'rgba(0, 0, 0, 0.8)',
+            backdropColor: 'rgba(31, 41, 55, 0.8)',
             backdropPadding: 4
           },
           grid: {

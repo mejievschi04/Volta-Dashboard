@@ -13,7 +13,7 @@
   <h1 style="color: #fff; margin-bottom: 20px;">Adaugă Operator Nou</h1>
 
   @if($errors->any())
-  <div style="background: #f87171; color: #fff; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+  <div style="background: #F87171; color: #fff; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
     <ul style="margin: 0; padding-left: 20px;">
       @foreach($errors->all() as $error)
       <li>{{ $error }}</li>
@@ -31,13 +31,13 @@
           <label style="display: block; color: #FFEE00; margin-bottom: 5px; font-weight: 600;">Nume și Prenume *</label>
           <input type="text" name="nume" value="{{ old('nume') }}" required 
                  placeholder="Ex: Ion Popescu"
-                 style="width: 100%; padding: 10px; border: 1px solid #333; border-radius: 8px; background: #1f2937; color: #fff;">
+                 style="width: 100%; padding: 10px; border: 1px solid #9CA3AF; border-radius: 8px; background: #1F2937; color: #fff;">
         </div>
 
         <div>
           <label style="display: block; color: #FFEE00; margin-bottom: 5px; font-weight: 600;">Data Angajare *</label>
           <input type="date" name="data_angajare" value="{{ old('data_angajare') }}" required
-                 style="width: 100%; padding: 10px; border: 1px solid #333; border-radius: 8px; background: #1f2937; color: #fff;">
+                 style="width: 100%; padding: 10px; border: 1px solid #9CA3AF; border-radius: 8px; background: #1F2937; color: #fff;">
         </div>
       </div>
 
@@ -47,7 +47,7 @@
           Salvează Operator
         </button>
         <a href="{{ route('operatori') }}" 
-           style="background: #333; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">
+           style="background: #111827; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">
           Anulează
         </a>
       </div>

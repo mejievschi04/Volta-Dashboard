@@ -1,15 +1,15 @@
 :root {
   /* Background colors - WCAG compliant */
-  --bg: #2B2B2B;           /* fundal principal */
-  --bg-soft: #2B2B2B;      /* panouri */
-  --bg-card: #2B2B2B;      /* carduri */
+  --bg: #111827;           /* fundal principal - Dark Navy */
+  --bg-soft: #111827;      /* panouri - Dark Navy */
+  --bg-card: #1F2937;      /* carduri - Slate dark */
   
   /* Text colors - WCAG AA compliant (4.5:1 contrast ratio) */
   --ink: #FFFFFF;          /* text alb - contrast 21:1 pe negru */
   --text: #FFFFFF;         /* text color variable */
-  --ink-secondary: #E5E5E5; /* text secundar - contrast 15.8:1 pe negru */
-  --muted: #B3B3B3;        /* text muted - contrast 10.2:1 pe negru (min 4.5:1) */
-  --muted-light: #CCCCCC;  /* text muted light - contrast 12.6:1 */
+  --ink-secondary: #9CA3AF; /* text secundar - Gray medium */
+  --muted: #9CA3AF;        /* text muted - Gray medium */
+  --muted-light: #9CA3AF;  /* text muted light - Gray medium */
   
   /* Brand colors - WCAG compliant */
   --brand: #FFEE00;        /* accent galben */
@@ -22,20 +22,20 @@
   --brand-30: rgba(255,238,0,.3);
   
   /* Success, Error, Warning, Info - WCAG compliant */
-  --success: #4CAF50;      /* verde - contrast 4.5:1 pe negru */
-  --success-light: #66BB6A; /* verde light */
-  --error: #F44336;        /* roșu - contrast 5.1:1 pe negru */
-  --error-light: #EF5350;  /* roșu light */
-  --warning: #FFC107;     /* portocaliu - contrast 7.1:1 pe negru */
-  --info: #2196F3;        /* albastru - contrast 4.5:1 pe negru */
-  --info-light: #42A5F5;   /* albastru light */
+  --success: #10B981;      /* verde emerald - contrast 4.5:1 pe negru */
+  --success-light: #34D399; /* verde emerald light */
+  --error: #EF4444;        /* roșu modern - contrast 5.1:1 pe negru */
+  --error-light: #F87171;  /* roșu modern light */
+  --warning: #F59E0B;     /* portocaliu modern - contrast 7.1:1 pe negru */
+  --info: #3B82F6;        /* albastru modern - contrast 4.5:1 pe negru */
+  --info-light: #60A5FA;   /* albastru modern light */
   
   /* UI Colors */
-  --primary: #2B2B2B;
-  --primary-dark: #333333;
-  --secondary: #757575;   /* gri - contrast 5.1:1 pe fundal */
+  --primary: #111827;
+  --primary-dark: #1F2937;
+  --secondary: #9CA3AF;   /* gri - Gray medium */
   --light: #F5F5F5;
-  --dark: #2B2B2B;
+  --dark: #111827;
   
   /* Border and shadow */
   --border: rgba(255, 238, 0, 0.2); /* border cu contrast vizibil */
@@ -75,8 +75,8 @@ html, body {
 
 body {
   font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  background-color: #333;
-  color: #333;
+  background-color: #111827;
+  color: #FFFFFF;
   line-height: 1.6;
 }
 
@@ -93,7 +93,7 @@ h1 {
 /* Sidebar */
 .sidebar {
   width: var(--sidebar-width);
-  background: linear-gradient(145deg, rgba(43, 43, 43, 0.95) 0%, rgba(43, 43, 43, 0.98) 100%);
+  background: linear-gradient(145deg, rgba(17, 24, 39, 0.95) 0%, rgba(17, 24, 39, 0.98) 100%);
   color: white;
   padding: 0;
   position: fixed;
@@ -231,7 +231,7 @@ h1 {
   gap: 15px;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(43, 43, 43, 0.5) 0%, rgba(43, 43, 43, 0.6) 100%);
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.5) 0%, rgba(17, 24, 39, 0.6) 100%);
 }
 
 .nav a::before {
@@ -354,7 +354,7 @@ h1 {
   border-bottom: none;
   position: static;
   backdrop-filter: none;
-  background: #2B2B2B;
+  background: #111827;
   color: #FFEE00;
 }
 
@@ -374,7 +374,7 @@ h1 {
   background: transparent;
   border: 0;
   outline: 0;
-  color: #333;
+  color: #FFFFFF;
   font-size: 15px;
 }
 
@@ -385,7 +385,7 @@ h1 {
 }
 
 .btn {
-  background: #2B2B2B;
+  background: #111827;
   color: var(--brand);
   border: none;
   padding: 14px 20px;
@@ -398,7 +398,7 @@ h1 {
 }
 
 .btn:hover {
-  background: #333;
+  background: #111827;
   color: var(--brand);
   box-shadow: none;
 }
@@ -411,7 +411,7 @@ h1 {
 
 .btn.secondary:hover {
   background: #f8f9fa;
-  color: #333;
+  color: #FFFFFF;
 }
 
 /* === KPI cards === */
@@ -423,7 +423,7 @@ h1 {
 }
 
 .card {
-  background: #2B2B2B;
+  background: #111827;
   color: white;
   border: 1px solid #ffee00;
   border-radius: var(--card-radius);
@@ -561,6 +561,27 @@ h1 {
     font-weight: 900;
   }
   
+  /* Header optimizat pentru mobile mic */
+  .header {
+    padding: 12px 15px;
+    margin-bottom: 18px;
+  }
+  
+  .header h1 {
+    font-size: 18px;
+    line-height: 1.4;
+  }
+  
+  .user-avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 15px;
+  }
+  
+  .notifications {
+    font-size: 16px;
+  }
+  
   /* Selector lună pe mobile mic */
   .month-selector-modern {
     margin-bottom: 18px;
@@ -688,7 +709,7 @@ h1 {
             min-width: 300px;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0);
-            background-color: #2B2B2B;
+            background-color: #111827;
             color: white;
           }
 
@@ -698,7 +719,7 @@ h1 {
   align-items: center;
   padding: 20px 30px;
   border-bottom: 1px solid #eee;
-  background-color: #2B2B2B;
+  background-color: #111827;
   color: white;
 }
 
@@ -746,7 +767,7 @@ h1 {
   font-size: 15px;
   transition: var(--transition);
   background: white;
-  color: #333;
+  color: #FFFFFF;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -828,7 +849,7 @@ tr:hover td {
   border-radius: var(--card-radius);
   padding: 20px;
   box-shadow: var(--shadow);
-  color: #333;
+  color: #FFFFFF;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -861,7 +882,7 @@ max-height: fit-content;
   display: flex;
   border-bottom: 1px solid #ddd;
   margin-bottom: 25px;
-  background-color: #2B2B2B;
+  background-color: #111827;
 }
 
 .tab {
@@ -931,7 +952,7 @@ max-height: fit-content;
     margin-left: 0;
     width: 100%;
     padding: 20px;
-    padding-top: 80px; /* Spațiu pentru hamburger */
+    padding-top: 90px; /* Spațiu pentru top bar mai înalt */
   }
   
   .hamburger {
@@ -939,23 +960,49 @@ max-height: fit-content;
   }
   
   .header {
-    padding: 15px 20px;
+    padding: 15px 18px;
     margin-bottom: 20px;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 12px;
+    border-radius: 14px;
   }
   
   .header h1 {
-    font-size: 24px;
+    font-size: 20px;
+    line-height: 1.3;
+    flex: 1;
+    min-width: 0;
+    word-wrap: break-word;
   }
   
   .user-menu {
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-wrap: nowrap;
+    gap: 12px;
+    align-items: center;
   }
   
   .user-info {
     display: none; /* Ascunde pe mobile */
+  }
+  
+  .user-avatar {
+    width: 42px;
+    height: 42px;
+    font-size: 16px;
+    margin-right: 0;
+  }
+  
+  .notifications {
+    margin-right: 8px;
+    font-size: 18px;
+  }
+  
+  .badge {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    top: -4px;
+    right: -4px;
   }
   
   .content {
@@ -1003,27 +1050,31 @@ max-height: fit-content;
   }
   
   .month-selector-wrapper {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-    padding: 18px;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 14px;
   }
   
   .month-selector-wrapper i {
-    font-size: 24px;
-    align-self: center;
+    font-size: 18px;
+    flex-shrink: 0;
   }
   
   .month-selector-wrapper label {
-    font-size: 14px;
-    text-align: center;
+    font-size: 13px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   
   .month-selector-wrapper .dashboard-month-select {
-    min-height: 52px;
+    min-height: 44px;
     font-size: 16px;
-    padding: 14px 18px;
-    padding-right: 45px;
+    padding: 12px 14px;
+    padding-right: 40px;
+    flex: 1;
+    min-width: 0;
   }
   
   /* Grafice optimizate pentru mobile */
@@ -1071,7 +1122,30 @@ max-height: fit-content;
   
   .main {
     padding: 15px;
-    padding-top: 75px;
+    padding-top: 90px; /* Spațiu pentru top bar mai înalt */
+  }
+  
+  .top-bar {
+    height: 75px;
+  }
+  
+  .top-bar-brand {
+    gap: 8px;
+  }
+  
+  .top-bar-logo {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .top-bar-title {
+    font-size: 15px;
+    letter-spacing: -0.2px;
+  }
+  
+  .hamburger {
+    width: 32px;
+    height: 32px;
   }
   
   .header {
@@ -1122,11 +1196,13 @@ max-height: fit-content;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.75);
   z-index: 999;
   opacity: 0;
   transition: opacity 0.3s ease;
   backdrop-filter: blur(4px);
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
 .sidebar-overlay.active {
@@ -1134,29 +1210,162 @@ max-height: fit-content;
   opacity: 1;
 }
 
+/* Pe mobile, overlay-ul este mai vizibil */
+@media (max-width: 1100px) {
+  .sidebar-overlay {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(6px);
+  }
+}
+
+/* Top bar fixă pentru mobile */
+.top-bar {
+  display: none; /* Ascuns pe desktop */
+}
+
+@media (max-width: 1100px) {
+  .top-bar {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 75px;
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.98) 0%, rgba(31, 41, 55, 0.98) 100%);
+    border-bottom: 2px solid rgba(255, 238, 0, 0.2);
+    backdrop-filter: blur(20px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 0 15px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 238, 0, 0.1);
+  }
+  
+  .top-bar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    height: 100%;
+  }
+  
+  .hamburger {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+  }
+  
+  .top-bar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    height: 36px;
+  }
+  
+  .top-bar-logo {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: brightness(1.1);
+    transition: transform 0.2s ease;
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .top-bar-title {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    height: auto;
+  }
+  
+  .top-bar-logo {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: brightness(1.1);
+    transition: transform 0.2s ease;
+    display: block;
+  }
+  
+  .top-bar-logo:hover {
+    transform: scale(1.05);
+  }
+  
+  .top-bar-title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+  }
+  
+  .main {
+    padding-top: 95px !important; /* Spațiu pentru top bar mai înalt */
+  }
+}
+
+
 .hamburger {
   display: none; /* Ascuns pe desktop */
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
   border: 2px solid var(--brand);
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.6);
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 1001;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 238, 0, 0.15);
-  touch-action: manipulation; /* Îmbunătățește răspunsul pe mobile */
+  box-shadow: 0 2px 10px rgba(255, 238, 0, 0.15);
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+
+/* Ascunde hamburger-ul când sidebar-ul este deschis pe mobile */
+@media (max-width: 1100px) {
+  .sidebar.open ~ .main .top-bar .hamburger {
+    opacity: 0.5;
+  }
+  
+  .top-bar {
+    border-bottom-color: rgba(255, 238, 0, 0.15);
+  }
 }
 
 .hamburger:hover {
   background: rgba(255, 238, 0, 0.15);
   box-shadow: 0 4px 20px rgba(255, 238, 0, 0.2);
   transform: scale(1.05);
+}
+
+.hamburger:active {
+  transform: scale(0.95);
 }
 
 .hamburger .bar {
@@ -1166,6 +1375,9 @@ max-height: fit-content;
   position: relative;
   border-radius: 2px;
   transition: all 0.3s ease;
+  margin: 0;
+  padding: 0;
+  display: block;
 }
 
 .hamburger .bar::before, .hamburger .bar::after {
@@ -1337,7 +1549,7 @@ max-height: fit-content;
 }
 
 input:checked + .slider {
-  background-color: #00cc00;
+  background-color: #10B981;
 }
 
 input:checked + .slider:before {
@@ -1421,26 +1633,57 @@ select:focus {
       color: var(--brand);
     }
 
-    .notifications {
+    .sync-btn {
       position: relative;
       margin-right: 20px;
       cursor: pointer;
+      background: linear-gradient(135deg, rgba(255, 238, 0, 0.15) 0%, rgba(255, 238, 0, 0.08) 100%);
       color: var(--brand);
-    }
-
-    .badge {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      background-color: var(--success);
-      color: white;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
+      border: 2px solid rgba(255, 238, 0, 0.3);
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 11px;
+      gap: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: nowrap;
+    }
+
+    .sync-btn:hover {
+      background: linear-gradient(135deg, rgba(255, 238, 0, 0.25) 0%, rgba(255, 238, 0, 0.15) 100%);
+      border-color: rgba(255, 238, 0, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 238, 0, 0.2);
+    }
+
+    .sync-btn:active {
+      transform: translateY(0);
+    }
+
+    .sync-btn.syncing {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .sync-btn.syncing i {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .sync-btn .sync-text {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .sync-btn .sync-text {
+        display: inline;
+      }
     }
       .main-content {
       flex: 1;
@@ -1453,7 +1696,7 @@ select:focus {
       justify-content: space-between;
       align-items: center;
       margin-bottom: 30px;
-      background: #2B2B2B;
+      background: #111827;
       padding: 20px 30px;
       border-radius: var(--border-radius);
       box-shadow: var(--shadow);
@@ -1465,7 +1708,7 @@ select:focus {
   padding: 20px 24px;
   margin-top: auto;
   border-top: 2px solid rgba(255, 238, 0, 0.12);
-  background: linear-gradient(180deg, rgba(43, 43, 43, 0.95) 0%, #2B2B2B 100%);
+  background: linear-gradient(180deg, rgba(17, 24, 39, 0.95) 0%, #111827 100%);
   backdrop-filter: blur(15px);
   position: sticky;
   bottom: 0;
@@ -1474,7 +1717,7 @@ select:focus {
 .logout-btn {
   width: 100%;
   background: linear-gradient(135deg, rgba(255, 0, 0, 0.15) 0%, rgba(255, 0, 0, 0.08) 100%);
-  color: #ff4444;
+  color: #EF4444;
   border: 2px solid rgba(255, 68, 68, 0.3);
   padding: 14px 20px;
   border-radius: 12px;
@@ -1530,7 +1773,7 @@ select:focus {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: linear-gradient(135deg, rgba(43, 43, 43, 0.9) 0%, rgba(43, 43, 43, 0.95) 100%);
+  background: linear-gradient(135deg, rgba(31, 41, 55, 0.9) 0%, rgba(31, 41, 55, 0.95) 100%);
   border: 2px solid rgba(255, 238, 0, 0.15);
   border-radius: 16px;
   padding: 16px 20px;
@@ -1591,7 +1834,7 @@ select:focus {
 }
 
 .month-selector-wrapper .dashboard-month-select option {
-  background: #1a1a1a;
+  background: #1F2937;
   color: #FFEE00;
   padding: 10px;
 }

@@ -21,7 +21,7 @@
         body {
             font-family: 'DejaVu Sans', Arial, sans-serif;
             font-size: 10px;
-            color: #333;
+            color: #111827;
             line-height: 1.4;
         }
         

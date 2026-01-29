@@ -9,7 +9,7 @@
 
 /* ---------- CARD STIL GENERAL ---------- */
 .operator-card {
-  background: #2B2B2B;
+  background: #1F2937;
   color: #FFEE00;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
@@ -31,7 +31,7 @@
 #mainTable thead,
 #detailTable thead {
   background: var(--bg-soft);
-  color: #333;
+  color: #FFFFFF;
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -70,7 +70,7 @@
 .chart-card {
   margin-top: 20px;
   text-align: center;
-  background-color: #2B2B2B !important;
+  background-color: #1F2937 !important;
   color: black;
 }
 
@@ -115,7 +115,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #2B2B2B;
+  background: #1F2937;
   border-radius: 12px;
   padding: 12px 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -129,7 +129,7 @@
 }
 
 .operator-card:hover {
-  background: #2B2B2B;
+  background: #1F2937;
   color: #fffee0;
 }
 
@@ -155,7 +155,7 @@
   flex: 1 1 calc(33.333% - 10px);
   display: flex;
   align-items: center;
-  background: #2B2B2B;
+  background: #1F2937;
   color: #FFEE00;
   border-radius: 12px;
   padding: 15px;

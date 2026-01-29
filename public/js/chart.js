@@ -136,12 +136,12 @@ async function loadVanzariTotale() {
             type: "line",
             label: "Plan",
             data: plan,
-            borderColor: "#ff0000",
+            borderColor: "#EF4444",
             backgroundColor: "rgba(255, 0, 0, 0.1)",
             borderWidth: 3,
             tension: 0.3,
             pointRadius: 5,
-            pointBackgroundColor: "#ff0000",
+            pointBackgroundColor: "#EF4444",
             pointBorderColor: "#ffffff",
             pointBorderWidth: 2,
             fill: false,
@@ -468,7 +468,7 @@ async function loadRaportComenziSesiuniByLuna(luna) {
           { 
             label: "Conversie (%)", 
             data: data.conversie, 
-            borderColor: "#ff0000ff", 
+            borderColor: "#EF4444", 
             backgroundColor: "rgba(255,0,0,0.1)", 
             fill: true, 
             tension: 0.35, 
@@ -491,7 +491,7 @@ async function loadRaportComenziSesiuniByLuna(luna) {
             type: 'linear',
             display: true,
             position: 'right',
-            ticks: { color: "#ff0000" },
+            ticks: { color: "#EF4444" },
             grid: { drawOnChartArea: false }
           }
         } 
@@ -531,7 +531,7 @@ async function openVanzariDetaliiModal(luna) {
     
     const modalContent = document.createElement('div');
     modalContent.style.cssText = `
-      background: #1a1a1a;
+      background: #1F2937;
       border-radius: 12px;
       padding: 30px;
       max-width: 900px;
@@ -548,7 +548,7 @@ async function openVanzariDetaliiModal(luna) {
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2 style="margin: 0; color: #ffee00;">Detalii Vânzări - ${monthName}</h2>
         <button id="closeModal" style="
-          background: #ff4444;
+          background: #EF4444;
           color: white;
           border: none;
           padding: 10px 20px;
@@ -560,15 +560,15 @@ async function openVanzariDetaliiModal(luna) {
       </div>
       
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
-        <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; text-align: center;">
+        <div style="background: #1F2937; padding: 20px; border-radius: 8px; text-align: center;">
           <div style="color: #888; font-size: 14px; margin-bottom: 8px;">Total fără TVA</div>
           <div style="color: #ffee00; font-size: 24px; font-weight: 700;">${formatNumber(data.total_fara_tva)} MDL</div>
         </div>
-        <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; text-align: center;">
+        <div style="background: #1F2937; padding: 20px; border-radius: 8px; text-align: center;">
           <div style="color: #888; font-size: 14px; margin-bottom: 8px;">Total cu TVA</div>
           <div style="color: #ffee00; font-size: 24px; font-weight: 700;">${formatNumber(data.total_cu_tva)} MDL</div>
         </div>
-        <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; text-align: center;">
+        <div style="background: #1F2937; padding: 20px; border-radius: 8px; text-align: center;">
           <div style="color: #888; font-size: 14px; margin-bottom: 8px;">Total Profit</div>
           <div style="color: #ffee00; font-size: 24px; font-weight: 700;">${formatNumber(data.total_profit)} MDL</div>
         </div>
@@ -577,7 +577,7 @@ async function openVanzariDetaliiModal(luna) {
       <div style="overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse;">
           <thead>
-            <tr style="background: #2a2a2a;">
+            <tr style="background: #1F2937;">
               <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ffee00;">Data</th>
               <th style="padding: 12px; text-align: right; border-bottom: 2px solid #ffee00;">Fără TVA</th>
               <th style="padding: 12px; text-align: right; border-bottom: 2px solid #ffee00;">Cu TVA</th>
@@ -586,7 +586,7 @@ async function openVanzariDetaliiModal(luna) {
           </thead>
           <tbody>
             ${data.data.map(row => `
-              <tr style="border-bottom: 1px solid #333;">
+              <tr style="border-bottom: 1px solid #9CA3AF;">
                 <td style="padding: 10px;">${row.data}</td>
                 <td style="padding: 10px; text-align: right;">${formatNumber(row.fara_tva)} MDL</td>
                 <td style="padding: 10px; text-align: right;">${formatNumber(row.cu_tva)} MDL</td>

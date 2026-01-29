@@ -7,7 +7,7 @@
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
     <div>
       <h1 style="color: #FFEE00; margin: 0; font-size: 32px; font-weight: 800; text-shadow: 0 0 20px rgba(255, 238, 0, 0.5);">Operatori</h1>
-      <p style="color: #B3B3B3; margin: 5px 0 0 0; font-size: 14px;">Gestionare și statistici operatori</p>
+      <p style="color: #9CA3AF; margin: 5px 0 0 0; font-size: 14px;">Gestionare și statistici operatori</p>
     </div>
     @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
     <a href="{{ route('operatori.create') }}" style="background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); color: #000; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(255, 238, 0, 0.3); transition: transform 0.2s;">
@@ -17,20 +17,20 @@
   </div>
   
   @if(session('success'))
-  <div style="background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%); color: #fff; padding: 16px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(74, 222, 128, 0.3);">
+  <div style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%); color: #fff; padding: 16px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
     <i class="fas fa-check-circle" style="margin-right: 8px;"></i>{{ session('success') }}
   </div>
   @endif
 
   @if(session('error'))
-  <div style="background: linear-gradient(135deg, #F44336 0%, #EF5350 100%); color: #fff; padding: 16px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(248, 113, 113, 0.3);">
+  <div style="background: linear-gradient(135deg, #EF4444 0%, #F87171 100%); color: #fff; padding: 16px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);">
     <i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i>{{ session('error') }}
   </div>
   @endif
   
   @if(isset($chartData) && count($chartData) > 0)
   <!-- Grafic Circular - Distribuția Vânzărilor -->
-  <div class="operator-card" style="margin-bottom: 30px; background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%); border: 1px solid rgba(255, 238, 0, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
+  <div class="operator-card" style="margin-bottom: 30px; background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border: 1px solid rgba(255, 238, 0, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
       <h2 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px;">
         <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); display: flex; align-items: center; justify-content: center;">
@@ -48,7 +48,7 @@
         <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border-left: 4px solid rgba(255, 238, 0, 0.5);">
           <div style="flex: 1;">
             <div style="color: #fff; font-weight: 600; font-size: 14px; margin-bottom: 4px;">{{ $data['nume'] }}</div>
-            <div style="color: #B3B3B3; font-size: 12px;">{{ number_format($data['vanzari_fara_tva'], 2, ',', '.') }} LEI</div>
+            <div style="color: #9CA3AF; font-size: 12px;">{{ number_format($data['vanzari_fara_tva'], 2, ',', '.') }} LEI</div>
           </div>
           <div style="color: #FFEE00; font-weight: 700; font-size: 18px; margin-left: 16px;">{{ $data['procent'] }}%</div>
         </div>
@@ -59,7 +59,7 @@
   @endif
   
   @if(isset($operatoriStats) && count($operatoriStats) > 0)
-  <div class="operator-card" style="margin-bottom: 30px; background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%); border: 1px solid rgba(255, 238, 0, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
+  <div class="operator-card" style="margin-bottom: 30px; background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border: 1px solid rgba(255, 238, 0, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
     <div style="overflow-x: auto;">
       <table id="operatoriTable" style="width: 100%; border-collapse: collapse;">
         <thead>
@@ -79,7 +79,7 @@
                 {{ $stat['operator']->nume }}
               </a>
               @if($stat['operator']->departament)
-                <div style="color: #B3B3B3; font-size: 12px; margin-top: 4px;">
+                <div style="color: #9CA3AF; font-size: 12px; margin-top: 4px;">
                   <i class="fas fa-building" style="margin-right: 4px;"></i>{{ $stat['operator']->departament }}
                 </div>
               @endif
@@ -94,7 +94,7 @@
               {{ number_format($stat['vanzari']->total_suma_fara_tva ?? 0, 2, ',', '.') }} LEI
             </td>
             <td class="row-text" style="padding: 16px; text-align: center;">
-              <span style="color: #4CAF50; font-weight: 700; font-size: 16px;">
+              <span style="color: #10B981; font-weight: 700; font-size: 16px;">
                 {{ number_format($stat['vanzari']->total_profit ?? 0, 2, ',', '.') }} LEI
               </span>
             </td>
@@ -104,7 +104,7 @@
                   <i class="fas fa-eye" style="margin-right: 4px;"></i>Profil
                 </a>
                 @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
-                <a href="{{ route('operatori.edit', $stat['operator']->id) }}" style="background: rgba(107, 114, 128, 0.15); color: #B3B3B3; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: all 0.2s; border: 1px solid rgba(107, 114, 128, 0.3);" onmouseover="this.style.background='rgba(107, 114, 128, 0.25)'" onmouseout="this.style.background='rgba(107, 114, 128, 0.15)'">
+                <a href="{{ route('operatori.edit', $stat['operator']->id) }}" style="background: rgba(156, 163, 175, 0.15); color: #9CA3AF; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: all 0.2s; border: 1px solid rgba(156, 163, 175, 0.3);" onmouseover="this.style.background='rgba(156, 163, 175, 0.25)'" onmouseout="this.style.background='rgba(156, 163, 175, 0.15)'">
                   <i class="fas fa-edit" style="margin-right: 4px;"></i>Edit
                 </a>
                 @endif
@@ -117,10 +117,10 @@
     </div>
   </div>
   @else
-  <div class="operator-card" style="margin-bottom: 30px; padding: 60px 20px; background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%); border: 2px dashed rgba(255, 255, 255, 0.1);">
+  <div class="operator-card" style="margin-bottom: 30px; padding: 60px 20px; background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border: 2px dashed rgba(255, 255, 255, 0.1);">
     <div style="text-align: left;">
-      <i class="fas fa-users" style="font-size: 48px; color: #B3B3B3; margin-bottom: 20px; display: block;"></i>
-      <p style="color: #B3B3B3; font-size: 18px; margin: 0;">Nu există operatori în sistem momentan.</p>
+      <i class="fas fa-users" style="font-size: 48px; color: #9CA3AF; margin-bottom: 20px; display: block;"></i>
+      <p style="color: #9CA3AF; font-size: 18px; margin: 0;">Nu există operatori în sistem momentan.</p>
     </div>
   </div>
   @endif

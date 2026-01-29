@@ -17,11 +17,11 @@
       </div>
       Adaugă Utilizator Nou
     </h1>
-    <p style="color: #B3B3B3; margin: 10px 0 0 60px; font-size: 14px;">Completează formularul pentru a adăuga un nou utilizator în sistem</p>
+    <p style="color: #9CA3AF; margin: 10px 0 0 60px; font-size: 14px;">Completează formularul pentru a adăuga un nou utilizator în sistem</p>
   </div>
 
   @if($errors->any())
-  <div style="background: linear-gradient(135deg, #F44336 0%, #EF5350 100%); color: #FFFFFF; padding: 16px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);">
+  <div style="background: linear-gradient(135deg, #EF4444 0%, #F87171 100%); color: #FFFFFF; padding: 16px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);">
     <div style="display: flex; align-items: center; margin-bottom: 12px;">
       <i class="fas fa-exclamation-circle" style="margin-right: 8px; font-size: 20px;"></i>
       <strong>Erori de validare:</strong>
@@ -34,7 +34,7 @@
   </div>
   @endif
 
-  <div class="operator-card" style="background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%); border: 1px solid rgba(255, 238, 0, 0.3); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
+  <div class="operator-card" style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border: 1px solid rgba(255, 238, 0, 0.3); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
     <form action="{{ route('users.store') }}" method="POST">
       @csrf
       

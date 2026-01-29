@@ -8,7 +8,7 @@
 .analiza-page {
   padding: 30px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 50%, #2B2B2B 100%);
+  background: linear-gradient(135deg, #111827 0%, #111827 50%, #111827 100%);
 }
 
 .analiza-page h1 {
@@ -43,7 +43,7 @@
   margin-bottom: 25px;
   padding: 12px 20px;
   border-radius: 10px;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(20, 20, 20, 0.6) 100%);
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.5) 0%, rgba(31, 41, 55, 0.6) 100%);
   border: 2px solid rgba(255, 238, 0, 0.25);
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -65,7 +65,7 @@
 }
 
 .section {
-  background: linear-gradient(145deg, rgba(0, 0, 0, 0.95) 0%, rgba(15, 15, 15, 0.98) 100%);
+  background: linear-gradient(145deg, rgba(31, 41, 55, 0.95) 0%, rgba(31, 41, 55, 0.98) 100%);
   border-radius: 20px;
   padding: 35px;
   margin-bottom: 30px;
@@ -190,7 +190,7 @@
 }
 
 .stat-card {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(20, 20, 20, 0.7) 100%);
+  background: linear-gradient(135deg, rgba(31, 41, 55, 0.6) 0%, rgba(31, 41, 55, 0.7) 100%);
   padding: 25px;
   border-radius: 15px;
   border-left: 5px solid #FFEE00;
@@ -227,7 +227,7 @@
 }
 
 .stat-card h4 {
-  color: #999;
+  color: #9CA3AF;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -253,7 +253,7 @@
 .loading {
   text-align: center;
   padding: 60px 40px;
-  color: #999;
+  color: #9CA3AF;
   position: relative;
 }
 
@@ -271,7 +271,7 @@
 }
 
 .loading p {
-  color: #999;
+  color: #9CA3AF;
   font-size: 16px;
   font-weight: 600;
   margin-top: 15px;
@@ -280,7 +280,7 @@
 .error {
   background: linear-gradient(135deg, rgba(255, 0, 0, 0.15) 0%, rgba(255, 0, 0, 0.1) 100%);
   border: 2px solid rgba(255, 0, 0, 0.4);
-  color: #ff6b6b;
+  color: #EF4444;
   padding: 20px 25px;
   border-radius: 12px;
   margin-top: 20px;
@@ -304,7 +304,7 @@
 
 .analiza-menu {
   width: 300px;
-  background: linear-gradient(145deg, rgba(0, 0, 0, 0.95) 0%, rgba(15, 15, 15, 0.98) 100%);
+  background: linear-gradient(145deg, rgba(31, 41, 55, 0.95) 0%, rgba(31, 41, 55, 0.98) 100%);
   border-radius: 20px;
   padding: 25px;
   box-shadow: 
@@ -361,7 +361,7 @@
   gap: 18px;
   margin-bottom: 25px;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(31, 41, 55, 0.3);
   border-radius: 12px;
   border: 1px solid rgba(255, 238, 0, 0.15);
   position: relative;
@@ -392,7 +392,7 @@
   padding: 12px 18px;
   border-radius: 10px;
   border: 2px solid rgba(255, 238, 0, 0.25);
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(31, 41, 55, 0.6);
   color: #FFEE00;
   font-weight: 600;
   cursor: pointer;
@@ -403,13 +403,13 @@
 
 .date-selector-menu .date-input:hover {
   border-color: rgba(255, 238, 0, 0.4);
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(31, 41, 55, 0.7);
 }
 
 .date-selector-menu .date-input:focus {
   outline: none;
   border-color: #FFEE00;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(31, 41, 55, 0.8);
   box-shadow: 0 0 20px rgba(255, 238, 0, 0.4), inset 0 0 10px rgba(255, 238, 0, 0.1);
 }
 
@@ -467,7 +467,7 @@
   padding: 16px 22px;
   border-radius: 12px;
   border: 2px solid rgba(255, 238, 0, 0.2);
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(20, 20, 20, 0.6) 100%);
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.5) 0%, rgba(31, 41, 55, 0.6) 100%);
   color: #FFEE00;
   font-weight: 700;
   cursor: pointer;
@@ -550,7 +550,7 @@
 .no-selection {
   text-align: center;
   padding: 120px 40px;
-  background: linear-gradient(145deg, rgba(0, 0, 0, 0.9) 0%, rgba(15, 15, 15, 0.95) 100%);
+  background: linear-gradient(145deg, rgba(31, 41, 55, 0.9) 0%, rgba(31, 41, 55, 0.95) 100%);
   border-radius: 20px;
   box-shadow: 
     0 10px 40px rgba(0, 0, 0, 0.6),
@@ -601,7 +601,7 @@
 }
 
 .no-selection p {
-  color: #999;
+  color: #9CA3AF;
   font-size: 16px;
   line-height: 1.6;
 }
@@ -719,7 +719,7 @@
       <div id="noSelection" class="no-selection">
         <i class="fas fa-mouse-pointer" style="font-size: 64px; color: #FFEE00; margin-bottom: 20px; opacity: 0.5;"></i>
         <h2 style="color: #FFEE00; margin-bottom: 10px;">Selectează o secțiune</h2>
-        <p style="color: #999;">Alege o opțiune din meniul lateral pentru a vedea datele</p>
+        <p style="color: #9CA3AF;">Alege o opțiune din meniul lateral pentru a vedea datele</p>
       </div>
   
       <!-- Utilizatori -->

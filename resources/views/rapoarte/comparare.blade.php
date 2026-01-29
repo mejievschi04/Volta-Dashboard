@@ -11,7 +11,7 @@
 }
 
 .comparare-header {
-  background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%);
+  background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%);
   border: 2px solid #ffee00;
   border-radius: 12px;
   padding: 25px;
@@ -43,7 +43,7 @@
 .control-group select {
   padding: 12px 16px;
   border-radius: 8px;
-  background: #2B2B2B;
+  background: #1F2937;
   color: #ffee00;
   border: 2px solid #ffee00;
   font-size: 16px;
@@ -70,8 +70,8 @@
 }
 
 .comparare-kpi-card {
-  background: #2B2B2B;
-  border: 1px solid #333;
+  background: #1F2937;
+  border: 1px solid #9CA3AF;
   border-radius: 10px;
   padding: 20px;
   position: relative;
@@ -139,8 +139,8 @@
 }
 
 .comparare-chart-container {
-  background: #2B2B2B;
-  border: 1px solid #333;
+  background: #1F2937;
+  border: 1px solid #9CA3AF;
   border-radius: 12px;
   padding: 25px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -161,8 +161,8 @@
 }
 
 .comparare-table-container {
-  background: #2B2B2B;
-  border: 1px solid #333;
+  background: #1F2937;
+  border: 1px solid #9CA3AF;
   border-radius: 12px;
   padding: 25px;
   overflow-x: auto;
@@ -197,7 +197,7 @@
 .comparare-table td {
   padding: 12px 15px;
   color: #fff;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #9CA3AF;
   background-color: var(--bg-soft);
 }
 

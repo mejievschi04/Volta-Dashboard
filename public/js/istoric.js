@@ -44,7 +44,7 @@ async function loadIstoric(period = 'all') {
   } catch (err) {
     console.error("Eroare la încărcarea datelor:", err);
     const tbody = document.querySelector("#istoricTable tbody");
-    tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: #ff4444;">Eroare la încărcarea datelor: ${err.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: #EF4444;">Eroare la încărcarea datelor: ${err.message}</td></tr>`;
   }
 }
 

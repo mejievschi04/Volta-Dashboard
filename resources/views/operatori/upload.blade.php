@@ -10,7 +10,7 @@
     </a>
   </div>
 
-  <div style="background: linear-gradient(135deg, #2B2B2B 0%, #2B2B2B 100%); border-radius: 16px; padding: 32px; border: 1px solid rgba(255, 238, 0, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
+  <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 32px; border: 1px solid rgba(255, 238, 0, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
     <h1 style="color: #ffee00; margin: 0 0 12px 0; font-size: 28px; font-weight: 800; display: flex; align-items: center; gap: 12px;">
       <i class="fas fa-file-excel" style="font-size: 32px;"></i>
       Încarcă Vânzări din Excel
@@ -24,17 +24,17 @@
       <h3 style="color: #3b82f6; margin: 0 0 12px 0; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
         <i class="fas fa-info-circle"></i>Instrucțiuni
       </h3>
-      <ul style="color: #d1d5db; margin: 0; padding-left: 20px; font-size: 13px;">
+      <ul style="color: #9CA3AF; margin: 0; padding-left: 20px; font-size: 13px;">
         <li style="margin-bottom: 8px;">Fișierul trebuie să fie în format <strong>Excel (.xlsx, .xls)</strong> sau <strong>CSV</strong></li>
         <li style="margin-bottom: 8px;">Dimensiune maximă: <strong>10 MB</strong></li>
         <li style="margin-bottom: 8px;">Rândurile trebuie să conțină următoarele coloane (în ordine):</li>
       </ul>
-      <div style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 12px; margin-top: 12px; font-family: monospace; font-size: 12px; color: #d1d5db;">
-        <div style="margin-bottom: 6px;"><span style="color: #4ade80;">1. Data</span> (YYYY-MM-DD, YYYY-MM, sau "ianuarie 2025")</div>
-        <div style="margin-bottom: 6px;"><span style="color: #4ade80;">2. Suma Fără TVA</span> (numeric, ex: 1000.50)</div>
-        <div style="margin-bottom: 6px;"><span style="color: #4ade80;">3. Suma Cu TVA</span> (numeric)</div>
-        <div style="margin-bottom: 6px;"><span style="color: #4ade80;">4. Profit</span> (numeric)</div>
-        <div style="margin-bottom: 6px;"><span style="color: #4ade80;">5. Nr. Vânzări</span> (întreg, opțional)</div>
+      <div style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 12px; margin-top: 12px; font-family: monospace; font-size: 12px; color: #9CA3AF;">
+        <div style="margin-bottom: 6px;"><span style="color: #10B981;">1. Data</span> (YYYY-MM-DD, YYYY-MM, sau "ianuarie 2025")</div>
+        <div style="margin-bottom: 6px;"><span style="color: #10B981;">2. Suma Fără TVA</span> (numeric, ex: 1000.50)</div>
+        <div style="margin-bottom: 6px;"><span style="color: #10B981;">3. Suma Cu TVA</span> (numeric)</div>
+        <div style="margin-bottom: 6px;"><span style="color: #10B981;">4. Profit</span> (numeric)</div>
+        <div style="margin-bottom: 6px;"><span style="color: #10B981;">5. Nr. Vânzări</span> (întreg, opțional)</div>
       </div>
       <p style="color: #9ca3af; margin: 12px 0 0 0; font-size: 12px;">
         <strong>Formate de dată acceptate:</strong>
@@ -72,12 +72,12 @@
           </p>
         </div>
 
-        <div id="dropZoneStatus" style="display:none; margin-top:12px; color:#d1d5db; font-size:13px;"></div>
+        <div id="dropZoneStatus" style="display:none; margin-top:12px; color:#9CA3AF; font-size:13px;"></div>
       </div>
 
       <div style="display: flex; align-items: center; gap: 12px;">
         <input type="checkbox" id="overwriteCheckbox" name="overwrite" value="1" style="width: 18px; height: 18px; cursor: pointer;">
-        <label for="overwriteCheckbox" style="color: #d1d5db; font-size: 13px; cursor: pointer; margin: 0;">
+        <label for="overwriteCheckbox" style="color: #9CA3AF; font-size: 13px; cursor: pointer; margin: 0;">
           Suprascriu datele existente pentru aceleași date (dacă nu este bifat, le actualizez)
         </label>
       </div>
@@ -124,7 +124,7 @@
   function createDebugLog() {
     const div = document.createElement('div');
     div.id = 'debugLog';
-    div.style.cssText = 'position: fixed; bottom: 10px; right: 10px; width: 400px; height: 200px; background: #2B2B2B; color: #0f0; border: 2px solid #0f0; padding: 10px; font-family: monospace; font-size: 11px; overflow-y: auto; z-index: 10000; border-radius: 5px;';
+    div.style.cssText = 'position: fixed; bottom: 10px; right: 10px; width: 400px; height: 200px; background: #1F2937; color: #0f0; border: 2px solid #0f0; padding: 10px; font-family: monospace; font-size: 11px; overflow-y: auto; z-index: 10000; border-radius: 5px;';
     document.body.appendChild(div);
     return div;
   }
@@ -201,10 +201,10 @@
         status.style.display = 'block';
         status.innerHTML = `
           <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
-            <i class="fas fa-check-circle" style="font-size: 40px; color: #4ade80;"></i>
+            <i class="fas fa-check-circle" style="font-size: 40px; color: #10B981;"></i>
             <div>
-              <p style="color: #4ade80; margin: 0 0 6px 0; font-weight: 600; font-size: 14px;">✓ Fișier selectat</p>
-              <p style="color: #d1d5db; margin: 0; font-size: 12px; word-break: break-all;">${fileName}</p>
+              <p style="color: #10B981; margin: 0 0 6px 0; font-weight: 600; font-size: 14px;">✓ Fișier selectat</p>
+              <p style="color: #9CA3AF; margin: 0; font-size: 12px; word-break: break-all;">${fileName}</p>
             </div>
           </div>
         `;

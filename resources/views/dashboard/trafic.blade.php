@@ -26,7 +26,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(31, 41, 55, 0.3);
   padding: 8px 15px;
   border-radius: 10px;
   border: 1px solid rgba(255, 238, 0, 0.1);
@@ -36,7 +36,7 @@
 .year-selector-wrapper:hover,
 .month-selector-wrapper:hover {
   border-color: rgba(255, 238, 0, 0.15);
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(31, 41, 55, 0.4);
   box-shadow: 0 0 15px rgba(255, 238, 0, 0.1);
 }
 
@@ -73,7 +73,7 @@
 }
 
 .year-select option {
-  background: #1a1a1a;
+  background: #1F2937;
   color: #FFEE00;
   padding: 10px;
 }
@@ -111,7 +111,7 @@
 }
 
 .month-select option {
-  background: #1a1a1a;
+  background: #1F2937;
   color: #FFEE00;
   padding: 10px;
 }
@@ -182,7 +182,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(31, 41, 55, 0.1), transparent);
   transition: left 0.5s;
 }
 
@@ -451,12 +451,12 @@ function drawChart() {
 
   const chartCtx = ctx.getContext('2d');
   const colors = {
-    total: "#F90716",
-    google: "#548CFF",
-    google_cpc: "#06FF00",
+    total: "#EF4444",
+    google: "#3B82F6",
+    google_cpc: "#10B981",
     direct: "#FFEE00",
-    yandex: "#F0F3FF",
-    other: "#888888"
+    yandex: "#8B5CF6",
+    other: "#9CA3AF"
   };
 
   const sourceLabels = {
@@ -477,7 +477,7 @@ function drawChart() {
     datasets = Object.keys(trafficData.datasets).map(source => ({
       label: sourceLabels[source] || source,
       data: trafficData.datasets[source] || [],
-      borderColor: colors[source] || "#888888",
+      borderColor: colors[source] || "#9CA3AF",
       tension: 0.3,
       fill: false
     }));
@@ -491,7 +491,7 @@ function drawChart() {
         const found = trafficData[source].find(d => d.day == day);
         return found ? found.visits : 0;
       }),
-      borderColor: colors[source] || "#888888",
+      borderColor: colors[source] || "#9CA3AF",
       tension: 0.3,
       fill: false
     }));
