@@ -13,17 +13,14 @@
   --error: #EF4444;
   --success: #10B981;
   --shadow-glow: 0 0 40px rgba(255, 238, 0, 0.2);
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Fundal negru cu efect lichid neon galben */
+/* Fundal simplu */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  background: linear-gradient(135deg, #111827 0%, #111827 50%, #111827 100%);
-  background-size: 200% 200%;
-  animation: gradientShift 15s ease infinite;
+  background: #111827;
   min-height: 100vh;
   min-height: -webkit-fill-available;
   height: 100vh;
@@ -36,11 +33,6 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
 /* Fix pentru mobile Safari */
 @supports (-webkit-touch-callout: none) {
   body {
@@ -48,119 +40,6 @@ body {
   }
 }
 
-/* Masă lichidă neon galben - Blob 1 */
-body::before {
-  content: '';
-  position: absolute;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(255, 238, 0, 0.12) 0%, rgba(255, 238, 0, 0.04) 50%, transparent 70%);
-  border-radius: 50% 40% 60% 30%;
-  filter: blur(60px);
-  animation: liquidMove1 20s ease-in-out infinite;
-  top: -200px;
-  left: -200px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Masă lichidă neon galben - Blob 2 */
-body::after {
-  content: '';
-  position: absolute;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(255, 238, 0, 0.1) 0%, rgba(255, 238, 0, 0.03) 50%, transparent 70%);
-  border-radius: 40% 60% 50% 35%;
-  filter: blur(70px);
-  animation: liquidMove2 25s ease-in-out infinite;
-  bottom: -250px;
-  right: -250px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-@keyframes liquidMove1 {
-  0% {
-    transform: translate(0, 0) scale(1) rotate(0deg);
-    border-radius: 50% 40% 60% 30%;
-  }
-  25% {
-    transform: translate(100px, 150px) scale(1.2) rotate(90deg);
-    border-radius: 40% 60% 50% 35%;
-  }
-  50% {
-    transform: translate(200px, 50px) scale(0.9) rotate(180deg);
-    border-radius: 60% 30% 50% 40%;
-  }
-  75% {
-    transform: translate(50px, 200px) scale(1.1) rotate(270deg);
-    border-radius: 35% 50% 40% 60%;
-  }
-  100% {
-    transform: translate(0, 0) scale(1) rotate(360deg);
-    border-radius: 50% 40% 60% 30%;
-  }
-}
-
-@keyframes liquidMove2 {
-  0% {
-    transform: translate(0, 0) scale(1) rotate(0deg);
-    border-radius: 40% 60% 50% 35%;
-  }
-  25% {
-    transform: translate(-150px, -100px) scale(0.8) rotate(-90deg);
-    border-radius: 60% 30% 50% 40%;
-  }
-  50% {
-    transform: translate(-200px, -50px) scale(1.3) rotate(-180deg);
-    border-radius: 35% 50% 40% 60%;
-  }
-  75% {
-    transform: translate(-50px, -200px) scale(0.95) rotate(-270deg);
-    border-radius: 50% 40% 60% 30%;
-  }
-  100% {
-    transform: translate(0, 0) scale(1) rotate(-360deg);
-    border-radius: 40% 60% 50% 35%;
-  }
-}
-
-/* Blob suplimentar pentru efect mai complex */
-.login-container::before {
-  content: '';
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255, 238, 0, 0.08) 0%, rgba(255, 238, 0, 0.02) 50%, transparent 70%);
-  border-radius: 55% 45% 50% 40%;
-  filter: blur(50px);
-  animation: liquidMove3 18s ease-in-out infinite;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-@keyframes liquidMove3 {
-  0% {
-    transform: translate(-50%, -50%) scale(1) rotate(0deg);
-    border-radius: 55% 45% 50% 40%;
-  }
-  33% {
-    transform: translate(-30%, -70%) scale(1.15) rotate(120deg);
-    border-radius: 45% 55% 40% 50%;
-  }
-  66% {
-    transform: translate(-70%, -30%) scale(0.85) rotate(240deg);
-    border-radius: 50% 40% 55% 45%;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1) rotate(360deg);
-    border-radius: 55% 45% 50% 40%;
-  }
-}
 
 /* Container login */
 .login-container {
@@ -194,39 +73,11 @@ body::after {
   position: relative;
   overflow: hidden;
   z-index: 11;
-  animation: slideUp 0.6s ease-out;
   width: 100%;
   box-sizing: border-box;
   max-width: 100%;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.login-box::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, transparent, rgba(255, 238, 0, 0.05), transparent);
-  animation: rotate 10s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
 
 /* Stiluri specifice pentru desktop */
 @media (min-width: 769px) {
@@ -406,23 +257,6 @@ body::after {
   border-radius: 50%;
   padding: 15px;
   position: relative;
-  animation: logoPulse 3s ease-in-out infinite;
-}
-
-.logo-wrapper::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 50%;
-  background: linear-gradient(45deg, var(--brand), transparent, var(--brand));
-  opacity: 0.3;
-  animation: rotate 8s linear infinite;
-  z-index: -1;
-}
-
-@keyframes logoPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
 }
 
 .logo-mark {
@@ -488,14 +322,12 @@ body::after {
   transform: translateY(-50%);
   color: var(--text-muted);
   font-size: 16px;
-  transition: var(--transition);
   z-index: 2;
 }
 
 .input-group.focused .input-icon,
 .input-group input:focus ~ .input-icon {
   color: var(--brand);
-  transform: translateY(-50%) scale(1.1);
 }
 
 .input-group input {
@@ -508,7 +340,6 @@ body::after {
   font-size: 15px;
   font-weight: 500;
   outline: none;
-  transition: var(--transition);
   box-sizing: border-box;
   backdrop-filter: blur(10px);
 }
@@ -525,7 +356,6 @@ body::after {
   box-shadow: 
     0 0 20px rgba(255, 238, 0, 0.15),
     inset 0 0 15px rgba(255, 238, 0, 0.05);
-  transform: translateY(-2px);
   padding-left: 55px;
 }
 
@@ -538,18 +368,17 @@ body::after {
   position: absolute;
   bottom: 0;
   left: 50%;
-  transform: translateX(-50%) scaleX(0);
+  transform: translateX(-50%);
   width: 0;
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--brand), transparent);
-  transition: var(--transition);
   border-radius: 2px;
 }
 
 .input-group.focused .input-focus-line,
 .input-group input:focus ~ .input-focus-line {
   width: calc(100% - 40px);
-  transform: translateX(-50%) scaleX(1);
+  transform: translateX(-50%);
 }
 
 /* Password toggle button */
@@ -566,19 +395,10 @@ body::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--transition);
   border-radius: 6px;
   z-index: 2;
 }
 
-.password-toggle:hover {
-  color: var(--brand);
-  background: rgba(255, 238, 0, 0.1);
-}
-
-.password-toggle:active {
-  transform: translateY(-50%) scale(0.95);
-}
 
 .password-toggle i {
   font-size: 16px;
@@ -595,7 +415,6 @@ body::after {
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  transition: var(--transition);
   position: relative;
   overflow: hidden;
   text-transform: uppercase;
@@ -619,7 +438,6 @@ body::after {
 .btn-login .btn-icon {
   position: relative;
   z-index: 2;
-  transition: var(--transition);
   font-size: 14px;
 }
 
@@ -630,32 +448,8 @@ body::after {
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  transition: left 0.6s ease;
 }
 
-.btn-login:hover {
-  transform: translateY(-3px);
-  box-shadow: 
-    0 10px 30px rgba(255, 238, 0, 0.5),
-    0 0 40px rgba(255, 238, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  background: linear-gradient(135deg, #FFEE00 0%, #FFD700 100%);
-}
-
-.btn-login:hover .btn-shine {
-  left: 100%;
-}
-
-.btn-login:hover .btn-icon {
-  transform: translateX(4px);
-}
-
-.btn-login:active {
-  transform: translateY(-1px);
-  box-shadow: 
-    0 4px 15px rgba(255, 238, 0, 0.4),
-    0 0 25px rgba(255, 238, 0, 0.25);
-}
 
 .btn-login.loading {
   pointer-events: none;
@@ -686,16 +480,6 @@ body::after {
   backdrop-filter: blur(10px);
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 .alert i {
   font-size: 18px;
@@ -722,75 +506,6 @@ body::after {
   box-shadow: 0 4px 15px rgba(81, 207, 102, 0.1);
 }
 
-/* Floating particles */
-.floating-particles {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
-}
-
-.particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: var(--brand);
-  border-radius: 50%;
-  opacity: 0.4;
-  animation: float 15s infinite ease-in-out;
-  box-shadow: 0 0 10px var(--brand);
-}
-
-.particle:nth-child(1) {
-  left: 10%;
-  animation-delay: 0s;
-  animation-duration: 12s;
-}
-
-.particle:nth-child(2) {
-  left: 30%;
-  animation-delay: 2s;
-  animation-duration: 18s;
-}
-
-.particle:nth-child(3) {
-  left: 50%;
-  animation-delay: 4s;
-  animation-duration: 15s;
-}
-
-.particle:nth-child(4) {
-  left: 70%;
-  animation-delay: 1s;
-  animation-duration: 20s;
-}
-
-.particle:nth-child(5) {
-  left: 90%;
-  animation-delay: 3s;
-  animation-duration: 14s;
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(100vh) translateX(0) scale(0);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.4;
-  }
-  90% {
-    opacity: 0.4;
-  }
-  100% {
-    transform: translateY(-100px) translateX(50px) scale(1);
-    opacity: 0;
-  }
-}
 
 /* Responsive design - Tablet */
 @media (max-width: 768px) {
@@ -951,13 +666,6 @@ body::after {
     filter: blur(40px);
   }
   
-  .floating-particles {
-    display: none; /* Dezactivează particulele pe mobile pentru performanță */
-  }
-  
-  .login-box::before {
-    animation-duration: 15s; /* Animație mai lentă */
-  }
 }
 
 /* Mobile Landscape */

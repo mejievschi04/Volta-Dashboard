@@ -17,9 +17,17 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
 </div>
 
 <!-- KPI CARDS -->
+@php
+  $isAdmin = auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator');
+@endphp
 <div class="kpi-grid">
-  <div class="card">
-    <h4>Plan luna curentă</h4>
+  <div class="card{{ $isAdmin ? ' editable-plan' : '' }}">
+    <h4>
+      Plan luna curentă
+      @if($isAdmin)
+        <i class="fas fa-edit edit-icon" title="Click pentru a edita"></i>
+      @endif
+    </h4>
     <div class="value" id="plan-luna">-</div>
   </div>
   <div class="card">
@@ -304,7 +312,7 @@ async function loadVanzariTotale() {
       }
       
       const kpiValues = [
-        { id: 'plan-luna', value: formatValue(planLuna, 'MDL') },
+        { id: 'plan-luna', value: formatValue(planLuna, 'MDL'), rawValue: planLuna },
         { id: 'vanzari-luna', value: formatValue(kpiData.vanzari_luna || 0, 'MDL') },
         { id: 'progres-plan', value: formatValue(kpiData.progres_plan || 0, '%') },
         { id: 'diferenta-plan', value: `<span style="color: ${diferentaColor}">${formatNumber(diferentaPlan)}</span> <span style="font-size:16px;color:var(--muted); font-weight:600;">MDL</span>` },
@@ -322,9 +330,148 @@ async function loadVanzariTotale() {
         const element = document.getElementById(kpi.id);
         if (element) {
           element.innerHTML = kpi.value;
+          // Salvează valoarea brută pentru plan-luna pentru editare
+          if (kpi.id === 'plan-luna' && kpi.rawValue !== undefined) {
+            element.setAttribute('data-raw-value', kpi.rawValue);
+            element.setAttribute('data-current-month', luna);
+          }
         }
       });
+      
+      // Reinițializează editarea după actualizarea KPI-urilor
+      @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
+      initPlanEdit();
+      @endif
     }
+
+    // Funcționalitate editare inline pentru plan (doar admini)
+    @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
+    function initPlanEdit() {
+      const planCard = document.querySelector('.editable-plan');
+      const planValue = document.getElementById('plan-luna');
+      
+      if (!planCard || !planValue) return;
+      
+      // Evită adăugarea multiplă a event listener-ului
+      if (planCard.dataset.editInitialized === 'true') return;
+      planCard.dataset.editInitialized = 'true';
+      
+      let isEditing = false;
+      
+      planCard.addEventListener('click', function(e) {
+        // Nu permite editarea dacă se dă click pe icon sau pe header
+        if (e.target.classList.contains('edit-icon') || e.target.closest('h4')) return;
+        
+        // Permite editarea dacă se dă click pe elementul .value sau pe card
+        if (!isEditing) {
+          const clickedValue = e.target.closest('.value');
+          if (clickedValue === planValue || e.target === planValue) {
+            startEditing();
+          }
+        }
+      });
+      
+      function startEditing() {
+        if (isEditing) return;
+        isEditing = true;
+        
+        const currentValue = parseFloat(planValue.getAttribute('data-raw-value') || 0);
+        const currentMonth = planValue.getAttribute('data-current-month') || selectLuna.value;
+        
+        // Creează input field
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.step = '0.01';
+        input.min = '0';
+        input.value = currentValue;
+        input.style.cssText = `
+          width: 100%;
+          background: rgba(31, 41, 55, 0.8);
+          border: 2px solid #FFEE00;
+          border-radius: 8px;
+          padding: 12px;
+          color: #FFFFFF;
+          font-size: 32px;
+          font-weight: 700;
+          text-align: center;
+          outline: none;
+          font-family: inherit;
+        `;
+        
+        const originalHTML = planValue.innerHTML;
+        planValue.innerHTML = '';
+        planValue.appendChild(input);
+        input.focus();
+        input.select();
+        
+        // Salvează la Enter sau blur
+        const save = async () => {
+          const newValue = parseFloat(input.value) || 0;
+          if (newValue < 0) {
+            alert('Valoarea trebuie să fie pozitivă!');
+            input.focus();
+            return;
+          }
+          
+          try {
+            const response = await fetch('{{ route("api.kpi.plan.update") }}', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+              },
+              body: JSON.stringify({
+                month: currentMonth,
+                valoare: newValue
+              })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+              // Reîncarcă KPI-urile pentru a actualiza toate valorile
+              await updateKPIandChart(currentMonth);
+              planCard.style.borderColor = '#10B981';
+              setTimeout(() => {
+                planCard.style.borderColor = '';
+              }, 2000);
+            } else {
+              alert('Eroare: ' + (result.error || 'Nu s-a putut actualiza planul.'));
+              planValue.innerHTML = originalHTML;
+            }
+          } catch (error) {
+            console.error('Eroare la salvare:', error);
+            alert('Eroare la salvare: ' + error.message);
+            planValue.innerHTML = originalHTML;
+          }
+          
+          isEditing = false;
+        };
+        
+        // Anulează la Escape
+        const cancel = () => {
+          planValue.innerHTML = originalHTML;
+          isEditing = false;
+        };
+        
+        input.addEventListener('blur', save);
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            save();
+          } else if (e.key === 'Escape') {
+            e.preventDefault();
+            cancel();
+          }
+        });
+      }
+    }
+    
+    // Inițializează editarea după încărcarea paginii
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(initPlanEdit, 500);
+    });
+    @endif
 
     if (!selectLunaListenerAdded) {
       selectLuna.addEventListener("change", async () => {

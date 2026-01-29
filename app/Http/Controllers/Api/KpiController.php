@@ -8,6 +8,7 @@ use App\Models\Vanzari;
 use App\Models\PlanVanzari;
 use App\Models\TrafficSource;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class KpiController extends Controller
 {
@@ -118,6 +119,91 @@ class KpiController extends Controller
                 'valoare_medie' => $valoareMedie,
                 'zile_activitate' => intval($vanzariData->zile_activitate ?? 0),
                 'progres_zilnic' => $progresZilnic,
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updatePlan(Request $request)
+    {
+        // Verifică dacă utilizatorul este admin
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Nu sunteți autentificat.'
+            ], 401);
+        }
+
+        $user = Auth::user();
+        $role = strtolower($user->role ?? '');
+        
+        if ($role !== 'admin' && $role !== 'administrator') {
+            return response()->json([
+                'success' => false,
+                'error' => 'Nu aveți permisiunea de a actualiza planul.'
+            ], 403);
+        }
+
+        $request->validate([
+            'month' => 'required|string|regex:/^\d{4}-\d{2}$/',
+            'valoare' => 'required|numeric|min:0'
+        ], [
+            'month.required' => 'Luna este obligatorie.',
+            'month.regex' => 'Formatul lunii trebuie să fie YYYY-MM.',
+            'valoare.required' => 'Valoarea este obligatorie.',
+            'valoare.numeric' => 'Valoarea trebuie să fie un număr.',
+            'valoare.min' => 'Valoarea trebuie să fie pozitivă.'
+        ]);
+
+        try {
+            $luna = $request->get('month');
+            $valoare = floatval($request->get('valoare'));
+            
+            // Parsează luna
+            $parts = explode('-', $luna);
+            $an = intval($parts[0]);
+            $lunaNum = intval($parts[1]);
+            
+            // Convertim numărul lunii în numele lunii în română
+            $luniRomana = [
+                1 => 'Ianuarie', 2 => 'Februarie', 3 => 'Martie', 4 => 'Aprilie',
+                5 => 'Mai', 6 => 'Iunie', 7 => 'Iulie', 8 => 'August',
+                9 => 'Septembrie', 10 => 'Octombrie', 11 => 'Noiembrie', 12 => 'Decembrie'
+            ];
+            $lunaNume = $luniRomana[$lunaNum] ?? '';
+            
+            if (empty($lunaNume)) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Lună invalidă.'
+                ], 400);
+            }
+            
+            // Caută sau creează planul pentru luna respectivă
+            $planData = PlanVanzari::where('an', $an)
+                ->where('luna', $lunaNume)
+                ->first();
+            
+            if ($planData) {
+                $planData->valoare = $valoare;
+                $planData->save();
+            } else {
+                PlanVanzari::create([
+                    'an' => $an,
+                    'luna' => $lunaNume,
+                    'valoare' => $valoare
+                ]);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Planul a fost actualizat cu succes.',
+                'plan_luna' => $valoare
             ]);
             
         } catch (\Exception $e) {

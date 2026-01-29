@@ -71,6 +71,7 @@ Route::middleware(['auth'])->group(function () {
     
     // API Routes
     Route::get('/api/kpi', [KpiController::class, 'index'])->name('api.kpi');
+    Route::put('/api/kpi/plan', [KpiController::class, 'updatePlan'])->name('api.kpi.plan.update');
     Route::get('/api/trafic', [\App\Http\Controllers\Api\TraficController::class, 'index'])->name('api.trafic');
     Route::get('/api/vanzari-lunare', [\App\Http\Controllers\Api\VanzariLunareController::class, 'index'])->name('api.vanzari.lunare');
     Route::get('/api/vanzari-zilnice', [\App\Http\Controllers\Api\VanzariZilniceController::class, 'index'])->name('api.vanzari.zilnice');
