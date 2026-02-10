@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'onec' => [
+        'base_url' => env('ONEC_BASE_URL', 'http://212.56.193.250/VOLTA_SQL/hs/CallCenterKPI'),
+        'username' => env('ONEC_USERNAME', 'HTTPService'),
+        'password' => env('ONEC_PASSWORD', ''),
+    ],
+
 ];

@@ -84,15 +84,15 @@
       <div class="header">
         <h1>@yield('header-title', 'Dashboard')</h1>
         <div class="user-menu">
-          <button type="button" class="sync-btn" id="syncBtn" title="Sincronizare vânzări 1C">
-            <i class="fas fa-sync-alt fa-lg"></i>
-            <span class="sync-text">Sincronizare</span>
-          </button>
           <div class="user-info">
             <div class="name">{{ Auth::check() ? Auth::user()->username : 'User' }}</div>
             <div class="role">{{ Auth::check() ? (Auth::user()->role ?? 'User') : 'User' }}</div>
           </div>
           <div class="user-avatar">{{ Auth::check() ? strtoupper(substr(Auth::user()->username, 0, 1)) : 'U' }}</div>
+          <button type="button" class="sync-btn" id="syncBtn" title="Sincronizare vânzări 1C">
+            <i class="fas fa-sync-alt fa-lg"></i>
+            <span class="sync-text">Sincronizare</span>
+          </button>
         </div>
       </div>
       @endif
@@ -193,23 +193,53 @@
       }
     });
 
-    // Buton sincronizare 1C - pregătit pentru funcționalitate viitoare
+    // Buton sincronizare 1C - apel API backend
     document.addEventListener('DOMContentLoaded', function() {
       const syncBtn = document.getElementById('syncBtn');
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
       if (syncBtn) {
         syncBtn.addEventListener('click', function() {
-          // Funcționalitatea de sincronizare va fi implementată aici
-          console.log('Sincronizare 1C - funcționalitate în dezvoltare');
-          
-          // Pregătit pentru animație de sincronizare
+          console.log('Sincronizare 1C - apel API backend');
+
           syncBtn.classList.add('syncing');
           syncBtn.disabled = true;
-          
-          // Simulare - va fi înlocuită cu API call real
-          setTimeout(() => {
+
+          const today = new Date();
+          const year = today.getFullYear();
+          const month = String(today.getMonth() + 1).padStart(2, '0');
+          const date_start = `${year}-${month}-01`;
+          const date_end = today.toISOString().slice(0, 10);
+
+          fetch("{{ route('api.1c.sync.kpi') }}", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'X-CSRF-TOKEN': csrfToken || ''
+            },
+            body: JSON.stringify({ date_start, date_end })
+          })
+          .then(async (response) => {
+            const data = await response.json().catch(() => null);
+
+            if (!response.ok || !data?.success) {
+              const msg = data?.message || 'Eroare la sincronizarea cu 1C.';
+              alert(msg);
+              console.error('Sync 1C error', data);
+            } else {
+              alert(`Sincronizare 1C OK pentru perioada ${data.date_start} - ${data.date_end}.`);
+              console.log('Sync 1C success', data);
+            }
+          })
+          .catch((error) => {
+            console.error('Sync 1C network error', error);
+            alert('Eroare de rețea la apelarea API-ului 1C.');
+          })
+          .finally(() => {
             syncBtn.classList.remove('syncing');
             syncBtn.disabled = false;
-          }, 2000);
+          });
         });
       }
     });

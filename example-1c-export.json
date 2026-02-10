@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "generatedAt": "2026-02-02T10:30:00Z",
+    "company": "VOLTA",
+    "currency": "MDL",
+    "period": {
+      "start": "2026-01-01",
+      "end": "2026-01-31"
+    }
+  },
+  "kpiTotal": {
+    "vanzariCuTVA": 1250000.55,
+    "vanzariFaraTVA": 1050420.63,
+    "profit": 210340.25,
+    "nrComenzi": 842
+  },
+  "kpiPeOperator": [
+    {
+      "operatorId1c": "OP-00017",
+      "operatorNume": "Neteda Octavian",
+      "vanzariCuTVA": 350000.0,
+      "vanzariFaraTVA": 294117.65,
+      "profit": 60350.25,
+      "nrComenzi": 210
+    },
+    {
+      "operatorId1c": "OP-00023",
+      "operatorNume": "Iurcu Marina",
+      "vanzariCuTVA": 280000.25,
+      "vanzariFaraTVA": 235294.33,
+      "profit": 49320.0,
+      "nrComenzi": 165
+    }
+  ],
+  "topProduseLunarPeste1000": [
+    {
+      "luna": "2026-01",
+      "reguli": {
+        "pragPretUnitarCuTVA": 1000,
+        "sortare": "cantitate_desc_then_vanzariCuTVA_desc"
+      },
+      "produse": [
+        {
+          "productId1c": "PRD-100045",
+          "sku": "SKU-100045",
+          "denumire": "Invertor 10kW Model X",
+          "pretUnitarCuTVA": 1250.0,
+          "pretUnitarFaraTVA": 1050.42,
+          "cantitate": 42,
+          "vanzariCuTVA": 52500.0,
+          "vanzariFaraTVA": 44117.64,
+          "profit": 8200.0
+        },
+        {
+          "productId1c": "PRD-100912",
+          "sku": "SKU-100912",
+          "denumire": "Baterie 5kWh Model B",
+          "pretUnitarCuTVA": 1899.99,
+          "pretUnitarFaraTVA": 1596.63,
+          "cantitate": 18,
+          "vanzariCuTVA": 34199.82,
+          "vanzariFaraTVA": 28739.34,
+          "profit": 6100.0
+        }
+      ]
+    }
+  ]
+}
+

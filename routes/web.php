@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\KpiController;
 use App\Http\Controllers\UploadVanzariController;
 use App\Http\Controllers\UploadOperatorVanzariController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Api\OneCController;
 
 // Rute publice
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -89,4 +90,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/ga/content', [\App\Http\Controllers\Api\GAAnalyticsController::class, 'content'])->name('api.ga.content');
     Route::get('/api/ga/ecommerce', [\App\Http\Controllers\Api\GAAnalyticsController::class, 'ecommerce'])->name('api.ga.ecommerce');
     Route::get('/api/ga/campaigns', [\App\Http\Controllers\Api\GAAnalyticsController::class, 'campaigns'])->name('api.ga.campaigns');
+
+    // 1C Sync Routes
+    Route::post('/api/1c/sync-kpi', [OneCController::class, 'syncKpi'])->name('api.1c.sync.kpi');
 });
