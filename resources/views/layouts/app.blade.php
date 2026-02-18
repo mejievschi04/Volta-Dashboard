@@ -221,10 +221,17 @@
             body: JSON.stringify({ date_start, date_end })
           })
           .then(async (response) => {
-            const data = await response.json().catch(() => null);
+            const data = await response.json().catch(() => ({}));
 
             if (!response.ok || !data?.success) {
-              const msg = data?.message || 'Eroare la sincronizarea cu 1C.';
+              let msg = data?.message || 'Eroare la sincronizarea cu 1C.';
+              if (data?.error) {
+                if (data.error.includes('Connection refused') || data.error.includes('connection refused')) {
+                  msg = 'Serverul 1C nu răspunde (conexiune refuzată). Verificați că serverul 1C este pornit și accesibil din rețeaua curentă.';
+                } else {
+                  msg = msg + ' Detalii: ' + data.error;
+                }
+              }
               alert(msg);
               console.error('Sync 1C error', data);
             } else {

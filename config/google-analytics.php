@@ -3,17 +3,16 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Google Analytics Configuration
+    | Google Analytics (GA4) Configuration
     |--------------------------------------------------------------------------
-    |
-    | Configurație pentru Google Analytics Data API (GA4)
-    |
+    | Toate valorile se citesc din .env. Pe server: setați GA_PROPERTY_ID și
+    | puneți service-account-credentials.json în storage/app/google-analytics/
     */
 
-    // Calea către fișierul JSON cu credențialele Service Account
-    'credentials_path' => storage_path('app/google-analytics/service-account-credentials.json'),
+    'credentials_path' => env('GA_CREDENTIALS_PATH')
+        ?: storage_path('app/google-analytics/service-account-credentials.json'),
 
-    // Google Analytics 4 Property ID (ex: "123456789")
-    // Găsește-l în Google Analytics > Admin > Property Settings
-    'property_id' => env('GA_PROPERTY_ID', '281678807'),
+    'property_id' => env('GA_PROPERTY_ID', ''),
+
+    'ssl_verify' => filter_var(env('GA_SSL_VERIFY', true), FILTER_VALIDATE_BOOLEAN),
 ];

@@ -1,5 +1,13 @@
 <?php
 
+// Polyfill mb_split() dacă extensia mbstring lipsește (opțional; pe producție recomandat mbstring)
+if (! function_exists('mb_split')) {
+    function mb_split($pattern, $string, $limit = -1) {
+        $result = @preg_split('/' . $pattern . '/u', $string, $limit === -1 ? -1 : $limit);
+        return $result !== false ? $result : [$string];
+    }
+}
+
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 

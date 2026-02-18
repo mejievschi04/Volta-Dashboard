@@ -1,14 +1,19 @@
 #!/bin/bash
 
 # Script de diagnosticare pentru sincronizare GA4 pe VPS
-# Rulează: bash check-ga-sync-vps.sh
+# Rulează din rădăcina proiectului: bash check-ga-sync-vps.sh
 
 echo "=========================================="
 echo "Diagnosticare Sincronizare GA4"
 echo "=========================================="
 echo ""
 
-cd /var/www/volta-dashboard || exit 1
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+cd "$ROOT" || exit 1
+if [ ! -f "artisan" ]; then
+    echo "❌ Rulează acest script din directorul rădăcină al proiectului Laravel."
+    exit 1
+fi
 
 # 1. Verifică fișierul de credențiale
 echo "1. Verifică fișierul de credențiale..."
@@ -96,9 +101,9 @@ echo "Diagnosticare completă!"
 echo "=========================================="
 echo ""
 echo "📋 Pași următori:"
-echo "   1. Dacă fișierul lipsește, vezi CREATE-GA-CREDENTIALS-MANUAL.md"
+echo "   1. Dacă fișierul lipsește: pune service-account-credentials.json în storage/app/google-analytics/"
 echo "   2. Dacă permisiunile sunt greșite, rulează:"
 echo "      chmod 600 storage/app/google-analytics/service-account-credentials.json"
 echo "      chown www-data:www-data storage/app/google-analytics/service-account-credentials.json"
-echo "   3. Pentru mai multe detalii, vezi DEBUG-GA-SYNC-VPS.md"
+echo "   3. Verifică .env: GA_PROPERTY_ID trebuie setat (ex: 281678807)"
 echo ""

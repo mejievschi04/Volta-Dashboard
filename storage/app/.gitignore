@@ -1,4 +1,6 @@
 *
 !private/
 !public/
+!google-analytics/
+!google-analytics/.gitkeep
 !.gitignore

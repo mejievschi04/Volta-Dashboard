@@ -40,7 +40,7 @@ else
     echo "      chmod 600 storage/app/google-analytics/service-account-credentials.json"
     echo "      chown www-data:www-data storage/app/google-analytics/service-account-credentials.json"
     echo ""
-    echo "   Vezi SETUP-GA-CREDENTIALS-VPS.md pentru instrucțiuni detaliate"
+    echo "   Transferă JSON-ul din Google Cloud Console (Service Account) în acest director."
 fi
 
 # Verifică configurația .env

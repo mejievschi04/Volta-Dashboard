@@ -19,6 +19,7 @@
 /storage/*.key
 /storage/pail
 /storage/app/google-analytics/*.json
+/storage/app/last_onec_kpi_response.json
 /vendor
 Homestead.json
 Homestead.yaml

@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Pe VPS: setați document root la directorul public/ (acest fișier nu se folosește).
+    # În subdirector (ex. local): setați RewriteBase la calea aplicației, ex. /Dashboard-Volta-Laravel/
+    RewriteBase /Dashboard-Volta-Laravel/
+
+    RewriteCond %{REQUEST_URI} !^/Dashboard-Volta-Laravel/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

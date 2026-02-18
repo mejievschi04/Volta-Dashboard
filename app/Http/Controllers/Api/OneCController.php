@@ -71,17 +71,25 @@ class OneCController extends Controller
                 'raw_response' => $data ?? $response->body(),
             ], 200, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         } catch (\Throwable $e) {
+            $message = $e->getMessage();
             Log::error('OneC KPI sync exception', [
-                'message' => $e->getMessage(),
+                'message' => $message,
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
             ]);
 
+            $userMessage = 'Eroare la sincronizarea cu 1C.';
+            if (str_contains($message, 'Connection refused')) {
+                $userMessage = 'Serverul 1C nu răspunde (conexiune refuzată). Verificați că serverul este pornit și accesibil.';
+            } elseif (str_contains($message, 'timed out') || str_contains($message, 'timeout')) {
+                $userMessage = 'Serverul 1C nu răspunde în timp util (timeout). Încercați din nou sau verificați rețeaua.';
+            }
+
             return response()->json([
                 'success' => false,
-                'message' => 'Eroare internă la sincronizarea cu 1C',
-                'error' => $e->getMessage(),
-            ], 500, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                'message' => $userMessage,
+                'error' => $message,
+            ], 503, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         }
     }
 }

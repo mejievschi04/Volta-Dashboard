@@ -75,7 +75,7 @@ ls -lh storage/app/google-analytics/service-account-credentials.json
 echo ""
 echo "📝 Următorii pași:"
 echo "   1. Verifică că .env conține: GA_PROPERTY_ID=281678807"
-echo "   2. Adaugă service account-ul în Google Analytics (vezi CREATE-GA-CREDENTIALS-MANUAL.md)"
+echo "   2. În GA4: Admin > Property > Property access management, adaugă e-mailul din JSON ca Viewer"
 echo "   3. Rulează: php artisan config:clear"
 echo "   4. Testează sincronizarea din interfață"
 echo ""
