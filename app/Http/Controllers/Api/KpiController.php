@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Vanzari;
 use App\Models\PlanVanzari;
 use App\Models\TrafficSource;
 use App\Models\OnecKpiSync;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Auth;
 
 class KpiController extends Controller
@@ -31,29 +30,16 @@ class KpiController extends Controller
             ];
             $lunaNume = $luniRomana[$lunaNum] ?? '';
             
-            // Total vânzări: preferă datele 1C salvate în DB pentru luna cerută (nu mai apelăm 1C la fiecare request)
+            // Date doar din 1C (onec_kpi_syncs)
             $onecSync = OnecKpiSync::whereRaw("DATE_FORMAT(period_start, '%Y-%m') = ?", [$luna])
                 ->orderByDesc('created_at')
                 ->first();
 
-            $vanzariData = Vanzari::selectRaw('
-                SUM(suma_fara_tva) as total_vanzari,
-                SUM(suma_cu_tva) as total_vanzari_cu_tva,
-                SUM(profit) as total_profit,
-                SUM(nr_vanzari) as total_comenzi,
-                COUNT(DISTINCT data) as zile_activitate
-            ')
-            ->whereRaw("DATE_FORMAT(data, '%Y-%m') = ?", [$luna])
-            ->first();
+            $vanzariLuna = $onecSync ? floatval($onecSync->vanzari_fara_tva) : 0;
+            $vanzariCuTva = $onecSync ? floatval($onecSync->vanzari_cu_tva) : 0;
+            $profit = $onecSync ? floatval($onecSync->profit) : 0;
+            $comenzi = $onecSync ? intval($onecSync->nr_comenzi) : 0;
 
-            if ($onecSync) {
-                $vanzariData->total_vanzari = $onecSync->vanzari_fara_tva;
-                $vanzariData->total_vanzari_cu_tva = $onecSync->vanzari_cu_tva;
-                $vanzariData->total_profit = $onecSync->profit;
-                $vanzariData->total_comenzi = $onecSync->nr_comenzi;
-            }
-
-            // Total zile pentru comenzi/zi: la 1C folosim zilele din perioada sync-ului, altfel zile din lună
             $totalZilePentruComenziZi = intval(date('t', strtotime($luna . '-01')));
             if ($onecSync && $onecSync->period_start && $onecSync->period_end) {
                 $startStr = is_object($onecSync->period_start) ? $onecSync->period_start->format('Y-m-d') : (string) $onecSync->period_start;
@@ -76,10 +62,7 @@ class KpiController extends Controller
                 ->first();
             
             // Calculează KPI-urile
-            $comenzi = intval($vanzariData->total_comenzi ?? 0);
             $zileLuna = intval(date('t', strtotime($luna . '-01')));
-            
-            // Calculează zilele trecute
             $lunaSelectata = strtotime($luna . '-01');
             $lunaCurenta = strtotime(date('Y-m-01'));
             $ziCurenta = intval(date('d'));
@@ -93,15 +76,8 @@ class KpiController extends Controller
             }
             
             $comenziZi = $totalZilePentruComenziZi > 0 ? round($comenzi / $totalZilePentruComenziZi, 1) : 0;
-            
-            // Conversie
             $totalSesiuni = intval($sesiuniData->total_sesiuni ?? 0);
             $conversie = $totalSesiuni > 0 ? round(($comenzi / $totalSesiuni) * 100, 2) : 0;
-            
-            // Calculează KPI-urile pentru plan
-            $vanzariLuna = floatval($vanzariData->total_vanzari ?? 0);
-            $vanzariCuTva = floatval($vanzariData->total_vanzari_cu_tva ?? 0);
-            $profit = floatval($vanzariData->total_profit ?? 0);
             
             // Progres plan (%)
             $progresPlan = $planLuna > 0 ? round(($vanzariLuna / $planLuna) * 100, 2) : 0;
@@ -139,9 +115,9 @@ class KpiController extends Controller
                 'comenzi_zi' => $comenziZi,
                 'conversie' => $conversie,
                 'valoare_medie' => $valoareMedie,
-                'zile_activitate' => intval($vanzariData->zile_activitate ?? 0),
+                'zile_activitate' => 0,
                 'progres_zilnic' => $progresZilnic,
-                'kpi_source' => $onecSync ? 'onec_db' : 'local',
+                'kpi_source' => $onecSync ? 'onec_db' : 'onec_db',
             ]);
             
         } catch (\Exception $e) {

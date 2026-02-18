@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Vanzari;
 use App\Models\PlanVanzari;
 use App\Models\TrafficSource;
 use App\Models\OnecKpiSync;
@@ -15,17 +14,16 @@ class IstoricController extends Controller
     public function index(Request $request)
     {
         try {
-            // Obține toate lunile cu date
-            $rows = Vanzari::selectRaw('
-                DATE_FORMAT(data, "%Y-%m") as month,
-                DATE_FORMAT(data, "%M") as month_name,
-                YEAR(data) as an,
-                MONTH(data) as luna_num
-            ')
-            ->groupBy(DB::raw('DATE_FORMAT(data, "%Y-%m")'), DB::raw('DATE_FORMAT(data, "%M")'), DB::raw('YEAR(data)'), DB::raw('MONTH(data)'))
-            ->orderBy('month', 'DESC')
-            ->get();
-            
+            // Lunile doar din 1C (onec_kpi_syncs)
+            $allMonths = OnecKpiSync::selectRaw("DATE_FORMAT(period_start, '%Y-%m') as month")
+                ->distinct()
+                ->pluck('month')
+                ->filter()
+                ->sort()
+                ->values()
+                ->reverse()
+                ->values();
+
             // Obține planurile
             $planMap = [];
             $lunaToNum = [
@@ -54,50 +52,37 @@ class IstoricController extends Controller
             ];
             
             $istoric = [];
-            
-            foreach ($rows as $row) {
-                $luna = $row->month;
-                $planKey = $row->an . '-' . str_pad($row->luna_num, 2, '0', STR_PAD_LEFT);
-                
-                // Vânzări pentru luna (preferă 1C din DB când există)
-                $vanzariData = Vanzari::selectRaw('
-                    SUM(suma_fara_tva) as total_vanzari,
-                    SUM(suma_cu_tva) as total_vanzari_cu_tva,
-                    SUM(profit) as total_profit,
-                    SUM(nr_vanzari) as total_comenzi,
-                    COUNT(DISTINCT data) as zile_activitate
-                ')
-                ->whereRaw("DATE_FORMAT(data, '%Y-%m') = ?", [$luna])
-                ->first();
+
+            foreach ($allMonths as $luna) {
+                $parts = explode('-', $luna);
+                $an = (int) ($parts[0] ?? date('Y'));
+                $lunaNum = (int) ($parts[1] ?? 1);
+                $planKey = $an . '-' . str_pad($lunaNum, 2, '0', STR_PAD_LEFT);
 
                 $onecSync = OnecKpiSync::whereRaw("DATE_FORMAT(period_start, '%Y-%m') = ?", [$luna])
                     ->orderByDesc('created_at')
                     ->first();
-                if ($onecSync) {
-                    $vanzariData->total_vanzari = $onecSync->vanzari_fara_tva;
-                    $vanzariData->total_vanzari_cu_tva = $onecSync->vanzari_cu_tva;
-                    $vanzariData->total_profit = $onecSync->profit;
-                    $vanzariData->total_comenzi = $onecSync->nr_comenzi;
-                }
-                
-                // Plan
+
+                $vanzariLuna = $onecSync ? floatval($onecSync->vanzari_fara_tva) : 0;
+                $vanzariCuTva = $onecSync ? floatval($onecSync->vanzari_cu_tva) : 0;
+                $profit = $onecSync ? floatval($onecSync->profit) : 0;
+                $comenzi = $onecSync ? intval($onecSync->nr_comenzi) : 0;
+
                 $planLuna = $planMap[$planKey] ?? 0;
-                
-                // Sesiuni
                 $sesiuniData = TrafficSource::selectRaw('SUM(visits) as total_sesiuni')
                     ->where('source', 'total')
                     ->whereRaw("DATE_FORMAT(date, '%Y-%m') = ?", [$luna])
                     ->first();
-                
-                // Calcule
-                $vanzariLuna = floatval($vanzariData->total_vanzari ?? 0);
-                $vanzariCuTva = floatval($vanzariData->total_vanzari_cu_tva ?? 0);
-                $profit = floatval($vanzariData->total_profit ?? 0);
-                $comenzi = intval($vanzariData->total_comenzi ?? 0);
                 $totalSesiuni = intval($sesiuniData->total_sesiuni ?? 0);
                 
                 $zileLuna = intval(date('t', strtotime($luna . '-01')));
-                $comenziZi = $zileLuna > 0 ? round($comenzi / $zileLuna, 1) : 0;
+                $totalZileComenziZi = $zileLuna;
+                if ($onecSync && $onecSync->period_start && $onecSync->period_end) {
+                    $startStr = is_object($onecSync->period_start) ? $onecSync->period_start->format('Y-m-d') : (string) $onecSync->period_start;
+                    $endStr = is_object($onecSync->period_end) ? $onecSync->period_end->format('Y-m-d') : (string) $onecSync->period_end;
+                    $totalZileComenziZi = max(1, (int) ((strtotime($endStr) - strtotime($startStr)) / 86400) + 1);
+                }
+                $comenziZi = $totalZileComenziZi > 0 ? round($comenzi / $totalZileComenziZi, 1) : 0;
                 $conversie = $totalSesiuni > 0 ? round(($comenzi / $totalSesiuni) * 100, 2) : 0;
                 $progresPlan = $planLuna > 0 ? round(($vanzariLuna / $planLuna) * 100, 2) : 0;
                 $diferentaPlan = $vanzariLuna - $planLuna;
@@ -120,14 +105,14 @@ class IstoricController extends Controller
                 $prognozaPlan = $vanzariLuna + ($vanzariZilniceMedii * $zileRamase);
                 $prognozaPlanProcent = $planLuna > 0 ? round(($prognozaPlan / $planLuna) * 100, 2) : 0;
                 
-                $lunaNume = $luniRomana[$row->luna_num] ?? 'Luna ' . $row->luna_num;
-                $label = $lunaNume . ' ' . $row->an;
-                
+                $lunaNume = $luniRomana[$lunaNum] ?? 'Luna ' . $lunaNum;
+                $label = $lunaNume . ' ' . $an;
+
                 $istoric[] = [
                     'luna' => $luna,
                     'luna_label' => $label,
-                    'an' => $row->an,
-                    'luna_num' => $row->luna_num,
+                    'an' => $an,
+                    'luna_num' => $lunaNum,
                     'plan_luna' => $planLuna,
                     'vanzari_luna' => $vanzariLuna,
                     'vanzari_cu_tva' => $vanzariCuTva,
@@ -140,8 +125,8 @@ class IstoricController extends Controller
                     'comenzi_zi' => $comenziZi,
                     'sesiuni' => $totalSesiuni,
                     'conversie' => $conversie,
-                    'zile_activitate' => intval($vanzariData->zile_activitate ?? 0),
-                    'kpi_source' => $onecSync ? 'onec_db' : 'local',
+                    'zile_activitate' => 0,
+                    'kpi_source' => 'onec_db',
                 ];
             }
             

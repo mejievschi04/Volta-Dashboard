@@ -7,7 +7,6 @@ use App\Http\Controllers\OperatoriController;
 use App\Http\Controllers\ProduseController;
 use App\Http\Controllers\RapoarteController;
 use App\Http\Controllers\Api\KpiController;
-use App\Http\Controllers\UploadVanzariController;
 use App\Http\Controllers\UploadOperatorVanzariController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Api\OneCController;
@@ -66,9 +65,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/setari', [DashboardController::class, 'setari'])->name('setari');
     Route::post('/setari/update', [DashboardController::class, 'updateSettings'])->name('setari.update');
     Route::post('/setari/password', [DashboardController::class, 'changePassword'])->name('setari.password');
-    
-    // Upload Excel Vânzări
-    Route::post('/upload/vanzari', [UploadVanzariController::class, 'upload'])->name('upload.vanzari');
     
     // API Routes
     Route::get('/api/kpi', [KpiController::class, 'index'])->name('api.kpi');

@@ -11,7 +11,6 @@
   <div class="tabs">
     <div class="tab active" data-tab="general">Generale</div>
     <div class="tab" data-tab="security">Securitate</div>
-    <div class="tab" data-tab="import-vanzari">Import Vânzări</div>
     @php $isAdmin = auth()->check() && in_array(strtolower(auth()->user()->role ?? ''), ['admin', 'administrator']); @endphp
     @if($isAdmin)
     <div class="tab" data-tab="onec-refresh">Date 1C</div>
@@ -90,35 +89,6 @@
       @if(session('passMessage'))
         <div style="margin-top:10px; color: {{ session('passMessage') === 'Parola a fost schimbată cu succes!' ? 'green' : 'red' }};">
           {{ session('passMessage') }}
-        </div>
-      @endif
-    </div>
-  </form>
-
-  <!-- IMPORT DATE VANZARI -->
-  <form method="POST" action="{{ route('upload.vanzari') }}" enctype="multipart/form-data" class="tab-content" id="import-vanzari">
-    @csrf
-    <div class="form">
-      <div class="field">
-        <label>📊 Importare Date Vânzări din 1C (Excel)</label>
-      </div>
-      <div class="field">
-        <input type="file" name="excel_file" accept=".xlsx,.xls" required style="padding: 10px; border: 2px dashed #9CA3AF; border-radius: 8px; background: #111827; color: #fff; width: 100%; cursor: pointer;">
-      </div>
-      <div class="field">
-        <label style="display: flex; align-items: center; cursor: pointer;">
-          <input type="checkbox" name="replace_existing" style="margin-right: 8px;">
-          Înlocuiește datele existente (șterge datele vechi pentru perioada importată)
-        </label>
-      </div>
-      <div class="field">
-        <button type="submit" name="upload_excel" class="btn" style="width:100%; background: #FFEE00; color: #000; font-weight: 600;">
-          📤 Încarcă și Importă Date Vânzări
-        </button>
-      </div>
-      @if(session('import_status'))
-        <div style="margin-top:10px; padding: 12px; border-radius: 8px; background: {{ session('import_status') === 'success' ? '#10B981' : '#EF4444' }}; color: white;">
-          {!! session('import_message') !!}
         </div>
       @endif
     </div>
