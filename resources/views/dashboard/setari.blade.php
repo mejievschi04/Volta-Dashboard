@@ -12,6 +12,10 @@
     <div class="tab active" data-tab="general">Generale</div>
     <div class="tab" data-tab="security">Securitate</div>
     <div class="tab" data-tab="import-vanzari">Import Vânzări</div>
+    @php $isAdmin = auth()->check() && in_array(strtolower(auth()->user()->role ?? ''), ['admin', 'administrator']); @endphp
+    @if($isAdmin)
+    <div class="tab" data-tab="onec-refresh">Date 1C</div>
+    @endif
   </div>
 
   <!-- GENERAL -->
@@ -119,6 +123,24 @@
       @endif
     </div>
   </form>
+
+  @if($isAdmin)
+  <!-- Hard refresh date 1C (doar admin) -->
+  <div class="tab-content" id="onec-refresh">
+    <div class="form">
+      <div class="field">
+        <label>🔄 Hard refresh date 1C (lunile trecute)</label>
+        <p style="color: #9CA3AF; font-size: 13px; margin: 8px 0 12px 0;">Reîncarcă din 1C și rescrie în baza de date toate lunile trecute (ultimele 12 luni). Folosește doar dacă vrei să suprascrii datele existente cu cele de la 1C.</p>
+      </div>
+      <div class="field">
+        <button type="button" id="onecHardRefreshBtn" class="btn" style="width:100%; background: #EF4444; color: #fff; font-weight: 600;">
+          Rescrie toate datele 1C (lunile trecute)
+        </button>
+      </div>
+      <div id="onecHardRefreshStatus" style="margin-top: 12px; padding: 12px; border-radius: 8px; display: none;"></div>
+    </div>
+  </div>
+  @endif
 </div>
 
 <div class="toast" id="toast">
@@ -149,6 +171,43 @@ document.getElementById('toast').classList.add('show');
 setTimeout(() => {
   document.getElementById('toast').classList.remove('show');
 }, 3000);
+@endif
+
+// Hard refresh 1C (admin)
+@if(isset($isAdmin) && $isAdmin)
+(function() {
+  const btn = document.getElementById('onecHardRefreshBtn');
+  const statusEl = document.getElementById('onecHardRefreshStatus');
+  if (!btn || !statusEl) return;
+  btn.addEventListener('click', function() {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    statusEl.style.display = 'block';
+    statusEl.textContent = 'Se reîncarcă datele din 1C... (poate dura câteva minute)';
+    statusEl.style.background = '#1F2937';
+    statusEl.style.color = '#fff';
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    fetch("{{ route('api.1c.hard.refresh') }}", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrf },
+      body: JSON.stringify({})
+    })
+    .then(r => r.json())
+    .then(data => {
+      statusEl.textContent = data.message || (data.success ? 'Gata.' : 'Eroare.');
+      statusEl.style.background = data.success ? '#10B981' : '#EF4444';
+      statusEl.style.color = '#fff';
+      if (data.onec_calls !== undefined) {
+        statusEl.textContent += ' Apeluri 1C: ' + data.onec_calls + '/' + (data.total_months || '?') + '.';
+      }
+    })
+    .catch(err => {
+      statusEl.textContent = 'Eroare: ' + (err.message || 'rețea');
+      statusEl.style.background = '#EF4444';
+    })
+    .finally(() => { btn.disabled = false; });
+  });
+})();
 @endif
 </script>
 @endpush

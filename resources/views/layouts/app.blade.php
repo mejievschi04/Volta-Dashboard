@@ -13,8 +13,14 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   @stack('styles')
   <style>
-    .sync-status { margin-left: 8px; font-size: 12px; color: var(--muted, #9CA3AF); }
-    .sync-status-error { color: var(--error, #EF4444); }
+    .sync-1c-sidebar { padding: 10px 14px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .sync-btn-sidebar { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 14px; background: rgba(255,238,0,0.15); color: #FFEE00; border: 1px solid rgba(255,238,0,0.3); border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; }
+    .sync-btn-sidebar:hover { background: rgba(255,238,0,0.25); }
+    .sync-btn-sidebar.syncing { opacity: 0.8; pointer-events: none; }
+    .sync-btn-sidebar.syncing .fa-sync-alt { animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .sync-status-sidebar { display: block; margin-top: 8px; min-height: 20px; padding: 6px 8px; font-size: 12px; line-height: 1.3; word-wrap: break-word; border-radius: 6px; background: rgba(0,0,0,0.2); color: var(--muted, #9CA3AF); }
+    .sync-status-sidebar.sync-status-error { color: #F87171; background: rgba(239,68,68,0.1); }
   </style>
 </head>
 <body>
@@ -55,6 +61,13 @@
         @endif
       </nav>
 
+      <div class="sync-1c-sidebar">
+        <button type="button" class="sync-btn sync-btn-sidebar" id="syncBtn" title="Sincronizare date 1C">
+          <i class="fas fa-sync-alt"></i><span class="txt">Sync 1C</span>
+        </button>
+        <div id="sync1cStatus" class="sync-status sync-status-sidebar" aria-live="polite"></div>
+      </div>
+
       <div class="logout-container">
         <form action="{{ route('logout') }}" method="post">
           @csrf
@@ -93,11 +106,6 @@
             <div class="role">{{ Auth::check() ? (Auth::user()->role ?? 'User') : 'User' }}</div>
           </div>
           <div class="user-avatar">{{ Auth::check() ? strtoupper(substr(Auth::user()->username, 0, 1)) : 'U' }}</div>
-          <button type="button" class="sync-btn" id="syncBtn" title="Sincronizare vânzări 1C">
-            <i class="fas fa-sync-alt fa-lg"></i>
-            <span class="sync-text">Sincronizare</span>
-          </button>
-          <span id="sync1cStatus" class="sync-status" aria-live="polite"></span>
         </div>
       </div>
       @endif
@@ -218,12 +226,7 @@
           syncBtn.disabled = true;
           console.log('Sincronizare 1C →', syncUrl);
 
-          const today = new Date();
-          const year = today.getFullYear();
-          const month = String(today.getMonth() + 1).padStart(2, '0');
-          const date_start = `${year}-${month}-01`;
-          const date_end = today.toISOString().slice(0, 10);
-
+          // smart=1: doar perioade care lipsesc (luna curentă, luna trecută), fără apel 1C dacă există deja
           fetch(syncUrl, {
             method: 'POST',
             headers: {
@@ -231,7 +234,7 @@
               'Accept': 'application/json',
               'X-CSRF-TOKEN': csrfToken || ''
             },
-            body: JSON.stringify({ date_start, date_end })
+            body: JSON.stringify({ smart: true })
           })
           .then(async (response) => {
             const contentType = response.headers.get('content-type') || '';
@@ -265,7 +268,8 @@
               setStatus(msg, true);
               console.error('Sync 1C error', data);
             } else {
-              setStatus('OK: ' + data.date_start + ' – ' + data.date_end, false);
+              const msg = data.message || (data.date_start && data.date_end ? 'OK: ' + data.date_start + ' – ' + data.date_end : 'Sincronizare reușită.');
+              setStatus(msg, false);
               console.log('Sync 1C success', data);
             }
           })

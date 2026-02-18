@@ -33,6 +33,12 @@
   font-size: 14px;
 }
 
+.istoric-header .source-note {
+  color: #10B981;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
 .istoric-filters {
   display: flex;
   gap: 15px;
@@ -456,6 +462,7 @@
   <div class="istoric-header">
     <h1>Istoric Rapoarte</h1>
     <p>Vizualizează și analizează toate datele istorice pentru fiecare lună</p>
+    <p class="source-note"><i class="fas fa-database"></i> Iconul de lângă lună = date vânzări/profit/comenzi din 1C</p>
   </div>
 
   <!-- Filtre -->
@@ -688,8 +695,9 @@ function updateTable() {
     const diffClass = vanzariVsAnterioara >= 0 ? 'positive' : 'negative';
     const sign = vanzariVsAnterioara >= 0 ? '+' : '';
     
+    const sourceIcon = (item.kpi_source === 'onec_db') ? ' <i class="fas fa-database" style="color: #10B981; font-size: 11px;" title="Date din 1C"></i>' : '';
     tr.innerHTML = `
-      <td><strong>${item.luna_label}</strong></td>
+      <td><strong>${item.luna_label}</strong>${sourceIcon}</td>
       <td class="text-right">${formatNumber(item.plan_luna)}</td>
       <td class="text-right">${formatNumber(item.vanzari_luna)}</td>
       <td class="text-right">${formatNumber(item.vanzari_cu_tva)}</td>

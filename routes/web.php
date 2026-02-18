@@ -93,4 +93,5 @@ Route::middleware(['auth'])->group(function () {
 
     // 1C Sync Routes
     Route::post('/api/1c/sync-kpi', [OneCController::class, 'syncKpi'])->name('api.1c.sync.kpi');
+    Route::post('/api/1c/hard-refresh', [OneCController::class, 'hardRefresh'])->name('api.1c.hard.refresh')->middleware(\App\Http\Middleware\CheckAdmin::class);
 });

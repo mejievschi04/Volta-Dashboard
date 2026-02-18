@@ -14,6 +14,9 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
     <label for="selectLuna">Selectează luna</label>
     <select id="selectLuna" class="dashboard-month-select"></select>
   </div>
+  <div id="kpi-source-badge" class="kpi-source-badge" style="display: none;" title="KPI-urile vânzări, profit și comenzi provin din ultima sincronizare 1C">
+    <i class="fas fa-database"></i> Date din 1C
+  </div>
 </div>
 
 <!-- KPI CARDS -->
@@ -81,7 +84,7 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
   <div class="chart-container">
     <h2><i class="fas fa-chart-line" style="margin-right: 8px;"></i>Grafic lunar</h2>
     <div class="chart-wrapper">
-      <canvas id="salesChart" style="cursor: pointer;" title="Click pentru detalii vânzări"></canvas>
+      <canvas id="salesChart"></canvas>
     </div>
   </div>
   <div class="chart-container">
@@ -279,16 +282,6 @@ async function loadVanzariTotale() {
             },
             beginAtZero: true
           }
-        },
-        onClick: (event, elements) => {
-          if (elements.length > 0) {
-            const element = elements[0];
-            const luna = labels[element.index];
-            openVanzariDetaliiModal(luna);
-          }
-        },
-        onHover: (event, activeElements) => {
-          event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
         }
       }
     });
@@ -337,6 +330,12 @@ async function loadVanzariTotale() {
           }
         }
       });
+
+      // Indicator sursă date: 1C (din DB) sau local
+      const badge = document.getElementById('kpi-source-badge');
+      if (badge) {
+        badge.style.display = (kpiData.kpi_source === 'onec_db') ? '' : 'none';
+      }
       
       // Reinițializează editarea după actualizarea KPI-urilor
       @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
@@ -776,142 +775,6 @@ async function loadRaportComenziSesiuniByLuna(luna) {
     });
 
   } catch(err){ console.error("Eroare la grafic Comenzi vs Conversie:", err); }
-}
-
-// ---------------- MODAL VANZARI DETALII ---------------- 
-async function openVanzariDetaliiModal(luna) {
-  try {
-    const res = await fetch(`{{ route('api.vanzari.detalii') }}?month=${luna}`);
-    const data = await res.json();
-    
-    if (!data.success) {
-      alert("Eroare la încărcarea datelor: " + (data.error || "Eroare necunoscută"));
-      return;
-    }
-    
-    const modal = document.createElement('div');
-    modal.id = 'vanzariDetaliiModal';
-    const isMobile = window.innerWidth <= 768;
-    modal.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(17, 24, 39, 0.9);
-      display: flex;
-      justify-content: center;
-      align-items: ${isMobile ? 'flex-start' : 'center'};
-      z-index: 10000;
-      padding: ${isMobile ? '10px' : '20px'};
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    `;
-    
-    const modalContent = document.createElement('div');
-    modalContent.style.cssText = `
-      background: #111827;
-      border-radius: ${isMobile ? '16px' : '12px'};
-      padding: ${isMobile ? '20px 16px' : '30px'};
-      max-width: ${isMobile ? '100%' : '900px'};
-      width: 100%;
-      max-height: ${isMobile ? '95vh' : '90vh'};
-      overflow-y: auto;
-      color: #fff;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-      margin-top: ${isMobile ? '10px' : '0'};
-    `;
-    
-    const monthName = new Date(luna + '-01').toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
-    
-    const gridCols = isMobile ? '1fr' : 'repeat(3, 1fr)';
-    const cardPadding = isMobile ? '16px' : '20px';
-    const titleSize = isMobile ? '18px' : '24px';
-    const valueSize = isMobile ? '20px' : '24px';
-    const headerFlex = isMobile ? 'column' : 'row';
-    const headerGap = isMobile ? '12px' : '0';
-    
-    modalContent.innerHTML = `
-      <div style="display: flex; flex-direction: ${headerFlex}; justify-content: space-between; align-items: ${isMobile ? 'flex-start' : 'center'}; gap: ${headerGap}; margin-bottom: ${isMobile ? '16px' : '20px'};">
-        <h2 style="margin: 0; color: #ffee00; font-size: ${titleSize}; line-height: 1.3;">Detalii Vânzări - ${monthName}</h2>
-        <button id="closeModal" style="
-          background: #EF4444;
-          color: white;
-          border: none;
-          padding: ${isMobile ? '10px 16px' : '10px 20px'};
-          border-radius: 8px;
-          cursor: pointer;
-          font-size: ${isMobile ? '14px' : '16px'};
-          font-weight: 600;
-          min-width: ${isMobile ? 'auto' : '100px'};
-          align-self: ${isMobile ? 'flex-end' : 'auto'};
-        ">✕ ${isMobile ? '' : 'Închide'}</button>
-      </div>
-      
-      <div style="display: grid; grid-template-columns: ${gridCols}; gap: ${isMobile ? '12px' : '15px'}; margin-bottom: ${isMobile ? '20px' : '25px'};">
-        <div style="background: #1F2937; padding: ${cardPadding}; border-radius: 8px; text-align: center;">
-          <div style="color: #9CA3AF; font-size: ${isMobile ? '12px' : '14px'}; margin-bottom: ${isMobile ? '6px' : '8px'};">Total fără TVA</div>
-          <div style="color: #ffee00; font-size: ${valueSize}; font-weight: 700; word-break: break-word;">${formatNumber(data.total_fara_tva)} MDL</div>
-        </div>
-        <div style="background: #1F2937; padding: ${cardPadding}; border-radius: 8px; text-align: center;">
-          <div style="color: #9CA3AF; font-size: ${isMobile ? '12px' : '14px'}; margin-bottom: ${isMobile ? '6px' : '8px'};">Total cu TVA</div>
-          <div style="color: #ffee00; font-size: ${valueSize}; font-weight: 700; word-break: break-word;">${formatNumber(data.total_cu_tva)} MDL</div>
-        </div>
-        <div style="background: #1F2937; padding: ${cardPadding}; border-radius: 8px; text-align: center;">
-          <div style="color: #9CA3AF; font-size: ${isMobile ? '12px' : '14px'}; margin-bottom: ${isMobile ? '6px' : '8px'};">Total Profit</div>
-          <div style="color: #ffee00; font-size: ${valueSize}; font-weight: 700; word-break: break-word;">${formatNumber(data.total_profit)} MDL</div>
-        </div>
-      </div>
-      
-      <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
-        <table style="width: 100%; border-collapse: collapse; min-width: ${isMobile ? '600px' : 'auto'};">
-          <thead>
-            <tr style="background: #1F2937;">
-              <th style="padding: ${isMobile ? '10px 8px' : '12px'}; text-align: left; border-bottom: 2px solid #ffee00; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">Data</th>
-              <th style="padding: ${isMobile ? '10px 8px' : '12px'}; text-align: right; border-bottom: 2px solid #ffee00; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">Fără TVA</th>
-              <th style="padding: ${isMobile ? '10px 8px' : '12px'}; text-align: right; border-bottom: 2px solid #ffee00; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">Cu TVA</th>
-              <th style="padding: ${isMobile ? '10px 8px' : '12px'}; text-align: right; border-bottom: 2px solid #ffee00; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">Profit</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${data.data.map(row => `
-              <tr style="border-bottom: 1px solid #9CA3AF;">
-                <td style="padding: ${isMobile ? '10px 8px' : '10px'}; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">${row.data}</td>
-                <td style="padding: ${isMobile ? '10px 8px' : '10px'}; text-align: right; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">${formatNumber(row.fara_tva)} MDL</td>
-                <td style="padding: ${isMobile ? '10px 8px' : '10px'}; text-align: right; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">${formatNumber(row.cu_tva)} MDL</td>
-                <td style="padding: ${isMobile ? '10px 8px' : '10px'}; text-align: right; color: #ffee00; font-size: ${isMobile ? '13px' : '14px'}; white-space: nowrap;">${formatNumber(row.profit)} MDL</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-    `;
-    
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-    
-    document.getElementById('closeModal').addEventListener('click', () => {
-      document.body.removeChild(modal);
-    });
-    
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        document.body.removeChild(modal);
-      }
-    });
-    
-    const escHandler = (e) => {
-      if (e.key === 'Escape') {
-        document.body.removeChild(modal);
-        document.removeEventListener('keydown', escHandler);
-      }
-    };
-    document.addEventListener('keydown', escHandler);
-    
-  } catch(err) {
-    console.error("Eroare la deschiderea modalului:", err);
-    alert("Eroare la încărcarea datelor detaliate");
-  }
 }
 
 // ---------------- DOCUMENT READY ---------------- 

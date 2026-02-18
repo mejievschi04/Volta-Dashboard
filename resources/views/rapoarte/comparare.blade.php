@@ -464,6 +464,12 @@
     </div>
   </div>
 
+  <!-- Sursa date KPI (1C / local) -->
+  <div id="comparareKpiSource" class="comparare-kpi-source" style="display: none; margin-bottom: 12px; font-size: 13px; color: #10B981;">
+    <i class="fas fa-database"></i>
+    <span id="comparareKpiSourceText"></span>
+  </div>
+
   <!-- KPI Cards cu Comparare -->
   <div class="comparare-kpi-grid" id="kpiGrid">
     <!-- KPI cards vor fi populate dinamic -->
@@ -618,6 +624,16 @@ async function updateComparare() {
     
     // Update KPI Cards
     updateKPICards(kpiData1, kpiData2);
+
+    // Indicator sursă date 1C
+    const src1 = (kpiData1.kpi_source === 'onec_db') ? '1C' : 'local';
+    const src2 = (kpiData2.kpi_source === 'onec_db') ? '1C' : 'local';
+    const sourceEl = document.getElementById('comparareKpiSource');
+    const sourceText = document.getElementById('comparareKpiSourceText');
+    if (sourceEl && sourceText) {
+      sourceText.textContent = `Luna 1: ${src1} · Luna 2: ${src2}`;
+      sourceEl.style.display = (src1 === '1C' || src2 === '1C') ? '' : 'none';
+    }
     
     // Update Charts
     updateCharts(kpiData1, kpiData2, month1Name, month2Name);

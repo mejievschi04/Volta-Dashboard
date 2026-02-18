@@ -2024,6 +2024,27 @@ select:focus {
 .month-selector-modern {
   margin-bottom: 25px;
   padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.kpi-source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 12px;
+  color: #10B981;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.kpi-source-badge i {
+  font-size: 14px;
 }
 
 .month-selector-wrapper {

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Vanzari;
 use App\Models\PlanVanzari;
 use App\Models\TrafficSource;
+use App\Models\OnecKpiSync;
 use Illuminate\Support\Facades\DB;
 
 class IstoricController extends Controller
@@ -58,7 +59,7 @@ class IstoricController extends Controller
                 $luna = $row->month;
                 $planKey = $row->an . '-' . str_pad($row->luna_num, 2, '0', STR_PAD_LEFT);
                 
-                // Vânzări pentru luna
+                // Vânzări pentru luna (preferă 1C din DB când există)
                 $vanzariData = Vanzari::selectRaw('
                     SUM(suma_fara_tva) as total_vanzari,
                     SUM(suma_cu_tva) as total_vanzari_cu_tva,
@@ -68,6 +69,16 @@ class IstoricController extends Controller
                 ')
                 ->whereRaw("DATE_FORMAT(data, '%Y-%m') = ?", [$luna])
                 ->first();
+
+                $onecSync = OnecKpiSync::whereRaw("DATE_FORMAT(period_start, '%Y-%m') = ?", [$luna])
+                    ->orderByDesc('created_at')
+                    ->first();
+                if ($onecSync) {
+                    $vanzariData->total_vanzari = $onecSync->vanzari_fara_tva;
+                    $vanzariData->total_vanzari_cu_tva = $onecSync->vanzari_cu_tva;
+                    $vanzariData->total_profit = $onecSync->profit;
+                    $vanzariData->total_comenzi = $onecSync->nr_comenzi;
+                }
                 
                 // Plan
                 $planLuna = $planMap[$planKey] ?? 0;
@@ -129,7 +140,8 @@ class IstoricController extends Controller
                     'comenzi_zi' => $comenziZi,
                     'sesiuni' => $totalSesiuni,
                     'conversie' => $conversie,
-                    'zile_activitate' => intval($vanzariData->zile_activitate ?? 0)
+                    'zile_activitate' => intval($vanzariData->zile_activitate ?? 0),
+                    'kpi_source' => $onecSync ? 'onec_db' : 'local',
                 ];
             }
             
