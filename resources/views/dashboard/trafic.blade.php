@@ -642,18 +642,22 @@ async function syncGoogleAnalytics() {
       }
     });
     
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(`HTTP ${response.status}: ${text.substring(0, 200)}`);
-    }
-    
+    const text = await response.text();
     const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-      const text = await response.text();
-      throw new Error(`Răspuns invalid (nu este JSON): ${text.substring(0, 200)}`);
+    const isJson = contentType && contentType.includes('application/json');
+    let result = null;
+    if (isJson && text) {
+      try { result = JSON.parse(text); } catch (_) {}
+    }
+
+    if (!response.ok) {
+      const msg = (result && (result.error || result.message)) ? (result.error || result.message) : text.substring(0, 300);
+      throw new Error(msg);
     }
     
-    const result = await response.json();
+    if (!result) {
+      throw new Error('Răspuns invalid de la server.');
+    }
     
     if (result.success) {
       syncStatus.className = 'success';

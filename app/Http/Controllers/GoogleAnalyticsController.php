@@ -223,44 +223,25 @@ class GoogleAnalyticsController extends Controller
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-                'credentials_path' => config('google-analytics.credentials_path'),
-                'property_id' => config('google-analytics.property_id'),
-                'credentials_exists' => file_exists(config('google-analytics.credentials_path')),
-                'credentials_readable' => file_exists(config('google-analytics.credentials_path')) ? is_readable(config('google-analytics.credentials_path')) : false
             ]);
 
-            // Returnează un mesaj mai clar pentru utilizator
             $errorMessage = $e->getMessage();
-            
-            // Adaugă informații suplimentare pentru probleme comune
-            if (strpos($errorMessage, 'Fișierul de credențiale nu există') !== false) {
-                $errorMessage .= ' Pentru a rezolva: încarcă fișierul service-account-credentials.json în storage/app/google-analytics/ pe server.';
+            if (strpos($errorMessage, 'Fișierul de credențiale') !== false) {
+                $errorMessage .= ' Încarcă service-account-credentials.json în storage/app/google-analytics/ pe server.';
             } elseif (strpos($errorMessage, 'Property ID') !== false) {
-                $errorMessage .= ' Verifică fișierul .env pe server și asigură-te că GA_PROPERTY_ID este setat corect.';
+                $errorMessage .= ' Adaugă în .env: GA_PROPERTY_ID=123456789 (ID din GA4 Admin → Property Settings).';
             }
 
-            // Construiește răspunsul cu detalii pentru debugging
-            $response = [
+            $isConfigError = strpos($e->getMessage(), 'Property ID') !== false
+                || strpos($e->getMessage(), 'credențiale') !== false
+                || strpos($e->getMessage(), 'credentials') !== false;
+            $statusCode = $isConfigError ? 400 : 500;
+
+            return response()->json([
                 'success' => false,
-                'message' => 'Server Error',
+                'message' => $isConfigError ? 'Configurare GA4 incompletă' : 'Server Error',
                 'error' => $errorMessage,
-                'file' => basename($e->getFile()),
-                'line' => $e->getLine(),
-            ];
-
-            // În modul de dezvoltare sau dacă APP_DEBUG este true, adaugă mai multe detalii
-            if (config('app.debug') || env('APP_DEBUG', false)) {
-                $response['debug'] = [
-                    'exception_class' => get_class($e),
-                    'trace' => array_slice($e->getTrace(), 0, 5), // Primele 5 niveluri
-                    'credentials_path' => config('google-analytics.credentials_path'),
-                    'credentials_exists' => file_exists(config('google-analytics.credentials_path')),
-                    'property_id' => config('google-analytics.property_id'),
-                ];
-            }
-
-            return response()->json($response, 500, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            ], $statusCode, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         }
     }
 }
