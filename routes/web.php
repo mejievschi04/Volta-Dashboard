@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OperatoriController;
-use App\Http\Controllers\ProduseController;
 use App\Http\Controllers\RapoarteController;
 use App\Http\Controllers\Api\KpiController;
 use App\Http\Controllers\UploadOperatorVanzariController;
@@ -53,8 +52,6 @@ Route::middleware(['auth'])->group(function () {
     
     // Ruta show trebuie să fie după create pentru a evita conflictele
     Route::get('/operatori/{id}', [OperatoriController::class, 'show'])->name('operatori.show');
-    
-    Route::get('/produse', [ProduseController::class, 'index'])->name('produse');
     
     Route::get('/rapoarte', [RapoarteController::class, 'index'])->name('rapoarte');
     Route::get('/rapoarte/comparare', [RapoarteController::class, 'comparare'])->name('rapoarte.comparare');

@@ -695,7 +695,7 @@ function updateTable() {
     const diffClass = vanzariVsAnterioara >= 0 ? 'positive' : 'negative';
     const sign = vanzariVsAnterioara >= 0 ? '+' : '';
     
-    const sourceIcon = (item.kpi_source === 'onec_db') ? ' <i class="fas fa-database" style="color: #10B981; font-size: 11px;" title="Date din 1C"></i>' : '';
+    const sourceIcon = (item.kpi_source === 'onec_db') ? ' <i class="fas fa-database" style="color: #10B981; font-size: 11px;" title="1C"></i>' : '';
     tr.innerHTML = `
       <td><strong>${item.luna_label}</strong>${sourceIcon}</td>
       <td class="text-right">${formatNumber(item.plan_luna)}</td>

@@ -4,6 +4,24 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ url('css/setari.css') }}">
+<style>
+  .setari-1c-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .btn-sync-1c {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 24px; background: #FFEE00; color: #000; border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.25s ease;
+  }
+  .btn-sync-1c:hover { background: #fff333; box-shadow: 0 4px 14px rgba(255, 238, 0, 0.35); }
+  .btn-sync-1c:disabled { opacity: 0.7; cursor: not-allowed; }
+  .btn-sync-1c.syncing .fa-sync-alt { animation: setari-spin 0.8s linear infinite; }
+  @keyframes setari-spin { to { transform: rotate(360deg); } }
+  .setari-sync-status {
+    display: none; margin-top: 8px; padding: 10px 14px; font-size: 13px; border-radius: 8px;
+    background: rgba(31, 41, 55, 0.8); color: #9CA3AF;
+  }
+  .setari-sync-status-error { color: #F87171; background: rgba(239, 68, 68, 0.15) !important; }
+  .btn-hard-refresh { width: 100%; background: #EF4444; color: #fff; font-weight: 600; }
+</style>
 @endpush
 
 @section('content')
@@ -13,7 +31,7 @@
     <div class="tab" data-tab="security">Securitate</div>
     @php $isAdmin = auth()->check() && in_array(strtolower(auth()->user()->role ?? ''), ['admin', 'administrator']); @endphp
     @if($isAdmin)
-    <div class="tab" data-tab="onec-refresh">Date 1C</div>
+    <div class="tab" data-tab="onec-refresh">1C</div>
     @endif
   </div>
 
@@ -95,16 +113,27 @@
   </form>
 
   @if($isAdmin)
-  <!-- Hard refresh date 1C (doar admin) -->
+  <!-- Secțiune 1C – doar admin -->
   <div class="tab-content" id="onec-refresh">
     <div class="form">
       <div class="field">
-        <label>🔄 Hard refresh date 1C (lunile trecute)</label>
+        <label>Sync 1C (lună curentă / lunile lipsă)</label>
+        <p style="color: #9CA3AF; font-size: 13px; margin: 8px 0 12px 0;">Sincronizează cu 1C doar perioadele care lipsesc (luna curentă, luna trecută). Nu rescrie datele existente.</p>
+      </div>
+      <div class="field setari-1c-actions">
+        <button type="button" id="sync1cBtn" class="btn btn-sync-1c" title="Sincronizare 1C">
+          <i class="fas fa-sync-alt"></i> Sync 1C
+        </button>
+        <div id="sync1cStatus" class="setari-sync-status" aria-live="polite"></div>
+      </div>
+
+      <div class="field" style="margin-top: 28px;">
+        <label>Hard refresh 1C (lunile trecute)</label>
         <p style="color: #9CA3AF; font-size: 13px; margin: 8px 0 12px 0;">Reîncarcă din 1C și rescrie în baza de date toate lunile trecute (ultimele 12 luni). Folosește doar dacă vrei să suprascrii datele existente cu cele de la 1C.</p>
       </div>
       <div class="field">
-        <button type="button" id="onecHardRefreshBtn" class="btn" style="width:100%; background: #EF4444; color: #fff; font-weight: 600;">
-          Rescrie toate datele 1C (lunile trecute)
+        <button type="button" id="onecHardRefreshBtn" class="btn btn-hard-refresh">
+          Rescrie 1C (lunile trecute)
         </button>
       </div>
       <div id="onecHardRefreshStatus" style="margin-top: 12px; padding: 12px; border-radius: 8px; display: none;"></div>
@@ -143,8 +172,75 @@ setTimeout(() => {
 }, 3000);
 @endif
 
-// Hard refresh 1C (admin)
+// Sync 1C (admin) – în Setări > Date 1C
 @if(isset($isAdmin) && $isAdmin)
+(function() {
+  const syncBtn = document.getElementById('sync1cBtn');
+  const statusEl = document.getElementById('sync1cStatus');
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+  const syncUrl = "{{ route('api.1c.sync.kpi') }}";
+
+  function setSyncStatus(text, isError) {
+    if (!statusEl) return;
+    statusEl.textContent = text;
+    statusEl.style.display = text ? 'block' : 'none';
+    statusEl.className = 'setari-sync-status' + (isError ? ' setari-sync-status-error' : '');
+  }
+
+  if (syncBtn) {
+    syncBtn.addEventListener('click', function() {
+      if (syncBtn.disabled) return;
+      setSyncStatus('Se sincronizează...', false);
+      syncBtn.disabled = true;
+      syncBtn.classList.add('syncing');
+      fetch(syncUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+        body: JSON.stringify({ smart: true })
+      })
+      .then(async function(response) {
+        const contentType = response.headers.get('content-type') || '';
+        let data = {};
+        if (contentType.includes('application/json')) {
+          data = await response.json().catch(function() { return {}; });
+        } else {
+          if (response.status === 419) {
+            setSyncStatus('Eroare 419: Token CSRF invalid. Reîncarcă pagina.', true);
+            return;
+          }
+          if (response.status === 500) {
+            setSyncStatus('Eroare 500 de la server.', true);
+            return;
+          }
+          setSyncStatus('Eroare ' + response.status, true);
+          return;
+        }
+        if (!response.ok || !data.success) {
+          var msg = data.message || 'Eroare la sincronizarea cu 1C.';
+          if (data.error) {
+            if (String(data.error).indexOf('Connection refused') !== -1) {
+              msg = 'Serverul 1C nu răspunde. Verifică accesul de pe server.';
+            } else {
+              msg = msg + ' ' + data.error;
+            }
+          }
+          setSyncStatus(msg, true);
+        } else {
+          setSyncStatus(data.message || (data.date_start && data.date_end ? 'OK: ' + data.date_start + ' – ' + data.date_end : 'Sincronizare reușită.'), false);
+        }
+      })
+      .catch(function(error) {
+        setSyncStatus('Eroare rețea: ' + (error.message || 'Verifică consola (F12).'), true);
+      })
+      .finally(function() {
+        syncBtn.disabled = false;
+        syncBtn.classList.remove('syncing');
+      });
+    });
+  }
+})();
+
+// Hard refresh 1C (admin)
 (function() {
   const btn = document.getElementById('onecHardRefreshBtn');
   const statusEl = document.getElementById('onecHardRefreshStatus');

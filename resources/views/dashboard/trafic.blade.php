@@ -11,195 +11,179 @@
   align-items: center;
   margin-bottom: 30px;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 24px;
+}
+
+.trafic-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #FFEE00;
+  text-shadow: 0 0 20px rgba(255, 238, 0, 0.15);
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
 }
 
 .trafic-controls {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
   flex-wrap: wrap;
+}
+
+.trafic-filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.trafic-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-left: 20px;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .year-selector-wrapper,
 .month-selector-wrapper {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: rgba(31, 41, 55, 0.3);
-  padding: 8px 15px;
+  gap: 8px;
+  background: rgba(31, 41, 55, 0.4);
+  padding: 10px 14px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 238, 0, 0.1);
-  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.25s ease;
+}
+
+.trafic-filters label {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.trafic-filters label i {
+  margin-right: 6px;
+  opacity: 0.9;
 }
 
 .year-selector-wrapper:hover,
 .month-selector-wrapper:hover {
-  border-color: rgba(255, 238, 0, 0.15);
-  background: rgba(31, 41, 55, 0.4);
-  box-shadow: 0 0 15px rgba(255, 238, 0, 0.1);
+  border-color: rgba(255, 238, 0, 0.2);
+  background: rgba(31, 41, 55, 0.5);
+}
+
+.year-select,
+.month-select {
+  height: 40px;
+  padding: 0 36px 0 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(31, 41, 55, 0.6);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23FFEE00' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 10px;
 }
 
 .year-select {
-  padding: 10px 15px;
-  font-size: 14px;
-  border-radius: 8px;
-  border: 2px solid rgba(255, 238, 0, 0.12);
-  background-color: var(--bg-soft);
-  color: #FFEE00;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 120px;
-  outline: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FFEE00' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 12px;
-  padding-right: 35px;
-}
-
-.year-select:hover {
-  border-color: rgba(255, 238, 0, 0.2);
-  box-shadow: 0 0 15px rgba(255, 238, 0, 0.12);
-  background-color: var(--bg-soft);
-}
-
-.year-select:focus {
-  border-color: #FFEE00;
-  box-shadow: 0 0 20px rgba(255, 238, 0, 0.15);
-  background-color: var(--bg-soft);
-}
-
-.year-select option {
-  background: #1F2937;
-  color: #FFEE00;
-  padding: 10px;
+  min-width: 100px;
 }
 
 .month-select {
-  padding: 10px 15px;
-  font-size: 14px;
-  border-radius: 8px;
-  border: 2px solid rgba(255, 238, 0, 0.12);
-  background-color: var(--bg-soft);
-  color: #FFEE00;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 200px;
-  outline: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FFEE00' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 12px;
-  padding-right: 35px;
+  min-width: 160px;
 }
 
+.year-select:hover,
 .month-select:hover {
-  border-color: rgba(255, 238, 0, 0.2);
-  box-shadow: 0 0 15px rgba(255, 238, 0, 0.12);
-  background-color: var(--bg-soft);
+  border-color: rgba(255, 238, 0, 0.25);
+  background-color: rgba(31, 41, 55, 0.8);
 }
 
+.year-select:focus,
 .month-select:focus {
-  border-color: #FFEE00;
-  box-shadow: 0 0 20px rgba(255, 238, 0, 0.15);
-  background-color: var(--bg-soft);
+  border-color: rgba(255, 238, 0, 0.5);
+  box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.15);
 }
 
+.year-select option,
 .month-select option {
   background: #1F2937;
-  color: #FFEE00;
+  color: #fff;
   padding: 10px;
 }
 
 .stats-btn-link {
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
 }
 
 .stat-btn-main {
-  background: linear-gradient(135deg, rgba(255, 238, 0, 0.08) 0%, rgba(255, 238, 0, 0.05) 100%);
+  height: 40px;
+  padding: 0 18px;
+  background: rgba(31, 41, 55, 0.6);
   color: #FFEE00;
-  border: 2px solid rgba(255, 238, 0, 0.15);
-  padding: 12px 24px;
+  border: 1px solid rgba(255, 238, 0, 0.25);
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  transition: all 0.25s ease;
   white-space: nowrap;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  box-sizing: border-box;
 }
 
 .stat-btn-main:hover {
-  background: linear-gradient(135deg, rgba(255, 238, 0, 0.1) 0%, rgba(255, 238, 0, 0.08) 100%);
-  border-color: #FFEE00;
-  box-shadow: 0 0 20px rgba(255, 238, 0, 0.15);
-  transform: translateY(-2px);
+  background: rgba(255, 238, 0, 0.12);
+  border-color: rgba(255, 238, 0, 0.4);
 }
 
 .stat-btn-main:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 
 .sync-btn {
-  background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%);
+  height: 40px;
+  padding: 0 20px;
+  background: #FFEE00;
   color: #000;
-  border: 2px solid #FFEE00;
-  padding: 12px 24px;
+  border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(255, 238, 0, 0.12);
-  position: relative;
-  overflow: hidden;
-  min-width: 180px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.sync-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(31, 41, 55, 0.1), transparent);
-  transition: left 0.5s;
-}
-
-.sync-btn:hover::before {
-  left: 100%;
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+  white-space: nowrap;
 }
 
 .sync-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 238, 0, 0.15);
-  background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%);
-  border-color: #FFEE00;
+  background: #fff333;
+  box-shadow: 0 4px 14px rgba(255, 238, 0, 0.35);
 }
 
 .sync-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(255, 238, 0, 0.12);
+  transform: scale(0.98);
 }
 
 .sync-btn:disabled {
@@ -217,27 +201,61 @@
   to { transform: rotate(360deg); }
 }
 
+@media (max-width: 900px) {
+  .trafic-actions {
+    border-left: none;
+    padding-left: 0;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   .trafic-header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 16px;
   }
-  
+
+  .trafic-header h1 {
+    font-size: 24px;
+  }
+
   .trafic-controls {
-    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .trafic-filters {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
+  .year-selector-wrapper,
   .month-selector-wrapper {
     width: 100%;
   }
-  
+
+  .year-select,
   .month-select {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .trafic-actions {
+    flex-direction: column;
+    padding-top: 12px;
+    gap: 10px;
+  }
+
+  .stats-btn-link,
+  .sync-btn {
     width: 100%;
   }
-  
-  .sync-btn {
+
+  .stat-btn-main {
     width: 100%;
   }
 }
@@ -246,14 +264,12 @@
 
 @section('content')
 <div class="trafic-header">
-  <h1 style="margin: 0; font-size: 32px; font-weight: 800; color: #FFEE00; text-shadow: 0 0 20px rgba(255, 238, 0, 0.15); letter-spacing: -0.5px;">Trafic</h1>
-  
+  <h1>Trafic</h1>
+
   <div class="trafic-controls">
-    <form method="get" action="{{ route('trafic') }}" id="traficFilterForm" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; width: 100%;">
+    <form method="get" action="{{ route('trafic') }}" id="traficFilterForm" class="trafic-filters">
       <div class="year-selector-wrapper">
-        <label for="selectAnTrafic" style="color: #fff; font-weight: 600; margin-right: 10px; white-space: nowrap;">
-          <i class="fas fa-calendar" style="margin-right: 5px;"></i>An:
-        </label>
+        <label for="selectAnTrafic"><i class="fas fa-calendar"></i>An:</label>
         <select id="selectAnTrafic" name="year" onchange="updateMonthOptions(); this.form.submit();" class="year-select">
           @php
             $currentYear = request('year', date('Y'));
@@ -271,9 +287,7 @@
       </div>
       
       <div class="month-selector-wrapper">
-        <label for="selectLunaTrafic" style="color: #fff; font-weight: 600; margin-right: 10px; white-space: nowrap;">
-          <i class="fas fa-calendar-alt" style="margin-right: 5px;"></i>Luna:
-        </label>
+        <label for="selectLunaTrafic"><i class="fas fa-calendar-alt"></i>Luna:</label>
         <select id="selectLunaTrafic" name="month" onchange="this.form.submit()" class="month-select">
           @php
             $months = [
@@ -294,25 +308,25 @@
         </select>
       </div>
     </form>
-    
-    <a href="{{ route('trafic.stats') }}" class="stats-btn-link">
-      <button class="stat-btn-main" title="Vezi statistici generale">
-        <i class="fas fa-chart-pie"></i>
-        <span>Statistici Generale</span>
+
+    <div class="trafic-actions">
+      <a href="{{ route('trafic.stats') }}" class="stats-btn-link">
+        <button type="button" class="stat-btn-main" title="Vezi statistici generale">
+          <i class="fas fa-chart-pie"></i>
+          <span>Statistici</span>
+        </button>
+      </a>
+      <a href="{{ route('trafic.analiza') }}" class="stats-btn-link">
+        <button type="button" class="stat-btn-main" title="Analiză detaliată">
+          <i class="fas fa-chart-bar"></i>
+          <span>Analiză</span>
+        </button>
+      </a>
+      <button type="button" id="syncButton" onclick="syncGoogleAnalytics()" class="sync-btn" title="Sincronizează datele din Google Analytics">
+        <i class="fas fa-sync-alt" id="syncIcon"></i>
+        <span id="syncText">Sincronizează GA4</span>
       </button>
-    </a>
-    
-    <a href="{{ route('trafic.analiza') }}" class="stats-btn-link">
-      <button class="stat-btn-main" title="Analiză detaliată - Utilizatori, Dispozitive, Geografie, Conținut, E-commerce, Campanii">
-        <i class="fas fa-chart-bar"></i>
-        <span>Analiză Detaliată</span>
-      </button>
-    </a>
-    
-    <button id="syncButton" onclick="syncGoogleAnalytics()" class="sync-btn" title="Sincronizează datele din Google Analytics">
-      <i class="fas fa-sync-alt" id="syncIcon"></i>
-      <span id="syncText">Sincronizează GA</span>
-    </button>
+    </div>
   </div>
 </div>
 
