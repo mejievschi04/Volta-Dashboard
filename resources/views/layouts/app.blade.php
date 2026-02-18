@@ -23,6 +23,14 @@
       </div>
       <nav class="nav">
         <h3>Menu</h3>
+        @if(auth()->check() && auth()->user()->isOperator())
+        <a href="{{ route('datele-mele') }}" class="{{ request()->routeIs('datele-mele') ? 'active' : '' }}">
+          <i class="fas fa-chart-bar"></i><span class="txt">Datele mele</span>
+        </a>
+        <a href="{{ route('setari') }}" class="{{ request()->routeIs('setari') ? 'active' : '' }}">
+          <i class="fas fa-cog"></i><span class="txt">Setări</span>
+        </a>
+        @else
         <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
           <i class="fas fa-home"></i><span class="txt">Acasă</span>
         </a>
@@ -45,6 +53,7 @@
         <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users*') ? 'active' : '' }}">
           <i class="fas fa-user-shield"></i><span class="txt">Utilizatori</span>
         </a>
+        @endif
         @endif
       </nav>
 
@@ -76,10 +85,10 @@
         </div>
       </div>
 
-      <!-- TOPBAR - doar pe pagina home -->
-      @if(request()->routeIs('dashboard'))
+      <!-- TOPBAR - pe dashboard și pe Datele mele (operatori) -->
+      @if(request()->routeIs('dashboard') || request()->routeIs('datele-mele'))
       <div class="header">
-        <h1>@yield('header-title', 'Dashboard')</h1>
+        <h1>@yield('header-title', request()->routeIs('datele-mele') ? 'Datele mele' : 'Dashboard')</h1>
         <div class="user-menu">
           <div class="user-info">
             <div class="name">{{ Auth::check() ? Auth::user()->username : 'User' }}</div>

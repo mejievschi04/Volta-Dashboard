@@ -3,106 +3,139 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Oferte;
 use App\Models\Operator;
 use App\Models\DateOp;
+use App\Models\OnecKpiOperator;
 use Illuminate\Support\Facades\DB;
 
 class OperatoriController extends Controller
 {
     public function index()
     {
-        // Obține toți operatorii activi
-        $operatori = Operator::where('activ', true)
-            ->orderBy('nume')
-            ->get();
-
-        // Obține statistici pentru fiecare operator
-        $operatoriStats = [];
-        
-        foreach ($operatori as $operator) {
-            // Statistici oferte
-            $oferteStats = Oferte::where(function($query) use ($operator) {
-                $query->where('operator_id', $operator->id)
-                      ->orWhere('operator', $operator->nume);
-            })
-            ->selectRaw('
-                COUNT(*) as total_oferte,
-                SUM(CASE WHEN status = "trimise" THEN 1 ELSE 0 END) as oferte_trimise,
-                SUM(CASE WHEN status = "finalizate" THEN 1 ELSE 0 END) as oferte_finalizate,
-                SUM(CASE WHEN status = "refuzate" THEN 1 ELSE 0 END) as oferte_refuzate
-            ')
-            ->first();
-
-            // Statistici vânzări
-            $vanzariStats = DateOp::where('operator_id', $operator->id)
+        // Doar date din 1C (agregate pe operator, din ianuarie 2023)
+        $operatori1c = [];
+        $chartData1c = [];
+        try {
+            $rows = OnecKpiOperator::query()
+                ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
+                ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
                 ->selectRaw('
-                    COUNT(*) as total_vanzari,
-                    COALESCE(SUM(suma_fara_tva), 0) as total_suma_fara_tva,
-                    COALESCE(SUM(suma_cu_tva), 0) as total_suma_cu_tva,
-                    COALESCE(SUM(profit), 0) as total_profit,
-                    COALESCE(SUM(nr_vanzari), 0) as total_nr_vanzari
+                    onec_kpi_operatori.operator_nume as nume,
+                    COALESCE(SUM(onec_kpi_operatori.vanzari_fara_tva), 0) as total_vanzari_fara_tva,
+                    COALESCE(SUM(onec_kpi_operatori.vanzari_cu_tva), 0) as total_vanzari_cu_tva,
+                    COALESCE(SUM(onec_kpi_operatori.profit), 0) as total_profit,
+                    COALESCE(SUM(onec_kpi_operatori.nr_comenzi), 0) as total_comenzi
                 ')
-                ->first();
+                ->groupBy('onec_kpi_operatori.operator_nume')
+                ->orderByDesc('total_vanzari_fara_tva')
+                ->get();
 
-            // Calculează timpul lucrat
-            $timpLucrat = $this->calculateWorkTime($operator->data_angajare);
-
-            $operatoriStats[] = [
-                'operator' => $operator,
-                'oferte' => $oferteStats,
-                'vanzari' => $vanzariStats,
-                'timp_lucrat' => $timpLucrat,
-            ];
-        }
-
-        // Calculează procentajele pentru fiecare operator
-        $chartData = [];
-        $totalOperatoriVanzariFaraTva = 0;
-        
-        // Mai întâi colectăm toate vânzările operatorilor activi și calculăm totalul
-        foreach ($operatoriStats as $stat) {
-            // Obține valoarea și asigură-te că este un număr
-            $vanzariFaraTva = $stat['vanzari']->total_suma_fara_tva ?? 0;
-            $vanzariFaraTva = (float) $vanzariFaraTva;
-            
-            // Adaugă la total doar dacă există vânzări
-            if ($vanzariFaraTva > 0) {
-                $totalOperatoriVanzariFaraTva += $vanzariFaraTva;
-            }
-        }
-        
-        // Acum calculăm procentajele bazate pe totalul operatorilor activi
-        foreach ($operatoriStats as $stat) {
-            // Obține valoarea și asigură-te că este un număr
-            $vanzariFaraTva = $stat['vanzari']->total_suma_fara_tva ?? 0;
-            $vanzariFaraTva = (float) $vanzariFaraTva;
-            
-            // Calculează procentajul doar dacă există vânzări și totalul este mai mare decât 0
-            $procent = 0;
-            if ($totalOperatoriVanzariFaraTva > 0 && $vanzariFaraTva > 0) {
-                $procent = ($vanzariFaraTva / $totalOperatoriVanzariFaraTva) * 100;
-                // Rotunjim la 2 zecimale
-                $procent = round($procent, 2);
-            }
-            
-            // Adaugă în grafic doar dacă operatorul are vânzări
-            // Folosim >= 0 pentru a include și operatorii cu 0 (dacă e nevoie)
-            if ($vanzariFaraTva > 0) {
-                $chartData[] = [
-                    'nume' => $stat['operator']->nume,
-                    'vanzari_fara_tva' => $vanzariFaraTva,
-                    'procent' => $procent,
+            foreach ($rows as $row) {
+                $nume = trim((string) ($row->nume ?? '')) ?: 'Fără nume';
+                $vanzari = (float) $row->total_vanzari_fara_tva;
+                $operatori1c[] = [
+                    'nume' => $nume,
+                    'vanzari_fara_tva' => $vanzari,
+                    'vanzari_cu_tva' => (float) $row->total_vanzari_cu_tva,
+                    'profit' => (float) $row->total_profit,
+                    'nr_comenzi' => (int) $row->total_comenzi,
                 ];
+                if ($vanzari > 0) {
+                    $chartData1c[] = ['nume' => $nume, 'vanzari_fara_tva' => $vanzari, 'procent' => 0];
+                }
+            }
+            $total1c = array_sum(array_column($chartData1c, 'vanzari_fara_tva'));
+            if ($total1c > 0) {
+                foreach ($chartData1c as &$d) {
+                    $d['procent'] = round(($d['vanzari_fara_tva'] / $total1c) * 100, 2);
+                }
+                unset($d);
+            }
+        } catch (\Throwable $e) {
+            // Tabel onec_kpi_operatori poate să nu existe
+        }
+
+        return view('operatori.index', compact('operatori1c', 'chartData1c'));
+    }
+
+    /**
+     * Pagina „Datele mele” pentru utilizatorul cu rol Operator – vede doar datele sale din 1C.
+     */
+    public function me(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user || !$user->isOperator()) {
+            return redirect()->route('dashboard');
+        }
+
+        $operatorNume = trim((string) ($user->operator_nume ?? $user->name ?? $user->username ?? ''));
+        $date = null;
+
+        $vanzariLunare1c = collect();
+
+        if ($operatorNume !== '') {
+            try {
+                $row = OnecKpiOperator::query()
+                    ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
+                    ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
+                    ->whereRaw('TRIM(onec_kpi_operatori.operator_nume) = ?', [$operatorNume])
+                    ->selectRaw('
+                        onec_kpi_operatori.operator_nume as nume,
+                        COALESCE(SUM(onec_kpi_operatori.vanzari_fara_tva), 0) as total_vanzari_fara_tva,
+                        COALESCE(SUM(onec_kpi_operatori.vanzari_cu_tva), 0) as total_vanzari_cu_tva,
+                        COALESCE(SUM(onec_kpi_operatori.profit), 0) as total_profit,
+                        COALESCE(SUM(onec_kpi_operatori.nr_comenzi), 0) as total_comenzi
+                    ')
+                    ->groupBy('onec_kpi_operatori.operator_nume')
+                    ->first();
+                if ($row) {
+                    $date = [
+                        'nume' => trim((string) ($row->nume ?? '')) ?: $operatorNume,
+                        'vanzari_fara_tva' => (float) $row->total_vanzari_fara_tva,
+                        'vanzari_cu_tva' => (float) $row->total_vanzari_cu_tva,
+                        'profit' => (float) $row->total_profit,
+                        'nr_comenzi' => (int) $row->total_comenzi,
+                    ];
+                }
+
+                // Date pe luni (din 1C, per lună) pentru grafic și tabel
+                $lunareRows = OnecKpiOperator::query()
+                    ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
+                    ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
+                    ->whereRaw('TRIM(onec_kpi_operatori.operator_nume) = ?', [$operatorNume])
+                    ->selectRaw('
+                        DATE_FORMAT(onec_kpi_syncs.period_start, "%Y-%m") as luna,
+                        COALESCE(SUM(onec_kpi_operatori.vanzari_fara_tva), 0) as vanzari_luna,
+                        COALESCE(SUM(onec_kpi_operatori.vanzari_cu_tva), 0) as vanzari_cu_tva,
+                        COALESCE(SUM(onec_kpi_operatori.profit), 0) as profit,
+                        COALESCE(SUM(onec_kpi_operatori.nr_comenzi), 0) as comenzi
+                    ')
+                    ->groupBy(DB::raw('DATE_FORMAT(onec_kpi_syncs.period_start, "%Y-%m")'))
+                    ->orderBy('luna', 'desc')
+                    ->get();
+
+                foreach ($lunareRows as $r) {
+                    $vanzariLunare1c->push((object) [
+                        'luna' => $r->luna,
+                        'luna_label' => \Carbon\Carbon::createFromFormat('Y-m', $r->luna)->translatedFormat('F Y'),
+                        'vanzari_luna' => (float) $r->vanzari_luna,
+                        'vanzari_cu_tva' => (float) $r->vanzari_cu_tva,
+                        'profit' => (float) $r->profit,
+                        'comenzi' => (int) $r->comenzi,
+                        'nr_vanzari' => (int) $r->comenzi,
+                    ]);
+                }
+            } catch (\Throwable $e) {
             }
         }
-        
-        // Sortează după vânzări descrescător pentru o afișare mai clară
-        usort($chartData, function($a, $b) {
-            return $b['vanzari_fara_tva'] <=> $a['vanzari_fara_tva'];
-        });
 
-        return view('operatori.index', compact('operatoriStats', 'chartData'));
+        return view('operatori.me', [
+            'operatorNume' => $operatorNume ?: $user->username,
+            'date' => $date,
+            'vanzariLunare1c' => $vanzariLunare1c,
+        ]);
     }
 
     public function show($id)

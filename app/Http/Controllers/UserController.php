@@ -27,6 +27,7 @@ class UserController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'name' => 'nullable|string|max:255',
             'role' => 'nullable|string|max:50',
+            'operator_nume' => 'nullable|string|max:255',
         ]);
 
         $user = new User();
@@ -34,6 +35,7 @@ class UserController extends Controller
         $user->email = $validated['email'] ?? null;
         $user->name = $validated['name'] ?? null;
         $user->role = $validated['role'] ?? 'user';
+        $user->operator_nume = ($validated['operator_nume'] ?? null) ? trim($validated['operator_nume']) : null;
         $user->password_hash = Hash::make($validated['password']);
         $user->save();
 
@@ -56,12 +58,14 @@ class UserController extends Controller
             'password' => 'nullable|string|min:6|confirmed',
             'name' => 'nullable|string|max:255',
             'role' => 'nullable|string|max:50',
+            'operator_nume' => 'nullable|string|max:255',
         ]);
 
         $user->username = $validated['username'];
         $user->email = $validated['email'] ?? null;
         $user->name = $validated['name'] ?? null;
         $user->role = $validated['role'] ?? $user->role;
+        $user->operator_nume = ($validated['operator_nume'] ?? null) ? trim($validated['operator_nume']) : null;
 
         if (!empty($validated['password'])) {
             $user->password_hash = Hash::make($validated['password']);

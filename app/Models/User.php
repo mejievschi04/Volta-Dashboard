@@ -26,10 +26,18 @@ class User extends Authenticatable
         'password',
         'password_hash',
         'role',
+        'operator_nume',
         'currency',
         'language',
         'country',
     ];
+
+    /** Utilizatorul este operator (vede doar pagina „Datele mele”). */
+    public function isOperator(): bool
+    {
+        $role = strtolower((string) ($this->role ?? ''));
+        return $role === 'operator' || $role === 'operatori';
+    }
 
     /**
      * The attributes that should be hidden for serialization.

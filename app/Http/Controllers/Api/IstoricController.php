@@ -14,15 +14,17 @@ class IstoricController extends Controller
     public function index(Request $request)
     {
         try {
-            // Lunile doar din 1C (onec_kpi_syncs)
-            $allMonths = OnecKpiSync::selectRaw("DATE_FORMAT(period_start, '%Y-%m') as month")
-                ->distinct()
-                ->pluck('month')
-                ->filter()
-                ->sort()
-                ->values()
-                ->reverse()
-                ->values();
+            // Perioadă fixă: din ianuarie 2023 până la luna curentă (ca la restul aplicației)
+            $firstDate = new \DateTime('2023-01-01');
+            $endDate = new \DateTime();
+            $endDate->modify('last day of this month');
+            $allMonths = [];
+            $current = clone $firstDate;
+            while ($current <= $endDate) {
+                $allMonths[] = $current->format('Y-m');
+                $current->modify('+1 month');
+            }
+            $allMonths = array_reverse($allMonths); // cele mai recente primele
 
             // Obține planurile
             $planMap = [];

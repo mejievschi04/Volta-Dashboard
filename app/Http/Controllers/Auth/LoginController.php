@@ -12,7 +12,9 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect()->route('dashboard');
+            return Auth::user()->isOperator()
+                ? redirect()->route('datele-mele')
+                : redirect()->route('dashboard');
         }
         return view('auth.login');
     }
@@ -74,16 +76,15 @@ class LoginController extends Controller
                     'session_id' => $request->session()->getId(),
                     'session_data' => $request->session()->all()
                 ]);
-                
-                // Forțăm redirect la dashboard în loc de intended
-                $dashboardUrl = route('dashboard');
-                \Log::info('Redirecting to dashboard', [
-                    'route' => $dashboardUrl,
+
+                $redirectUrl = $user->isOperator() ? route('datele-mele') : route('dashboard');
+                \Log::info('Redirecting after login', [
+                    'route' => $redirectUrl,
                     'session_persists' => $request->session()->has('_token'),
                     'auth_after_save' => Auth::check()
                 ]);
-                
-                return redirect($dashboardUrl);
+
+                return redirect($redirectUrl);
             } else {
                 \Log::warning('Password mismatch', ['username' => $credentials['username']]);
             }

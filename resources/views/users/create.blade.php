@@ -76,13 +76,28 @@
           <label style="display: block; color: #FFEE00; margin-bottom: 8px; font-weight: 700; font-size: 14px;">
             <i class="fas fa-shield-alt" style="margin-right: 6px;"></i>Rol
           </label>
-          <select name="role" 
+          <select name="role" id="role"
                   style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; transition: all 0.2s; cursor: pointer;"
                   onfocus="this.style.borderColor='#FFEE00'; this.style.background='rgba(255, 238, 0, 0.15)'"
                   onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(255, 255, 255, 0.05)'">
             <option value="user" {{ old('role') === 'user' ? 'selected' : '' }}>User</option>
             <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+            <option value="operator" {{ old('role') === 'operator' ? 'selected' : '' }}>Operator</option>
           </select>
+        </div>
+
+        <div id="operator-nume-wrap" style="display: none;">
+          <label style="display: block; color: #FFEE00; margin-bottom: 8px; font-weight: 700; font-size: 14px;">
+            <i class="fas fa-user-tag" style="margin-right: 6px;"></i>Nume operator (1C) *
+          </label>
+          <input type="text" name="operator_nume" value="{{ old('operator_nume') }}" 
+                 style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; transition: all 0.2s;"
+                 onfocus="this.style.borderColor='#FFEE00'; this.style.background='rgba(255, 238, 0, 0.15)'"
+                 onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(255, 255, 255, 0.05)'"
+                 placeholder="Exact cum apare în raportul 1C">
+          <p style="color: #9CA3AF; font-size: 12px; margin-top: 6px; margin-bottom: 0;">
+            <i class="fas fa-info-circle" style="margin-right: 4px;"></i>Trebuie să coincidă cu numele din 1C ca operatorul să vadă datele corecte.
+          </p>
         </div>
 
         <div>
@@ -250,5 +265,19 @@
   }
 }
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var role = document.getElementById('role');
+  var wrap = document.getElementById('operator-nume-wrap');
+  if (!role || !wrap) return;
+  function toggle() {
+    var v = (role.value || '').toLowerCase();
+    wrap.style.display = (v === 'operator' || v === 'operatori') ? '' : 'none';
+    wrap.querySelector('input').required = (v === 'operator' || v === 'operatori');
+  }
+  role.addEventListener('change', toggle);
+  toggle();
+});
+</script>
 @endpush
 

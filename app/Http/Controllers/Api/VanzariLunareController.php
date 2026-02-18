@@ -13,18 +13,12 @@ class VanzariLunareController extends Controller
     public function index(Request $request)
     {
         try {
-            $firstDate = date('Y-m-01', strtotime('-24 months'));
+            // Perioadă fixă: din ianuarie 2023 până la sfârșitul lunii curente
+            $firstDate = '2023-01-01';
             $lastDate = date('Y-m-t');
             $onecByMonth = collect();
 
             try {
-                $range = OnecKpiSync::selectRaw('MIN(period_start) as min_date, MAX(period_end) as max_date')->first();
-                if ($range && $range->min_date) {
-                    $firstDate = $range->min_date;
-                }
-                if ($range && $range->max_date) {
-                    $lastDate = $range->max_date;
-                }
                 $onecByMonth = OnecKpiSync::selectRaw("DATE_FORMAT(period_start, '%Y-%m') as month, vanzari_fara_tva, nr_comenzi")
                     ->orderByDesc('created_at')
                     ->get()

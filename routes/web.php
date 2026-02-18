@@ -15,12 +15,15 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Rute protejate
-Route::middleware(['auth'])->group(function () {
+// Rute protejate (RestrictOperator redirecționează rolul „Operator” doar către Datele mele / Setări)
+Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.alias');
+
+    // Pagina „Datele mele” pentru utilizatori cu rol Operator
+    Route::get('/datele-mele', [OperatoriController::class, 'me'])->name('datele-mele');
     
-    // Rute operatori
+    // Rute operatori (listă 1C – doar pentru non-operatori sau admin)
     Route::get('/operatori', [OperatoriController::class, 'index'])->name('operatori');
     
     // Rute operatori - doar pentru admin (trebuie să fie înainte de ruta {id})
