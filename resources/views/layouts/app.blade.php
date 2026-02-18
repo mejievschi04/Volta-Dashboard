@@ -12,6 +12,10 @@
   <link rel="stylesheet" href="{{ url('css/style.css') }}"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   @stack('styles')
+  <style>
+    .sync-status { margin-left: 8px; font-size: 12px; color: var(--muted, #9CA3AF); }
+    .sync-status-error { color: var(--error, #EF4444); }
+  </style>
 </head>
 <body>
   <div class="app">
@@ -93,6 +97,7 @@
             <i class="fas fa-sync-alt fa-lg"></i>
             <span class="sync-text">Sincronizare</span>
           </button>
+          <span id="sync1cStatus" class="sync-status" aria-live="polite"></span>
         </div>
       </div>
       @endif
@@ -196,14 +201,22 @@
     // Buton sincronizare 1C - apel API backend
     document.addEventListener('DOMContentLoaded', function() {
       const syncBtn = document.getElementById('syncBtn');
+      const statusEl = document.getElementById('sync1cStatus');
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      const syncUrl = "{{ route('api.1c.sync.kpi') }}";
+
+      function setStatus(text, isError) {
+        if (!statusEl) return;
+        statusEl.textContent = text;
+        statusEl.className = 'sync-status' + (isError ? ' sync-status-error' : '');
+      }
 
       if (syncBtn) {
         syncBtn.addEventListener('click', function() {
-          console.log('Sincronizare 1C - apel API backend');
-
+          setStatus('Se sincronizează...', false);
           syncBtn.classList.add('syncing');
           syncBtn.disabled = true;
+          console.log('Sincronizare 1C →', syncUrl);
 
           const today = new Date();
           const year = today.getFullYear();
@@ -211,7 +224,7 @@
           const date_start = `${year}-${month}-01`;
           const date_end = today.toISOString().slice(0, 10);
 
-          fetch("{{ route('api.1c.sync.kpi') }}", {
+          fetch(syncUrl, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -221,27 +234,44 @@
             body: JSON.stringify({ date_start, date_end })
           })
           .then(async (response) => {
-            const data = await response.json().catch(() => ({}));
+            const contentType = response.headers.get('content-type') || '';
+            let data = {};
+            if (contentType.includes('application/json')) {
+              data = await response.json().catch(() => ({}));
+            } else {
+              const text = await response.text();
+              console.error('Sync 1C: răspuns non-JSON', response.status, text.substring(0, 200));
+              if (response.status === 419) {
+                setStatus('Eroare 419: Token CSRF invalid. Reîncarcă pagina și încearcă din nou.', true);
+                return;
+              }
+              if (response.status === 500) {
+                setStatus('Eroare 500 de la server. Verifică storage/logs/laravel.log pe server.', true);
+                return;
+              }
+              setStatus('Eroare ' + response.status + '. Răspuns invalid.', true);
+              return;
+            }
 
             if (!response.ok || !data?.success) {
               let msg = data?.message || 'Eroare la sincronizarea cu 1C.';
               if (data?.error) {
                 if (data.error.includes('Connection refused') || data.error.includes('connection refused')) {
-                  msg = 'Serverul 1C nu răspunde (conexiune refuzată). Verificați că serverul 1C este pornit și accesibil din rețeaua curentă.';
+                  msg = 'Serverul 1C nu răspunde (conexiune refuzată). Verifică accesul de pe server.';
                 } else {
                   msg = msg + ' Detalii: ' + data.error;
                 }
               }
-              alert(msg);
+              setStatus(msg, true);
               console.error('Sync 1C error', data);
             } else {
-              alert(`Sincronizare 1C OK pentru perioada ${data.date_start} - ${data.date_end}.`);
+              setStatus('OK: ' + data.date_start + ' – ' + data.date_end, false);
               console.log('Sync 1C success', data);
             }
           })
           .catch((error) => {
             console.error('Sync 1C network error', error);
-            alert('Eroare de rețea la apelarea API-ului 1C.');
+            setStatus('Eroare rețea: ' + (error.message || 'Verifică consola (F12).'), true);
           })
           .finally(() => {
             syncBtn.classList.remove('syncing');
