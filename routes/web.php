@@ -25,10 +25,11 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
     
     // Rute operatori (listă 1C – doar pentru non-operatori sau admin)
     Route::get('/operatori', [OperatoriController::class, 'index'])->name('operatori');
-    
-    // Rute operatori - doar pentru admin (raport și toggle înainte de ruta {id})
+    // Raport detaliat per operator – disponibil pentru toți utilizatorii autentificați
+    Route::get('/operatori/raport/{nume}', [OperatoriController::class, 'raportByNume'])->name('operatori.raport')->where('nume', '[^/]+');
+
+    // Rute operatori - doar pentru admin
     Route::middleware([\App\Http\Middleware\CheckAdmin::class])->group(function () {
-        Route::get('/operatori/raport/{nume}', [OperatoriController::class, 'raportByNume'])->name('operatori.raport')->where('nume', '[^/]+');
         Route::post('/operatori/toggle-activ', [OperatoriController::class, 'toggleActiv'])->name('operatori.toggle-activ');
         Route::get('/operatori/create', [OperatoriController::class, 'create'])->name('operatori.create');
         Route::post('/operatori', [OperatoriController::class, 'store'])->name('operatori.store');

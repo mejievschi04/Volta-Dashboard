@@ -104,6 +104,7 @@ class VanzariLunareController extends Controller
                     'vanzari' => $vanzariVal,
                     'plan' => $planValoare,
                     'comenzi' => $comenziVal,
+                    'sesiuni' => $totalSesiuni,
                     'conversie' => $conversieVal,
                     'zile' => 0
                 ];

@@ -97,7 +97,7 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
     </div>
   </div>
   <div class="chart-container">
-    <h2><i class="fas fa-network-wired" style="margin-right: 8px;"></i>Sesiuni zilnice</h2>
+    <h2><i class="fas fa-network-wired" style="margin-right: 8px;"></i>Sesiuni per lună</h2>
     <div class="chart-wrapper">
       <canvas id="sesiuniChart"></canvas>
     </div>
@@ -155,7 +155,6 @@ async function loadVanzariTotale() {
       selectLuna.appendChild(opt);
       selectLuna.value = lunaCurenta;
       await updateKPIandChart(lunaCurenta);
-      loadSesiuniZilniceByLuna(lunaCurenta);
       loadComenziSiConversieLunare();
       return;
     }
@@ -200,6 +199,7 @@ async function loadVanzariTotale() {
     const vanzari = dataLunare.data.map(d => d.vanzari);
     const plan = dataLunare.data.map(d => d.plan || null);
     const comenziData = dataLunare.data.map(d => d.comenzi || 0);
+    const sesiuniData = dataLunare.data.map(d => d.sesiuni || 0);
     const conversieData = dataLunare.data.map(d => d.conversie || 0);
 
     const barChartOptions = {
@@ -274,6 +274,19 @@ async function loadVanzariTotale() {
         data: {
           labels,
           datasets: [{ label: "Conversie (%)", data: conversieData, backgroundColor: "rgba(239, 68, 68, 0.6)", borderColor: "#EF4444", borderWidth: 2, borderRadius: 6 }]
+        },
+        options: barChartOptions
+      }) };
+    }
+
+    destroyChart("sesiuniChart");
+    const ctxSesiuni = document.getElementById("sesiuniChart");
+    if (ctxSesiuni) {
+      charts["sesiuniChart"] = { instance: new Chart(ctxSesiuni.getContext("2d"), {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [{ label: "Total sesiuni", data: sesiuniData, backgroundColor: "rgba(255, 238, 0, 0.7)", borderColor: "#ffee00", borderWidth: 2, borderRadius: 6 }]
         },
         options: barChartOptions
       }) };
@@ -463,7 +476,6 @@ async function loadVanzariTotale() {
       selectLuna.addEventListener("change", async () => {
         const luna = selectLuna.value;
         await updateKPIandChart(luna);
-        loadSesiuniZilniceByLuna(luna);
       });
       selectLunaListenerAdded = true;
     }
@@ -480,7 +492,6 @@ async function loadVanzariTotale() {
       selectLuna.appendChild(opt);
       selectLuna.value = lunaCurenta;
       await updateKPIandChart(lunaCurenta);
-      loadSesiuniZilniceByLuna(lunaCurenta);
       loadComenziSiConversieLunare();
     }
 
@@ -494,7 +505,6 @@ async function loadVanzariTotale() {
       selectLuna.appendChild(opt);
       selectLuna.value = lunaCurenta;
       await updateKPIandChart(lunaCurenta);
-      loadSesiuniZilniceByLuna(lunaCurenta);
       loadComenziSiConversieLunare();
     }
   }
@@ -504,95 +514,10 @@ async function loadVanzariTotale() {
 function loadComenziSiConversieLunare() {
   destroyChart("comenziLunarChart");
   destroyChart("conversieLunarChart");
+  destroyChart("sesiuniChart");
   initChart("comenziLunarChart", "Comenzi", "#ffee00");
   initChart("conversieLunarChart", "Conversie %", "#ffee00");
-}
-
-// ---------------- LOAD SESIUNI ---------------- 
-async function loadSesiuniZilniceByLuna(luna) {
-  try {
-    const res = await fetch(`{{ route('api.sesiuni') }}?month=${luna}`);
-    const data = await res.json();
-    
-    if (!data.success) {
-      throw new Error(data.error || "Eroare la încărcarea datelor");
-    }
-
-    destroyChart("sesiuniChart");
-    const ctx = document.getElementById("sesiuniChart").getContext("2d");
-    charts["sesiuniChart"].instance = new Chart(ctx, {
-      type: "line",
-      data: { 
-        labels: data.labels, 
-        datasets: [{ 
-          label: "Sesiuni zilnice", 
-          data: data.sesiuni, 
-          borderColor: "#ffee00", 
-          backgroundColor: "rgba(255,238,0,0.2)", 
-          fill: true, 
-          tension: 0.35, 
-            pointRadius: window.innerWidth <= 768 ? 1.5 : 3,
-          pointBackgroundColor: "#ffee00" 
-        }] 
-      },
-      options: { 
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-          mode: 'index',
-          intersect: false,
-        },
-        plugins: { 
-          legend: { 
-            labels: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 12 : 14 },
-              padding: window.innerWidth <= 768 ? 8 : 15,
-              usePointStyle: true
-            },
-            position: 'top'
-          },
-          tooltip: {
-            backgroundColor: 'rgba(31, 41, 55, 0.9)',
-            titleColor: '#FFEE00',
-            bodyColor: '#fff',
-            borderColor: '#FFEE00',
-            borderWidth: 1,
-            padding: 12,
-            titleFont: { size: 14, weight: 'bold' },
-            bodyFont: { size: 13 },
-            cornerRadius: 8
-          }
-        }, 
-        scales: { 
-          x: { 
-            ticks: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 9 : 12 },
-              maxRotation: window.innerWidth <= 768 ? 45 : 0,
-              minRotation: window.innerWidth <= 768 ? 45 : 0
-            }, 
-            grid: { 
-              color: "rgba(255,255,0,0.05)",
-              drawBorder: false
-            } 
-          }, 
-          y: { 
-            ticks: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 11 : 12 }
-            }, 
-            grid: { 
-              color: "rgba(255,255,0,0.05)",
-              drawBorder: false
-            }, 
-            beginAtZero: true 
-          } 
-        } 
-      }
-    });
-
-  } catch(err){ console.error("Eroare la graficul Sesiuni:", err); }
+  initChart("sesiuniChart", "Total sesiuni", "#ffee00");
 }
 
 // ---------------- DOCUMENT READY ---------------- 
@@ -600,7 +525,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initChart("salesChart", "Vânzări lunare", "#ffee00");
   initChart("comenziLunarChart", "Comenzi", "#ffee00");
   initChart("conversieLunarChart", "Conversie %", "#ffee00");
-  initChart("sesiuniChart", "Sesiuni zilnice", "#ffee00");
+  initChart("sesiuniChart", "Total sesiuni", "#ffee00");
 
   loadVanzariTotale();
 });

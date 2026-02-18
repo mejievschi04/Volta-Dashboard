@@ -3,104 +3,106 @@
 @section('title', 'Operatori – VOLTA')
 
 @section('content')
-<div style="padding: 20px; max-width: 1400px; margin: 0 auto;">
-  <div style="margin-bottom: 30px;">
-    <h1 style="color: #FFEE00; margin: 0; font-size: 32px; font-weight: 800; text-shadow: 0 0 20px rgba(255, 238, 0, 0.5);">Operatori</h1>
-    <p style="color: #9CA3AF; margin: 5px 0 0 0; font-size: 14px;">Date din 1C (ianuarie 2023 – prezent)</p>
-  </div>
-  
+<div class="operatori-page">
+  <header class="operatori-page-header">
+    <div class="operatori-page-header-inner">
+      <div class="operatori-page-icon"><i class="fas fa-users"></i></div>
+      <div>
+        <h1 class="operatori-page-title">Operatori</h1>
+        <p class="operatori-page-subtitle">Date din 1C (ianuarie 2023 – prezent)</p>
+      </div>
+    </div>
+  </header>
+
   @if(session('success'))
-  <div style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%); color: #fff; padding: 16px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
-    <i class="fas fa-check-circle" style="margin-right: 8px;"></i>{{ session('success') }}
+  <div class="operatori-alert operatori-alert-success">
+    <i class="fas fa-check-circle"></i><span>{{ session('success') }}</span>
+  </div>
+  @endif
+  @if(session('error'))
+  <div class="operatori-alert operatori-alert-error">
+    <i class="fas fa-exclamation-circle"></i><span>{{ session('error') }}</span>
   </div>
   @endif
 
-  @if(session('error'))
-  <div style="background: linear-gradient(135deg, #EF4444 0%, #F87171 100%); color: #fff; padding: 16px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);">
-    <i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i>{{ session('error') }}
-  </div>
-  @endif
-  
   @if(isset($operatori1c) && count($operatori1c) > 0)
-  <div class="operator-card" style="margin-bottom: 30px; background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border: 1px solid rgba(255, 238, 0, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
+  <div class="operatori-card operatori-card-main">
     @if(isset($chartData1c) && count($chartData1c) > 0)
-    <div class="pie-chart-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center; margin-bottom: 24px;">
-      <div style="position: relative; height: 320px;">
-        <canvas id="vanzariPieChart1c"></canvas>
+    <section class="operatori-chart-section">
+      <div class="operatori-pie-wrap">
+        <div class="operatori-pie-canvas"><canvas id="vanzariPieChart1c"></canvas></div>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div class="operatori-legend">
         @foreach($chartData1c as $d)
-        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border-left: 4px solid rgba(255, 238, 0, 0.5);">
-          <div style="flex: 1;">
-            <div style="color: #fff; font-weight: 600; font-size: 14px;">{{ $d['nume'] }}</div>
-            <div style="color: #9CA3AF; font-size: 12px;">{{ number_format($d['vanzari_fara_tva'], 2, ',', '.') }} MDL</div>
-          </div>
-          <div style="color: #FFEE00; font-weight: 700; font-size: 18px;">{{ $d['procent'] }}%</div>
+        <div class="operatori-legend-item">
+          <span class="operatori-legend-name">{{ $d['nume'] }}</span>
+          <span class="operatori-legend-value">{{ number_format($d['vanzari_fara_tva'], 2, ',', '.') }} MDL</span>
+          <span class="operatori-legend-pct">{{ $d['procent'] }}%</span>
         </div>
         @endforeach
       </div>
-    </div>
+    </section>
     @endif
-    <div style="overflow-x: auto;">
-      <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr style="background: rgba(255, 238, 0, 0.15); color: #FFEE00;">
-            <th style="padding: 14px; text-align: left; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700;">Operator</th>
-            <th style="padding: 14px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700;">Vânzări fără TVA</th>
-            <th style="padding: 14px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700;">Profit</th>
-            <th style="padding: 14px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700;">Comenzi</th>
-            @if(auth()->check() && in_array(strtolower(auth()->user()->role ?? ''), ['admin', 'administrator']))
-            <th style="padding: 14px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700;">Acțiuni</th>
-            @endif
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($operatori1c as $op)
-          <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
-            <td style="padding: 14px; color: #fff; font-weight: 600;">{{ $op['nume'] }}</td>
-            <td style="padding: 14px; text-align: center; color: #fff;">{{ number_format($op['vanzari_fara_tva'], 2, ',', '.') }} MDL</td>
-            <td style="padding: 14px; text-align: center; color: #10B981; font-weight: 600;">{{ number_format($op['profit'], 2, ',', '.') }} MDL</td>
-            <td style="padding: 14px; text-align: center; color: #fff;">{{ number_format($op['nr_comenzi'], 0, ',', '.') }}</td>
-            @if(auth()->check() && in_array(strtolower(auth()->user()->role ?? ''), ['admin', 'administrator']))
-            <td style="padding: 14px; text-align: center;">
-              @if(!empty($op['operator_id']))
-              <a href="{{ route('operatori.show', $op['operator_id']) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(59, 130, 246, 0.2); color: #60A5FA; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px; border: 1px solid rgba(59, 130, 246, 0.4); transition: all 0.2s;" onmouseover="this.style.background='rgba(59, 130, 246, 0.3)'" onmouseout="this.style.background='rgba(59, 130, 246, 0.2)'"><i class="fas fa-chart-line"></i> Raport detaliat</a>
-              @else
-              <a href="{{ route('operatori.raport', ['nume' => $op['nume']]) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(59, 130, 246, 0.2); color: #60A5FA; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px; border: 1px solid rgba(59, 130, 246, 0.4); transition: all 0.2s;" onmouseover="this.style.background='rgba(59, 130, 246, 0.3)'" onmouseout="this.style.background='rgba(59, 130, 246, 0.2)'"><i class="fas fa-chart-line"></i> Raport detaliat</a>
-              @endif
-              <form action="{{ route('operatori.toggle-activ') }}" method="post" style="display: inline-block; margin-left: 8px;" onsubmit="return confirm('Dezactivezi acest operator? Nu va mai apărea în listă. Poți reactiva din Editare operatori.');">
-                @csrf
-                <input type="hidden" name="nume" value="{{ $op['nume'] }}">
-                <button type="submit" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(239, 68, 68, 0.2); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.3)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.2)'"><i class="fas fa-user-slash"></i> Dezactivează</button>
-              </form>
-            </td>
-            @endif
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
-    </div>
+
+    <section class="operatori-table-section">
+      <h2 class="operatori-table-title"><i class="fas fa-list"></i> Lista operatori</h2>
+      <div class="operatori-table-wrap">
+        <table class="operatori-table">
+          <thead>
+            <tr>
+              <th>Operator</th>
+              <th class="tc">Vânzări fără TVA</th>
+              <th class="tc">Profit</th>
+              <th class="tc">Comenzi</th>
+              <th class="tc">Acțiuni</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($operatori1c as $op)
+            <tr>
+              <td><strong>{{ $op['nume'] }}</strong></td>
+              <td class="tc">{{ number_format($op['vanzari_fara_tva'], 2, ',', '.') }} MDL</td>
+              <td class="tc operatori-profit">{{ number_format($op['profit'], 2, ',', '.') }} MDL</td>
+              <td class="tc">{{ number_format($op['nr_comenzi'], 0, ',', '.') }}</td>
+              <td class="tc operatori-actions">
+                @if(!empty($op['operator_id']))
+                <a href="{{ route('operatori.show', $op['operator_id']) }}" class="operatori-btn operatori-btn-report"><i class="fas fa-chart-line"></i> Raport detaliat</a>
+                @else
+                <a href="{{ route('operatori.raport', ['nume' => $op['nume']]) }}" class="operatori-btn operatori-btn-report"><i class="fas fa-chart-line"></i> Raport detaliat</a>
+                @endif
+                @if(auth()->check() && in_array(strtolower(auth()->user()->role ?? ''), ['admin', 'administrator']))
+                <form action="{{ route('operatori.toggle-activ') }}" method="post" class="operatori-form-inline" onsubmit="return confirm('Dezactivezi acest operator? Nu va mai apărea în listă.');">
+                  @csrf
+                  <input type="hidden" name="nume" value="{{ $op['nume'] }}">
+                  <button type="submit" class="operatori-btn operatori-btn-deactivate"><i class="fas fa-user-slash"></i> Dezactivează</button>
+                </form>
+                @endif
+              </td>
+            </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+    </section>
   </div>
   @else
-  <div class="operator-card" style="margin-bottom: 30px; padding: 60px 20px; background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border: 2px dashed rgba(255, 255, 255, 0.1);">
-    <div style="text-align: center;">
-      <i class="fas fa-database" style="font-size: 48px; color: #9CA3AF; margin-bottom: 20px; display: block;"></i>
-      <p style="color: #9CA3AF; font-size: 18px; margin: 0;">Nu există date din 1C pentru operatori.</p>
-      <p style="color: #6B7280; font-size: 14px; margin: 12px 0 0 0;">Sincronizează din Setări → 1C.</p>
-    </div>
+  <div class="operatori-card operatori-card-empty">
+    <i class="fas fa-database"></i>
+    <p>Nu există date din 1C pentru operatori.</p>
+    <p class="operatori-empty-hint">Sincronizează din Setări → 1C.</p>
   </div>
   @endif
 
   @if(auth()->check() && in_array(strtolower(auth()->user()->role ?? ''), ['admin', 'administrator']) && isset($operatoriDezactivati) && $operatoriDezactivati->count() > 0)
-  <div class="operator-card" style="margin-top: 30px; background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border: 1px solid rgba(255, 255, 255, 0.08);">
-    <h3 style="color: #9CA3AF; margin: 0 0 16px 0; font-size: 18px; font-weight: 700;"><i class="fas fa-user-slash" style="margin-right: 8px;"></i> Operatori dezactivați (nu apar în listă)</h3>
-    <p style="color: #6B7280; font-size: 13px; margin: 0 0 16px 0;">Poți reactiva pentru a-i afișa din nou în lista de mai sus.</p>
-    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+  <div class="operatori-card operatori-card-dezactivati">
+    <h3><i class="fas fa-user-slash"></i> Operatori dezactivați</h3>
+    <p class="operatori-dezactivati-desc">Nu apar în listă. Poți reactiva pentru a-i afișa din nou.</p>
+    <div class="operatori-dezactivati-btns">
       @foreach($operatoriDezactivati as $od)
-      <form action="{{ route('operatori.toggle-activ') }}" method="post" style="display: inline-block;">
+      <form action="{{ route('operatori.toggle-activ') }}" method="post">
         @csrf
         <input type="hidden" name="nume" value="{{ $od->nume }}">
-        <button type="submit" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(74, 222, 128, 0.2); color: #34D399; border: 1px solid rgba(74, 222, 128, 0.4); border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer;">{{ $od->nume }} <i class="fas fa-user-check"></i> Reactivează</button>
+        <button type="submit" class="operatori-btn operatori-btn-reactivate">{{ $od->nume }} <i class="fas fa-user-check"></i> Reactivează</button>
       </form>
       @endforeach
     </div>
