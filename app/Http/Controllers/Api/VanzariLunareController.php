@@ -12,16 +12,26 @@ class VanzariLunareController extends Controller
     public function index(Request $request)
     {
         try {
-            // Date doar din 1C (onec_kpi_syncs)
-            $range = OnecKpiSync::selectRaw('MIN(period_start) as min_date, MAX(period_end) as max_date')->first();
-            $firstDate = $range && $range->min_date ? $range->min_date : date('Y-m-01', strtotime('-24 months'));
-            $lastDate = $range && $range->max_date ? $range->max_date : date('Y-m-t');
+            $firstDate = date('Y-m-01', strtotime('-24 months'));
+            $lastDate = date('Y-m-t');
+            $onecByMonth = collect();
 
-            $onecByMonth = OnecKpiSync::selectRaw("DATE_FORMAT(period_start, '%Y-%m') as month, vanzari_fara_tva")
-                ->orderByDesc('created_at')
-                ->get()
-                ->unique('month')
-                ->keyBy('month');
+            try {
+                $range = OnecKpiSync::selectRaw('MIN(period_start) as min_date, MAX(period_end) as max_date')->first();
+                if ($range && $range->min_date) {
+                    $firstDate = $range->min_date;
+                }
+                if ($range && $range->max_date) {
+                    $lastDate = $range->max_date;
+                }
+                $onecByMonth = OnecKpiSync::selectRaw("DATE_FORMAT(period_start, '%Y-%m') as month, vanzari_fara_tva")
+                    ->orderByDesc('created_at')
+                    ->get()
+                    ->unique('month')
+                    ->keyBy('month');
+            } catch (\Throwable $e) {
+                // Tabel onec_kpi_syncs poate să nu existe încă (migrare nerulată)
+            }
             
             // Obține planurile pentru toate lunile
             $planMap = [];

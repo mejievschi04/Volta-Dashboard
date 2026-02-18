@@ -151,7 +151,17 @@ async function loadVanzariTotale() {
     const dataLunare = await resLunare.json();
     
     if (!dataLunare.success) {
-      throw new Error(dataLunare.error || "Eroare la încărcarea datelor");
+      const lunaCurenta = new Date().toISOString().slice(0, 7);
+      const opt = document.createElement("option");
+      opt.value = lunaCurenta;
+      opt.textContent = new Date(lunaCurenta + '-01').toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
+      selectLuna.appendChild(opt);
+      selectLuna.value = lunaCurenta;
+      await updateKPIandChart(lunaCurenta);
+      loadVanzariZilniceByLuna(lunaCurenta);
+      loadSesiuniZilniceByLuna(lunaCurenta);
+      loadRaportComenziSesiuniByLuna(lunaCurenta);
+      return;
     }
 
     selectLuna.innerHTML = '';
@@ -483,14 +493,37 @@ async function loadVanzariTotale() {
       selectLunaListenerAdded = true;
     }
 
-    if(dataLunare.luni.length) {
-      const ultimaLuna = dataLunare.luni[dataLunare.luni.length-1].value;
+    if (dataLunare.luni.length) {
+      const ultimaLuna = dataLunare.luni[dataLunare.luni.length - 1].value;
       selectLuna.value = ultimaLuna;
       selectLuna.dispatchEvent(new Event("change"));
+    } else {
+      const lunaCurenta = new Date().toISOString().slice(0, 7);
+      const opt = document.createElement("option");
+      opt.value = lunaCurenta;
+      opt.textContent = new Date(lunaCurenta + '-01').toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
+      selectLuna.appendChild(opt);
+      selectLuna.value = lunaCurenta;
+      await updateKPIandChart(lunaCurenta);
+      loadVanzariZilniceByLuna(lunaCurenta);
+      loadSesiuniZilniceByLuna(lunaCurenta);
+      loadRaportComenziSesiuniByLuna(lunaCurenta);
     }
 
   } catch(err) {
     console.error("Eroare la încărcarea datelor:", err);
+    const lunaCurenta = new Date().toISOString().slice(0, 7);
+    if (selectLuna && !selectLuna.options.length) {
+      const opt = document.createElement("option");
+      opt.value = lunaCurenta;
+      opt.textContent = new Date(lunaCurenta + '-01').toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
+      selectLuna.appendChild(opt);
+      selectLuna.value = lunaCurenta;
+      await updateKPIandChart(lunaCurenta);
+      loadVanzariZilniceByLuna(lunaCurenta);
+      loadSesiuniZilniceByLuna(lunaCurenta);
+      loadRaportComenziSesiuniByLuna(lunaCurenta);
+    }
   }
 }
 

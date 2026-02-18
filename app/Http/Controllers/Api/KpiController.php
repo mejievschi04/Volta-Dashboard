@@ -8,7 +8,6 @@ use App\Models\PlanVanzari;
 use App\Models\TrafficSource;
 use App\Models\OnecKpiSync;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Auth;
 
 class KpiController extends Controller
 {
