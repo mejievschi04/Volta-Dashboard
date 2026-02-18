@@ -14,9 +14,6 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
     <label for="selectLuna">Selectează luna</label>
     <select id="selectLuna" class="dashboard-month-select"></select>
   </div>
-  <div id="kpi-source-badge" class="kpi-source-badge" style="display: none;" title="KPI din sincronizare 1C">
-    <i class="fas fa-database"></i>
-  </div>
 </div>
 
 <!-- KPI CARDS -->
@@ -327,12 +324,6 @@ async function loadVanzariTotale() {
         }
       });
 
-      // Indicator sursă date: 1C (din DB) sau local
-      const badge = document.getElementById('kpi-source-badge');
-      if (badge) {
-        badge.style.display = (kpiData.kpi_source === 'onec_db') ? '' : 'none';
-      }
-      
       // Reinițializează editarea după actualizarea KPI-urilor
       @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
       initPlanEdit();
