@@ -198,102 +198,89 @@ async function loadVanzariTotale() {
     console.log('Toate opțiunile din selector:', Array.from(selectLuna.options).map(opt => opt.value + ' - ' + opt.text));
     console.log('=== END DEBUG ===');
 
-    // Grafic lunar agregat
-    const labels = dataLunare.data.map(d => d.luna);
+    // Grafic lunar agregat + Comenzi + Conversie (aceeași sursă, același stil)
+    const labels = dataLunare.data.map(d => d.luna_label || d.luna);
     const vanzari = dataLunare.data.map(d => d.vanzari);
     const plan = dataLunare.data.map(d => d.plan || null);
+    const comenziData = dataLunare.data.map(d => d.comenzi || 0);
+    const conversieData = dataLunare.data.map(d => d.conversie || 0);
 
-    destroyChart("salesChart");
-    const ctx = document.getElementById("salesChart").getContext("2d");
-    charts["salesChart"].instance = new Chart(ctx, {
-      data: {
-        labels,
-        datasets: [
-          {
-            type: "line",
-            label: "Plan",
-            data: plan,
-            borderColor: "#EF4444",
-            backgroundColor: "rgba(239, 68, 68, 0.1)",
-            borderWidth: 3,
-            tension: 0.3,
-            pointRadius: window.innerWidth <= 768 ? 2 : 5,
-            pointBackgroundColor: "#EF4444",
-            pointBorderColor: "#ffffff",
-            pointBorderWidth: 2,
-            fill: false,
-            order: 1
-          },
-          {
-            type: "bar",
-            label: "Vânzări reale",
-            data: vanzari,
-            backgroundColor: "rgba(255, 238, 0, 0.7)",
-            borderColor: "#ffee00",
-            borderWidth: 2,
-            borderRadius: 6,
-            order: 2
-          }
-        ]
+    const barChartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          labels: { color: "#fff", font: { size: window.innerWidth <= 768 ? 12 : 14 }, padding: window.innerWidth <= 768 ? 8 : 15, usePointStyle: true },
+          display: true,
+          position: 'top'
+        },
+        tooltip: {
+          backgroundColor: 'rgba(31, 41, 55, 0.9)',
+          titleColor: '#FFEE00',
+          bodyColor: '#fff',
+          borderColor: '#FFEE00',
+          borderWidth: 1,
+          padding: 12,
+          titleFont: { size: 14, weight: 'bold' },
+          bodyFont: { size: 13 },
+          cornerRadius: 8,
+          displayColors: true
+        }
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-          mode: 'index',
-          intersect: false,
+      scales: {
+        x: {
+          ticks: { color: "#fff", font: { size: window.innerWidth <= 768 ? 9 : 12 }, maxRotation: window.innerWidth <= 768 ? 45 : 0, minRotation: window.innerWidth <= 768 ? 45 : 0 },
+          grid: { color: "rgba(255,255,0,0.05)", drawBorder: false }
         },
-        plugins: {
-          legend: { 
-            labels: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 12 : 14 },
-              padding: window.innerWidth <= 768 ? 8 : 15,
-              usePointStyle: true
-            },
-            display: true,
-            position: 'top'
-          },
-          tooltip: {
-            backgroundColor: 'rgba(31, 41, 55, 0.9)',
-            titleColor: '#FFEE00',
-            bodyColor: '#fff',
-            borderColor: '#FFEE00',
-            borderWidth: 1,
-            padding: 12,
-            titleFont: { size: 14, weight: 'bold' },
-            bodyFont: { size: 13 },
-            cornerRadius: 8,
-            displayColors: true
-          }
-        },
-        scales: {
-          x: {
-            ticks: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 9 : 12 },
-              maxRotation: window.innerWidth <= 768 ? 45 : 0,
-              minRotation: window.innerWidth <= 768 ? 45 : 0
-            },
-            grid: { 
-              color: "rgba(255,255,0,0.05)",
-              drawBorder: false
-            }
-          },
-          y: {
-            ticks: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 11 : 12 }
-            },
-            grid: { 
-              color: "rgba(255,255,0,0.05)",
-              drawBorder: false
-            },
-            beginAtZero: true
-          }
+        y: {
+          ticks: { color: "#fff", font: { size: window.innerWidth <= 768 ? 11 : 12 } },
+          grid: { color: "rgba(255,255,0,0.05)", drawBorder: false },
+          beginAtZero: true
         }
       }
-    });
+    };
+
+    destroyChart("salesChart");
+    const ctxSales = document.getElementById("salesChart");
+    if (ctxSales) {
+      charts["salesChart"].instance = new Chart(ctxSales.getContext("2d"), {
+        data: {
+          labels,
+          datasets: [
+            { type: "line", label: "Plan", data: plan, borderColor: "#EF4444", backgroundColor: "rgba(239, 68, 68, 0.1)", borderWidth: 3, tension: 0.3, pointRadius: window.innerWidth <= 768 ? 2 : 5, pointBackgroundColor: "#EF4444", pointBorderColor: "#ffffff", pointBorderWidth: 2, fill: false, order: 1 },
+            { type: "bar", label: "Vânzări reale", data: vanzari, backgroundColor: "rgba(255, 238, 0, 0.7)", borderColor: "#ffee00", borderWidth: 2, borderRadius: 6, order: 2 }
+          ]
+        },
+        options: barChartOptions
+      });
+    }
+
+    destroyChart("comenziLunarChart");
+    const ctxComenzi = document.getElementById("comenziLunarChart");
+    if (ctxComenzi) {
+      charts["comenziLunarChart"] = { instance: new Chart(ctxComenzi.getContext("2d"), {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [{ label: "Comenzi", data: comenziData, backgroundColor: "rgba(255, 238, 0, 0.7)", borderColor: "#ffee00", borderWidth: 2, borderRadius: 6 }]
+        },
+        options: barChartOptions
+      }) };
+    }
+
+    destroyChart("conversieLunarChart");
+    const ctxConversie = document.getElementById("conversieLunarChart");
+    if (ctxConversie) {
+      charts["conversieLunarChart"] = { instance: new Chart(ctxConversie.getContext("2d"), {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [{ label: "Conversie (%)", data: conversieData, backgroundColor: "rgba(239, 68, 68, 0.6)", borderColor: "#EF4444", borderWidth: 2, borderRadius: 6 }]
+        },
+        options: barChartOptions
+      }) };
+    }
 
     async function updateKPIandChart(luna) {
       const resKPI = await fetch(`{{ route('api.kpi') }}?month=${luna}`);
@@ -522,94 +509,12 @@ async function loadVanzariTotale() {
   }
 }
 
-// ---------------- COMENZI ȘI CONVERSIE PER LUNĂ (din istoric) ----------------
-async function loadComenziSiConversieLunare() {
-  const chartOpts = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { labels: { color: "#fff", font: { size: window.innerWidth <= 768 ? 12 : 14 } }, position: 'top' },
-      tooltip: {
-        backgroundColor: 'rgba(31, 41, 55, 0.9)',
-        titleColor: '#FFEE00',
-        bodyColor: '#fff',
-        borderColor: '#FFEE00',
-        borderWidth: 1,
-        padding: 12,
-        cornerRadius: 8
-      }
-    },
-    scales: {
-      x: {
-        ticks: { color: "#fff", font: { size: window.innerWidth <= 768 ? 9 : 11 }, maxRotation: 45, minRotation: 45 },
-        grid: { color: "rgba(255,255,0,0.05)" }
-      },
-      y: {
-        ticks: { color: "#fff", font: { size: window.innerWidth <= 768 ? 9 : 11 } },
-        grid: { color: "rgba(255,255,0,0.05)" },
-        beginAtZero: true
-      }
-    }
-  };
-  try {
-    const res = await fetch("{{ route('api.istoric') }}");
-    const json = await res.json();
-    if (!json.success || !Array.isArray(json.data)) {
-      initChart("comenziLunarChart", "Comenzi", "#ffee00");
-      initChart("conversieLunarChart", "Conversie %", "#ffee00");
-      return;
-    }
-    const data = json.data.slice().reverse();
-    const labels = data.map(d => d.luna_label || d.luna);
-    const comenzi = data.map(d => d.comenzi || 0);
-    const conversie = data.map(d => d.conversie || 0);
-
-    destroyChart("comenziLunarChart");
-    const ctx1 = document.getElementById("comenziLunarChart");
-    if (ctx1) {
-      const chart1 = new Chart(ctx1.getContext("2d"), {
-        type: "bar",
-        data: {
-          labels,
-          datasets: [{
-            label: "Comenzi",
-            data: comenzi,
-            backgroundColor: "rgba(255, 238, 0, 0.7)",
-            borderColor: "#ffee00",
-            borderWidth: 2,
-            borderRadius: 6
-          }]
-        },
-        options: chartOpts
-      });
-      charts["comenziLunarChart"] = { instance: chart1 };
-    }
-
-    destroyChart("conversieLunarChart");
-    const ctx2 = document.getElementById("conversieLunarChart");
-    if (ctx2) {
-      const chart2 = new Chart(ctx2.getContext("2d"), {
-        type: "bar",
-        data: {
-          labels,
-          datasets: [{
-            label: "Conversie (%)",
-            data: conversie,
-            backgroundColor: "rgba(239, 68, 68, 0.6)",
-            borderColor: "#EF4444",
-            borderWidth: 2,
-            borderRadius: 6
-          }]
-        },
-        options: chartOpts
-      });
-      charts["conversieLunarChart"] = { instance: chart2 };
-    }
-  } catch (err) {
-    console.error("Eroare grafice comenzi/conversie lunare:", err);
-    initChart("comenziLunarChart", "Comenzi", "#ffee00");
-    initChart("conversieLunarChart", "Conversie %", "#ffee00");
-  }
+// ---------------- COMENZI ȘI CONVERSIE PER LUNĂ (fallback: grafice goale) ----------------
+function loadComenziSiConversieLunare() {
+  destroyChart("comenziLunarChart");
+  destroyChart("conversieLunarChart");
+  initChart("comenziLunarChart", "Comenzi", "#ffee00");
+  initChart("conversieLunarChart", "Conversie %", "#ffee00");
 }
 
 // ---------------- LOAD SESIUNI ---------------- 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PlanVanzari;
 use App\Models\OnecKpiSync;
+use App\Models\TrafficSource;
 
 class VanzariLunareController extends Controller
 {
@@ -24,13 +25,23 @@ class VanzariLunareController extends Controller
                 if ($range && $range->max_date) {
                     $lastDate = $range->max_date;
                 }
-                $onecByMonth = OnecKpiSync::selectRaw("DATE_FORMAT(period_start, '%Y-%m') as month, vanzari_fara_tva")
+                $onecByMonth = OnecKpiSync::selectRaw("DATE_FORMAT(period_start, '%Y-%m') as month, vanzari_fara_tva, nr_comenzi")
                     ->orderByDesc('created_at')
                     ->get()
                     ->unique('month')
                     ->keyBy('month');
             } catch (\Throwable $e) {
                 // Tabel onec_kpi_syncs poate să nu existe încă (migrare nerulată)
+            }
+
+            $sesiuniByMonth = collect();
+            try {
+                $sesiuniRows = TrafficSource::selectRaw("DATE_FORMAT(date, '%Y-%m') as month, SUM(visits) as total_sesiuni")
+                    ->where('source', 'total')
+                    ->groupBy('month')
+                    ->pluck('total_sesiuni', 'month');
+                $sesiuniByMonth = $sesiuniRows;
+            } catch (\Throwable $e) {
             }
             
             // Obține planurile pentru toate lunile
@@ -85,6 +96,9 @@ class VanzariLunareController extends Controller
                 $monthKey = $currentDate->format('Y-m');
                 $onec = $onecByMonth->get($monthKey);
                 $vanzariVal = $onec ? floatval($onec->vanzari_fara_tva) : 0;
+                $comenziVal = $onec ? intval($onec->nr_comenzi) : 0;
+                $totalSesiuni = (int) ($sesiuniByMonth->get($monthKey) ?? 0);
+                $conversieVal = $totalSesiuni > 0 ? round(($comenziVal / $totalSesiuni) * 100, 2) : 0;
                 $planKey = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT);
                 $planValoare = $planMap[$planKey] ?? null;
                 $lunaNume = $luniRomana[$month] ?? 'Luna ' . $month;
@@ -92,8 +106,11 @@ class VanzariLunareController extends Controller
                 $luni[] = ['value' => $monthKey, 'label' => $label];
                 $data[] = [
                     'luna' => $monthKey,
+                    'luna_label' => $label,
                     'vanzari' => $vanzariVal,
                     'plan' => $planValoare,
+                    'comenzi' => $comenziVal,
+                    'conversie' => $conversieVal,
                     'zile' => 0
                 ];
                 $currentDate->modify('+1 month');
