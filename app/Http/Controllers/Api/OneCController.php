@@ -16,7 +16,7 @@ class OneCController extends Controller
     /**
      * Sincronizare KPI din 1C.
      * - Fără force: nu se apelează 1C dacă perioada există deja în DB.
-     * - Cu smart=1: se verifică doar perioadele care lipsesc (luna curentă, luna trecută) și se apelează 1C doar pentru ele.
+     * - Cu smart=1: se verifică lunile din 1 ianuarie 2023 până în prezent; pentru fiecare lună care lipsește se apelează 1C.
      */
     public function syncKpi(Request $request)
     {
@@ -135,19 +135,32 @@ class OneCController extends Controller
     }
 
     /**
-     * Sync smart: doar perioadele care lipsesc (luna curentă, luna trecută).
-     * Pentru fiecare perioadă: dacă există deja în DB și nu e force, nu se apelează 1C.
+     * Sync smart: perioade din 1 ianuarie 2023 până în prezent care lipsesc.
+     * Pentru fiecare lună: dacă există deja în DB și nu e force, nu se apelează 1C.
      */
     private function syncKpiSmart(Request $request, bool $force): JsonResponse
     {
         $today = date('Y-m-d');
         $currentMonthStart = date('Y-m-01');
-        $lastMonthStart = date('Y-m-01', strtotime('first day of last month'));
-        $lastMonthEnd = date('Y-m-t', strtotime('last day of last month'));
+        $periods = [];
 
-        $periods = [
-            ['start' => $currentMonthStart, 'end' => $today, 'label' => 'luna curentă'],
-            ['start' => $lastMonthStart, 'end' => $lastMonthEnd, 'label' => 'luna trecută'],
+        // De la ianuarie 2023 până la luna trecută (luni complete)
+        $cursor = strtotime('2023-01-01');
+        $endOfLastMonth = strtotime('last day of last month');
+        while ($cursor <= $endOfLastMonth) {
+            $periods[] = [
+                'start' => date('Y-m-01', $cursor),
+                'end' => date('Y-m-t', $cursor),
+                'label' => date('Y-m', $cursor),
+            ];
+            $cursor = strtotime('+1 month', $cursor);
+        }
+
+        // Luna curentă (de la 1 până azi)
+        $periods[] = [
+            'start' => $currentMonthStart,
+            'end' => $today,
+            'label' => date('Y-m') . ' (curentă)',
         ];
 
         $synced = [];

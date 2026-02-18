@@ -14,9 +14,16 @@ class OperatoriController extends Controller
 {
     public function index()
     {
-        // Doar date din 1C (agregate pe operator, din ianuarie 2023)
+        // Date din 1C (ianuarie 2023); excludem operatorii dezactivați (Operator.activ = 0)
         $operatori1c = [];
         $chartData1c = [];
+        $dezactivatedNume = Operator::where('activ', false)
+            ->get()
+            ->map(fn ($o) => trim((string) ($o->nume ?? '')))
+            ->filter()
+            ->values()
+            ->toArray();
+
         try {
             $rows = OnecKpiOperator::query()
                 ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
@@ -34,13 +41,18 @@ class OperatoriController extends Controller
 
             foreach ($rows as $row) {
                 $nume = trim((string) ($row->nume ?? '')) ?: 'Fără nume';
+                if (in_array($nume, $dezactivatedNume, true)) {
+                    continue;
+                }
                 $vanzari = (float) $row->total_vanzari_fara_tva;
+                $operatorRecord = Operator::whereRaw('TRIM(nume) = ?', [$nume])->first();
                 $operatori1c[] = [
                     'nume' => $nume,
                     'vanzari_fara_tva' => $vanzari,
                     'vanzari_cu_tva' => (float) $row->total_vanzari_cu_tva,
                     'profit' => (float) $row->total_profit,
                     'nr_comenzi' => (int) $row->total_comenzi,
+                    'operator_id' => $operatorRecord?->id,
                 ];
                 if ($vanzari > 0) {
                     $chartData1c[] = ['nume' => $nume, 'vanzari_fara_tva' => $vanzari, 'procent' => 0];
@@ -57,7 +69,112 @@ class OperatoriController extends Controller
             // Tabel onec_kpi_operatori poate să nu existe
         }
 
-        return view('operatori.index', compact('operatori1c', 'chartData1c'));
+        $operatoriDezactivati = Operator::where('activ', false)->orderBy('nume')->get();
+
+        return view('operatori.index', compact('operatori1c', 'chartData1c', 'operatoriDezactivati'));
+    }
+
+    /**
+     * Raport detaliat 1C pentru un operator după nume (admin/vizualizare).
+     * Dacă există Operator cu acest nume, redirect la show(id). Altfel afișează doar datele 1C.
+     */
+    public function raportByNume(string $nume)
+    {
+        $nume = trim($nume);
+        if ($nume === '') {
+            return redirect()->route('operatori')->with('error', 'Nume invalid.');
+        }
+
+        $operator = Operator::whereRaw('TRIM(nume) = ?', [$nume])->first();
+        if ($operator) {
+            return redirect()->route('operatori.show', $operator->id);
+        }
+
+        $date = null;
+        $vanzariLunare1c = collect();
+        try {
+            $row = OnecKpiOperator::query()
+                ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
+                ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
+                ->whereRaw('TRIM(onec_kpi_operatori.operator_nume) = ?', [$nume])
+                ->selectRaw('
+                    onec_kpi_operatori.operator_nume as nume,
+                    COALESCE(SUM(onec_kpi_operatori.vanzari_fara_tva), 0) as total_vanzari_fara_tva,
+                    COALESCE(SUM(onec_kpi_operatori.vanzari_cu_tva), 0) as total_vanzari_cu_tva,
+                    COALESCE(SUM(onec_kpi_operatori.profit), 0) as total_profit,
+                    COALESCE(SUM(onec_kpi_operatori.nr_comenzi), 0) as total_comenzi
+                ')
+                ->groupBy('onec_kpi_operatori.operator_nume')
+                ->first();
+            if ($row) {
+                $date = [
+                    'nume' => trim((string) ($row->nume ?? '')) ?: $nume,
+                    'vanzari_fara_tva' => (float) $row->total_vanzari_fara_tva,
+                    'vanzari_cu_tva' => (float) $row->total_vanzari_cu_tva,
+                    'profit' => (float) $row->total_profit,
+                    'nr_comenzi' => (int) $row->total_comenzi,
+                ];
+            }
+            $lunareRows = OnecKpiOperator::query()
+                ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
+                ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
+                ->whereRaw('TRIM(onec_kpi_operatori.operator_nume) = ?', [$nume])
+                ->selectRaw('
+                    DATE_FORMAT(onec_kpi_syncs.period_start, "%Y-%m") as luna,
+                    COALESCE(SUM(onec_kpi_operatori.vanzari_fara_tva), 0) as vanzari_luna,
+                    COALESCE(SUM(onec_kpi_operatori.vanzari_cu_tva), 0) as vanzari_cu_tva,
+                    COALESCE(SUM(onec_kpi_operatori.profit), 0) as profit,
+                    COALESCE(SUM(onec_kpi_operatori.nr_comenzi), 0) as comenzi
+                ')
+                ->groupBy(DB::raw('DATE_FORMAT(onec_kpi_syncs.period_start, "%Y-%m")'))
+                ->orderBy('luna', 'desc')
+                ->get();
+            foreach ($lunareRows as $r) {
+                $vanzariLunare1c->push((object) [
+                    'luna' => $r->luna,
+                    'luna_label' => \Carbon\Carbon::createFromFormat('Y-m', $r->luna)->translatedFormat('F Y'),
+                    'vanzari_luna' => (float) $r->vanzari_luna,
+                    'vanzari_cu_tva' => (float) $r->vanzari_cu_tva,
+                    'profit' => (float) $r->profit,
+                    'comenzi' => (int) $r->comenzi,
+                    'nr_vanzari' => (int) $r->comenzi,
+                ]);
+            }
+        } catch (\Throwable $e) {
+        }
+
+        return view('operatori.raport', [
+            'operatorNume' => $nume,
+            'date' => $date,
+            'vanzariLunare1c' => $vanzariLunare1c,
+        ]);
+    }
+
+    /**
+     * Toggle activ pentru un operator după nume (doar admin). Dezactivare = nu mai apare în listă.
+     */
+    public function toggleActiv(Request $request)
+    {
+        $nume = trim((string) $request->input('nume', ''));
+        if ($nume === '') {
+            return redirect()->route('operatori')->with('error', 'Nume invalid.');
+        }
+
+        $operator = Operator::whereRaw('TRIM(nume) = ?', [$nume])->first();
+        if ($operator) {
+            $operator->activ = !$operator->activ;
+            $operator->save();
+            $message = $operator->activ ? 'Operatorul a fost reactivat.' : 'Operatorul a fost dezactivat și nu mai apare în listă.';
+        } else {
+            Operator::create([
+                'nume' => $nume,
+                'data_angajare' => now(),
+                'activ' => false,
+            ]);
+            $message = 'Operatorul a fost dezactivat și nu mai apare în listă.';
+        }
+
+        return redirect()->route('operatori')->with('success', $message);
     }
 
     /**
