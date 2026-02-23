@@ -145,12 +145,14 @@ class OperatoriController extends Controller
         }
 
         $operatorRecord = Operator::whereRaw('TRIM(nume) = ?', [trim($nume)])->first();
+        $canEditPhotos = $operatorRecord && $this->canEditOperatorPhotos($operatorRecord);
 
         return view('operatori.raport', [
             'operatorNume' => $nume,
             'date' => $date,
             'vanzariLunare1c' => $vanzariLunare1c,
             'operatorRecord' => $operatorRecord,
+            'canEditPhotos' => $canEditPhotos,
         ]);
     }
 
@@ -253,12 +255,14 @@ class OperatoriController extends Controller
         }
 
         $operatorRecord = $operatorNume !== '' ? Operator::whereRaw('TRIM(nume) = ?', [$operatorNume])->first() : null;
+        $canEditPhotos = $operatorRecord && $this->canEditOperatorPhotos($operatorRecord);
 
         return view('operatori.me', [
             'operatorNume' => $operatorNume ?: $user->username,
             'date' => $date,
             'vanzariLunare1c' => $vanzariLunare1c,
             'operatorRecord' => $operatorRecord,
+            'canEditPhotos' => $canEditPhotos,
         ]);
     }
 
