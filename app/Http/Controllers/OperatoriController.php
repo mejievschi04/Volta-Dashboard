@@ -351,7 +351,8 @@ class OperatoriController extends Controller
     }
 
     /**
-     * Verifică dacă utilizatorul curent poate edita pozele operatorului (el însuși sau admin).
+     * Doar operatorul însuși sau adminul poate edita pozele (profil și copertă).
+     * Operatorul = user cu operator_nume identic cu operator.nume.
      */
     private function canEditOperatorPhotos(Operator $operator): bool
     {
@@ -363,8 +364,9 @@ class OperatoriController extends Controller
         if (in_array($role, ['admin', 'administrator'], true)) {
             return true;
         }
-        $operatorNume = trim((string) ($user->operator_nume ?? ''));
-        return $operatorNume !== '' && strcasecmp($operatorNume, trim((string) $operator->nume)) === 0;
+        $userNume = trim((string) ($user->operator_nume ?? ''));
+        $operatorNume = trim((string) ($operator->nume ?? ''));
+        return $userNume !== '' && strcasecmp($userNume, $operatorNume) === 0;
     }
 
     /**
