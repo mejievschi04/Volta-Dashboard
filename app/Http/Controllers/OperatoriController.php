@@ -144,7 +144,7 @@ class OperatoriController extends Controller
         } catch (\Throwable $e) {
         }
 
-        $operatorRecord = Operator::whereRaw('TRIM(nume) = ?', [trim($nume)])->first();
+        $operatorRecord = Operator::whereRaw('LOWER(TRIM(nume)) = ?', [mb_strtolower(trim($nume))])->first();
         $canEditPhotos = $operatorRecord && $this->canEditOperatorPhotos($operatorRecord);
 
         return view('operatori.raport', [
@@ -254,11 +254,12 @@ class OperatoriController extends Controller
             }
         }
 
-        $operatorRecord = $operatorNume !== '' ? Operator::whereRaw('TRIM(nume) = ?', [$operatorNume])->first() : null;
-        $canEditPhotos = $operatorRecord && $this->canEditOperatorPhotos($operatorRecord);
+        $fullName = trim((string) ($user->full_name ?? $user->name ?? ''));
+        $operatorRecord = $fullName !== '' ? Operator::whereRaw('LOWER(TRIM(nume)) = ?', [mb_strtolower($fullName)])->first() : null;
+        $canEditPhotos = $operatorRecord !== null;
 
         return view('operatori.me', [
-            'operatorNume' => $operatorNume ?: $user->username,
+            'operatorNume' => $operatorNume ?: $fullName ?: $user->username,
             'date' => $date,
             'vanzariLunare1c' => $vanzariLunare1c,
             'operatorRecord' => $operatorRecord,
@@ -352,7 +353,7 @@ class OperatoriController extends Controller
 
     /**
      * Doar operatorul însuși sau adminul poate edita pozele (profil și copertă).
-     * Operatorul = user cu operator_nume identic cu operator.nume.
+     * Operatorul = full_name al user-ului coincide cu operator.nume (ca în 1C).
      */
     private function canEditOperatorPhotos(Operator $operator): bool
     {
@@ -364,9 +365,9 @@ class OperatoriController extends Controller
         if (in_array($role, ['admin', 'administrator'], true)) {
             return true;
         }
-        $userNume = trim((string) ($user->operator_nume ?? ''));
+        $fullName = trim((string) ($user->full_name ?? $user->name ?? ''));
         $operatorNume = trim((string) ($operator->nume ?? ''));
-        return $userNume !== '' && strcasecmp($userNume, $operatorNume) === 0;
+        return $fullName !== '' && $operatorNume !== '' && strcasecmp($fullName, $operatorNume) === 0;
     }
 
     /**

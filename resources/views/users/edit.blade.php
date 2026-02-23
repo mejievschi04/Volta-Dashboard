@@ -53,13 +53,26 @@
 
         <div>
           <label style="display: block; color: #FFEE00; margin-bottom: 8px; font-weight: 700; font-size: 14px;">
-            <i class="fas fa-id-card" style="margin-right: 6px;"></i>Nume Complet
+            <i class="fas fa-id-card" style="margin-right: 6px;"></i>Nume (afișare)
           </label>
           <input type="text" name="name" value="{{ old('name', $user->name) }}" 
                  style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; transition: all 0.2s;"
                  onfocus="this.style.borderColor='#FFEE00'; this.style.background='rgba(255, 238, 0, 0.15)'"
                  onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(255, 255, 255, 0.05)'"
-                 placeholder="Introduceți numele complet">
+                 placeholder="Nume afișat">
+        </div>
+        <div>
+          <label style="display: block; color: #FFEE00; margin-bottom: 8px; font-weight: 700; font-size: 14px;">
+            <i class="fas fa-user-check" style="margin-right: 6px;"></i>Full name (nume complet, ca în 1C)
+          </label>
+          <input type="text" name="full_name" value="{{ old('full_name', $user->full_name) }}" 
+                 style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; transition: all 0.2s;"
+                 onfocus="this.style.borderColor='#FFEE00'; this.style.background='rgba(255, 238, 0, 0.15)'"
+                 onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(255, 255, 255, 0.05)'"
+                 placeholder="Exact ca în 1C – folosit pentru poze profil/copertă">
+          <p style="color: #9CA3AF; font-size: 12px; margin-top: 6px; margin-bottom: 0;">
+            <i class="fas fa-info-circle" style="margin-right: 4px;"></i>Trebuie identic cu numele operatorului din listă (1C) ca operatorul să poată încărca poze.
+          </p>
         </div>
 
         <div>
