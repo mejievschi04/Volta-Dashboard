@@ -258,6 +258,19 @@ class OneCController extends Controller
     }
 
     /**
+     * Citește o valoare numerică din array încercând mai multe variante de chei (1C poate trimite camelCase / snake_case / PascalCase).
+     */
+    private function getNumeric(array $arr, array $keyVariants, float $default = 0): float
+    {
+        foreach ($keyVariants as $key) {
+            if (array_key_exists($key, $arr) && $arr[$key] !== null && $arr[$key] !== '') {
+                return (float) $arr[$key];
+            }
+        }
+        return $default;
+    }
+
+    /**
      * Salvează răspunsul 1C în onec_kpi_syncs și onec_kpi_operatori.
      * O singură înregistrare per lună: dacă există deja un sync pentru aceeași lună (period_start în aceeași lună),
      * îl actualizează ca să nu dublăm vanzarile la raportare (ex. februarie parțial + februarie completă).
@@ -265,9 +278,11 @@ class OneCController extends Controller
     private function saveOneCResponseToDb(string $dateStart, string $dateEnd, array $data): ?OnecKpiSync
     {
         $meta = $data['meta'] ?? [];
-        $period = $meta['period'] ?? [];
-        $kpiTotal = $data['kpiTotal'] ?? [];
-        $kpiPeOperator = $data['kpiPeOperator'] ?? [];
+        $kpiTotal = $data['kpiTotal'] ?? $data['KpiTotal'] ?? [];
+        $kpiPeOperator = $data['kpiPeOperator'] ?? $data['KpiPeOperator'] ?? $data['kpiPeOperator'] ?? [];
+        if (! is_array($kpiPeOperator)) {
+            $kpiPeOperator = [];
+        }
 
         $generatedAt = isset($meta['generatedAt'])
             ? (is_numeric($meta['generatedAt']) ? date('Y-m-d H:i:s', (int) $meta['generatedAt']) : $meta['generatedAt'])
@@ -294,10 +309,10 @@ class OneCController extends Controller
                 'period_end' => $dateEnd,
                 'company' => $meta['company'] ?? null,
                 'currency' => $meta['currency'] ?? null,
-                'vanzari_cu_tva' => (float) ($kpiTotal['vanzariCuTVA'] ?? 0),
-                'vanzari_fara_tva' => (float) ($kpiTotal['vanzariFaraTVA'] ?? 0),
-                'profit' => (float) ($kpiTotal['profit'] ?? 0),
-                'nr_comenzi' => (int) ($kpiTotal['nrComenzi'] ?? 0),
+                'vanzari_cu_tva' => $this->getNumeric($kpiTotal, ['vanzariCuTVA', 'vanzari_cu_tva', 'VanzariCuTVA']),
+                'vanzari_fara_tva' => $this->getNumeric($kpiTotal, ['vanzariFaraTVA', 'vanzari_fara_tva', 'VanzariFaraTVA']),
+                'profit' => $this->getNumeric($kpiTotal, ['profit', 'Profit']),
+                'nr_comenzi' => (int) $this->getNumeric($kpiTotal, ['nrComenzi', 'nr_comenzi', 'NrComenzi']),
                 'generated_at' => $generatedAt,
             ];
 
@@ -309,14 +324,18 @@ class OneCController extends Controller
             }
 
             foreach ($kpiPeOperator as $row) {
+                if (! is_array($row)) {
+                    continue;
+                }
+                $nume = $row['operatorNume'] ?? $row['operator_nume'] ?? $row['OperatorNume'] ?? null;
                 OnecKpiOperator::create([
                     'onec_kpi_sync_id' => $sync->id,
-                    'operator_id_1c' => (string) ($row['operatorId1c'] ?? ''),
-                    'operator_nume' => $row['operatorNume'] ?? null,
-                    'vanzari_cu_tva' => (float) ($row['vanzariCuTVA'] ?? 0),
-                    'vanzari_fara_tva' => (float) ($row['vanzariFaraTVA'] ?? 0),
-                    'profit' => (float) ($row['profit'] ?? 0),
-                    'nr_comenzi' => (int) ($row['nrComenzi'] ?? 0),
+                    'operator_id_1c' => (string) ($row['operatorId1c'] ?? $row['operator_id_1c'] ?? ''),
+                    'operator_nume' => $nume,
+                    'vanzari_cu_tva' => $this->getNumeric($row, ['vanzariCuTVA', 'vanzari_cu_tva', 'VanzariCuTVA']),
+                    'vanzari_fara_tva' => $this->getNumeric($row, ['vanzariFaraTVA', 'vanzari_fara_tva', 'VanzariFaraTVA']),
+                    'profit' => $this->getNumeric($row, ['profit', 'Profit']),
+                    'nr_comenzi' => (int) $this->getNumeric($row, ['nrComenzi', 'nr_comenzi', 'NrComenzi']),
                 ]);
             }
 

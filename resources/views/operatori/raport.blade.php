@@ -26,9 +26,13 @@
     $lunaCurentaData = $vanzariLunare1c->firstWhere('luna', $lunaCurenta);
   @endphp
 
-  <div class="operatori-cover">
+  <div class="operatori-cover" @if(isset($operatorRecord) && $operatorRecord && $operatorRecord->photo_coperta_url) style="background-image: url('{{ $operatorRecord->photo_coperta_url }}'); background-size: cover; background-position: center;" @endif>
     <div class="operatori-cover-inner">
+      @if(isset($operatorRecord) && $operatorRecord && $operatorRecord->photo_profil_url)
+      <div class="operatori-avatar operatori-avatar--img" style="background-image: url('{{ $operatorRecord->photo_profil_url }}');"></div>
+      @else
       <div class="operatori-avatar">{{ strtoupper(mb_substr($date['nume'], 0, 1)) }}</div>
+      @endif
       <div class="operatori-detail-name-wrap">
         <h1 class="operatori-detail-title">{{ $date['nume'] }}</h1>
         <span class="operatori-badge">

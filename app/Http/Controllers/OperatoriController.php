@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Oferte;
 use App\Models\Operator;
 use App\Models\DateOp;
@@ -143,10 +144,13 @@ class OperatoriController extends Controller
         } catch (\Throwable $e) {
         }
 
+        $operatorRecord = Operator::whereRaw('TRIM(nume) = ?', [trim($nume)])->first();
+
         return view('operatori.raport', [
             'operatorNume' => $nume,
             'date' => $date,
             'vanzariLunare1c' => $vanzariLunare1c,
+            'operatorRecord' => $operatorRecord,
         ]);
     }
 
@@ -248,10 +252,13 @@ class OperatoriController extends Controller
             }
         }
 
+        $operatorRecord = $operatorNume !== '' ? Operator::whereRaw('TRIM(nume) = ?', [$operatorNume])->first() : null;
+
         return view('operatori.me', [
             'operatorNume' => $operatorNume ?: $user->username,
             'date' => $date,
             'vanzariLunare1c' => $vanzariLunare1c,
+            'operatorRecord' => $operatorRecord,
         ]);
     }
 
@@ -335,7 +342,75 @@ class OperatoriController extends Controller
             'vanzariStats' => $vanzariStats,
             'vanzariLunare' => $vanzariLunare,
             'vanzariLunareForJs' => $vanzariLunareForJs,
+            'canEditPhotos' => $this->canEditOperatorPhotos($operator),
         ]);
+    }
+
+    /**
+     * Verifică dacă utilizatorul curent poate edita pozele operatorului (el însuși sau admin).
+     */
+    private function canEditOperatorPhotos(Operator $operator): bool
+    {
+        $user = Auth::user();
+        if (! $user) {
+            return false;
+        }
+        $role = strtolower((string) ($user->role ?? ''));
+        if (in_array($role, ['admin', 'administrator'], true)) {
+            return true;
+        }
+        $operatorNume = trim((string) ($user->operator_nume ?? ''));
+        return $operatorNume !== '' && strcasecmp($operatorNume, trim((string) $operator->nume)) === 0;
+    }
+
+    /**
+     * Încarcă poza de profil pentru operator.
+     */
+    public function uploadProfilePhoto(Request $request, $id)
+    {
+        $operator = Operator::findOrFail($id);
+        if (! $this->canEditOperatorPhotos($operator)) {
+            return redirect()->route('operatori.show', $operator->id)
+                ->with('error', 'Nu aveți permisiunea să modificați pozele acestui operator.');
+        }
+
+        $request->validate([
+            'photo' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
+        ]);
+
+        $dir = 'operatori/' . $operator->id;
+        if ($operator->photo_profil) {
+            Storage::disk('public')->delete($operator->photo_profil);
+        }
+        $path = $request->file('photo')->store($dir, 'public');
+        $operator->update(['photo_profil' => $path]);
+
+        return redirect()->route('operatori.show', $operator->id)->with('success', 'Poza de profil a fost actualizată.');
+    }
+
+    /**
+     * Încarcă poza de copertă pentru operator.
+     */
+    public function uploadCoverPhoto(Request $request, $id)
+    {
+        $operator = Operator::findOrFail($id);
+        if (! $this->canEditOperatorPhotos($operator)) {
+            return redirect()->route('operatori.show', $operator->id)
+                ->with('error', 'Nu aveți permisiunea să modificați pozele acestui operator.');
+        }
+
+        $request->validate([
+            'photo' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
+        ]);
+
+        $dir = 'operatori/' . $operator->id;
+        if ($operator->photo_coperta) {
+            Storage::disk('public')->delete($operator->photo_coperta);
+        }
+        $path = $request->file('photo')->store($dir, 'public');
+        $operator->update(['photo_coperta' => $path]);
+
+        return redirect()->route('operatori.show', $operator->id)->with('success', 'Poza de copertă a fost actualizată.');
     }
 
     public function create()

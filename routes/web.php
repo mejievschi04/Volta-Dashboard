@@ -58,7 +58,10 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
     
     // Ruta show trebuie să fie după create pentru a evita conflictele
     Route::get('/operatori/{id}', [OperatoriController::class, 'show'])->name('operatori.show');
-    
+    // Poze profil/copertă – operatorul însuși sau admin
+    Route::post('/operatori/{id}/photo/profil', [OperatoriController::class, 'uploadProfilePhoto'])->name('operatori.photo.profil');
+    Route::post('/operatori/{id}/photo/coperta', [OperatoriController::class, 'uploadCoverPhoto'])->name('operatori.photo.coperta');
+
     Route::get('/rapoarte', [RapoarteController::class, 'index'])->name('rapoarte');
     Route::get('/rapoarte/comparare', [RapoarteController::class, 'comparare'])->name('rapoarte.comparare');
     Route::get('/istoric', [RapoarteController::class, 'istoric'])->name('istoric');

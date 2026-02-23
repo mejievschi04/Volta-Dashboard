@@ -28,11 +28,15 @@
   @endphp
 
   <!-- Cover + profil (ca în pagina individuală operator din admin) -->
-  <div class="operator-me-cover" style="background: linear-gradient(135deg, rgba(255, 238, 0, 0.3) 0%, rgba(255, 238, 0, 0.2) 50%, rgba(255, 238, 0, 0.1) 100%); background-color: #1F2937; border-radius: 16px 16px 0 0; height: 280px; position: relative; margin-bottom: 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+  <div class="operator-me-cover" style="background: linear-gradient(135deg, rgba(255, 238, 0, 0.3) 0%, rgba(255, 238, 0, 0.2) 50%, rgba(255, 238, 0, 0.1) 100%); background-color: #1F2937; border-radius: 16px 16px 0 0; height: 280px; position: relative; margin-bottom: 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); @if(isset($operatorRecord) && $operatorRecord && $operatorRecord->photo_coperta_url) background-image: url('{{ $operatorRecord->photo_coperta_url }}'); background-size: cover; background-position: center; @endif">
     <div style="position: absolute; bottom: -70px; left: 40px; display: flex; align-items: flex-end; gap: 20px;">
+      @if(isset($operatorRecord) && $operatorRecord && $operatorRecord->photo_profil_url)
+      <div class="operator-me-avatar" style="width: 140px; height: 140px; border-radius: 50%; background: url('{{ $operatorRecord->photo_profil_url }}') center/cover; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); border: 5px solid #111827;"></div>
+      @else
       <div class="operator-me-avatar" style="width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); display: flex; align-items: center; justify-content: center; font-size: 56px; font-weight: 700; color: #000; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); border: 5px solid #111827;">
         {{ strtoupper(mb_substr($date['nume'], 0, 1)) }}
       </div>
+      @endif
       <div style="padding-bottom: 16px;">
         <h1 class="operator-me-title" style="color: #fff; margin: 0 0 8px 0; font-size: 32px; font-weight: 800; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);">
           {{ $date['nume'] }}
@@ -40,6 +44,9 @@
         <span style="background: rgba(17, 24, 39, 0.9); color: #FFEE00; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #FFEE00;">
           <i class="fas fa-database"></i> Rezultate din 1C (ian. 2023 – prezent)
         </span>
+        @if(isset($operatorRecord) && $operatorRecord)
+        <a href="{{ route('operatori.show', $operatorRecord->id) }}" style="margin-left: 12px; color: #9CA3AF; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" title="Editează poza de profil și coperta"><i class="fas fa-camera"></i> Editează poze</a>
+        @endif
       </div>
     </div>
   </div>
