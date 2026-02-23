@@ -171,11 +171,14 @@ class OneCController extends Controller
             $dateStart = $p['start'];
             $dateEnd = $p['end'];
 
+            // Un singur sync per lună: skip doar dacă avem deja date până la sfârșitul perioadei cerute
+            // (astfel în cursul lunii actualizăm zilnic, iar în luna următoare reîmprospătăm luna completă)
             if (! $force) {
-                $existing = OnecKpiSync::where('period_start', $dateStart)
-                    ->where('period_end', $dateEnd)
+                $monthStart = substr($dateStart, 0, 7);
+                $existing = OnecKpiSync::where('period_start', '>=', $dateStart)
+                    ->where('period_start', '<', date('Y-m-d', strtotime($monthStart . '-01 +1 month')))
                     ->first();
-                if ($existing) {
+                if ($existing && $existing->period_end >= $dateEnd) {
                     $skipped[] = ['period' => "{$dateStart} – {$dateEnd}", 'label' => $p['label'], 'sync_id' => $existing->id];
                     continue;
                 }
@@ -256,7 +259,8 @@ class OneCController extends Controller
 
     /**
      * Salvează răspunsul 1C în onec_kpi_syncs și onec_kpi_operatori.
-     * Dacă există deja un sync pentru aceeași perioadă, îl actualizează.
+     * O singură înregistrare per lună: dacă există deja un sync pentru aceeași lună (period_start în aceeași lună),
+     * îl actualizează ca să nu dublăm vanzarile la raportare (ex. februarie parțial + februarie completă).
      */
     private function saveOneCResponseToDb(string $dateStart, string $dateEnd, array $data): ?OnecKpiSync
     {
@@ -269,14 +273,17 @@ class OneCController extends Controller
             ? (is_numeric($meta['generatedAt']) ? date('Y-m-d H:i:s', (int) $meta['generatedAt']) : $meta['generatedAt'])
             : null;
 
-        $sync = OnecKpiSync::where('period_start', $dateStart)
-            ->where('period_end', $dateEnd)
+        // Căutăm orice sync pentru aceeași lună (YYYY-MM) ca dateStart, ca să actualizăm în loc să duplicăm
+        $nextMonth = date('Y-m-d', strtotime(substr($dateStart, 0, 7) . '-01 +1 month'));
+        $sync = OnecKpiSync::where('period_start', '>=', $dateStart)
+            ->where('period_start', '<', $nextMonth)
             ->first();
 
         DB::transaction(function () use (
             &$sync,
             $dateStart,
             $dateEnd,
+            $nextMonth,
             $meta,
             $kpiTotal,
             $kpiPeOperator,
@@ -311,6 +318,16 @@ class OneCController extends Controller
                     'profit' => (float) ($row['profit'] ?? 0),
                     'nr_comenzi' => (int) ($row['nrComenzi'] ?? 0),
                 ]);
+            }
+
+            // Șterge eventuale duplicate pentru aceeași lună (un singur sync per YYYY-MM)
+            $sameMonthIds = OnecKpiSync::where('period_start', '>=', $dateStart)
+                ->where('period_start', '<', $nextMonth)
+                ->where('id', '!=', $sync->id)
+                ->pluck('id');
+            if ($sameMonthIds->isNotEmpty()) {
+                OnecKpiOperator::whereIn('onec_kpi_sync_id', $sameMonthIds)->delete();
+                OnecKpiSync::whereIn('id', $sameMonthIds)->delete();
             }
         });
 
