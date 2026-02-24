@@ -255,7 +255,13 @@ class OperatoriController extends Controller
         }
 
         $fullName = trim((string) ($user->full_name ?? $user->name ?? ''));
-        $operatorRecord = $fullName !== '' ? Operator::whereRaw('LOWER(TRIM(nume)) = ?', [mb_strtolower($fullName)])->first() : null;
+        $operatorRecord = null;
+        if ($fullName !== '') {
+            $operatorRecord = Operator::whereRaw('LOWER(TRIM(nume)) = ?', [mb_strtolower($fullName)])->first();
+            if (! $operatorRecord) {
+                $operatorRecord = Operator::create(['nume' => $fullName, 'activ' => true]);
+            }
+        }
         $canEditPhotos = $operatorRecord !== null;
 
         return view('operatori.me', [

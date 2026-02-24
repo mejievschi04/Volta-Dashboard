@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\KpiController;
 use App\Http\Controllers\UploadOperatorVanzariController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Api\OneCController;
+use App\Http\Controllers\LivrariController;
 
 // Rute publice
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -22,7 +23,10 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
 
     // Pagina „Datele mele” pentru utilizatori cu rol Operator
     Route::get('/datele-mele', [OperatoriController::class, 'me'])->name('datele-mele');
-    
+    // Livrări: operator adaugă date, admin vede toate + KPI
+    Route::get('/livrari', [LivrariController::class, 'index'])->name('livrari');
+    Route::post('/livrari', [LivrariController::class, 'store'])->name('livrari.store');
+
     // Rute operatori (listă 1C – doar pentru non-operatori sau admin)
     Route::get('/operatori', [OperatoriController::class, 'index'])->name('operatori');
     // Raport detaliat per operator – disponibil pentru toți utilizatorii autentificați

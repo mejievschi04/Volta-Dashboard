@@ -1829,6 +1829,12 @@ select:focus {
   box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.3);
 }
 
+/* Lista deschisă a select-urilor: fundal închis, text deschis */
+select option {
+  background: #1F2937;
+  color: #E5E7EB;
+}
+
 #selectLuna {
   background-color: var(--bg-soft) !important;
 }

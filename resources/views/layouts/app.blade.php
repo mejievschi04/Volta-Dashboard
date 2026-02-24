@@ -27,6 +27,9 @@
         <a href="{{ route('datele-mele') }}" class="{{ request()->routeIs('datele-mele') ? 'active' : '' }}">
           <i class="fas fa-chart-bar"></i><span class="txt">Datele mele</span>
         </a>
+        <a href="{{ route('livrari') }}" class="{{ request()->routeIs('livrari*') ? 'active' : '' }}">
+          <i class="fas fa-truck"></i><span class="txt">Livrări</span>
+        </a>
         <a href="{{ route('setari') }}" class="{{ request()->routeIs('setari') ? 'active' : '' }}">
           <i class="fas fa-cog"></i><span class="txt">Setări</span>
         </a>
@@ -42,6 +45,9 @@
         </a>
         <a href="{{ route('operatori') }}" class="{{ request()->routeIs('operatori*') ? 'active' : '' }}">
           <i class="fas fa-users"></i><span class="txt">Operatori</span>
+        </a>
+        <a href="{{ route('livrari') }}" class="{{ request()->routeIs('livrari*') ? 'active' : '' }}">
+          <i class="fas fa-truck"></i><span class="txt">Livrări</span>
         </a>
         <a href="{{ route('trafic') }}" class="{{ request()->routeIs('trafic') ? 'active' : '' }}">
           <i class="fas fa-network-wired"></i><span class="txt">Trafic</span>

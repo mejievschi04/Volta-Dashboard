@@ -73,6 +73,9 @@
         <a href="{{ route('datele-mele') }}" class="{{ request()->routeIs('datele-mele') ? 'active' : '' }}">
           <i class="fas fa-chart-bar" style="margin-right: 6px;"></i>Datele mele
         </a>
+        <a href="{{ route('livrari') }}" class="{{ request()->routeIs('livrari*') ? 'active' : '' }}">
+          <i class="fas fa-truck" style="margin-right: 6px;"></i>Livrări
+        </a>
         <a href="{{ route('setari') }}" class="{{ request()->routeIs('setari') ? 'active' : '' }}">
           <i class="fas fa-cog" style="margin-right: 6px;"></i>Setări
         </a>

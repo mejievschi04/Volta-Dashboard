@@ -12,6 +12,8 @@ class RestrictOperator
     /** Rute pe care un utilizator cu rol Operator le poate accesa. */
     private const ALLOWED_ROUTES = [
         'datele-mele',
+        'livrari',
+        'livrari.store',
         'setari',
         'setari.update',
         'setari.password',
