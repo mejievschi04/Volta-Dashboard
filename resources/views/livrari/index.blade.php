@@ -78,27 +78,46 @@
   .livrari-modal-error.is-visible { display: block; }
   .livrari-btn-open-modal { padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; border: none; background: linear-gradient(135deg, #FFEE00 0%, #FACC15 100%); color: #000; display: inline-flex; align-items: center; gap: 8px; }
   .livrari-btn-open-modal:hover { opacity: 0.95; }
-  /* Pagina Livrări – admin: stilizare îmbunătățită */
+  /* Pagina Livrări – admin: restilizare modernă KPI */
   .livrari-page.livrari-page--admin { max-width: 1400px; padding: 28px 24px; }
   .livrari-page--admin .livrari-card { border-radius: 20px; box-shadow: 0 12px 40px rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); overflow: hidden; }
-  .livrari-page--admin .livrari-card h2 { font-size: 22px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px; color: #fff; letter-spacing: 0.3px; }
   .livrari-page--admin .livrari-filters { gap: 20px; padding: 8px 0; }
   .livrari-page--admin .livrari-filters select { min-width: 180px; padding: 12px 16px; font-size: 14px; }
   .livrari-page--admin .livrari-search-input { min-width: 260px; padding: 12px 16px; }
-  /* Card KPI principal – un singur box vizual puternic */
-  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-grid { grid-template-columns: 1fr; gap: 0; margin-bottom: 0; }
-  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-box { padding: 32px 36px; border-radius: 16px; background: linear-gradient(145deg, rgba(255,238,0,0.12) 0%, rgba(250,204,21,0.06) 100%); border: 1px solid rgba(255,238,0,0.28); box-shadow: 0 8px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06); text-align: center; margin-bottom: 28px; }
-  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-box .label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; color: #D1D5DB; font-weight: 600; }
-  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-box .value { font-size: 42px; font-weight: 800; color: #FFEE00; text-shadow: 0 0 24px rgba(255,238,0,0.25); letter-spacing: -0.02em; }
-  /* Container Livrări per operator – clar separat de KPI */
-  .livrari-page--admin .livrari-per-operator { background: rgba(31,41,55,0.6); border-radius: 14px; padding: 24px; margin-top: 0; border: 1px solid rgba(255,255,255,0.06); }
-  .livrari-page--admin .livrari-per-operator h3 { font-size: 17px; margin-bottom: 18px; color: #FFEE00; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-  .livrari-page--admin .livrari-per-operator .livrari-table { max-width: 100%; border-radius: 10px; overflow: hidden; }
-  .livrari-page--admin .livrari-per-operator thead { background: linear-gradient(180deg, rgba(55,65,81,0.95) 0%, rgba(31,41,55,0.98) 100%); }
-  .livrari-page--admin .livrari-per-operator th { padding: 14px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: #D1D5DB; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.08); }
-  .livrari-page--admin .livrari-per-operator td { padding: 14px 20px; font-size: 14px; color: #E5E7EB; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(17,24,39,0.5); }
-  .livrari-page--admin .livrari-per-operator tbody tr:hover td { background: rgba(255,238,0,0.06); }
-  .livrari-page--admin .livrari-per-operator tbody tr:last-child td { border-bottom: none; }
+  /* KPI Livrări – header modern */
+  .livrari-page--admin .livrari-admin-kpi { padding: 0; }
+  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header { display: flex; align-items: center; gap: 20px; padding: 28px 32px 24px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header-icon { width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg, rgba(255,238,0,0.2) 0%, rgba(250,204,21,0.1) 100%); border: 1px solid rgba(255,238,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #FFEE00; flex-shrink: 0; }
+  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-title { margin: 0 0 4px 0; font-size: 24px; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-subtitle { margin: 0; font-size: 14px; color: #9CA3AF; font-weight: 400; }
+  /* KPI body – grid: total + tabel */
+  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-body { display: grid; grid-template-columns: 280px 1fr; gap: 28px; padding: 28px 32px 32px; }
+  .livrari-page--admin .livrari-kpi-total-card { background: linear-gradient(145deg, rgba(255,238,0,0.08) 0%, rgba(250,204,21,0.04) 100%); border: 1px solid rgba(255,238,0,0.2); border-radius: 16px; padding: 28px; display: flex; align-items: center; gap: 20px; height: fit-content; }
+  .livrari-page--admin .livrari-kpi-total-icon { width: 52px; height: 52px; border-radius: 12px; background: rgba(255,238,0,0.15); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #FFEE00; flex-shrink: 0; }
+  .livrari-page--admin .livrari-kpi-total-content { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .livrari-page--admin .livrari-kpi-total-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #9CA3AF; }
+  .livrari-page--admin .livrari-kpi-total-value { font-size: 36px; font-weight: 800; color: #FFEE00; letter-spacing: -0.03em; line-height: 1.1; }
+  /* Livrări per operator – card + tabel modern */
+  .livrari-page--admin .livrari-per-operator { background: rgba(31,41,55,0.5); border-radius: 14px; padding: 24px; border: 1px solid rgba(255,255,255,0.06); }
+  .livrari-page--admin .livrari-per-operator-title { margin: 0 0 18px 0; font-size: 16px; font-weight: 700; color: #E5E7EB; display: flex; align-items: center; gap: 10px; }
+  .livrari-page--admin .livrari-per-operator-title i { color: #FFEE00; font-size: 15px; }
+  .livrari-page--admin .livrari-per-operator-table-wrap { overflow: hidden; border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); }
+  .livrari-page--admin .livrari-per-operator-table { margin: 0; }
+  .livrari-page--admin .livrari-per-operator-table thead tr { background: rgba(55,65,81,0.6); }
+  .livrari-page--admin .livrari-per-operator-table th { padding: 14px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #9CA3AF; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: left; }
+  .livrari-page--admin .livrari-per-operator-table th.livrari-th-num { text-align: right; width: 120px; }
+  .livrari-page--admin .livrari-per-operator-table td { padding: 14px 20px; font-size: 14px; color: #E5E7EB; border-bottom: 1px solid rgba(255,255,255,0.04); background: rgba(17,24,39,0.4); }
+  .livrari-page--admin .livrari-per-operator-table td.livrari-td-num { text-align: right; color: #FFEE00; font-size: 15px; }
+  .livrari-page--admin .livrari-per-operator-table tbody tr:hover td { background: rgba(255,238,0,0.05); }
+  .livrari-page--admin .livrari-per-operator-table tbody tr:last-child td { border-bottom: none; }
+  .livrari-page--admin .livrari-operator-name { font-weight: 500; color: #fff; }
+  @media (max-width: 768px) {
+    .livrari-page--admin .livrari-admin-kpi .livrari-kpi-body { grid-template-columns: 1fr; padding: 20px 20px 24px; }
+    .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header { padding: 20px 20px 18px; flex-wrap: wrap; }
+    .livrari-page--admin .livrari-kpi-total-card { flex-direction: column; align-items: flex-start; }
+    .livrari-page--admin .livrari-kpi-total-value { font-size: 32px; }
+  }
+  .livrari-page--admin .livrari-card h2 { font-size: 22px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px; color: #fff; letter-spacing: 0.3px; }
   .livrari-page--admin .livrari-table-wrap { border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
   .livrari-page--admin .livrari-table th { padding: 16px 18px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.3px; }
   .livrari-page--admin .livrari-table td { padding: 14px 18px; font-size: 14px; }
@@ -172,31 +191,42 @@
 
   @if($isAdmin && ($perOperator->isNotEmpty() || $totalLivrari > 0))
   <div class="livrari-card livrari-admin-kpi">
-    <h2><i class="fas fa-chart-bar"></i> KPI Livrări</h2>
-    <div class="livrari-kpi-grid">
-      <div class="livrari-kpi-box">
-        <div class="label">Total livrări</div>
-        <div class="value">{{ number_format($totalLivrari, 0, ',', '.') }}</div>
+    <div class="livrari-kpi-header">
+      <div class="livrari-kpi-header-icon"><i class="fas fa-truck"></i></div>
+      <div>
+        <h2 class="livrari-kpi-title">KPI Livrări</h2>
+        <p class="livrari-kpi-subtitle">Rezumat livrări și distribuție per operator</p>
       </div>
     </div>
-    <div class="livrari-per-operator">
-      <h3><i class="fas fa-users"></i> Livrări per operator</h3>
-      <table class="livrari-table">
-        <thead>
-          <tr>
-            <th>Operator</th>
-            <th class="tc">Nr. livrări</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($perOperator as $row)
-          <tr>
-            <td>{{ $row->nume }}</td>
-            <td class="tc" style="text-align: center;">{{ $row->total }}</td>
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
+    <div class="livrari-kpi-body">
+      <div class="livrari-kpi-total-card">
+        <div class="livrari-kpi-total-icon"><i class="fas fa-boxes-stacked"></i></div>
+        <div class="livrari-kpi-total-content">
+          <span class="livrari-kpi-total-label">Total livrări</span>
+          <span class="livrari-kpi-total-value">{{ number_format($totalLivrari, 0, ',', '.') }}</span>
+        </div>
+      </div>
+      <div class="livrari-per-operator">
+        <h3 class="livrari-per-operator-title"><i class="fas fa-users"></i> Livrări per operator</h3>
+        <div class="livrari-per-operator-table-wrap">
+          <table class="livrari-table livrari-per-operator-table">
+            <thead>
+              <tr>
+                <th>Operator</th>
+                <th class="livrari-th-num">Nr. livrări</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($perOperator as $row)
+              <tr>
+                <td><span class="livrari-operator-name">{{ $row->nume }}</span></td>
+                <td class="livrari-td-num"><strong>{{ $row->total }}</strong></td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
   @endif

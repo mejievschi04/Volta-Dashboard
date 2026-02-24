@@ -2,230 +2,204 @@
 
 @section('title', 'Profil Operator – VOLTA')
 
-@section('content')
-<script>
-  if (typeof window.openVanzareModal === 'undefined') {
-    window.openVanzareModal = function(luna) {
-      console.warn('openVanzareModal: Funcția nu este încă completă. Așteptați încărcarea scriptului.');
-    };
+@push('styles')
+<style>
+  @media (max-width: 900px) {
+    .operator-me-grid { grid-template-columns: 1fr !important; margin-top: 80px !important; }
+    .operator-me-cover { height: 220px !important; }
+    .operator-me-avatar { width: 100px !important; height: 100px !important; font-size: 40px !important; bottom: -50px !important; left: 20px !important; }
+    .operator-me-title { font-size: 24px !important; }
   }
-</script>
-<div class="operatori-detail-page">
-  @if(session('success'))
-  <div class="operatori-alert operatori-alert-success">
-    <i class="fas fa-check-circle"></i><span>{{ session('success') }}</span>
-  </div>
-  @endif
-  @if(session('error'))
-  <div class="operatori-alert operatori-alert-error">
-    <i class="fas fa-exclamation-circle"></i><span>{{ session('error') }}</span>
-  </div>
-  @endif
+</style>
+@endpush
 
-  <a href="{{ route('operatori') }}" class="operatori-back">
-    <i class="fas fa-arrow-left"></i> Înapoi la Operatori
-  </a>
+@section('content')
+@if(session('success'))
+<div style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%); color: #fff; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+  <i class="fas fa-check-circle" style="font-size: 20px;"></i>
+  <span style="font-weight: 600;">{{ session('success') }}</span>
+</div>
+@endif
+@if(session('error'))
+<div style="background: rgba(239, 68, 68, 0.2); color: #F87171; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; border: 1px solid rgba(239, 68, 68, 0.4);">
+  <i class="fas fa-exclamation-circle" style="font-size: 20px;"></i>
+  <span style="font-weight: 600;">{{ session('error') }}</span>
+</div>
+@endif
 
-  <div class="operatori-cover operatori-cover--show" @if($operator->photo_coperta_url) style="background-image: url('{{ $operator->photo_coperta_url }}'); background-size: cover; background-position: center;" @endif>
-    @if($canEditPhotos && auth()->check() && !auth()->user()->isOperator())
-    <div class="operatori-cover-photo-actions">
-      <form action="{{ route('operatori.photo.coperta', $operator->id) }}" method="post" enctype="multipart/form-data" class="operatori-photo-form">
-        @csrf
-        <input type="file" name="photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="operatori-photo-input" id="input-cover-{{ $operator->id }}" onchange="this.form.submit()">
-        <label for="input-cover-{{ $operator->id }}" class="operatori-btn operatori-btn-ghost operatori-btn-photo"><i class="fas fa-camera"></i> {{ $operator->photo_coperta_url ? 'Schimbă coperta' : 'Adaugă copertă' }}</label>
-      </form>
-    </div>
-    @endif
-    <div class="operatori-cover-inner">
-      <div class="operatori-avatar-wrap">
-        @if($operator->photo_profil_url)
-        <div class="operatori-avatar operatori-avatar--img" style="background-image: url('{{ $operator->photo_profil_url }}');"></div>
-        @else
-        <div class="operatori-avatar">{{ strtoupper(mb_substr($operator->nume, 0, 1)) }}</div>
-        @endif
-        @if($canEditPhotos && auth()->check() && !auth()->user()->isOperator())
-        <form action="{{ route('operatori.photo.profil', $operator->id) }}" method="post" enctype="multipart/form-data" class="operatori-photo-form operatori-avatar-form">
-          @csrf
-          <input type="file" name="photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="operatori-photo-input" id="input-profil-{{ $operator->id }}" onchange="this.form.submit()">
-          <label for="input-profil-{{ $operator->id }}" class="operatori-btn operatori-btn-avatar-upload" title="Schimbă poza de profil"><i class="fas fa-camera"></i></label>
-        </form>
-        @endif
+<a href="{{ route('operatori') }}" style="display: inline-flex; align-items: center; gap: 8px; color: #9CA3AF; text-decoration: none; font-size: 14px; margin-bottom: 20px;" onmouseover="this.style.color='#FFEE00'" onmouseout="this.style.color='#9CA3AF'">
+  <i class="fas fa-arrow-left"></i> Înapoi la Operatori
+</a>
+
+@if(isset($date) && $date)
+  @php
+    $lunaCurenta = now()->format('Y-m');
+    $lunaCurentaData = $vanzariLunare1c->firstWhere('luna', $lunaCurenta);
+  @endphp
+
+  <!-- Cover + profil (identic cu Datele mele) -->
+  <div class="operator-me-cover" style="background: linear-gradient(135deg, rgba(255, 238, 0, 0.3) 0%, rgba(255, 238, 0, 0.2) 50%, rgba(255, 238, 0, 0.1) 100%); background-color: #1F2937; border-radius: 16px 16px 0 0; height: 280px; position: relative; margin-bottom: 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); @if($operator->photo_coperta_url) background-image: url('{{ $operator->photo_coperta_url }}'); background-size: cover; background-position: center; @endif">
+    <div style="position: absolute; bottom: -70px; left: 40px; display: flex; align-items: flex-end; gap: 20px;">
+      @if($operator->photo_profil_url)
+      <div class="operator-me-avatar" style="width: 140px; height: 140px; border-radius: 50%; background: url('{{ $operator->photo_profil_url }}') center/cover; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); border: 5px solid #111827;"></div>
+      @else
+      <div class="operator-me-avatar" style="width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); display: flex; align-items: center; justify-content: center; font-size: 56px; font-weight: 700; color: #000; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); border: 5px solid #111827;">
+        {{ strtoupper(mb_substr($date['nume'], 0, 1)) }}
       </div>
-      <div class="operatori-detail-name-wrap">
-        <h1 class="operatori-detail-title">{{ $operator->nume }}</h1>
-        <div class="operatori-badges">
-          @if($operator->data_angajare)
-          <span class="operatori-badge">
-            <i class="fas fa-calendar-alt"></i> Angajat din {{ $operator->data_angajare->format('d.m.Y') }}
-          </span>
-          @endif
-          <span class="operatori-badge">
-            <i class="fas fa-{{ $operator->activ ? 'check-circle' : 'times-circle' }}"></i>
-            {{ $operator->activ ? 'Activ' : 'Inactiv' }}
-          </span>
-        </div>
+      @endif
+      <div style="padding-bottom: 16px;">
+        <h1 class="operator-me-title" style="color: #fff; margin: 0 0 8px 0; font-size: 32px; font-weight: 800; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);">
+          {{ $date['nume'] }}
+        </h1>
+        <span style="background: rgba(17, 24, 39, 0.9); color: #FFEE00; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #FFEE00;">
+          <i class="fas fa-database"></i> Rezultate din 1C (ian. 2023 – prezent)
+        </span>
       </div>
     </div>
   </div>
 
-  <div class="operatori-detail-grid">
-    <div class="operatori-sidebar-column">
-      @php
-        $lunaCurenta = now()->format('Y-m');
-        $vanzariLunaCurenta = $vanzari->filter(function($v) use ($lunaCurenta) {
-          return $v->data && $v->data->format('Y-m') == $lunaCurenta;
-        });
-        $vanzariLunaCurentaSuma = $vanzariLunaCurenta->sum('suma_fara_tva');
-        $vanzariLunaCurentaProfit = $vanzariLunaCurenta->sum('profit');
-        $vanzariLunaCurentaCount = $vanzariLunaCurenta->count();
-        if (isset($vanzariLunare1c) && $vanzariLunare1c->isNotEmpty()) {
-          $lunaCurenta1c = $vanzariLunare1c->firstWhere('luna', $lunaCurenta);
-          if ($lunaCurenta1c) {
-            $vanzariLunaCurentaSuma = $lunaCurenta1c->vanzari_luna ?? 0;
-            $vanzariLunaCurentaProfit = $lunaCurenta1c->profit ?? 0;
-            $vanzariLunaCurentaCount = $lunaCurenta1c->comenzi ?? $lunaCurenta1c->nr_vanzari ?? 0;
-          }
-        }
-      @endphp
-      @if($canEditPhotos && auth()->check() && !auth()->user()->isOperator())
-      <div class="operatori-sidebar-card operatori-sidebar-card-photos">
-        <h3 class="operatori-sidebar-title"><i class="fas fa-images"></i> Poze profil și copertă</h3>
-        <p class="operatori-photos-hint">Încarcă poza de profil și/sau coperta (operatorii își schimbă pozele din Setări).</p>
-        <div class="operatori-photo-forms">
-          <form action="{{ route('operatori.photo.profil', $operator->id) }}" method="post" enctype="multipart/form-data" class="operatori-photo-form-block">
-            @csrf
-            <input type="file" name="photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="operatori-photo-input" id="sidebar-profil-{{ $operator->id }}" onchange="this.form.submit()">
-            <label for="sidebar-profil-{{ $operator->id }}" class="operatori-btn operatori-btn-photo-block"><i class="fas fa-user-circle"></i> Poza de profil</label>
-          </form>
-          <form action="{{ route('operatori.photo.coperta', $operator->id) }}" method="post" enctype="multipart/form-data" class="operatori-photo-form-block">
-            @csrf
-            <input type="file" name="photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="operatori-photo-input" id="sidebar-coperta-{{ $operator->id }}" onchange="this.form.submit()">
-            <label for="sidebar-coperta-{{ $operator->id }}" class="operatori-btn operatori-btn-photo-block"><i class="fas fa-image"></i> Poza de copertă</label>
-          </form>
+  <div class="operator-me-grid" style="display: grid; grid-template-columns: 300px 1fr; gap: 20px; margin-top: 90px;">
+    <!-- Coloană stânga: Luna curentă -->
+    <div>
+      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+        <h3 style="color: #fff; margin: 0 0 20px 0; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-calendar-check" style="color: #3b82f6;"></i> Luna curentă
+        </h3>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(59, 130, 246, 0.1); border-radius: 10px; border: 1px solid rgba(59, 130, 246, 0.2);">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(59, 130, 246, 0.2); display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-shopping-cart" style="color: #3b82f6;"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Vânzări (fără TVA)</div>
+              <div style="color: #fff; font-size: 16px; font-weight: 700;">{{ $lunaCurentaData ? number_format($lunaCurentaData->vanzari_luna, 2, ',', '.') : '0,00' }} MDL</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(74, 222, 128, 0.1); border-radius: 10px; border: 1px solid rgba(74, 222, 128, 0.2);">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(74, 222, 128, 0.2); display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-trophy" style="color: #10B981;"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Profit</div>
+              <div style="color: #10B981; font-size: 16px; font-weight: 700;">{{ $lunaCurentaData ? number_format($lunaCurentaData->profit, 2, ',', '.') : '0,00' }} MDL</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(255, 255, 255, 0.03); border-radius: 10px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 238, 0, 0.2); display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-list" style="color: #FFEE00;"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Comenzi</div>
+              <div style="color: #fff; font-size: 16px; font-weight: 700;">{{ $lunaCurentaData ? (int) $lunaCurentaData->comenzi : 0 }}</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 10px; border: 1px solid rgba(245, 158, 11, 0.2);">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(245, 158, 11, 0.2); display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-truck" style="color: #F59E0B;"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Livrări (luna curentă)</div>
+              <div style="color: #F59E0B; font-size: 16px; font-weight: 700;">{{ $nrLivrariLunaCurenta ?? 0 }}</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(139, 92, 246, 0.1); border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.2);">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(139, 92, 246, 0.2); display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-store" style="color: #8B5CF6;"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Pick-up (luna curentă)</div>
+              <div style="color: #8B5CF6; font-size: 16px; font-weight: 700;">{{ $pickupLunaCurenta ?? 0 }}</div>
+            </div>
+          </div>
         </div>
       </div>
-      @endif
-      <div class="operatori-sidebar-card">
-        <h3 class="operatori-sidebar-title"><i class="fas fa-calendar-check"></i> Luna Curentă</h3>
-        <div class="operatori-stat-list">
-          <div class="operatori-stat-row">
-            <div class="operatori-stat-icon"><i class="fas fa-shopping-cart"></i></div>
-            <div style="flex: 1;">
-              <div class="operatori-stat-label">Vânzări (fără TVA)</div>
-              <div class="operatori-stat-value">{{ number_format($vanzariLunaCurentaSuma, 2, ',', '.') }} LEI</div>
-            </div>
-          </div>
-          <div class="operatori-stat-row operatori-stat-row--profit">
-            <div class="operatori-stat-icon"><i class="fas fa-trophy"></i></div>
-            <div style="flex: 1;">
-              <div class="operatori-stat-label">Profit</div>
-              <div class="operatori-stat-value">{{ number_format($vanzariLunaCurentaProfit, 2, ',', '.') }} LEI</div>
-            </div>
-          </div>
-          <div class="operatori-stat-row operatori-stat-row--neutral">
-            <div class="operatori-stat-icon"><i class="fas fa-list"></i></div>
-            <div style="flex: 1;">
-              <div class="operatori-stat-label">Comenzi</div>
-              <div class="operatori-stat-value">{{ $vanzariLunaCurentaCount }}</div>
-            </div>
-          </div>
-          @if($vanzariLunaCurentaCount > 0)
-          <div class="operatori-stat-row operatori-stat-row--neutral">
-            <div class="operatori-stat-icon"><i class="fas fa-calculator"></i></div>
-            <div style="flex: 1;">
-              <div class="operatori-stat-label">Medie/Comandă</div>
-              <div class="operatori-stat-value" style="font-size: 14px; font-weight: 500;">{{ number_format($vanzariLunaCurentaSuma / $vanzariLunaCurentaCount, 2, ',', '.') }} LEI</div>
-            </div>
-          </div>
-          @endif
-        </div>
-      </div>
-
-      @if($operator->observatii)
-      <div class="operatori-sidebar-card operatori-notes-card">
-        <h3 class="operatori-sidebar-title"><i class="fas fa-sticky-note"></i> Observații</h3>
-        <p>{{ $operator->observatii }}</p>
-      </div>
-      @endif
     </div>
 
-    <div class="operatori-main-feed">
-      @if(isset($vanzariStats))
-      <div class="operatori-content-card">
-        <div class="operatori-card-header">
-          <h2 class="operatori-section-title">
-            <div class="operatori-section-icon"><i class="fas fa-chart-line"></i></div>
-            Statistici Vânzări
+    <!-- Coloană dreapta: Statistici totale + grafic + tabel -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      <!-- Statistici totale (1C) -->
+      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+        <div style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
+          <h2 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-chart-line" style="color: #fff; font-size: 20px;"></i>
+            </div>
+            Statistici totale (1C)
           </h2>
         </div>
-        <div class="kpi-cards-grid">
-          <div class="kpi-card" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
-            <div class="kpi-label"><i class="fas fa-shopping-cart" style="margin-right: 6px;"></i>Total Vânzări</div>
-            <div class="kpi-value">{{ $vanzariStats['total_vanzari'] }}</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px;">
+          <div style="background: rgba(59, 130, 246, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2); text-align: center;">
+            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Vânzări fără TVA</div>
+            <div style="color: #fff; font-size: 22px; font-weight: 800;">{{ number_format($date['vanzari_fara_tva'], 2, ',', '.') }} <span style="font-size: 12px; color: #9CA3AF;">MDL</span></div>
           </div>
-          <div class="kpi-card" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
-            <div class="kpi-label"><i class="fas fa-money-bill-wave" style="margin-right: 6px;"></i>Suma (fără TVA)</div>
-            <div class="kpi-value" style="font-size: 22px;">{{ number_format($vanzariStats['total_suma_fara_tva'], 2, ',', '.') }} LEI</div>
+          <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Vânzări cu TVA</div>
+            <div style="color: #fff; font-size: 22px; font-weight: 700;">{{ number_format($date['vanzari_cu_tva'], 2, ',', '.') }} <span style="font-size: 12px; color: #9CA3AF;">MDL</span></div>
           </div>
-          <div class="kpi-card" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
-            <div class="kpi-label"><i class="fas fa-receipt" style="margin-right: 6px;"></i>Suma (cu TVA)</div>
-            <div class="kpi-value" style="font-size: 22px;">{{ number_format($vanzariStats['total_suma_cu_tva'], 2, ',', '.') }} LEI</div>
+          <div style="background: rgba(74, 222, 128, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(74, 222, 128, 0.2); text-align: center;">
+            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Profit</div>
+            <div style="color: #10B981; font-size: 22px; font-weight: 800;">{{ number_format($date['profit'], 2, ',', '.') }} <span style="font-size: 12px; color: #9CA3AF;">MDL</span></div>
           </div>
-          <div class="kpi-card" style="background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.2);">
-            <div class="kpi-label"><i class="fas fa-trophy" style="margin-right: 6px;"></i>Total Profit</div>
-            <div class="kpi-value" style="color: #10B981;">{{ number_format($vanzariStats['total_profit'], 2, ',', '.') }} LEI</div>
+          <div style="background: rgba(255, 238, 0, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(255, 238, 0, 0.2); text-align: center;">
+            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Comenzi</div>
+            <div style="color: #FFEE00; font-size: 22px; font-weight: 800;">{{ number_format($date['nr_comenzi'], 0, ',', '.') }}</div>
           </div>
-          <div class="kpi-card" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
-            <div class="kpi-label"><i class="fas fa-list" style="margin-right: 6px;"></i>Număr Vânzări</div>
-            <div class="kpi-value">{{ $vanzariStats['total_nr_vanzari'] }}</div>
+          <div style="background: rgba(245, 158, 11, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.2); text-align: center;">
+            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Livrări (total)</div>
+            <div style="color: #F59E0B; font-size: 22px; font-weight: 800;">{{ number_format($nrLivrariTotal ?? 0, 0, ',', '.') }}</div>
           </div>
-          <div class="kpi-card" style="background: rgba(255, 238, 0, 0.1); border: 1px solid rgba(255, 238, 0, 0.2);">
-            <div class="kpi-label"><i class="fas fa-calendar-alt" style="margin-right: 6px;"></i>Medie/Lună</div>
-            <div class="kpi-value" style="color: #FFEE00; font-size: 22px;">{{ number_format($vanzariStats['medie_vanzari_luna'], 2, ',', '.') }} LEI</div>
+          <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.2); text-align: center;">
+            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Pick-up (total)</div>
+            <div style="color: #8B5CF6; font-size: 22px; font-weight: 800;">{{ number_format($pickupTotal ?? 0, 0, ',', '.') }}</div>
           </div>
+        </div>
+      </div>
+
+      <!-- Grafic vânzări pe luni -->
+      @if($vanzariLunare1c->count() > 0)
+      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+        <div style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
+          <h2 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-chart-line" style="color: #fff; font-size: 20px;"></i>
+            </div>
+            Vânzări pe luni (fără TVA)
+          </h2>
+        </div>
+        <div style="position: relative; height: 320px;">
+          <canvas id="vanzariChartMe"></canvas>
         </div>
       </div>
       @endif
 
-      @if(isset($vanzariLunare) && $vanzariLunare->count() > 0)
-      <div class="operatori-content-card">
-        <div class="operatori-card-header">
-          <h2 class="operatori-section-title">
-            <div class="operatori-section-icon"><i class="fas fa-chart-line"></i></div>
-            Grafic Vânzări (fără TVA)
+      <!-- Tabel vânzări pe luni -->
+      @if($vanzariLunare1c->count() > 0)
+      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+        <div style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
+          <h2 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-calendar-alt" style="color: #000; font-size: 20px;"></i>
+            </div>
+            Vânzări pe luni
           </h2>
         </div>
-        <div class="operatori-chart-wrap">
-          <canvas id="vanzariChart"></canvas>
-        </div>
-      </div>
-
-      <div class="operatori-content-card">
-        <div class="operatori-card-header">
-          <h2 class="operatori-section-title">
-            <div class="operatori-section-icon"><i class="fas fa-calendar-alt"></i></div>
-            Vânzări pe Luni
-          </h2>
-        </div>
-        <div class="operatori-detail-table-wrap">
-          <table id="vanzariLunareTable" class="operatori-detail-table">
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse;">
             <thead>
-              <tr>
-                <th>Lună</th>
-                <th class="tc">Comenzi</th>
-                <th class="tc">Vânzări (fără TVA)</th>
-                <th class="tc">Profit</th>
-                <th class="tc">Număr Vânzări</th>
+              <tr style="background: linear-gradient(135deg, rgba(255, 238, 0, 0.2) 0%, rgba(255, 238, 0, 0.1) 100%);">
+                <th style="padding: 14px 16px; text-align: left; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Lună</th>
+                <th style="padding: 14px 16px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Comenzi</th>
+                <th style="padding: 14px 16px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Vânzări (fără TVA)</th>
+                <th style="padding: 14px 16px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Profit</th>
               </tr>
             </thead>
             <tbody>
-              @foreach($vanzariLunare as $luna)
-              <tr class="table-row-hover">
-                <td class="row-text"><strong>{{ $luna->luna_label }}</strong></td>
-                <td class="tc row-text">{{ $luna->comenzi }}</td>
-                <td class="tc row-text">{{ number_format($luna->vanzari_luna, 2, ',', '.') }} LEI</td>
-                <td class="tc td-profit">{{ number_format($luna->profit, 2, ',', '.') }} LEI</td>
-                <td class="tc row-text">{{ $luna->nr_vanzari }}</td>
+              @foreach($vanzariLunare1c as $luna)
+              <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.06); transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 238, 0, 0.08)'" onmouseout="this.style.background='transparent'">
+                <td style="padding: 14px 16px; color: #fff; font-weight: 600;">{{ $luna->luna_label }}</td>
+                <td style="padding: 14px 16px; text-align: center; color: #fff;">{{ $luna->comenzi }}</td>
+                <td style="padding: 14px 16px; text-align: center; color: #fff; font-weight: 600;">{{ number_format($luna->vanzari_luna, 2, ',', '.') }} MDL</td>
+                <td style="padding: 14px 16px; text-align: center; color: #10B981; font-weight: 700;">{{ number_format($luna->profit, 2, ',', '.') }} MDL</td>
               </tr>
               @endforeach
             </tbody>
@@ -233,412 +207,73 @@
         </div>
       </div>
       @endif
-
-      @if(isset($vanzariLunare))
-      <div class="operatori-content-card">
-        <div class="operatori-card-header">
-          <h2 class="operatori-section-title">
-            <div class="operatori-section-icon operatori-section-icon--yellow"><i class="fas fa-list-alt"></i></div>
-            Vânzări pe Luni
-          </h2>
-          @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
-          <div class="operatori-card-actions">
-            <button type="button" onclick="openVanzareModal()" class="operatori-btn-primary">
-              <i class="fas fa-plus"></i> Adaugă Vânzare
-            </button>
-            <a href="{{ route('operatori.upload', $operator->id) }}" class="operatori-btn-secondary">
-              <i class="fas fa-file-excel"></i> Încarcă Excel
-            </a>
-          </div>
-          @endif
-        </div>
-        <div class="operatori-detail-table-wrap">
-          <table id="vanzariTable" class="operatori-detail-table operatori-table-yellow">
-            <thead>
-              <tr>
-                <th>Lună</th>
-                <th class="tc">Comenzi</th>
-                <th class="tc">Vânzări (fără TVA)</th>
-                <th class="tc">Profit</th>
-                <th class="tc">Nr. Vânzări</th>
-                @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
-                <th class="tc">Acțiuni</th>
-                @endif
-              </tr>
-            </thead>
-            <tbody>
-              @forelse($vanzariLunare as $luna)
-              <tr class="table-row-hover">
-                <td class="row-text"><strong>{{ $luna->luna_label }}</strong></td>
-                <td class="tc row-text">{{ $luna->comenzi }}</td>
-                <td class="tc row-text">{{ number_format($luna->vanzari_luna, 2, ',', '.') }} LEI</td>
-                <td class="tc td-profit">{{ number_format($luna->profit, 2, ',', '.') }} LEI</td>
-                <td class="tc row-text">{{ $luna->nr_vanzari }}</td>
-                @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
-                <td class="tc">
-                  <div class="operatori-table-actions">
-                    <button type="button" onclick="openVanzareModal('{{ $luna->luna }}')" class="operatori-btn-icon"><i class="fas fa-edit"></i></button>
-                    <button type="button" onclick="deleteVanzareLuna('{{ $luna->luna }}')" class="operatori-btn-icon operatori-btn-icon--danger"><i class="fas fa-trash"></i></button>
-                  </div>
-                </td>
-                @endif
-              </tr>
-              @empty
-              <tr>
-                <td colspan="{{ auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator') ? '6' : '5' }}" style="padding: 40px; text-align: center; color: #9CA3AF;">
-                  <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5; display: block;"></i>
-                  Nu există vânzări înregistrate
-                </td>
-              </tr>
-              @endforelse
-            </tbody>
-          </table>
-        </div>
-      </div>
-      @endif
     </div>
   </div>
-</div>
 
-@if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
-<div id="vanzareModal" class="operatori-modal-overlay">
-  <div class="operatori-modal">
-    <button type="button" onclick="closeVanzareModal()" class="operatori-modal-close" aria-label="Închide">
-      <i class="fas fa-times"></i>
-    </button>
-    <h2 class="operatori-modal-title">
-      <div class="operatori-modal-title-icon"><i class="fas fa-plus"></i></div>
-      <span id="modalTitle">Adaugă Vânzare</span>
-    </h2>
-    <form id="vanzareForm" method="POST" action="{{ route('operatori.vanzari.store', $operator->id) }}">
-      @csrf
-      <input type="hidden" id="vanzareId" name="luna_id">
-      <input type="hidden" id="formMethod" name="_method" value="POST">
-      <div class="operatori-form-group">
-        <label class="operatori-form-label" for="vanzareLuna">Lună *</label>
-        <input type="month" name="luna" id="vanzareLuna" required class="operatori-form-input" placeholder="">
-      </div>
-      <div class="operatori-form-group">
-        <label class="operatori-form-label" for="vanzareSumaFaraTva">Suma (fără TVA) *</label>
-        <input type="number" name="suma_fara_tva" id="vanzareSumaFaraTva" step="0.01" min="0" required class="operatori-form-input" placeholder="0.00">
-      </div>
-      <div class="operatori-form-group">
-        <label class="operatori-form-label" for="vanzareSumaCuTva">Suma (cu TVA) *</label>
-        <input type="number" name="suma_cu_tva" id="vanzareSumaCuTva" step="0.01" min="0" required class="operatori-form-input" placeholder="0.00">
-      </div>
-      <div class="operatori-form-group">
-        <label class="operatori-form-label" for="vanzareProfit">Profit *</label>
-        <input type="number" name="profit" id="vanzareProfit" step="0.01" required class="operatori-form-input" placeholder="0.00">
-      </div>
-      <div class="operatori-form-group">
-        <label class="operatori-form-label" for="vanzareNrVanzari">Număr Vânzări</label>
-        <input type="number" name="nr_vanzari" id="vanzareNrVanzari" min="0" value="1" class="operatori-form-input" placeholder="1">
-      </div>
-      <div class="operatori-form-actions">
-        <button type="submit" class="operatori-btn-primary"><i class="fas fa-save"></i> Salvează</button>
-        <button type="button" onclick="closeVanzareModal()" class="operatori-btn-ghost">Anulează</button>
-      </div>
-    </form>
-  </div>
-</div>
-@endif
-
-@endsection
-
-@push('styles')
-<link rel="stylesheet" href="{{ url('css/operatori.css') }}">
-@endpush
-
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{{ url('js/operatori-det.js') }}"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const rows = document.querySelectorAll('.table-row-hover');
-  rows.forEach(row => {
-    row.addEventListener('mouseenter', function() {
-      this.style.background = 'rgba(255, 238, 0, 0.15)';
-      const cells = this.querySelectorAll('.row-text');
-      cells.forEach(cell => {
-        if (!cell.querySelector('span')) {
-          cell.style.color = '#000';
-        }
-      });
-    });
-    row.addEventListener('mouseleave', function() {
-      this.style.background = 'transparent';
-      const cells = this.querySelectorAll('.row-text');
-      cells.forEach(cell => {
-        if (!cell.querySelector('span')) {
-          cell.style.color = '';
-        }
-      });
-    });
-  });
-
-  // Grafic Vânzări fără TVA
-  @if(isset($vanzariLunare) && $vanzariLunare->count() > 0)
-  const vanzariChartCanvas = document.getElementById('vanzariChart');
-  if (vanzariChartCanvas) {
-    const ctx = vanzariChartCanvas.getContext('2d');
-    @php
-      $vanzariLunareArray = [];
-      if (isset($vanzariLunare) && $vanzariLunare->count() > 0) {
-        $vanzariLunareArray = $vanzariLunare->reverse()->values()->all();
-      }
-    @endphp
-    const vanzariLunareJson = @json($vanzariLunareArray);
-    
-    // Debug
-    console.log('vanzariLunareJson:', vanzariLunareJson);
-    console.log('Type:', typeof vanzariLunareJson);
-    console.log('Is Array:', Array.isArray(vanzariLunareJson));
-    
-    // Convertim în array sigur
-    let vanzariLunareArray = [];
-    if (Array.isArray(vanzariLunareJson)) {
-      vanzariLunareArray = vanzariLunareJson;
-    } else if (vanzariLunareJson && typeof vanzariLunareJson === 'object') {
-      vanzariLunareArray = Object.values(vanzariLunareJson);
-    }
-    
-    console.log('vanzariLunareArray:', vanzariLunareArray);
-    console.log('Is Array:', Array.isArray(vanzariLunareArray));
-    
-    if (!Array.isArray(vanzariLunareArray) || vanzariLunareArray.length === 0) {
-      console.warn('Nu există date pentru grafic');
-      return;
-    }
-    
-    const labels = vanzariLunareArray.map(function(v) { return v?.luna_label || ''; });
-    const data = vanzariLunareArray.map(function(v) { return parseFloat(v?.vanzari_luna) || 0; });
-    
-    new Chart(ctx, {
+  @if($vanzariLunare1c->count() > 0)
+  @push('scripts')
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('vanzariChartMe');
+    if (!canvas) return;
+    const vanzariLunare = @json($vanzariLunare1c->sortBy('luna')->values());
+    const labels = vanzariLunare.map(function(v) { return v.luna_label || v.luna; });
+    const data = vanzariLunare.map(function(v) { return parseFloat(v.vanzari_luna) || 0; });
+    new Chart(canvas.getContext('2d'), {
       type: 'line',
       data: {
         labels: labels,
         datasets: [{
-          label: 'Vanzari (fara TVA)',
+          label: 'Vânzări (fără TVA) MDL',
           data: data,
           borderColor: '#3b82f6',
           backgroundColor: 'rgba(59, 130, 246, 0.1)',
           borderWidth: 3,
           tension: 0.4,
           fill: true,
-          pointRadius: window.innerWidth <= 768 ? 2 : 5,
+          pointRadius: 4,
           pointBackgroundColor: '#3b82f6',
           pointBorderColor: '#fff',
-          pointBorderWidth: window.innerWidth <= 768 ? 1 : 2,
-          pointHoverRadius: window.innerWidth <= 768 ? 4 : 7,
-          pointHoverBackgroundColor: '#2563eb',
-          pointHoverBorderColor: '#fff',
-          pointHoverBorderWidth: 3
+          pointBorderWidth: 2
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: {
-            labels: {
-              color: '#fff',
-              font: {
-                size: window.innerWidth <= 768 ? 10 : 14,
-                weight: 'bold'
-              },
-              padding: window.innerWidth <= 768 ? 8 : 15,
-              usePointStyle: true,
-              boxWidth: window.innerWidth <= 768 ? 8 : 12,
-              boxHeight: window.innerWidth <= 768 ? 8 : 12
-            },
-            display: true,
-            position: 'top'
-          },
+          legend: { labels: { color: '#fff', font: { size: 12 } } },
           tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            backgroundColor: 'rgba(0,0,0,0.9)',
             titleColor: '#3b82f6',
             bodyColor: '#fff',
-            borderColor: '#3b82f6',
-            borderWidth: 1,
-            padding: 12,
-            titleFont: {
-              size: 14,
-              weight: 'bold'
-            },
-            bodyFont: {
-              size: 13
-            },
-            cornerRadius: 8,
             callbacks: {
-              label: function(context) {
-                return 'Vânzări: ' + new Intl.NumberFormat('ro-RO', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                }).format(context.parsed.y) + ' LEI';
+              label: function(ctx) {
+                return 'Vânzări: ' + new Intl.NumberFormat('ro-RO', { minimumFractionDigits: 2 }).format(ctx.parsed.y) + ' MDL';
               }
             }
           }
         },
         scales: {
-          x: {
-            ticks: {
-              color: '#fff',
-              font: {
-                size: window.innerWidth <= 768 ? 9 : 12
-              }
-            },
-            grid: {
-              color: 'rgba(255, 255, 255, 0.05)'
-            }
-          },
+          x: { ticks: { color: '#9CA3AF', maxRotation: 45 }, grid: { color: 'rgba(255,255,255,0.05)' } },
           y: {
-            ticks: {
-              color: '#fff',
-              font: {
-                size: 12
-              },
-              callback: function(value) {
-                return new Intl.NumberFormat('ro-RO', {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0
-                }).format(value) + ' LEI';
-              }
-            },
-            grid: {
-              color: 'rgba(255, 255, 255, 0.05)'
-            },
+            ticks: { color: '#9CA3AF', callback: function(v) { return new Intl.NumberFormat('ro-RO', { maximumFractionDigits: 0 }).format(v) + ' MDL'; } },
+            grid: { color: 'rgba(255,255,255,0.05)' },
             beginAtZero: true
           }
         }
       }
     });
-  }
-  @endif
-});
-</script>
-
-<script>
-  // Funcții pentru modal vânzări (pe luni)
-  @php
-    $isAdmin = auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator');
-  @endphp
-  
-  // Definește variabila de date
-  @if($isAdmin)
-  const vanzariLunareData = @json($vanzariLunareForJs ?? []);
-  @else
-  const vanzariLunareData = {};
-  @endif
-
-  // Definește funcția - asigură-te că este disponibilă global
-  window.openVanzareModal = function(luna = null) {
-    const modal = document.getElementById('vanzareModal');
-    if (!modal) {
-      console.error('Modal vanzareModal nu a fost gasit');
-      return;
-    }
-    
-    const form = document.getElementById('vanzareForm');
-    const title = document.getElementById('modalTitle');
-    const methodInput = document.getElementById('formMethod');
-    const idInput = document.getElementById('vanzareId');
-    
-    if (!form || !title || !methodInput || !idInput) {
-      console.error('Elemente necesare pentru modal nu au fost gasite');
-      return;
-    }
-    
-    // Reset form
-    form.reset();
-    form.action = '{{ route("operatori.vanzari.store", $operator->id) }}';
-    methodInput.value = 'POST';
-    idInput.value = '';
-    title.textContent = 'Adauga Vanzare';
-    
-    // Dacă edităm o vânzare existentă
-    if (luna && vanzariLunareData && vanzariLunareData[luna]) {
-      const vanzare = vanzariLunareData[luna];
-      const lunaInput = document.getElementById('vanzareLuna');
-      const sumaFaraTvaInput = document.getElementById('vanzareSumaFaraTva');
-      const sumaCuTvaInput = document.getElementById('vanzareSumaCuTva');
-      const profitInput = document.getElementById('vanzareProfit');
-      const nrVanzariInput = document.getElementById('vanzareNrVanzari');
-      
-      if (lunaInput) lunaInput.value = vanzare.luna || '';
-      if (sumaFaraTvaInput) sumaFaraTvaInput.value = vanzare.suma_fara_tva || '';
-      if (sumaCuTvaInput) sumaCuTvaInput.value = vanzare.suma_cu_tva || '';
-      if (profitInput) profitInput.value = vanzare.profit || '';
-      if (nrVanzariInput) nrVanzariInput.value = vanzare.nr_vanzari || 1;
-      
-      form.action = '{{ route("operatori.vanzari.update", [$operator->id, ":luna"]) }}'.replace(':luna', luna);
-      methodInput.value = 'PUT';
-      idInput.value = luna;
-      title.textContent = 'Editeaza Vanzare';
-    } else {
-      // Setează luna curentă ca default
-      const today = new Date();
-      const currentMonth = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
-      const lunaInput = document.getElementById('vanzareLuna');
-      if (lunaInput) {
-        lunaInput.value = currentMonth;
-      }
-    }
-    
-    modal.style.display = 'flex';
-  };
-
-  window.closeVanzareModal = function() {
-    const modal = document.getElementById('vanzareModal');
-    if (modal) {
-      modal.style.display = 'none';
-    }
-  };
-
-  window.deleteVanzareLuna = function(luna) {
-    if (!confirm('Esti sigur ca vrei sa stergi vanzarile pentru aceasta luna?')) {
-      return;
-    }
-    
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = '{{ route("operatori.vanzari.destroy", [$operator->id, ":luna"]) }}'.replace(':luna', luna);
-    
-    const methodInput = document.createElement('input');
-    methodInput.type = 'hidden';
-    methodInput.name = '_method';
-    methodInput.value = 'DELETE';
-    form.appendChild(methodInput);
-    
-    const csrfInput = document.createElement('input');
-    csrfInput.type = 'hidden';
-    csrfInput.name = '_token';
-    csrfInput.value = '{{ csrf_token() }}';
-    form.appendChild(csrfInput);
-    
-    document.body.appendChild(form);
-    form.submit();
-  };
-
-  // Închide modal la click pe fundal și ESC
-  document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('vanzareModal');
-    if (modal) {
-      modal.addEventListener('click', function(e) {
-        if (e.target === this) {
-          closeVanzareModal();
-        }
-      });
-    }
-
-    // Închide modal cu ESC
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        const modal = document.getElementById('vanzareModal');
-        if (modal && modal.style.display === 'flex') {
-          closeVanzareModal();
-        }
-      }
-    });
   });
-</script>
-@endpush
+  </script>
+  @endpush
+  @endif
+@else
+  <!-- Fără date 1C pentru acest operator -->
+  <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border: 2px dashed rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 48px 24px; text-align: center; margin-top: 20px;">
+    <i class="fas fa-database" style="font-size: 56px; color: #9CA3AF; margin-bottom: 20px; display: block; opacity: 0.7;"></i>
+    <p style="color: #E5E7EB; font-size: 18px; margin: 0; font-weight: 600;">Nu există date din 1C pentru acest operator</p>
+    <p style="color: #9CA3AF; font-size: 14px; margin: 12px 0 0 0;">Nume: <strong style="color: #FFEE00;">{{ $operator->nume ?? '—' }}</strong></p>
+  </div>
+@endif
+@endsection

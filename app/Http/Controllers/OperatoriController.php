@@ -10,6 +10,7 @@ use App\Models\Operator;
 use App\Models\DateOp;
 use App\Models\Livrare;
 use App\Models\OnecKpiOperator;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class OperatoriController extends Controller
@@ -302,95 +303,6 @@ class OperatoriController extends Controller
             $operator = Operator::whereRaw('LOWER(TRIM(nume)) = ?', [mb_strtolower(trim((string) $id))])->firstOrFail();
         }
 
-        $oferte = collect();
-        $oferteStats = [
-            'total_oferte' => 0,
-            'oferte_trimise' => 0,
-            'oferte_finalizate' => 0,
-            'oferte_refuzate' => 0,
-            'valoare_totala' => 0,
-            'valoare_finalizate' => 0,
-        ];
-        $vanzari = collect();
-        $vanzariStats = [
-            'total_vanzari' => 0,
-            'total_suma_fara_tva' => 0,
-            'total_suma_cu_tva' => 0,
-            'total_profit' => 0,
-            'total_nr_vanzari' => 0,
-            'medie_vanzari_luna' => 0,
-        ];
-        $vanzariLunare = collect();
-        $vanzariLunareForJs = collect();
-
-        try {
-            $oferte = Oferte::where(function ($query) use ($operator) {
-                $query->where('operator_id', $operator->id)
-                    ->orWhere('operator', $operator->nume);
-            })
-                ->orderBy('data_trimisa', 'desc')
-                ->get();
-
-            $oferteStats = [
-                'total_oferte' => $oferte->count(),
-                'oferte_trimise' => $oferte->where('status', 'trimise')->count(),
-                'oferte_finalizate' => $oferte->where('status', 'finalizate')->count(),
-                'oferte_refuzate' => $oferte->where('status', 'refuzate')->count(),
-                'valoare_totala' => $oferte->sum('valoare'),
-                'valoare_finalizate' => $oferte->where('status', 'finalizate')->sum('valoare'),
-            ];
-        } catch (\Throwable $e) {
-            \Log::warning('Operatori show: oferte query failed', ['operator_id' => $operator->id, 'error' => $e->getMessage()]);
-        }
-
-        try {
-            $vanzari = DateOp::where('operator_id', $operator->id)
-                ->orderBy('data', 'desc')
-                ->get();
-
-            $vanzariStats = [
-                'total_vanzari' => $vanzari->sum('nr_vanzari'),
-                'total_suma_fara_tva' => $vanzari->sum('suma_fara_tva'),
-                'total_suma_cu_tva' => $vanzari->sum('suma_cu_tva'),
-                'total_profit' => $vanzari->sum('profit'),
-                'total_nr_vanzari' => $vanzari->sum('nr_vanzari'),
-                'medie_vanzari_luna' => $this->calculateAverageSalesPerMonth($vanzari),
-            ];
-
-            $vanzariLunare = DateOp::where('operator_id', $operator->id)
-                ->whereNotNull('data')
-                ->selectRaw('
-                    DATE_FORMAT(data, "%Y-%m") as luna,
-                    DATE_FORMAT(data, "%Y") as an,
-                    DATE_FORMAT(data, "%m") as luna_num,
-                    DATE_FORMAT(data, "%M %Y") as luna_label,
-                    COUNT(*) as comenzi,
-                    SUM(suma_fara_tva) as vanzari_luna,
-                    SUM(profit) as profit,
-                    SUM(nr_vanzari) as nr_vanzari
-                ')
-                ->groupBy('luna', 'an', 'luna_num', 'luna_label')
-                ->orderBy('luna', 'desc')
-                ->get();
-
-            foreach ($vanzariLunare as $v) {
-                $vanzariLuna = DateOp::where('operator_id', $operator->id)
-                    ->whereRaw('DATE_FORMAT(data, "%Y-%m") = ?', [$v->luna])
-                    ->get();
-                $sumaCuTva = $vanzariLuna->sum('suma_cu_tva');
-                $vanzariLunareForJs->put($v->luna, [
-                    'luna' => $v->luna,
-                    'suma_fara_tva' => $v->vanzari_luna,
-                    'suma_cu_tva' => $sumaCuTva > 0 ? $sumaCuTva : ($v->vanzari_luna * 1.19),
-                    'profit' => $v->profit,
-                    'nr_vanzari' => $v->nr_vanzari ?? 1,
-                ]);
-            }
-        } catch (\Throwable $e) {
-            \Log::warning('Operatori show: date_op query failed', ['operator_id' => $operator->id, 'error' => $e->getMessage()]);
-        }
-
-        // Date din 1C (OnecKpiOperator) după nume – ca pe „Datele mele”; folosim când date_op e gol
         $operatorNume = trim((string) ($operator->nume ?? ''));
         $date1c = null;
         $vanzariLunare1c = collect();
@@ -407,7 +319,7 @@ class OperatoriController extends Controller
                         COALESCE(SUM(onec_kpi_operatori.nr_comenzi), 0) as total_comenzi
                     ')
                     ->first();
-                if ($row1c && ((float) $row1c->total_vanzari_fara_tva) > 0) {
+                if ($row1c) {
                     $date1c = [
                         'vanzari_fara_tva' => (float) $row1c->total_vanzari_fara_tva,
                         'vanzari_cu_tva' => (float) $row1c->total_vanzari_cu_tva,
@@ -445,42 +357,40 @@ class OperatoriController extends Controller
             }
         }
 
-        // Preferăm 1C pentru statistici când date_op dă 0, ca să coincidă cu „Datele mele”
+        // Pentru pagina identică cu „Datele mele”: $date (ca la me), livrări și pick-up
+        $date = null;
         if ($date1c !== null) {
-            $nrLuni = $vanzariLunare1c->count() ?: 1;
-            $vanzariStats = [
-                'total_vanzari' => $date1c['nr_comenzi'],
-                'total_suma_fara_tva' => $date1c['vanzari_fara_tva'],
-                'total_suma_cu_tva' => $date1c['vanzari_cu_tva'],
-                'total_profit' => $date1c['profit'],
-                'total_nr_vanzari' => $date1c['nr_comenzi'],
-                'medie_vanzari_luna' => $date1c['vanzari_fara_tva'] / $nrLuni,
+            $date = [
+                'nume' => trim((string) ($operator->nume ?? '')),
+                'vanzari_fara_tva' => $date1c['vanzari_fara_tva'],
+                'vanzari_cu_tva' => $date1c['vanzari_cu_tva'],
+                'profit' => $date1c['profit'],
+                'nr_comenzi' => $date1c['nr_comenzi'],
             ];
         }
-        if ($vanzariLunare1c->isNotEmpty() && $vanzariLunare->isEmpty()) {
-            $vanzariLunare = $vanzariLunare1c;
-            foreach ($vanzariLunare1c as $v) {
-                $vanzariLunareForJs->put($v->luna, [
-                    'luna' => $v->luna,
-                    'suma_fara_tva' => $v->vanzari_luna,
-                    'suma_cu_tva' => $v->vanzari_cu_tva > 0 ? $v->vanzari_cu_tva : ($v->vanzari_luna * 1.19),
-                    'profit' => $v->profit,
-                    'nr_vanzari' => $v->nr_vanzari ?? 1,
-                ]);
-            }
+        $operatorUser = User::whereRaw('LOWER(TRIM(full_name)) = ?', [mb_strtolower($operatorNume)])->first();
+        $lunaCurenta = now()->format('Y-m');
+        $nrLivrariTotal = $operatorUser ? Livrare::where('user_id', $operatorUser->id)->count() : 0;
+        $nrLivrariLunaCurenta = $operatorUser
+            ? Livrare::where('user_id', $operatorUser->id)->whereRaw('DATE_FORMAT(data_livrarii, "%Y-%m") = ?', [$lunaCurenta])->count()
+            : 0;
+        $comenziTotal = $date ? (int) $date['nr_comenzi'] : 0;
+        $comenziLunaCurenta = 0;
+        if ($vanzariLunare1c->isNotEmpty()) {
+            $lunaData = $vanzariLunare1c->firstWhere('luna', $lunaCurenta);
+            $comenziLunaCurenta = $lunaData ? (int) $lunaData->comenzi : 0;
         }
+        $pickupTotal = max(0, $comenziTotal - $nrLivrariTotal);
+        $pickupLunaCurenta = max(0, $comenziLunaCurenta - $nrLivrariLunaCurenta);
 
         return view('operatori.show', [
             'operator' => $operator,
-            'oferte' => $oferte,
-            'oferteStats' => $oferteStats,
-            'vanzari' => $vanzari,
-            'vanzariStats' => $vanzariStats,
-            'vanzariLunare' => $vanzariLunare,
-            'vanzariLunareForJs' => $vanzariLunareForJs,
-            'date1c' => $date1c,
+            'date' => $date,
             'vanzariLunare1c' => $vanzariLunare1c,
-            'canEditPhotos' => $this->canEditOperatorPhotos($operator),
+            'nrLivrariTotal' => $nrLivrariTotal,
+            'nrLivrariLunaCurenta' => $nrLivrariLunaCurenta,
+            'pickupTotal' => $pickupTotal,
+            'pickupLunaCurenta' => $pickupLunaCurenta,
         ]);
     }
 
