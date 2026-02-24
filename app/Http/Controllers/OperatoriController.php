@@ -47,7 +47,7 @@ class OperatoriController extends Controller
                     continue;
                 }
                 $vanzari = (float) $row->total_vanzari_fara_tva;
-                $operatorRecord = Operator::whereRaw('TRIM(nume) = ?', [$nume])->first();
+                $operatorRecord = Operator::whereRaw('LOWER(TRIM(nume)) = ?', [mb_strtolower($nume)])->first();
                 $operatori1c[] = [
                     'nume' => $nume,
                     'vanzari_fara_tva' => $vanzari,
@@ -295,10 +295,12 @@ class OperatoriController extends Controller
 
     public function show($id)
     {
-        // Găsește operatorul după ID sau nume
-        $operator = Operator::where('id', $id)
-            ->orWhere('nume', $id)
-            ->firstOrFail();
+        // Când parametrul e numeric = ID din URL (lista operatori). Altfel = nume (legătură din raport).
+        if (is_numeric($id)) {
+            $operator = Operator::findOrFail((int) $id);
+        } else {
+            $operator = Operator::whereRaw('LOWER(TRIM(nume)) = ?', [mb_strtolower(trim((string) $id))])->firstOrFail();
+        }
 
         $oferte = collect();
         $oferteStats = [
@@ -401,18 +403,14 @@ class OperatoriController extends Controller
     }
 
     /**
-     * Doar operatorul însuși sau adminul poate edita pozele (profil și copertă).
-     * Operatorul = full_name al user-ului coincide cu operator.nume (ca în 1C).
+     * Doar operatorul însuși poate edita pozele (profil și copertă), din Setări.
+     * Adminul nu poate schimba pozele; operatorul = full_name al user-ului coincide cu operator.nume (ca în 1C).
      */
     private function canEditOperatorPhotos(Operator $operator): bool
     {
         $user = Auth::user();
         if (! $user) {
             return false;
-        }
-        $role = strtolower((string) ($user->role ?? ''));
-        if (in_array($role, ['admin', 'administrator'], true)) {
-            return true;
         }
         $fullName = trim((string) ($user->full_name ?? $user->name ?? ''));
         $operatorNume = trim((string) ($operator->nume ?? ''));
