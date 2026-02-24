@@ -17,6 +17,8 @@ class RestrictOperator
         'setari',
         'setari.update',
         'setari.password',
+        'operatori.photo.profil',
+        'operatori.photo.coperta',
         'logout',
     ];
 

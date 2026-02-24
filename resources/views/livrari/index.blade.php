@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends(auth()->check() && auth()->user()->isOperator() ? 'layouts.operator' : 'layouts.app')
 
 @section('title', 'Livrări – VOLTA')
 
@@ -44,6 +44,23 @@
   .livrari-form-grid select option { background: #1F2937; color: #E5E7EB; }
   .livrari-filters .livrari-btn { padding: 10px 18px; font-size: 13px; }
   .livrari-search-wrap { min-width: 220px; }
+  /* Formular adăugare livrare – mai simplu pentru operatori */
+  .livrari-add-card { margin-bottom: 24px; }
+  .livrari-add-hint { color: #9CA3AF; font-size: 14px; margin: -8px 0 20px 0; }
+  .livrari-add-form { display: flex; flex-direction: column; gap: 20px; }
+  .livrari-add-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .livrari-add-row-full { grid-template-columns: 1fr; }
+  .livrari-add-field label { display: block; color: #FFEE00; margin-bottom: 8px; font-size: 14px; font-weight: 600; }
+  .livrari-add-field input,
+  .livrari-add-field select { width: 100%; padding: 14px 16px; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; background: #1F2937; color: #E5E7EB; font-size: 15px; }
+  .livrari-add-field input:focus,
+  .livrari-add-field select:focus { outline: none; border-color: #FFEE00; }
+  .livrari-add-field input::placeholder { color: #6B7280; }
+  .livrari-add-actions { margin-top: 8px; }
+  .livrari-btn-add { padding: 14px 28px; font-size: 16px; }
+  @media (max-width: 600px) {
+    .livrari-add-row { grid-template-columns: 1fr; }
+  }
   .livrari-search-input { padding: 10px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: #1F2937; color: #E5E7EB; min-width: 220px; font-size: 14px; }
   .livrari-search-input::placeholder { color: #6B7280; }
   .livrari-search-input:focus { outline: none; border-color: #FFEE00; background: #111827; }
@@ -146,40 +163,44 @@
   @endif
 
   @if(!$isAdmin)
-  <div class="livrari-card">
-    <h2><i class="fas fa-plus-circle"></i> Adaugă livrare</h2>
-    <form action="{{ route('livrari.store') }}" method="post">
+  <div class="livrari-card livrari-add-card">
+    <h2><i class="fas fa-plus-circle"></i> Adaugă livrare nouă</h2>
+    <p class="livrari-add-hint">Completează câmpurile și apasă Salvează. Data comenzii se completează automat cu data de azi.</p>
+    <form action="{{ route('livrari.store') }}" method="post" class="livrari-add-form">
       @csrf
-      <div class="livrari-form-grid">
-        <div>
-          <label for="numar_comanda">Număr comandă *</label>
-          <input type="text" id="numar_comanda" name="numar_comanda" value="{{ old('numar_comanda') }}" required maxlength="100" placeholder="Ex: CMD-001">
-        </div>
-        <div>
-          <label for="data">Data *</label>
-          <input type="date" id="data" name="data" value="{{ old('data', date('Y-m-d')) }}" required>
-        </div>
-        <div>
-          <label for="adresa_livrarii">Adresa livrării *</label>
-          <input type="text" id="adresa_livrarii" name="adresa_livrarii" value="{{ old('adresa_livrarii') }}" required maxlength="500" placeholder="Strada, nr., oraș">
-        </div>
-        <div>
-          <label for="nr_client">Nr. client *</label>
-          <input type="text" id="nr_client" name="nr_client" value="{{ old('nr_client') }}" required maxlength="100" placeholder="Ex: CL-123">
-        </div>
-        <div>
+      <input type="hidden" name="data" value="{{ old('data', date('Y-m-d')) }}" id="livrari-data-comanda">
+      <div class="livrari-add-row">
+        <div class="livrari-add-field">
           <label for="data_livrarii">Data livrării *</label>
           <input type="date" id="data_livrarii" name="data_livrarii" value="{{ old('data_livrarii', date('Y-m-d')) }}" required>
         </div>
-        <div>
+        <div class="livrari-add-field">
           <label for="in_chisinau">Locație *</label>
-          <select id="in_chisinau" name="in_chisinau" class="livrari-select-locatie" style="width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; background: #1F2937; color: #E5E7EB;">
+          <select id="in_chisinau" name="in_chisinau" class="livrari-select-locatie">
             <option value="1" {{ old('in_chisinau', '1') == '1' ? 'selected' : '' }}>În Chișinău</option>
             <option value="0" {{ old('in_chisinau') === '0' ? 'selected' : '' }}>În afara</option>
           </select>
         </div>
       </div>
-      <button type="submit" class="livrari-btn livrari-btn-primary"><i class="fas fa-save"></i> Salvează livrarea</button>
+      <div class="livrari-add-row">
+        <div class="livrari-add-field">
+          <label for="numar_comanda">Număr comandă *</label>
+          <input type="text" id="numar_comanda" name="numar_comanda" value="{{ old('numar_comanda') }}" required maxlength="100" placeholder="Ex: CMD-001">
+        </div>
+        <div class="livrari-add-field">
+          <label for="nr_client">Nr. client *</label>
+          <input type="text" id="nr_client" name="nr_client" value="{{ old('nr_client') }}" required maxlength="100" placeholder="Ex: CL-123">
+        </div>
+      </div>
+      <div class="livrari-add-row livrari-add-row-full">
+        <div class="livrari-add-field">
+          <label for="adresa_livrarii">Adresa livrării *</label>
+          <input type="text" id="adresa_livrarii" name="adresa_livrarii" value="{{ old('adresa_livrarii') }}" required maxlength="500" placeholder="Strada, nr., oraș, cod poștal">
+        </div>
+      </div>
+      <div class="livrari-add-actions">
+        <button type="submit" class="livrari-btn livrari-btn-primary livrari-btn-add"><i class="fas fa-check"></i> Salvează livrarea</button>
+      </div>
     </form>
   </div>
   @endif
@@ -227,4 +248,19 @@
     @endif
   </div>
 </div>
+@if(!$isAdmin)
+@push('scripts')
+<script>
+(function() {
+  var dataComanda = document.getElementById('livrari-data-comanda');
+  var dataLivrarii = document.getElementById('data_livrarii');
+  if (dataComanda && dataLivrarii) {
+    dataLivrarii.addEventListener('change', function() {
+      dataComanda.value = dataLivrarii.value;
+    });
+  }
+})();
+</script>
+@endpush
+@endif
 @endsection

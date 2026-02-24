@@ -398,6 +398,9 @@ class OperatoriController extends Controller
         $path = $request->file('photo')->store($dir, 'public');
         $operator->update(['photo_profil' => $path]);
 
+        if (Auth::user() && Auth::user()->isOperator()) {
+            return redirect()->route('setari')->with('success', 'Poza de profil a fost actualizată.');
+        }
         return redirect()->route('operatori.show', $operator->id)->with('success', 'Poza de profil a fost actualizată.');
     }
 
@@ -423,6 +426,9 @@ class OperatoriController extends Controller
         $path = $request->file('photo')->store($dir, 'public');
         $operator->update(['photo_coperta' => $path]);
 
+        if (Auth::user() && Auth::user()->isOperator()) {
+            return redirect()->route('setari')->with('success', 'Poza de copertă a fost actualizată.');
+        }
         return redirect()->route('operatori.show', $operator->id)->with('success', 'Poza de copertă a fost actualizată.');
     }
 

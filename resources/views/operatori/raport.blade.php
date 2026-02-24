@@ -44,24 +44,6 @@
 
   <div class="operatori-detail-grid">
     <div>
-      @if(isset($operatorRecord) && $operatorRecord && isset($canEditPhotos) && $canEditPhotos)
-      <div class="operatori-sidebar-card operatori-sidebar-card-photos">
-        <h3 class="operatori-sidebar-title"><i class="fas fa-images"></i> Poze profil și copertă</h3>
-        <p class="operatori-photos-hint">Încarcă poza de profil și/sau coperta.</p>
-        <div class="operatori-photo-forms">
-          <form action="{{ route('operatori.photo.profil', $operatorRecord->id) }}" method="post" enctype="multipart/form-data" class="operatori-photo-form-block">
-            @csrf
-            <input type="file" name="photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="operatori-photo-input" id="raport-profil-{{ $operatorRecord->id }}" onchange="this.form.submit()">
-            <label for="raport-profil-{{ $operatorRecord->id }}" class="operatori-btn operatori-btn-photo-block"><i class="fas fa-user-circle"></i> Poza de profil</label>
-          </form>
-          <form action="{{ route('operatori.photo.coperta', $operatorRecord->id) }}" method="post" enctype="multipart/form-data" class="operatori-photo-form-block">
-            @csrf
-            <input type="file" name="photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="operatori-photo-input" id="raport-coperta-{{ $operatorRecord->id }}" onchange="this.form.submit()">
-            <label for="raport-coperta-{{ $operatorRecord->id }}" class="operatori-btn operatori-btn-photo-block"><i class="fas fa-image"></i> Poza de copertă</label>
-          </form>
-        </div>
-      </div>
-      @endif
       <div class="operatori-sidebar-card">
         <h3 class="operatori-sidebar-title"><i class="fas fa-calendar-check"></i> Luna curentă</h3>
         <div class="operatori-stat-list">

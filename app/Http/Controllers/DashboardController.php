@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Operator;
 
 class DashboardController extends Controller
 {
@@ -36,7 +38,18 @@ class DashboardController extends Controller
 
     public function setari()
     {
-        return view('dashboard.setari');
+        $operatorRecord = null;
+        if (Auth::check() && Auth::user()->isOperator()) {
+            $user = Auth::user();
+            $fullName = trim((string) ($user->full_name ?? $user->name ?? ''));
+            if ($fullName !== '') {
+                $operatorRecord = Operator::whereRaw('LOWER(TRIM(nume)) = ?', [mb_strtolower($fullName)])->first();
+                if (! $operatorRecord) {
+                    $operatorRecord = Operator::create(['nume' => $fullName, 'activ' => true]);
+                }
+            }
+        }
+        return view('dashboard.setari', compact('operatorRecord'));
     }
 
     public function traficStats()

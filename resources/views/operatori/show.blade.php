@@ -27,7 +27,7 @@
   </a>
 
   <div class="operatori-cover operatori-cover--show" @if($operator->photo_coperta_url) style="background-image: url('{{ $operator->photo_coperta_url }}'); background-size: cover; background-position: center;" @endif>
-    @auth
+    @if($canEditPhotos && auth()->check() && !auth()->user()->isOperator())
     <div class="operatori-cover-photo-actions">
       <form action="{{ route('operatori.photo.coperta', $operator->id) }}" method="post" enctype="multipart/form-data" class="operatori-photo-form">
         @csrf
@@ -35,7 +35,7 @@
         <label for="input-cover-{{ $operator->id }}" class="operatori-btn operatori-btn-ghost operatori-btn-photo"><i class="fas fa-camera"></i> {{ $operator->photo_coperta_url ? 'Schimbă coperta' : 'Adaugă copertă' }}</label>
       </form>
     </div>
-    @endauth
+    @endif
     <div class="operatori-cover-inner">
       <div class="operatori-avatar-wrap">
         @if($operator->photo_profil_url)
@@ -43,13 +43,13 @@
         @else
         <div class="operatori-avatar">{{ strtoupper(mb_substr($operator->nume, 0, 1)) }}</div>
         @endif
-        @auth
+        @if($canEditPhotos && auth()->check() && !auth()->user()->isOperator())
         <form action="{{ route('operatori.photo.profil', $operator->id) }}" method="post" enctype="multipart/form-data" class="operatori-photo-form operatori-avatar-form">
           @csrf
           <input type="file" name="photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="operatori-photo-input" id="input-profil-{{ $operator->id }}" onchange="this.form.submit()">
           <label for="input-profil-{{ $operator->id }}" class="operatori-btn operatori-btn-avatar-upload" title="Schimbă poza de profil"><i class="fas fa-camera"></i></label>
         </form>
-        @endauth
+        @endif
       </div>
       <div class="operatori-detail-name-wrap">
         <h1 class="operatori-detail-title">{{ $operator->nume }}</h1>
@@ -79,10 +79,10 @@
         $vanzariLunaCurentaProfit = $vanzariLunaCurenta->sum('profit');
         $vanzariLunaCurentaCount = $vanzariLunaCurenta->count();
       @endphp
-      @auth
+      @if($canEditPhotos && auth()->check() && !auth()->user()->isOperator())
       <div class="operatori-sidebar-card operatori-sidebar-card-photos">
         <h3 class="operatori-sidebar-title"><i class="fas fa-images"></i> Poze profil și copertă</h3>
-        <p class="operatori-photos-hint">Încarcă poza de profil și/sau coperta. Doar operatorul sau administratorul pot actualiza.</p>
+        <p class="operatori-photos-hint">Încarcă poza de profil și/sau coperta (operatorii își schimbă pozele din Setări).</p>
         <div class="operatori-photo-forms">
           <form action="{{ route('operatori.photo.profil', $operator->id) }}" method="post" enctype="multipart/form-data" class="operatori-photo-form-block">
             @csrf
@@ -96,7 +96,7 @@
           </form>
         </div>
       </div>
-      @endauth
+      @endif
       <div class="operatori-sidebar-card">
         <h3 class="operatori-sidebar-title"><i class="fas fa-calendar-check"></i> Luna Curentă</h3>
         <div class="operatori-stat-list">

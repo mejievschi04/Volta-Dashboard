@@ -4,6 +4,19 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ url('css/setari.css') }}">
+<style>
+  .setari-photos-card { margin-bottom: 24px; }
+  .setari-photos-hint { color: #9CA3AF; font-size: 14px; margin: 0 0 16px 0; }
+  .setari-photo-forms { display: flex; flex-wrap: wrap; gap: 12px; }
+  .setari-photo-form { margin: 0; }
+  .setari-photo-input { position: absolute; width: 0; height: 0; opacity: 0; }
+  .setari-photo-btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px;
+    background: rgba(255, 238, 0, 0.15); color: #FFEE00; border: 1px solid rgba(255, 238, 0, 0.4);
+    border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s;
+  }
+  .setari-photo-btn:hover { background: rgba(255, 238, 0, 0.25); }
+</style>
 @endpush
 
 @section('content')
@@ -12,7 +25,31 @@
 
 <div class="setari-wrap">
 @if($isOperator)
-  {{-- Operator: doar Securitate (schimbare parolă) --}}
+  {{-- Operator: Poze profil și copertă --}}
+  @if(isset($operatorRecord) && $operatorRecord)
+  <div class="panel setari-operator-card setari-photos-card" id="poze">
+    <h2 class="setari-section-title">
+      <i class="fas fa-images"></i> Poze profil și copertă
+    </h2>
+    <p class="setari-photos-hint">Încarcă poza de profil și/sau poza de copertă (folosite pe pagina Datele mele).</p>
+    <div class="setari-photo-forms">
+      <form action="{{ route('operatori.photo.profil', $operatorRecord->id) }}" method="post" enctype="multipart/form-data" class="setari-photo-form">
+        @csrf
+        <input type="file" name="photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="setari-photo-input" id="setari-profil" onchange="this.form.submit()">
+        <label for="setari-profil" class="setari-photo-btn"><i class="fas fa-user-circle"></i> Poza de profil</label>
+      </form>
+      <form action="{{ route('operatori.photo.coperta', $operatorRecord->id) }}" method="post" enctype="multipart/form-data" class="setari-photo-form">
+        @csrf
+        <input type="file" name="photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="setari-photo-input" id="setari-coperta" onchange="this.form.submit()">
+        <label for="setari-coperta" class="setari-photo-btn"><i class="fas fa-image"></i> Poza de copertă</label>
+      </form>
+    </div>
+    @if(session('success'))
+    <div class="setari-message success" style="margin-top: 12px;">{{ session('success') }}</div>
+    @endif
+  </div>
+  @endif
+  {{-- Operator: Securitate (schimbare parolă) --}}
   <div class="panel setari-operator-card">
     <h2 class="setari-section-title">
       <i class="fas fa-lock"></i> Securitate

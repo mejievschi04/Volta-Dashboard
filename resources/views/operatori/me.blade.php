@@ -45,7 +45,7 @@
           <i class="fas fa-database"></i> Rezultate din 1C (ian. 2023 – prezent)
         </span>
         @if(isset($operatorRecord) && $operatorRecord)
-        <a href="{{ route('operatori.show', $operatorRecord->id) }}" style="margin-left: 12px; color: #9CA3AF; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" title="Editează poza de profil și coperta"><i class="fas fa-camera"></i> Editează poze</a>
+        <a href="{{ route('setari') }}#poze" style="margin-left: 12px; color: #9CA3AF; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" title="Schimbă pozele din Setări"><i class="fas fa-cog"></i> Poze în Setări</a>
         @endif
       </div>
     </div>
@@ -54,24 +54,6 @@
   <div class="operator-me-grid" style="display: grid; grid-template-columns: 300px 1fr; gap: 20px; margin-top: 90px;">
     <!-- Coloană stânga -->
     <div>
-      @if(isset($operatorRecord) && $operatorRecord && isset($canEditPhotos) && $canEditPhotos)
-      <div class="operatori-sidebar-card operatori-sidebar-card-photos" style="margin-bottom: 20px;">
-        <h3 class="operatori-sidebar-title"><i class="fas fa-images"></i> Poze profil și copertă</h3>
-        <p class="operatori-photos-hint">Încarcă poza de profil și/sau coperta.</p>
-        <div class="operatori-photo-forms">
-          <form action="{{ route('operatori.photo.profil', $operatorRecord->id) }}" method="post" enctype="multipart/form-data" class="operatori-photo-form-block">
-            @csrf
-            <input type="file" name="photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="operatori-photo-input" id="me-profil-{{ $operatorRecord->id }}" onchange="this.form.submit()">
-            <label for="me-profil-{{ $operatorRecord->id }}" class="operatori-btn operatori-btn-photo-block"><i class="fas fa-user-circle"></i> Poza de profil</label>
-          </form>
-          <form action="{{ route('operatori.photo.coperta', $operatorRecord->id) }}" method="post" enctype="multipart/form-data" class="operatori-photo-form-block">
-            @csrf
-            <input type="file" name="photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="operatori-photo-input" id="me-coperta-{{ $operatorRecord->id }}" onchange="this.form.submit()">
-            <label for="me-coperta-{{ $operatorRecord->id }}" class="operatori-btn operatori-btn-photo-block"><i class="fas fa-image"></i> Poza de copertă</label>
-          </form>
-        </div>
-      </div>
-      @endif
       <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
         <h3 style="color: #fff; margin: 0 0 20px 0; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
           <i class="fas fa-calendar-check" style="color: #3b82f6;"></i> Luna curentă
