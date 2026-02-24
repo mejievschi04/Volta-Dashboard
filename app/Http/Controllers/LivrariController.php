@@ -144,7 +144,24 @@ class LivrariController extends Controller
         $localitate = trim((string) $validated['localitate']);
         $validated['in_chisinau'] = $this->isChisinau($localitate);
         $validated['user_id'] = Auth::id();
-        Livrare::create($validated);
+        $livrare = Livrare::create($validated);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Livrarea a fost adăugată.',
+                'livrare' => [
+                    'id' => $livrare->id,
+                    'numar_comanda' => $livrare->numar_comanda,
+                    'data' => $livrare->data->format('d.m.Y'),
+                    'localitate' => $livrare->localitate,
+                    'adresa_livrarii' => $livrare->adresa_livrarii,
+                    'nr_client' => $livrare->nr_client,
+                    'data_livrarii' => $livrare->data_livrarii->format('d.m.Y'),
+                    'locatie' => $livrare->in_chisinau ? 'În Chișinău' : 'În afara',
+                ],
+            ]);
+        }
 
         return redirect()->route('livrari')->with('success', 'Livrarea a fost adăugată.');
     }

@@ -64,6 +64,20 @@
   .livrari-search-input { padding: 10px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: #1F2937; color: #E5E7EB; min-width: 220px; font-size: 14px; }
   .livrari-search-input::placeholder { color: #6B7280; }
   .livrari-search-input:focus { outline: none; border-color: #FFEE00; background: #111827; }
+  /* Modal adaugare livrare */
+  .livrari-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+  .livrari-modal-overlay.is-open { display: flex; }
+  .livrari-modal { background: linear-gradient(160deg, #1F2937 0%, #111827 100%); border-radius: 16px; padding: 28px; max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,238,0,0.2); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .livrari-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .livrari-modal-title { color: #FFEE00; font-size: 20px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 10px; }
+  .livrari-modal-close { background: none; border: none; color: #9CA3AF; font-size: 24px; cursor: pointer; padding: 4px 8px; line-height: 1; border-radius: 8px; }
+  .livrari-modal-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .livrari-modal-success { display: none; padding: 12px 16px; background: rgba(16, 185, 129, 0.2); color: #34D399; border-radius: 10px; margin-bottom: 16px; font-weight: 500; }
+  .livrari-modal-success.is-visible { display: block; }
+  .livrari-modal-error { display: none; padding: 12px 16px; background: rgba(239, 68, 68, 0.2); color: #F87171; border-radius: 10px; margin-bottom: 16px; }
+  .livrari-modal-error.is-visible { display: block; }
+  .livrari-btn-open-modal { padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; border: none; background: linear-gradient(135deg, #FFEE00 0%, #FACC15 100%); color: #000; display: inline-flex; align-items: center; gap: 8px; }
+  .livrari-btn-open-modal:hover { opacity: 0.95; }
 </style>
 @endpush
 
@@ -163,42 +177,57 @@
   @endif
 
   @if(!$isAdmin)
-  <div class="livrari-card livrari-add-card">
-    <h2><i class="fas fa-plus-circle"></i> Adaugă livrare nouă</h2>
-    <p class="livrari-add-hint">Completează câmpurile și apasă Salvează. Locația (În Chișinău / În afara) se stabilește automat după localitate.</p>
-    <form action="{{ route('livrari.store') }}" method="post" class="livrari-add-form">
-      @csrf
-      <input type="hidden" name="data" value="{{ old('data', date('Y-m-d')) }}" id="livrari-data-comanda">
-      <div class="livrari-add-row">
-        <div class="livrari-add-field">
-          <label for="data_livrarii">Data livrării *</label>
-          <input type="date" id="data_livrarii" name="data_livrarii" value="{{ old('data_livrarii', date('Y-m-d')) }}" required>
-        </div>
-        <div class="livrari-add-field">
-          <label for="numar_comanda">Număr comandă *</label>
-          <input type="text" id="numar_comanda" name="numar_comanda" value="{{ old('numar_comanda') }}" required maxlength="100" placeholder="Ex: CMD-001">
-        </div>
+  <div style="margin-bottom: 24px;">
+    <button type="button" class="livrari-btn-open-modal" id="livrariOpenModalBtn" aria-label="Adaugă livrare">
+      <i class="fas fa-plus-circle"></i> Adaugă livrare
+    </button>
+  </div>
+
+  <!-- Modal Adaugă livrare -->
+  <div class="livrari-modal-overlay" id="livrariAddModal" aria-hidden="true">
+    <div class="livrari-modal" role="dialog" aria-labelledby="livrariModalTitle">
+      <div class="livrari-modal-header">
+        <h2 class="livrari-modal-title" id="livrariModalTitle"><i class="fas fa-truck"></i> Adaugă livrare nouă</h2>
+        <button type="button" class="livrari-modal-close" id="livrariModalClose" aria-label="Închide">&times;</button>
       </div>
-      <div class="livrari-add-row">
-        <div class="livrari-add-field">
-          <label for="localitate">Localitate *</label>
-          <input type="text" id="localitate" name="localitate" value="{{ old('localitate') }}" required maxlength="255" placeholder="Ex: Chișinău, Bălți, Orhei...">
+      <p class="livrari-add-hint" style="margin-bottom: 16px;">Locația (În Chișinău / În afara) se stabilește automat după localitate. După salvare poți introduce altă livrare sau închide.</p>
+      <div class="livrari-modal-success" id="livrariModalSuccess"></div>
+      <div class="livrari-modal-error" id="livrariModalError"></div>
+      <form id="livrariAddForm" action="{{ route('livrari.store') }}" method="post" class="livrari-add-form">
+        @csrf
+        <input type="hidden" name="data" value="{{ date('Y-m-d') }}" id="livrari-data-comanda">
+        <div class="livrari-add-row">
+          <div class="livrari-add-field">
+            <label for="modal_data_livrarii">Data livrării *</label>
+            <input type="date" id="modal_data_livrarii" name="data_livrarii" value="{{ date('Y-m-d') }}" required>
+          </div>
+          <div class="livrari-add-field">
+            <label for="modal_numar_comanda">Număr comandă *</label>
+            <input type="text" id="modal_numar_comanda" name="numar_comanda" required maxlength="100" placeholder="Ex: CMD-001">
+          </div>
         </div>
-        <div class="livrari-add-field">
-          <label for="nr_client">Nr. client *</label>
-          <input type="text" id="nr_client" name="nr_client" value="{{ old('nr_client') }}" required maxlength="100" placeholder="Ex: CL-123">
+        <div class="livrari-add-row">
+          <div class="livrari-add-field">
+            <label for="modal_localitate">Localitate *</label>
+            <input type="text" id="modal_localitate" name="localitate" required maxlength="255" placeholder="Ex: Chișinău, Bălți, Orhei...">
+          </div>
+          <div class="livrari-add-field">
+            <label for="modal_nr_client">Nr. client *</label>
+            <input type="text" id="modal_nr_client" name="nr_client" required maxlength="100" placeholder="Ex: CL-123">
+          </div>
         </div>
-      </div>
-      <div class="livrari-add-row livrari-add-row-full">
-        <div class="livrari-add-field">
-          <label for="adresa_livrarii">Adresă *</label>
-          <input type="text" id="adresa_livrarii" name="adresa_livrarii" value="{{ old('adresa_livrarii') }}" required maxlength="500" placeholder="Strada, nr., bloc, scara, apartament, cod poștal">
+        <div class="livrari-add-row livrari-add-row-full">
+          <div class="livrari-add-field">
+            <label for="modal_adresa_livrarii">Adresa *</label>
+            <input type="text" id="modal_adresa_livrarii" name="adresa_livrarii" required maxlength="500" placeholder="Strada, nr., bloc, scara, apartament, cod poștal">
+          </div>
         </div>
-      </div>
-      <div class="livrari-add-actions">
-        <button type="submit" class="livrari-btn livrari-btn-primary livrari-btn-add"><i class="fas fa-check"></i> Salvează livrarea</button>
-      </div>
-    </form>
+        <div class="livrari-add-actions" style="display: flex; gap: 12px; align-items: center;">
+          <button type="submit" class="livrari-btn livrari-btn-primary livrari-btn-add" id="livrariModalSubmitBtn"><i class="fas fa-check"></i> Salvează livrarea</button>
+          <button type="button" class="livrari-modal-close" id="livrariModalCloseBottom" style="padding: 10px 20px; font-size: 14px;">Închide</button>
+        </div>
+      </form>
+    </div>
   </div>
   @endif
 
@@ -218,7 +247,7 @@
             @if($isAdmin)<th>Operator</th>@endif
           </tr>
         </thead>
-        <tbody>
+        <tbody id="livrariTableBody">
           @forelse($livrari as $l)
           <tr>
             <td>{{ $l->numar_comanda }}</td>
@@ -233,7 +262,7 @@
             @endif
           </tr>
           @empty
-          <tr>
+          <tr id="livrariEmptyRow">
             <td colspan="{{ $isAdmin ? 9 : 8 }}" style="text-align: center; color: #9CA3AF; padding: 32px;">Nicio livrare înregistrată.</td>
           </tr>
           @endforelse
@@ -251,11 +280,117 @@
 @push('scripts')
 <script>
 (function() {
+  var modal = document.getElementById('livrariAddModal');
+  var openBtn = document.getElementById('livrariOpenModalBtn');
+  var closeBtn = document.getElementById('livrariModalClose');
+  var closeBtnBottom = document.getElementById('livrariModalCloseBottom');
+  var form = document.getElementById('livrariAddForm');
+  var successEl = document.getElementById('livrariModalSuccess');
+  var errorEl = document.getElementById('livrariModalError');
+  var submitBtn = document.getElementById('livrariModalSubmitBtn');
   var dataComanda = document.getElementById('livrari-data-comanda');
-  var dataLivrarii = document.getElementById('data_livrarii');
-  if (dataComanda && dataLivrarii) {
-    dataLivrarii.addEventListener('change', function() {
-      dataComanda.value = dataLivrarii.value;
+  var dataLivrarii = document.getElementById('modal_data_livrarii');
+  var tbody = document.getElementById('livrariTableBody');
+  var emptyRow = document.getElementById('livrariEmptyRow');
+  var isAdmin = {{ $isAdmin ? 'true' : 'false' }};
+
+  function openModal() {
+    if (modal) {
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+  function closeModal() {
+    if (modal) {
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+  }
+  function showSuccess(msg) {
+    if (successEl) { successEl.textContent = msg; successEl.classList.add('is-visible'); }
+    if (errorEl) errorEl.classList.remove('is-visible');
+  }
+  function showError(msg) {
+    if (errorEl) { errorEl.textContent = msg; errorEl.classList.add('is-visible'); }
+    if (successEl) successEl.classList.remove('is-visible');
+  }
+  function hideMessages() {
+    if (successEl) successEl.classList.remove('is-visible');
+    if (errorEl) errorEl.classList.remove('is-visible');
+  }
+  function resetForm() {
+    if (form) form.reset();
+    if (dataComanda) dataComanda.value = new Date().toISOString().slice(0, 10);
+    if (dataLivrarii) dataLivrarii.value = new Date().toISOString().slice(0, 10);
+  }
+  function addRowToTable(livrare) {
+    if (!tbody) return;
+    if (emptyRow) emptyRow.remove();
+    var colCount = isAdmin ? 9 : 8;
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td>' + (livrare.numar_comanda || '') + '</td>' +
+      '<td>' + (livrare.data || '') + '</td>' +
+      '<td>' + (livrare.localitate || '—') + '</td>' +
+      '<td>' + (livrare.adresa_livrarii || '') + '</td>' +
+      '<td>' + (livrare.nr_client || '') + '</td>' +
+      '<td>' + (livrare.data_livrarii || '') + '</td>' +
+      '<td>' + (livrare.locatie || '—') + '</td>' +
+      (isAdmin ? '<td>—</td>' : '');
+    tbody.insertBefore(tr, tbody.firstChild);
+  }
+
+  if (openBtn) openBtn.addEventListener('click', function() { hideMessages(); resetForm(); openModal(); });
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (closeBtnBottom) closeBtnBottom.addEventListener('click', closeModal);
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) closeModal();
+    });
+  }
+
+  if (dataLivrarii && dataComanda) {
+    dataLivrarii.addEventListener('change', function() { dataComanda.value = dataLivrarii.value; });
+  }
+
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (submitBtn) submitBtn.disabled = true;
+      errorEl.textContent = '';
+      hideMessages();
+      var formData = new FormData(form);
+      var csrf = document.querySelector('meta[name="csrf-token"]');
+      if (csrf) formData.append('_token', csrf.getAttribute('content'));
+
+      fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+      })
+      .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, status: r.status, data: d }; }).catch(function() { return { ok: false, status: r.status, data: {} }; }); })
+      .then(function(result) {
+        if (result.ok && result.data.success) {
+          showSuccess(result.data.message || 'Livrarea a fost adăugată.');
+          resetForm();
+          if (result.data.livrare) addRowToTable(result.data.livrare);
+        } else {
+          var msg = 'Eroare la salvare.';
+          if (result.data) {
+            if (result.data.message) msg = result.data.message;
+            else if (result.data.errors) msg = Object.values(result.data.errors).flat().join(' ');
+          }
+          showError(msg);
+        }
+      })
+      .catch(function(err) {
+        showError('Eroare de rețea. Încearcă din nou.');
+      })
+      .finally(function() {
+        if (submitBtn) submitBtn.disabled = false;
+      });
     });
   }
 })();
