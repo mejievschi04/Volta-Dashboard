@@ -390,6 +390,86 @@ class OperatoriController extends Controller
             \Log::warning('Operatori show: date_op query failed', ['operator_id' => $operator->id, 'error' => $e->getMessage()]);
         }
 
+        // Date din 1C (OnecKpiOperator) după nume – ca pe „Datele mele”; folosim când date_op e gol
+        $operatorNume = trim((string) ($operator->nume ?? ''));
+        $date1c = null;
+        $vanzariLunare1c = collect();
+        if ($operatorNume !== '') {
+            try {
+                $row1c = OnecKpiOperator::query()
+                    ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
+                    ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
+                    ->whereRaw('LOWER(TRIM(onec_kpi_operatori.operator_nume)) = ?', [mb_strtolower($operatorNume)])
+                    ->selectRaw('
+                        COALESCE(SUM(onec_kpi_operatori.vanzari_fara_tva), 0) as total_vanzari_fara_tva,
+                        COALESCE(SUM(onec_kpi_operatori.vanzari_cu_tva), 0) as total_vanzari_cu_tva,
+                        COALESCE(SUM(onec_kpi_operatori.profit), 0) as total_profit,
+                        COALESCE(SUM(onec_kpi_operatori.nr_comenzi), 0) as total_comenzi
+                    ')
+                    ->first();
+                if ($row1c && ((float) $row1c->total_vanzari_fara_tva) > 0) {
+                    $date1c = [
+                        'vanzari_fara_tva' => (float) $row1c->total_vanzari_fara_tva,
+                        'vanzari_cu_tva' => (float) $row1c->total_vanzari_cu_tva,
+                        'profit' => (float) $row1c->total_profit,
+                        'nr_comenzi' => (int) $row1c->total_comenzi,
+                    ];
+                }
+                $lunare1c = OnecKpiOperator::query()
+                    ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
+                    ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
+                    ->whereRaw('LOWER(TRIM(onec_kpi_operatori.operator_nume)) = ?', [mb_strtolower($operatorNume)])
+                    ->selectRaw('
+                        DATE_FORMAT(onec_kpi_syncs.period_start, "%Y-%m") as luna,
+                        COALESCE(SUM(onec_kpi_operatori.vanzari_fara_tva), 0) as vanzari_luna,
+                        COALESCE(SUM(onec_kpi_operatori.vanzari_cu_tva), 0) as vanzari_cu_tva,
+                        COALESCE(SUM(onec_kpi_operatori.profit), 0) as profit,
+                        COALESCE(SUM(onec_kpi_operatori.nr_comenzi), 0) as comenzi
+                    ')
+                    ->groupBy(DB::raw('DATE_FORMAT(onec_kpi_syncs.period_start, "%Y-%m")'))
+                    ->orderBy('luna', 'desc')
+                    ->get();
+                foreach ($lunare1c as $r) {
+                    $vanzariLunare1c->push((object) [
+                        'luna' => $r->luna,
+                        'luna_label' => \Carbon\Carbon::createFromFormat('Y-m', $r->luna)->translatedFormat('F Y'),
+                        'vanzari_luna' => (float) $r->vanzari_luna,
+                        'vanzari_cu_tva' => (float) $r->vanzari_cu_tva,
+                        'profit' => (float) $r->profit,
+                        'comenzi' => (int) $r->comenzi,
+                        'nr_vanzari' => (int) $r->comenzi,
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                \Log::warning('Operatori show: 1C KPI query failed', ['operator_id' => $operator->id, 'error' => $e->getMessage()]);
+            }
+        }
+
+        // Preferăm 1C pentru statistici când date_op dă 0, ca să coincidă cu „Datele mele”
+        if ($date1c !== null) {
+            $nrLuni = $vanzariLunare1c->count() ?: 1;
+            $vanzariStats = [
+                'total_vanzari' => $date1c['nr_comenzi'],
+                'total_suma_fara_tva' => $date1c['vanzari_fara_tva'],
+                'total_suma_cu_tva' => $date1c['vanzari_cu_tva'],
+                'total_profit' => $date1c['profit'],
+                'total_nr_vanzari' => $date1c['nr_comenzi'],
+                'medie_vanzari_luna' => $date1c['vanzari_fara_tva'] / $nrLuni,
+            ];
+        }
+        if ($vanzariLunare1c->isNotEmpty() && $vanzariLunare->isEmpty()) {
+            $vanzariLunare = $vanzariLunare1c;
+            foreach ($vanzariLunare1c as $v) {
+                $vanzariLunareForJs->put($v->luna, [
+                    'luna' => $v->luna,
+                    'suma_fara_tva' => $v->vanzari_luna,
+                    'suma_cu_tva' => $v->vanzari_cu_tva > 0 ? $v->vanzari_cu_tva : ($v->vanzari_luna * 1.19),
+                    'profit' => $v->profit,
+                    'nr_vanzari' => $v->nr_vanzari ?? 1,
+                ]);
+            }
+        }
+
         return view('operatori.show', [
             'operator' => $operator,
             'oferte' => $oferte,
@@ -398,6 +478,8 @@ class OperatoriController extends Controller
             'vanzariStats' => $vanzariStats,
             'vanzariLunare' => $vanzariLunare,
             'vanzariLunareForJs' => $vanzariLunareForJs,
+            'date1c' => $date1c,
+            'vanzariLunare1c' => $vanzariLunare1c,
             'canEditPhotos' => $this->canEditOperatorPhotos($operator),
         ]);
     }

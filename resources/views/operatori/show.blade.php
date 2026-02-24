@@ -78,6 +78,14 @@
         $vanzariLunaCurentaSuma = $vanzariLunaCurenta->sum('suma_fara_tva');
         $vanzariLunaCurentaProfit = $vanzariLunaCurenta->sum('profit');
         $vanzariLunaCurentaCount = $vanzariLunaCurenta->count();
+        if (isset($vanzariLunare1c) && $vanzariLunare1c->isNotEmpty()) {
+          $lunaCurenta1c = $vanzariLunare1c->firstWhere('luna', $lunaCurenta);
+          if ($lunaCurenta1c) {
+            $vanzariLunaCurentaSuma = $lunaCurenta1c->vanzari_luna ?? 0;
+            $vanzariLunaCurentaProfit = $lunaCurenta1c->profit ?? 0;
+            $vanzariLunaCurentaCount = $lunaCurenta1c->comenzi ?? $lunaCurenta1c->nr_vanzari ?? 0;
+          }
+        }
       @endphp
       @if($canEditPhotos && auth()->check() && !auth()->user()->isOperator())
       <div class="operatori-sidebar-card operatori-sidebar-card-photos">
