@@ -78,11 +78,31 @@
   .livrari-modal-error.is-visible { display: block; }
   .livrari-btn-open-modal { padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; border: none; background: linear-gradient(135deg, #FFEE00 0%, #FACC15 100%); color: #000; display: inline-flex; align-items: center; gap: 8px; }
   .livrari-btn-open-modal:hover { opacity: 0.95; }
+  /* Pagina Livrări – admin: stilizare îmbunătățită */
+  .livrari-page.livrari-page--admin { max-width: 1400px; padding: 28px 24px; }
+  .livrari-page--admin .livrari-card { border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.25); border: 1px solid rgba(255,238,0,0.12); }
+  .livrari-page--admin .livrari-card h2 { font-size: 22px; padding-bottom: 12px; border-bottom: 2px solid rgba(255,238,0,0.2); margin-bottom: 20px; }
+  .livrari-page--admin .livrari-filters { gap: 20px; padding: 8px 0; }
+  .livrari-page--admin .livrari-filters select { min-width: 180px; padding: 12px 16px; font-size: 14px; }
+  .livrari-page--admin .livrari-search-input { min-width: 260px; padding: 12px 16px; }
+  .livrari-page--admin .livrari-kpi-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+  .livrari-page--admin .livrari-kpi-box { padding: 24px; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); border: 1px solid rgba(255,238,0,0.25); }
+  .livrari-page--admin .livrari-kpi-box .label { font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .livrari-page--admin .livrari-kpi-box .value { font-size: 28px; }
+  .livrari-page--admin .livrari-per-operator { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 20px; margin-top: 24px; }
+  .livrari-page--admin .livrari-per-operator h3 { font-size: 17px; margin-bottom: 16px; color: #FFEE00; }
+  .livrari-page--admin .livrari-per-operator .livrari-table { max-width: 100%; }
+  .livrari-page--admin .livrari-per-operator th { padding: 12px 16px; }
+  .livrari-page--admin .livrari-per-operator td { padding: 12px 16px; }
+  .livrari-page--admin .livrari-table-wrap { border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
+  .livrari-page--admin .livrari-table th { padding: 16px 18px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .livrari-page--admin .livrari-table td { padding: 14px 18px; font-size: 14px; }
+  .livrari-page--admin .livrari-table tbody tr:hover { background: rgba(255,238,0,0.06); }
 </style>
 @endpush
 
 @section('content')
-<div class="livrari-page">
+<div class="livrari-page {{ $isAdmin ? 'livrari-page--admin' : '' }}">
   <h1><i class="fas fa-truck" style="margin-right: 10px;"></i> Livrări</h1>
   <p class="subtitle">{{ $isAdmin ? 'Toate livrările și KPI per operator' : 'Adaugă și vizualizează livrările tale' }}</p>
 
@@ -91,12 +111,12 @@
     $operatorsForFilter = $operatorsForFilter ?? collect();
   @endphp
 
-  <form method="get" action="{{ route('livrari') }}" class="livrari-card" style="margin-bottom: 20px;">
+  <form method="get" action="{{ route('livrari') }}" class="livrari-card livrari-filters-card" style="margin-bottom: 20px;">
     <h2 style="margin-bottom: 16px;"><i class="fas fa-filter"></i> Filtre și căutare</h2>
     <div class="livrari-filters">
       <div class="livrari-search-wrap">
         <label for="cauta">Căutare</label>
-        <input type="text" id="cauta" name="cauta" value="{{ $filters['cauta'] ?? '' }}" placeholder="Nr. comandă, adresă, nr. client..." class="livrari-search-input" maxlength="200">
+        <input type="text" id="cauta" name="cauta" value="{{ $filters['cauta'] ?? '' }}" placeholder="Nr. comandă, adresă, raion, nr. telefon..." class="livrari-search-input" maxlength="200">
       </div>
       <div>
         <label>Lună</label>
@@ -146,7 +166,7 @@
   @endif
 
   @if($isAdmin && ($perOperator->isNotEmpty() || $totalLivrari > 0))
-  <div class="livrari-card">
+  <div class="livrari-card livrari-admin-kpi">
     <h2><i class="fas fa-chart-bar"></i> KPI Livrări</h2>
     <div class="livrari-kpi-grid">
       <div class="livrari-kpi-box">
@@ -155,7 +175,7 @@
       </div>
     </div>
     <div class="livrari-per-operator">
-      <h3>Livrări per operator</h3>
+      <h3><i class="fas fa-users"></i> Livrări per operator</h3>
       <table class="livrari-table">
         <thead>
           <tr>
@@ -190,7 +210,7 @@
         <h2 class="livrari-modal-title" id="livrariModalTitle"><i class="fas fa-truck"></i> Adaugă livrare nouă</h2>
         <button type="button" class="livrari-modal-close" id="livrariModalClose" aria-label="Închide">&times;</button>
       </div>
-      <p class="livrari-add-hint" style="margin-bottom: 16px;">Locația (În Chișinău / În afara) se stabilește automat după localitate. După salvare poți introduce altă livrare sau închide.</p>
+      <p class="livrari-add-hint" style="margin-bottom: 16px;">Locația (În Chișinău / În afara) se stabilește automat după raion. După salvare poți introduce altă livrare sau închide.</p>
       <div class="livrari-modal-success" id="livrariModalSuccess"></div>
       <div class="livrari-modal-error" id="livrariModalError"></div>
       <form id="livrariAddForm" action="{{ route('livrari.store') }}" method="post" class="livrari-add-form">
@@ -208,12 +228,12 @@
         </div>
         <div class="livrari-add-row">
           <div class="livrari-add-field">
-            <label for="modal_localitate">Localitate *</label>
+            <label for="modal_localitate">Raion *</label>
             <input type="text" id="modal_localitate" name="localitate" required maxlength="255" placeholder="Ex: Chișinău, Bălți, Orhei...">
           </div>
           <div class="livrari-add-field">
-            <label for="modal_nr_client">Nr. client *</label>
-            <input type="text" id="modal_nr_client" name="nr_client" required maxlength="100" placeholder="Ex: CL-123">
+            <label for="modal_nr_client">Nr. de telefon *</label>
+            <input type="text" id="modal_nr_client" name="nr_client" required maxlength="100" placeholder="Ex: 069123456 sau 37378123456">
           </div>
         </div>
         <div class="livrari-add-row livrari-add-row-full">
@@ -231,7 +251,7 @@
   </div>
   @endif
 
-  <div class="livrari-card">
+  <div class="livrari-card livrari-table-card">
     <h2><i class="fas fa-list"></i> {{ $isAdmin ? 'Toate livrările' : 'Livrările mele' }}</h2>
     <div class="livrari-table-wrap">
       <table class="livrari-table">

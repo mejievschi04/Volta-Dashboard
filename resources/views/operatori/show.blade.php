@@ -73,7 +73,7 @@
       @php
         $lunaCurenta = now()->format('Y-m');
         $vanzariLunaCurenta = $vanzari->filter(function($v) use ($lunaCurenta) {
-          return $v->data->format('Y-m') == $lunaCurenta;
+          return $v->data && $v->data->format('Y-m') == $lunaCurenta;
         });
         $vanzariLunaCurentaSuma = $vanzariLunaCurenta->sum('suma_fara_tva');
         $vanzariLunaCurentaProfit = $vanzariLunaCurenta->sum('profit');

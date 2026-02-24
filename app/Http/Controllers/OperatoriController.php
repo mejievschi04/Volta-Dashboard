@@ -300,69 +300,92 @@ class OperatoriController extends Controller
             ->orWhere('nume', $id)
             ->firstOrFail();
 
-        // Obține toate ofertele pentru operator
-        $oferte = Oferte::where(function($query) use ($operator) {
-            $query->where('operator_id', $operator->id)
-                  ->orWhere('operator', $operator->nume);
-        })
-        ->orderBy('data_trimisa', 'desc')
-        ->get();
-
-        // Statistici oferte
+        $oferte = collect();
         $oferteStats = [
-            'total_oferte' => $oferte->count(),
-            'oferte_trimise' => $oferte->where('status', 'trimise')->count(),
-            'oferte_finalizate' => $oferte->where('status', 'finalizate')->count(),
-            'oferte_refuzate' => $oferte->where('status', 'refuzate')->count(),
-            'valoare_totala' => $oferte->sum('valoare'),
-            'valoare_finalizate' => $oferte->where('status', 'finalizate')->sum('valoare'),
+            'total_oferte' => 0,
+            'oferte_trimise' => 0,
+            'oferte_finalizate' => 0,
+            'oferte_refuzate' => 0,
+            'valoare_totala' => 0,
+            'valoare_finalizate' => 0,
         ];
-
-        // Statistici vânzări
-        $vanzari = DateOp::where('operator_id', $operator->id)
-            ->orderBy('data', 'desc')
-            ->get();
-
+        $vanzari = collect();
         $vanzariStats = [
-            'total_vanzari' => $vanzari->sum('nr_vanzari'),
-            'total_suma_fara_tva' => $vanzari->sum('suma_fara_tva'),
-            'total_suma_cu_tva' => $vanzari->sum('suma_cu_tva'),
-            'total_profit' => $vanzari->sum('profit'),
-            'total_nr_vanzari' => $vanzari->sum('nr_vanzari'),
-            'medie_vanzari_luna' => $this->calculateAverageSalesPerMonth($vanzari),
+            'total_vanzari' => 0,
+            'total_suma_fara_tva' => 0,
+            'total_suma_cu_tva' => 0,
+            'total_profit' => 0,
+            'total_nr_vanzari' => 0,
+            'medie_vanzari_luna' => 0,
         ];
-
-        // Statistici vânzări pe luni
-        $vanzariLunare = DateOp::where('operator_id', $operator->id)
-            ->selectRaw('
-                DATE_FORMAT(data, "%Y-%m") as luna,
-                DATE_FORMAT(data, "%Y") as an,
-                DATE_FORMAT(data, "%m") as luna_num,
-                DATE_FORMAT(data, "%M %Y") as luna_label,
-                COUNT(*) as comenzi,
-                SUM(suma_fara_tva) as vanzari_luna,
-                SUM(profit) as profit,
-                SUM(nr_vanzari) as nr_vanzari
-            ')
-            ->groupBy('luna', 'an', 'luna_num', 'luna_label')
-            ->orderBy('luna', 'desc')
-            ->get();
-
-        // Calculează suma cu TVA pentru fiecare lună (pentru JavaScript)
+        $vanzariLunare = collect();
         $vanzariLunareForJs = collect();
-        foreach ($vanzariLunare as $v) {
-            $vanzariLuna = DateOp::where('operator_id', $operator->id)
-                ->whereRaw('DATE_FORMAT(data, "%Y-%m") = ?', [$v->luna])
+
+        try {
+            $oferte = Oferte::where(function ($query) use ($operator) {
+                $query->where('operator_id', $operator->id)
+                    ->orWhere('operator', $operator->nume);
+            })
+                ->orderBy('data_trimisa', 'desc')
                 ->get();
-            $sumaCuTva = $vanzariLuna->sum('suma_cu_tva');
-            
-            $vanzariLunareForJs->put($v->luna, [
-                'luna' => $v->luna,
-                'suma_fara_tva' => $v->vanzari_luna,
-                'suma_cu_tva' => $sumaCuTva > 0 ? $sumaCuTva : ($v->vanzari_luna * 1.19),
-                'profit' => $v->profit,
-                'nr_vanzari' => $v->nr_vanzari ?? 1,
-            ]);
+
+            $oferteStats = [
+                'total_oferte' => $oferte->count(),
+                'oferte_trimise' => $oferte->where('status', 'trimise')->count(),
+                'oferte_finalizate' => $oferte->where('status', 'finalizate')->count(),
+                'oferte_refuzate' => $oferte->where('status', 'refuzate')->count(),
+                'valoare_totala' => $oferte->sum('valoare'),
+                'valoare_finalizate' => $oferte->where('status', 'finalizate')->sum('valoare'),
+            ];
+        } catch (\Throwable $e) {
+            \Log::warning('Operatori show: oferte query failed', ['operator_id' => $operator->id, 'error' => $e->getMessage()]);
+        }
+
+        try {
+            $vanzari = DateOp::where('operator_id', $operator->id)
+                ->orderBy('data', 'desc')
+                ->get();
+
+            $vanzariStats = [
+                'total_vanzari' => $vanzari->sum('nr_vanzari'),
+                'total_suma_fara_tva' => $vanzari->sum('suma_fara_tva'),
+                'total_suma_cu_tva' => $vanzari->sum('suma_cu_tva'),
+                'total_profit' => $vanzari->sum('profit'),
+                'total_nr_vanzari' => $vanzari->sum('nr_vanzari'),
+                'medie_vanzari_luna' => $this->calculateAverageSalesPerMonth($vanzari),
+            ];
+
+            $vanzariLunare = DateOp::where('operator_id', $operator->id)
+                ->whereNotNull('data')
+                ->selectRaw('
+                    DATE_FORMAT(data, "%Y-%m") as luna,
+                    DATE_FORMAT(data, "%Y") as an,
+                    DATE_FORMAT(data, "%m") as luna_num,
+                    DATE_FORMAT(data, "%M %Y") as luna_label,
+                    COUNT(*) as comenzi,
+                    SUM(suma_fara_tva) as vanzari_luna,
+                    SUM(profit) as profit,
+                    SUM(nr_vanzari) as nr_vanzari
+                ')
+                ->groupBy('luna', 'an', 'luna_num', 'luna_label')
+                ->orderBy('luna', 'desc')
+                ->get();
+
+            foreach ($vanzariLunare as $v) {
+                $vanzariLuna = DateOp::where('operator_id', $operator->id)
+                    ->whereRaw('DATE_FORMAT(data, "%Y-%m") = ?', [$v->luna])
+                    ->get();
+                $sumaCuTva = $vanzariLuna->sum('suma_cu_tva');
+                $vanzariLunareForJs->put($v->luna, [
+                    'luna' => $v->luna,
+                    'suma_fara_tva' => $v->vanzari_luna,
+                    'suma_cu_tva' => $sumaCuTva > 0 ? $sumaCuTva : ($v->vanzari_luna * 1.19),
+                    'profit' => $v->profit,
+                    'nr_vanzari' => $v->nr_vanzari ?? 1,
+                ]);
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('Operatori show: date_op query failed', ['operator_id' => $operator->id, 'error' => $e->getMessage()]);
         }
 
         return view('operatori.show', [
