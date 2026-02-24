@@ -12,6 +12,7 @@ class Livrare extends Model
         'numar_comanda',
         'data',
         'adresa_livrarii',
+        'oras',
         'nr_client',
         'data_livrarii',
         'in_chisinau',

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Oferte;
 use App\Models\Operator;
 use App\Models\DateOp;
+use App\Models\Livrare;
 use App\Models\OnecKpiOperator;
 use Illuminate\Support\Facades\DB;
 
@@ -264,12 +265,31 @@ class OperatoriController extends Controller
         }
         $canEditPhotos = $operatorRecord !== null;
 
+        $lunaCurenta = now()->format('Y-m');
+        $nrLivrariTotal = Livrare::where('user_id', $user->id)->count();
+        $nrLivrariLunaCurenta = Livrare::where('user_id', $user->id)
+            ->whereRaw('DATE_FORMAT(data_livrarii, "%Y-%m") = ?', [$lunaCurenta])
+            ->count();
+
+        $comenziTotal = $date ? (int) $date['nr_comenzi'] : 0;
+        $comenziLunaCurenta = 0;
+        if ($vanzariLunare1c->isNotEmpty()) {
+            $lunaData = $vanzariLunare1c->firstWhere('luna', $lunaCurenta);
+            $comenziLunaCurenta = $lunaData ? (int) $lunaData->comenzi : 0;
+        }
+        $pickupTotal = max(0, $comenziTotal - $nrLivrariTotal);
+        $pickupLunaCurenta = max(0, $comenziLunaCurenta - $nrLivrariLunaCurenta);
+
         return view('operatori.me', [
             'operatorNume' => $operatorNume ?: $fullName ?: $user->username,
             'date' => $date,
             'vanzariLunare1c' => $vanzariLunare1c,
             'operatorRecord' => $operatorRecord,
             'canEditPhotos' => $canEditPhotos,
+            'nrLivrariTotal' => $nrLivrariTotal,
+            'nrLivrariLunaCurenta' => $nrLivrariLunaCurenta,
+            'pickupTotal' => $pickupTotal,
+            'pickupLunaCurenta' => $pickupLunaCurenta,
         ]);
     }
 

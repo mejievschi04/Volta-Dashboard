@@ -41,6 +41,7 @@ class LivrariController extends Controller
             $query->where(function ($q) use ($term) {
                 $q->where('numar_comanda', 'like', $term)
                     ->orWhere('adresa_livrarii', 'like', $term)
+                    ->orWhere('oras', 'like', $term)
                     ->orWhere('nr_client', 'like', $term);
             });
         }
@@ -65,6 +66,7 @@ class LivrariController extends Controller
                 $baseCount->where(function ($q) use ($term) {
                     $q->where('numar_comanda', 'like', $term)
                         ->orWhere('adresa_livrarii', 'like', $term)
+                        ->orWhere('oras', 'like', $term)
                         ->orWhere('nr_client', 'like', $term);
                 });
             }
@@ -86,6 +88,7 @@ class LivrariController extends Controller
                 $perOperatorQuery->where(function ($q) use ($term) {
                     $q->where('numar_comanda', 'like', $term)
                         ->orWhere('adresa_livrarii', 'like', $term)
+                        ->orWhere('oras', 'like', $term)
                         ->orWhere('nr_client', 'like', $term);
                 });
             }
@@ -125,6 +128,7 @@ class LivrariController extends Controller
 
     /**
      * Salvează o livrare nouă (operator sau admin).
+     * Locația (în Chișinău / în afara) se setează automat după oraș: dacă orașul = Chișinău → în Chișinău, altfel → în afara.
      */
     public function store(Request $request)
     {
@@ -132,15 +136,23 @@ class LivrariController extends Controller
             'numar_comanda' => 'required|string|max:100',
             'data' => 'required|date',
             'adresa_livrarii' => 'required|string|max:500',
+            'oras' => 'required|string|max:255',
             'nr_client' => 'required|string|max:100',
             'data_livrarii' => 'required|date',
-            'in_chisinau' => 'nullable|boolean',
         ]);
 
+        $oras = trim((string) $validated['oras']);
+        $validated['in_chisinau'] = $this->isChisinau($oras);
         $validated['user_id'] = Auth::id();
-        $validated['in_chisinau'] = (bool) ($request->input('in_chisinau', true));
         Livrare::create($validated);
 
         return redirect()->route('livrari')->with('success', 'Livrarea a fost adăugată.');
+    }
+
+    /** Returnează true dacă orașul este Chișinău (ignoră diacritice și majuscule). */
+    private function isChisinau(string $oras): bool
+    {
+        $norm = mb_strtolower(trim($oras));
+        return in_array($norm, ['chisinau', 'chișinău', 'chișinau', 'chisinău'], true);
     }
 }

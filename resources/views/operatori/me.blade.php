@@ -86,6 +86,24 @@
               <div style="color: #fff; font-size: 16px; font-weight: 700;">{{ $lunaCurentaData ? (int) $lunaCurentaData->comenzi : 0 }}</div>
             </div>
           </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 10px; border: 1px solid rgba(245, 158, 11, 0.2);">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(245, 158, 11, 0.2); display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-truck" style="color: #F59E0B;"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Livrări (luna curentă)</div>
+              <div style="color: #F59E0B; font-size: 16px; font-weight: 700;">{{ $nrLivrariLunaCurenta ?? 0 }}</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(139, 92, 246, 0.1); border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.2);">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(139, 92, 246, 0.2); display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-store" style="color: #8B5CF6;"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Pickup (luna curentă)</div>
+              <div style="color: #8B5CF6; font-size: 16px; font-weight: 700;">{{ $pickupLunaCurenta ?? 0 }}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -118,6 +136,14 @@
           <div style="background: rgba(255, 238, 0, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(255, 238, 0, 0.2); text-align: center;">
             <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Comenzi</div>
             <div style="color: #FFEE00; font-size: 22px; font-weight: 800;">{{ number_format($date['nr_comenzi'], 0, ',', '.') }}</div>
+          </div>
+          <div style="background: rgba(245, 158, 11, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.2); text-align: center;">
+            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Livrări (total)</div>
+            <div style="color: #F59E0B; font-size: 22px; font-weight: 800;">{{ number_format($nrLivrariTotal ?? 0, 0, ',', '.') }}</div>
+          </div>
+          <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.2); text-align: center;">
+            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Pickup (total)</div>
+            <div style="color: #8B5CF6; font-size: 22px; font-weight: 800;">{{ number_format($pickupTotal ?? 0, 0, ',', '.') }}</div>
           </div>
         </div>
       </div>

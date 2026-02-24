@@ -165,7 +165,7 @@
   @if(!$isAdmin)
   <div class="livrari-card livrari-add-card">
     <h2><i class="fas fa-plus-circle"></i> Adaugă livrare nouă</h2>
-    <p class="livrari-add-hint">Completează câmpurile și apasă Salvează. Data comenzii se completează automat cu data de azi.</p>
+    <p class="livrari-add-hint">Completează câmpurile și apasă Salvează. Locația (În Chișinău / În afara) se stabilește automat după oraș.</p>
     <form action="{{ route('livrari.store') }}" method="post" class="livrari-add-form">
       @csrf
       <input type="hidden" name="data" value="{{ old('data', date('Y-m-d')) }}" id="livrari-data-comanda">
@@ -175,17 +175,14 @@
           <input type="date" id="data_livrarii" name="data_livrarii" value="{{ old('data_livrarii', date('Y-m-d')) }}" required>
         </div>
         <div class="livrari-add-field">
-          <label for="in_chisinau">Locație *</label>
-          <select id="in_chisinau" name="in_chisinau" class="livrari-select-locatie">
-            <option value="1" {{ old('in_chisinau', '1') == '1' ? 'selected' : '' }}>În Chișinău</option>
-            <option value="0" {{ old('in_chisinau') === '0' ? 'selected' : '' }}>În afara</option>
-          </select>
+          <label for="numar_comanda">Număr comandă *</label>
+          <input type="text" id="numar_comanda" name="numar_comanda" value="{{ old('numar_comanda') }}" required maxlength="100" placeholder="Ex: CMD-001">
         </div>
       </div>
       <div class="livrari-add-row">
         <div class="livrari-add-field">
-          <label for="numar_comanda">Număr comandă *</label>
-          <input type="text" id="numar_comanda" name="numar_comanda" value="{{ old('numar_comanda') }}" required maxlength="100" placeholder="Ex: CMD-001">
+          <label for="oras">Oraș *</label>
+          <input type="text" id="oras" name="oras" value="{{ old('oras') }}" required maxlength="255" placeholder="Ex: Chișinău, Bălți, Orhei...">
         </div>
         <div class="livrari-add-field">
           <label for="nr_client">Nr. client *</label>
@@ -194,8 +191,8 @@
       </div>
       <div class="livrari-add-row livrari-add-row-full">
         <div class="livrari-add-field">
-          <label for="adresa_livrarii">Adresa livrării *</label>
-          <input type="text" id="adresa_livrarii" name="adresa_livrarii" value="{{ old('adresa_livrarii') }}" required maxlength="500" placeholder="Strada, nr., oraș, cod poștal">
+          <label for="adresa_livrarii">Adresă *</label>
+          <input type="text" id="adresa_livrarii" name="adresa_livrarii" value="{{ old('adresa_livrarii') }}" required maxlength="500" placeholder="Strada, nr., bloc, scara, apartament, cod poștal">
         </div>
       </div>
       <div class="livrari-add-actions">
@@ -213,7 +210,8 @@
           <tr>
             <th>Număr comandă</th>
             <th>Data</th>
-            <th>Adresa livrării</th>
+            <th>Oraș</th>
+            <th>Adresă</th>
             <th>Nr. client</th>
             <th>Data livrării</th>
             <th>Locație</th>
@@ -225,6 +223,7 @@
           <tr>
             <td>{{ $l->numar_comanda }}</td>
             <td>{{ $l->data->format('d.m.Y') }}</td>
+            <td>{{ $l->oras ?? '—' }}</td>
             <td>{{ $l->adresa_livrarii }}</td>
             <td>{{ $l->nr_client }}</td>
             <td>{{ $l->data_livrarii->format('d.m.Y') }}</td>
@@ -235,7 +234,7 @@
           </tr>
           @empty
           <tr>
-            <td colspan="{{ $isAdmin ? 8 : 7 }}" style="text-align: center; color: #9CA3AF; padding: 32px;">Nicio livrare înregistrată.</td>
+            <td colspan="{{ $isAdmin ? 9 : 8 }}" style="text-align: center; color: #9CA3AF; padding: 32px;">Nicio livrare înregistrată.</td>
           </tr>
           @endforelse
         </tbody>
