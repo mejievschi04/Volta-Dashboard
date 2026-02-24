@@ -46,42 +46,38 @@
 
     <section class="operatori-table-section">
       <h2 class="operatori-table-title"><i class="fas fa-list"></i> Lista operatori</h2>
-      <div class="operatori-table-wrap">
-        <table class="operatori-table">
-          <thead>
-            <tr>
-              <th>Operator</th>
-              <th class="tc">Vânzări fără TVA</th>
-              <th class="tc">Profit</th>
-              <th class="tc">Comenzi</th>
-              <th class="tc">Acțiuni</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($operatori1c as $op)
-            <tr>
-              <td><strong>{{ $op['nume'] }}</strong></td>
-              <td class="tc">{{ number_format($op['vanzari_fara_tva'], 2, ',', '.') }} MDL</td>
-              <td class="tc operatori-profit">{{ number_format($op['profit'], 2, ',', '.') }} MDL</td>
-              <td class="tc">{{ number_format($op['nr_comenzi'], 0, ',', '.') }}</td>
-              <td class="tc operatori-actions">
-                @if(!empty($op['operator_id']))
-                <a href="{{ route('operatori.show', $op['operator_id']) }}" class="operatori-btn operatori-btn-report"><i class="fas fa-chart-line"></i> Raport detaliat</a>
-                @else
-                <a href="{{ route('operatori.raport', ['nume' => $op['nume']]) }}" class="operatori-btn operatori-btn-report"><i class="fas fa-chart-line"></i> Raport detaliat</a>
-                @endif
-                @if(auth()->check() && in_array(strtolower(auth()->user()->role ?? ''), ['admin', 'administrator']))
-                <form action="{{ route('operatori.toggle-activ') }}" method="post" class="operatori-form-inline" onsubmit="return confirm('Dezactivezi acest operator? Nu va mai apărea în listă.');">
-                  @csrf
-                  <input type="hidden" name="nume" value="{{ $op['nume'] }}">
-                  <button type="submit" class="operatori-btn operatori-btn-deactivate"><i class="fas fa-user-slash"></i> Dezactivează</button>
-                </form>
-                @endif
-              </td>
-            </tr>
-            @endforeach
-          </tbody>
-        </table>
+      <div class="operatori-list-grid">
+        @foreach($operatori1c as $op)
+        <div class="operatori-list-card">
+          <div class="operatori-list-card-name">{{ $op['nume'] }}</div>
+          <div class="operatori-list-card-row">
+            <span class="operatori-list-card-label">Vânzări fără TVA</span>
+            <span class="operatori-list-card-value">{{ number_format($op['vanzari_fara_tva'], 2, ',', '.') }} MDL</span>
+          </div>
+          <div class="operatori-list-card-row">
+            <span class="operatori-list-card-label">Profit</span>
+            <span class="operatori-list-card-value operatori-profit">{{ number_format($op['profit'], 2, ',', '.') }} MDL</span>
+          </div>
+          <div class="operatori-list-card-row">
+            <span class="operatori-list-card-label">Comenzi</span>
+            <span class="operatori-list-card-value">{{ number_format($op['nr_comenzi'], 0, ',', '.') }}</span>
+          </div>
+          <div class="operatori-list-card-actions">
+            @if(!empty($op['operator_id']))
+            <a href="{{ route('operatori.show', $op['operator_id']) }}" class="operatori-btn operatori-btn-report"><i class="fas fa-chart-line"></i> Raport detaliat</a>
+            @else
+            <a href="{{ route('operatori.raport', ['nume' => $op['nume']]) }}" class="operatori-btn operatori-btn-report"><i class="fas fa-chart-line"></i> Raport detaliat</a>
+            @endif
+            @if(auth()->check() && in_array(strtolower(auth()->user()->role ?? ''), ['admin', 'administrator']))
+            <form action="{{ route('operatori.toggle-activ') }}" method="post" class="operatori-form-inline" onsubmit="return confirm('Dezactivezi acest operator? Nu va mai apărea în listă.');">
+              @csrf
+              <input type="hidden" name="nume" value="{{ $op['nume'] }}">
+              <button type="submit" class="operatori-btn operatori-btn-deactivate"><i class="fas fa-user-slash"></i> Dezactivează</button>
+            </form>
+            @endif
+          </div>
+        </div>
+        @endforeach
       </div>
     </section>
   </div>
