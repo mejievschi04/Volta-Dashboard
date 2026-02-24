@@ -100,7 +100,7 @@
               <i class="fas fa-store" style="color: #8B5CF6;"></i>
             </div>
             <div style="flex: 1;">
-              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Pickup (luna curentă)</div>
+              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Pick-up (luna curentă)</div>
               <div style="color: #8B5CF6; font-size: 16px; font-weight: 700;">{{ $pickupLunaCurenta ?? 0 }}</div>
             </div>
           </div>
@@ -142,7 +142,7 @@
             <div style="color: #F59E0B; font-size: 22px; font-weight: 800;">{{ number_format($nrLivrariTotal ?? 0, 0, ',', '.') }}</div>
           </div>
           <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.2); text-align: center;">
-            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Pickup (total)</div>
+            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Pick-up (total)</div>
             <div style="color: #8B5CF6; font-size: 22px; font-weight: 800;">{{ number_format($pickupTotal ?? 0, 0, ',', '.') }}</div>
           </div>
         </div>

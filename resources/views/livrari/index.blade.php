@@ -165,7 +165,7 @@
   @if(!$isAdmin)
   <div class="livrari-card livrari-add-card">
     <h2><i class="fas fa-plus-circle"></i> Adaugă livrare nouă</h2>
-    <p class="livrari-add-hint">Completează câmpurile și apasă Salvează. Locația (În Chișinău / În afara) se stabilește automat după oraș.</p>
+    <p class="livrari-add-hint">Completează câmpurile și apasă Salvează. Locația (În Chișinău / În afara) se stabilește automat după localitate.</p>
     <form action="{{ route('livrari.store') }}" method="post" class="livrari-add-form">
       @csrf
       <input type="hidden" name="data" value="{{ old('data', date('Y-m-d')) }}" id="livrari-data-comanda">
@@ -181,8 +181,8 @@
       </div>
       <div class="livrari-add-row">
         <div class="livrari-add-field">
-          <label for="oras">Oraș *</label>
-          <input type="text" id="oras" name="oras" value="{{ old('oras') }}" required maxlength="255" placeholder="Ex: Chișinău, Bălți, Orhei...">
+          <label for="localitate">Localitate *</label>
+          <input type="text" id="localitate" name="localitate" value="{{ old('localitate') }}" required maxlength="255" placeholder="Ex: Chișinău, Bălți, Orhei...">
         </div>
         <div class="livrari-add-field">
           <label for="nr_client">Nr. client *</label>
@@ -210,8 +210,8 @@
           <tr>
             <th>Număr comandă</th>
             <th>Data</th>
-            <th>Oraș</th>
-            <th>Adresă</th>
+            <th>Localitate</th>
+            <th>Adresa</th>
             <th>Nr. client</th>
             <th>Data livrării</th>
             <th>Locație</th>
@@ -223,7 +223,7 @@
           <tr>
             <td>{{ $l->numar_comanda }}</td>
             <td>{{ $l->data->format('d.m.Y') }}</td>
-            <td>{{ $l->oras ?? '—' }}</td>
+            <td>{{ $l->localitate ?? '—' }}</td>
             <td>{{ $l->adresa_livrarii }}</td>
             <td>{{ $l->nr_client }}</td>
             <td>{{ $l->data_livrarii->format('d.m.Y') }}</td>

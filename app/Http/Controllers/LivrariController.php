@@ -41,7 +41,7 @@ class LivrariController extends Controller
             $query->where(function ($q) use ($term) {
                 $q->where('numar_comanda', 'like', $term)
                     ->orWhere('adresa_livrarii', 'like', $term)
-                    ->orWhere('oras', 'like', $term)
+                    ->orWhere('localitate', 'like', $term)
                     ->orWhere('nr_client', 'like', $term);
             });
         }
@@ -66,7 +66,7 @@ class LivrariController extends Controller
                 $baseCount->where(function ($q) use ($term) {
                     $q->where('numar_comanda', 'like', $term)
                         ->orWhere('adresa_livrarii', 'like', $term)
-                        ->orWhere('oras', 'like', $term)
+                        ->orWhere('localitate', 'like', $term)
                         ->orWhere('nr_client', 'like', $term);
                 });
             }
@@ -88,7 +88,7 @@ class LivrariController extends Controller
                 $perOperatorQuery->where(function ($q) use ($term) {
                     $q->where('numar_comanda', 'like', $term)
                         ->orWhere('adresa_livrarii', 'like', $term)
-                        ->orWhere('oras', 'like', $term)
+                        ->orWhere('localitate', 'like', $term)
                         ->orWhere('nr_client', 'like', $term);
                 });
             }
@@ -136,23 +136,23 @@ class LivrariController extends Controller
             'numar_comanda' => 'required|string|max:100',
             'data' => 'required|date',
             'adresa_livrarii' => 'required|string|max:500',
-            'oras' => 'required|string|max:255',
+            'localitate' => 'required|string|max:255',
             'nr_client' => 'required|string|max:100',
             'data_livrarii' => 'required|date',
         ]);
 
-        $oras = trim((string) $validated['oras']);
-        $validated['in_chisinau'] = $this->isChisinau($oras);
+        $localitate = trim((string) $validated['localitate']);
+        $validated['in_chisinau'] = $this->isChisinau($localitate);
         $validated['user_id'] = Auth::id();
         Livrare::create($validated);
 
         return redirect()->route('livrari')->with('success', 'Livrarea a fost adăugată.');
     }
 
-    /** Returnează true dacă orașul este Chișinău (ignoră diacritice și majuscule). */
-    private function isChisinau(string $oras): bool
+    /** Returnează true dacă localitatea este Chișinău (ignoră diacritice și majuscule). */
+    private function isChisinau(string $localitate): bool
     {
-        $norm = mb_strtolower(trim($oras));
+        $norm = mb_strtolower(trim($localitate));
         return in_array($norm, ['chisinau', 'chișinău', 'chișinau', 'chisinău'], true);
     }
 }
