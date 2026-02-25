@@ -654,6 +654,9 @@ function updateKPICards(data1, data2) {
     { key: 'progres_plan', label: 'Progres Plan', suffix: '%' },
     { key: 'comenzi', label: 'Comenzi', suffix: '' },
     { key: 'comenzi_zi', label: 'Comenzi/Zi', suffix: '' },
+    { key: 'cec_mediu', label: 'CEC mediu', suffix: 'MDL' },
+    { key: 'total_livrari_luna', label: 'Total livrări lună', suffix: '' },
+    { key: 'pickup', label: 'Pickup', suffix: '' },
     { key: 'sesiuni', label: 'Sesiuni', suffix: '' },
     { key: 'conversie', label: 'Conversie', suffix: '%' },
     { key: 'profit', label: 'Profit', suffix: 'MDL' },
@@ -890,6 +893,9 @@ function updateTable(data1, data2) {
     { key: 'prognoza_plan_procent', label: 'Prognoză Plan %', suffix: '%' },
     { key: 'comenzi', label: 'Comenzi', suffix: '' },
     { key: 'comenzi_zi', label: 'Comenzi/Zi', suffix: '' },
+    { key: 'cec_mediu', label: 'CEC mediu', suffix: 'MDL' },
+    { key: 'total_livrari_luna', label: 'Total livrări lună', suffix: '' },
+    { key: 'pickup', label: 'Pickup', suffix: '' },
     { key: 'sesiuni', label: 'Sesiuni', suffix: '' },
     { key: 'conversie', label: 'Conversie', suffix: '%' }
   ];

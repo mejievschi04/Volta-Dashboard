@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\PlanVanzari;
 use App\Models\TrafficSource;
 use App\Models\OnecKpiSync;
+use App\Models\Livrare;
 use Illuminate\Support\Facades\Auth;
 
 class KpiController extends Controller
@@ -92,8 +93,14 @@ class KpiController extends Controller
             // Prognoză plan %
             $prognozaPlanProcent = $planLuna > 0 ? round(($prognozaPlan / $planLuna) * 100, 2) : 0;
             
-            // Valoare medie comandă
-            $valoareMedie = $comenzi > 0 ? round($vanzariLuna / $comenzi, 2) : 0;
+            // Valoare medie comandă (CEC mediu = suma fără TVA / nr comenzi)
+            $cecMediu = $comenzi > 0 ? round($vanzariLuna / $comenzi, 2) : 0;
+            
+            // Total livrări în luna selectată (din tabelul livrari)
+            $totalLivrariLuna = Livrare::whereRaw("DATE_FORMAT(data_livrarii, '%Y-%m') = ?", [$luna])->count();
+            
+            // Pickup = total comenzi - livrări
+            $pickup = max(0, $comenzi - $totalLivrariLuna);
             
             // Progres zilnic
             $progresZilnic = $zileLuna > 0 ? round(($zileTrecute / $zileLuna) * 100, 2) : 0;
@@ -113,7 +120,10 @@ class KpiController extends Controller
                 'comenzi' => $comenzi,
                 'comenzi_zi' => $comenziZi,
                 'conversie' => $conversie,
-                'valoare_medie' => $valoareMedie,
+                'valoare_medie' => $cecMediu,
+                'cec_mediu' => $cecMediu,
+                'total_livrari_luna' => $totalLivrariLuna,
+                'pickup' => $pickup,
                 'zile_activitate' => 0,
                 'progres_zilnic' => $progresZilnic,
                 'kpi_source' => $onecSync ? 'onec_db' : 'onec_db',

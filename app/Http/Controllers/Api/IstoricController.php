@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\PlanVanzari;
 use App\Models\TrafficSource;
 use App\Models\OnecKpiSync;
+use App\Models\Livrare;
 use Illuminate\Support\Facades\DB;
 
 class IstoricController extends Controller
@@ -88,6 +89,9 @@ class IstoricController extends Controller
                 $conversie = $totalSesiuni > 0 ? round(($comenzi / $totalSesiuni) * 100, 2) : 0;
                 $progresPlan = $planLuna > 0 ? round(($vanzariLuna / $planLuna) * 100, 2) : 0;
                 $diferentaPlan = $vanzariLuna - $planLuna;
+                $cecMediu = $comenzi > 0 ? round($vanzariLuna / $comenzi, 2) : 0;
+                $totalLivrariLuna = Livrare::whereRaw("DATE_FORMAT(data_livrarii, '%Y-%m') = ?", [$luna])->count();
+                $pickup = max(0, $comenzi - $totalLivrariLuna);
                 
                 // Calculează zilele trecute pentru prognoză
                 $lunaSelectata = strtotime($luna . '-01');
@@ -127,6 +131,9 @@ class IstoricController extends Controller
                     'comenzi_zi' => $comenziZi,
                     'sesiuni' => $totalSesiuni,
                     'conversie' => $conversie,
+                    'cec_mediu' => $cecMediu,
+                    'total_livrari_luna' => $totalLivrariLuna,
+                    'pickup' => $pickup,
                     'zile_activitate' => 0,
                     'kpi_source' => 'onec_db',
                 ];

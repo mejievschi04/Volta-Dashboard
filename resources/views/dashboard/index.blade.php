@@ -74,6 +74,18 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
     <h4>Vânzări cu TVA</h4>
     <div class="value" id="vanzari-cu-tva">-</div>
   </div>
+  <div class="card">
+    <h4>CEC mediu</h4>
+    <div class="value" id="cec-mediu">-</div>
+  </div>
+  <div class="card">
+    <h4>Total livrări lună</h4>
+    <div class="value" id="total-livrari-luna">-</div>
+  </div>
+  <div class="card">
+    <h4>Pickup</h4>
+    <div class="value" id="pickup">-</div>
+  </div>
 </div>
 
 <!-- GRAFICE -->
@@ -322,7 +334,10 @@ async function loadVanzariTotale() {
         { id: 'sesiuni', value: formatValue(kpiData.sesiuni || 0) },
         { id: 'conversie', value: formatValue(kpiData.conversie || 0, '%') },
         { id: 'profit', value: formatValue(kpiData.profit || 0, 'MDL') },
-        { id: 'vanzari-cu-tva', value: formatValue(kpiData.vanzari_cu_tva || 0, 'MDL') }
+        { id: 'vanzari-cu-tva', value: formatValue(kpiData.vanzari_cu_tva || 0, 'MDL') },
+        { id: 'cec-mediu', value: formatValue(kpiData.cec_mediu ?? kpiData.valoare_medie ?? 0, 'MDL') },
+        { id: 'total-livrari-luna', value: formatValue(kpiData.total_livrari_luna ?? 0) },
+        { id: 'pickup', value: formatValue(kpiData.pickup ?? 0) }
       ];
 
       kpiValues.forEach(kpi => {

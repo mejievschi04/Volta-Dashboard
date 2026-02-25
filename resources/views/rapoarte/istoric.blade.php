@@ -538,6 +538,9 @@
           <th class="text-right" style="width: 8%;">Dif. Plan</th>
           <th class="text-right" style="width: 6%;">Comenzi</th>
           <th class="text-right" style="width: 6%;">Comenzi/Zi</th>
+          <th class="text-right" style="width: 6%;">CEC mediu</th>
+          <th class="text-right" style="width: 6%;">Livrări</th>
+          <th class="text-right" style="width: 6%;">Pickup</th>
           <th class="text-right" style="width: 7%;">Sesiuni</th>
           <th class="text-center" style="width: 6%;">Conversie</th>
           <th class="text-right" style="width: 9%;">vs Anterioară</th>
@@ -639,9 +642,14 @@ function updateStats() {
   const totalVanzari = filteredData.reduce((sum, d) => sum + (d.vanzari_luna || 0), 0);
   const totalProfit = filteredData.reduce((sum, d) => sum + (d.profit || 0), 0);
   const totalComenzi = filteredData.reduce((sum, d) => sum + (d.comenzi || 0), 0);
+  const totalLivrari = filteredData.reduce((sum, d) => sum + (d.total_livrari_luna || 0), 0);
+  const totalPickup = filteredData.reduce((sum, d) => sum + (d.pickup || 0), 0);
   const avgConversie = filteredData.length > 0 
     ? (filteredData.reduce((sum, d) => sum + (d.conversie || 0), 0) / filteredData.length).toFixed(2)
     : 0;
+  const avgCecMediu = filteredData.length > 0 && totalComenzi > 0
+    ? (totalVanzari / totalComenzi).toFixed(2)
+    : (filteredData.length > 0 ? (filteredData.reduce((sum, d) => sum + (d.cec_mediu || 0), 0) / filteredData.length).toFixed(2) : 0);
   
   document.getElementById("statsContainer").innerHTML = `
     <div class="stat-card">
@@ -655,6 +663,18 @@ function updateStats() {
     <div class="stat-card">
       <h4>Total Comenzi</h4>
       <p class="value">${formatNumber(totalComenzi)}</p>
+    </div>
+    <div class="stat-card">
+      <h4>CEC mediu</h4>
+      <p class="value">${formatNumber(avgCecMediu)} MDL</p>
+    </div>
+    <div class="stat-card">
+      <h4>Total livrări</h4>
+      <p class="value">${formatNumber(totalLivrari)}</p>
+    </div>
+    <div class="stat-card">
+      <h4>Pickup</h4>
+      <p class="value">${formatNumber(totalPickup)}</p>
     </div>
     <div class="stat-card">
       <h4>Conversie Medie</h4>
@@ -706,6 +726,9 @@ function updateTable() {
       <td class="text-right ${item.diferenta_plan >= 0 ? 'positive' : 'negative'}">${formatNumber(item.diferenta_plan)}</td>
       <td class="text-right">${formatNumber(item.comenzi)}</td>
       <td class="text-right">${formatNumber(item.comenzi_zi)}</td>
+      <td class="text-right">${formatNumber(item.cec_mediu)}</td>
+      <td class="text-right">${formatNumber(item.total_livrari_luna)}</td>
+      <td class="text-right">${formatNumber(item.pickup)}</td>
       <td class="text-right">${formatNumber(item.sesiuni)}</td>
       <td class="text-center">${formatNumber(item.conversie)}%</td>
       <td class="text-right ${diffClass}" style="font-size: 11px; line-height: 1.3;">${sign}${formatNumber(Math.abs(vanzariVsAnterioara))}<br><small style="font-size: 10px;">(${sign}${vanzariVsAnterioaraPercent}%)</small></td>

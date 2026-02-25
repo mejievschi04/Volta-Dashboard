@@ -4,124 +4,499 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/operatori.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
 <style>
-  .livrari-page { padding: 24px 20px; max-width: 1200px; margin: 0 auto; font-family: 'Montserrat', system-ui, sans-serif; color: #E5E7EB; }
-  .livrari-page h1 { color: #FFEE00; margin: 0 0 8px 0; font-size: 28px; font-weight: 800; }
-  .livrari-page .subtitle { color: #9CA3AF; margin: 0 0 24px 0; font-size: 14px; }
-  .livrari-alert { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 12px; margin-bottom: 20px; font-weight: 500; }
-  .livrari-alert-success { background: linear-gradient(135deg, #10B981 0%, #34D399 100%); color: #fff; }
-  .livrari-card { background: linear-gradient(160deg, #1F2937 0%, #111827 100%); border-radius: 16px; padding: 24px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.06); }
-  .livrari-card h2 { color: #fff; margin: 0 0 20px 0; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-  .livrari-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
-  .livrari-form-grid label { display: block; color: #FFEE00; margin-bottom: 6px; font-size: 13px; font-weight: 600; }
-  .livrari-form-grid input { width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; background: rgba(255,255,255,0.05); color: #fff; font-size: 14px; }
-  .livrari-form-grid input:focus { outline: none; border-color: #FFEE00; background: rgba(255,238,0,0.08); }
-  .livrari-btn { padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; }
-  .livrari-btn-primary { background: linear-gradient(135deg, #FFEE00 0%, #FACC15 100%); color: #000; }
-  .livrari-btn-primary:hover { opacity: 0.95; }
-  .livrari-table-wrap { overflow-x: auto; }
-  .livrari-table { width: 100%; border-collapse: collapse; }
-  .livrari-table th, .livrari-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); color: #E5E7EB; }
-  .livrari-table th { background: rgba(255,238,0,0.15); color: #FFEE00; font-weight: 700; font-size: 13px; }
-  .livrari-table tbody tr:hover { background: rgba(255,255,255,0.03); }
-  .livrari-kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
-  .livrari-kpi-box { background: rgba(255,238,0,0.1); border: 1px solid rgba(255,238,0,0.3); border-radius: 12px; padding: 20px; text-align: center; }
-  .livrari-kpi-box .label { color: #9CA3AF; font-size: 12px; margin-bottom: 6px; }
-  .livrari-kpi-box .value { color: #FFEE00; font-size: 24px; font-weight: 800; }
-  .livrari-per-operator { margin-top: 16px; }
-  .livrari-per-operator h3 { color: #fff; font-size: 16px; margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px; }
-  .livrari-per-operator table { width: 100%; max-width: 400px; border-collapse: collapse; }
-  .livrari-per-operator th { text-align: left; color: #9CA3AF; font-size: 12px; }
-  .livrari-pagination { margin-top: 20px; display: flex; justify-content: center; gap: 8px; }
-  .livrari-pagination a, .livrari-pagination span { padding: 8px 14px; border-radius: 8px; background: rgba(255,255,255,0.08); color: #fff; text-decoration: none; font-size: 14px; }
-  .livrari-pagination a:hover { background: rgba(255,238,0,0.2); color: #FFEE00; }
+  /* ---------- Page base ---------- */
+  .livrari-page {
+    padding: 32px 24px 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+    font-family: 'DM Sans', 'Montserrat', system-ui, sans-serif;
+    color: var(--ink-secondary, #E5E7EB);
+    min-height: 60vh;
+  }
+  .livrari-page h1 {
+    color: var(--brand, #FFEE00);
+    margin: 0 0 6px 0;
+    font-size: clamp(1.75rem, 4vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .livrari-page h1 i { opacity: 0.95; }
+  .livrari-page .subtitle {
+    color: var(--muted, #9CA3AF);
+    margin: 0 0 28px 0;
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  /* ---------- Cards ---------- */
+  .livrari-card {
+    background: linear-gradient(165deg, rgba(31, 41, 55, 0.95) 0%, rgba(17, 24, 39, 0.98) 100%);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 238, 0, 0.04);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .livrari-card:hover { border-color: rgba(255, 238, 0, 0.12); }
+  .livrari-card h2 {
+    color: #fff;
+    margin: 0 0 20px 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.01em;
+  }
+  .livrari-card h2 i { color: var(--brand); opacity: 0.9; }
+
+  /* ---------- Alerts ---------- */
+  .livrari-alert {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    border: 1px solid transparent;
+  }
+  .livrari-alert-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(52, 211, 153, 0.15) 100%);
+    color: #34D399;
+    border-color: rgba(16, 185, 129, 0.35);
+  }
+  .livrari-alert i { font-size: 1.25rem; flex-shrink: 0; }
+
+  /* ---------- Filters card ---------- */
+  .livrari-filters-card { padding: 24px 28px; }
+  .livrari-filters-card h2 { margin-bottom: 20px; }
+  .livrari-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 20px;
+  }
+  .livrari-filters label {
+    display: block;
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+  .livrari-search-wrap { min-width: 240px; }
+  .livrari-search-input {
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    background: rgba(17, 24, 39, 0.6);
+    color: #fff;
+    min-width: 100%;
+    font-size: 0.9375rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .livrari-search-input::placeholder { color: #6B7280; }
+  .livrari-search-input:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(255, 238, 0, 0.12);
+  }
+  .livrari-filters select {
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    background: rgba(17, 24, 39, 0.6);
+    color: #E5E7EB;
+    min-width: 180px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .livrari-filters select:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(255, 238, 0, 0.12);
+  }
+  .livrari-filters .livrari-btn { padding: 12px 22px; font-size: 0.9375rem; }
+  .livrari-btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+  }
+  .livrari-btn:hover { transform: translateY(-1px); }
+  .livrari-btn-primary {
+    background: linear-gradient(135deg, #FFEE00 0%, #E6D600 100%);
+    color: #0a0a0a;
+    box-shadow: 0 4px 14px rgba(255, 238, 0, 0.35);
+  }
+  .livrari-btn-primary:hover { box-shadow: 0 6px 20px rgba(255, 238, 0, 0.45); }
+
+  /* ---------- Data table ---------- */
+  .livrari-table-card { padding: 24px 28px; }
+  .livrari-table-card h2 { margin-bottom: 20px; }
+  .livrari-table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(17, 24, 39, 0.4);
+  }
+  .livrari-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .livrari-table th {
+    background: rgba(255, 238, 0, 0.08);
+    color: var(--brand);
+    padding: 14px 18px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid rgba(255, 238, 0, 0.2);
+  }
+  .livrari-table td {
+    padding: 14px 18px;
+    color: #E5E7EB;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .livrari-table tbody tr {
+    transition: background 0.15s ease;
+  }
+  .livrari-table tbody tr:hover { background: rgba(255, 238, 0, 0.04); }
+  .livrari-table tbody tr:last-child td { border-bottom: none; }
+
+  /* ---------- Pagination ---------- */
+  .livrari-pagination {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .livrari-pagination a,
+  .livrari-pagination span {
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+  }
+  .livrari-pagination a:hover {
+    background: rgba(255, 238, 0, 0.2);
+    color: var(--brand);
+  }
   .livrari-pagination .disabled span { color: #6B7280; }
-  .livrari-filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px; margin-bottom: 20px; }
-  .livrari-filters label { display: block; color: #9CA3AF; font-size: 12px; margin-bottom: 4px; }
-  .livrari-filters select { padding: 10px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: #1F2937; color: #E5E7EB; min-width: 160px; }
-  .livrari-filters select option { background: #1F2937; color: #E5E7EB; }
-  .livrari-form-grid select { background: #1F2937 !important; color: #E5E7EB !important; }
-  .livrari-form-grid select option { background: #1F2937; color: #E5E7EB; }
-  .livrari-filters .livrari-btn { padding: 10px 18px; font-size: 13px; }
-  .livrari-search-wrap { min-width: 220px; }
-  /* Formular adăugare livrare – mai simplu pentru operatori */
-  .livrari-add-card { margin-bottom: 24px; }
-  .livrari-add-hint { color: #9CA3AF; font-size: 14px; margin: -8px 0 20px 0; }
-  .livrari-add-form { display: flex; flex-direction: column; gap: 20px; }
-  .livrari-add-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* ---------- Add livrare button (operator) ---------- */
+  .livrari-operator-actions { margin-bottom: 28px; }
+  .livrari-btn-open-modal {
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    background: linear-gradient(135deg, #FFEE00 0%, #E6D600 100%);
+    color: #0a0a0a;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 16px rgba(255, 238, 0, 0.4);
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+  }
+  .livrari-btn-open-modal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(255, 238, 0, 0.5);
+  }
+
+  /* ---------- Modal ---------- */
+  .livrari-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(8px);
+  }
+  .livrari-modal-overlay.is-open { display: flex; }
+  .livrari-modal {
+    background: linear-gradient(165deg, #1F2937 0%, #111827 100%);
+    border-radius: 20px;
+    padding: 32px;
+    max-width: 540px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 238, 0, 0.15);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  .livrari-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .livrari-modal-title {
+    color: var(--brand);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .livrari-modal-close {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: #9CA3AF;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .livrari-modal-close:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+  .livrari-modal-close.livrari-btn-secondary {
+    width: auto;
+    height: auto;
+    padding: 12px 22px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+  .livrari-add-hint {
+    color: var(--muted);
+    font-size: 0.875rem;
+    margin: -4px 0 20px 0;
+    line-height: 1.5;
+  }
+  .livrari-add-form { display: flex; flex-direction: column; gap: 22px; }
+  .livrari-add-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   .livrari-add-row-full { grid-template-columns: 1fr; }
-  .livrari-add-field label { display: block; color: #FFEE00; margin-bottom: 8px; font-size: 14px; font-weight: 600; }
+  .livrari-add-field label {
+    display: block;
+    color: var(--brand);
+    margin-bottom: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
   .livrari-add-field input,
-  .livrari-add-field select { width: 100%; padding: 14px 16px; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; background: #1F2937; color: #E5E7EB; font-size: 15px; }
+  .livrari-add-field select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    background: rgba(17, 24, 39, 0.6);
+    color: #E5E7EB;
+    font-size: 0.9375rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
   .livrari-add-field input:focus,
-  .livrari-add-field select:focus { outline: none; border-color: #FFEE00; }
+  .livrari-add-field select:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(255, 238, 0, 0.12);
+  }
   .livrari-add-field input::placeholder { color: #6B7280; }
-  .livrari-add-actions { margin-top: 8px; }
-  .livrari-btn-add { padding: 14px 28px; font-size: 16px; }
+  .livrari-add-actions { margin-top: 8px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .livrari-btn-add { padding: 14px 26px; font-size: 1rem; }
+  .livrari-modal-success,
+  .livrari-modal-error {
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    font-weight: 500;
+    font-size: 0.9375rem;
+  }
+  .livrari-modal-success { display: none; background: rgba(16, 185, 129, 0.2); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+  .livrari-modal-success.is-visible { display: block; }
+  .livrari-modal-error { display: none; background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+  .livrari-modal-error.is-visible { display: block; }
+
   @media (max-width: 600px) {
     .livrari-add-row { grid-template-columns: 1fr; }
+    .livrari-page { padding: 20px 16px 32px; }
+    .livrari-card { padding: 20px; }
+    .livrari-filters { gap: 16px; }
+    .livrari-filters select { min-width: 100%; }
+    .livrari-search-wrap { min-width: 100%; }
   }
-  .livrari-search-input { padding: 10px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: #1F2937; color: #E5E7EB; min-width: 220px; font-size: 14px; }
-  .livrari-search-input::placeholder { color: #6B7280; }
-  .livrari-search-input:focus { outline: none; border-color: #FFEE00; background: #111827; }
-  /* Modal adaugare livrare */
-  .livrari-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
-  .livrari-modal-overlay.is-open { display: flex; }
-  .livrari-modal { background: linear-gradient(160deg, #1F2937 0%, #111827 100%); border-radius: 16px; padding: 28px; max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,238,0,0.2); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
-  .livrari-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-  .livrari-modal-title { color: #FFEE00; font-size: 20px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 10px; }
-  .livrari-modal-close { background: none; border: none; color: #9CA3AF; font-size: 24px; cursor: pointer; padding: 4px 8px; line-height: 1; border-radius: 8px; }
-  .livrari-modal-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
-  .livrari-modal-success { display: none; padding: 12px 16px; background: rgba(16, 185, 129, 0.2); color: #34D399; border-radius: 10px; margin-bottom: 16px; font-weight: 500; }
-  .livrari-modal-success.is-visible { display: block; }
-  .livrari-modal-error { display: none; padding: 12px 16px; background: rgba(239, 68, 68, 0.2); color: #F87171; border-radius: 10px; margin-bottom: 16px; }
-  .livrari-modal-error.is-visible { display: block; }
-  .livrari-btn-open-modal { padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; border: none; background: linear-gradient(135deg, #FFEE00 0%, #FACC15 100%); color: #000; display: inline-flex; align-items: center; gap: 8px; }
-  .livrari-btn-open-modal:hover { opacity: 0.95; }
-  /* Pagina Livrări – admin: restilizare modernă KPI */
-  .livrari-page.livrari-page--admin { max-width: 1400px; padding: 28px 24px; }
-  .livrari-page--admin .livrari-card { border-radius: 20px; box-shadow: 0 12px 40px rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); overflow: hidden; }
-  .livrari-page--admin .livrari-filters { gap: 20px; padding: 8px 0; }
-  .livrari-page--admin .livrari-filters select { min-width: 180px; padding: 12px 16px; font-size: 14px; }
-  .livrari-page--admin .livrari-search-input { min-width: 260px; padding: 12px 16px; }
-  /* KPI Livrări – header modern */
-  .livrari-page--admin .livrari-admin-kpi { padding: 0; }
-  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header { display: flex; align-items: center; gap: 20px; padding: 28px 32px 24px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header-icon { width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg, rgba(255,238,0,0.2) 0%, rgba(250,204,21,0.1) 100%); border: 1px solid rgba(255,238,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #FFEE00; flex-shrink: 0; }
-  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-title { margin: 0 0 4px 0; font-size: 24px; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
-  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-subtitle { margin: 0; font-size: 14px; color: #9CA3AF; font-weight: 400; }
-  /* KPI body – grid: total + tabel */
-  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-body { display: grid; grid-template-columns: 280px 1fr; gap: 28px; padding: 28px 32px 32px; }
-  .livrari-page--admin .livrari-kpi-total-card { background: linear-gradient(145deg, rgba(255,238,0,0.08) 0%, rgba(250,204,21,0.04) 100%); border: 1px solid rgba(255,238,0,0.2); border-radius: 16px; padding: 28px; display: flex; align-items: center; gap: 20px; height: fit-content; }
-  .livrari-page--admin .livrari-kpi-total-icon { width: 52px; height: 52px; border-radius: 12px; background: rgba(255,238,0,0.15); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #FFEE00; flex-shrink: 0; }
+
+  /* ---------- Admin: KPI & extra polish ---------- */
+  .livrari-page.livrari-page--admin { max-width: 1320px; padding: 32px 24px 48px; }
+  .livrari-page--admin .livrari-card {
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  }
+  .livrari-page--admin .livrari-admin-kpi { padding: 0; overflow: hidden; }
+  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 28px 32px 26px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: linear-gradient(90deg, rgba(255, 238, 0, 0.06) 0%, transparent 100%);
+  }
+  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(255, 238, 0, 0.2) 0%, rgba(250, 204, 21, 0.08) 100%);
+    border: 1px solid rgba(255, 238, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--brand);
+    flex-shrink: 0;
+  }
+  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-title {
+    margin: 0 0 4px 0;
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-subtitle {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-body {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 28px;
+    padding: 28px 32px 32px;
+  }
+  .livrari-page--admin .livrari-kpi-total-card {
+    background: linear-gradient(145deg, rgba(255, 238, 0, 0.1) 0%, rgba(250, 204, 21, 0.05) 100%);
+    border: 1px solid rgba(255, 238, 0, 0.2);
+    border-radius: 16px;
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: fit-content;
+  }
+  .livrari-page--admin .livrari-kpi-total-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: rgba(255, 238, 0, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.375rem;
+    color: var(--brand);
+    flex-shrink: 0;
+  }
   .livrari-page--admin .livrari-kpi-total-content { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-  .livrari-page--admin .livrari-kpi-total-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #9CA3AF; }
-  .livrari-page--admin .livrari-kpi-total-value { font-size: 36px; font-weight: 800; color: #FFEE00; letter-spacing: -0.03em; line-height: 1.1; }
-  /* Livrări per operator – card + tabel modern */
-  .livrari-page--admin .livrari-per-operator { background: rgba(31,41,55,0.5); border-radius: 14px; padding: 24px; border: 1px solid rgba(255,255,255,0.06); }
-  .livrari-page--admin .livrari-per-operator-title { margin: 0 0 18px 0; font-size: 16px; font-weight: 700; color: #E5E7EB; display: flex; align-items: center; gap: 10px; }
-  .livrari-page--admin .livrari-per-operator-title i { color: #FFEE00; font-size: 15px; }
-  .livrari-page--admin .livrari-per-operator-table-wrap { overflow: hidden; border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); }
+  .livrari-page--admin .livrari-kpi-total-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .livrari-page--admin .livrari-kpi-total-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--brand);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+  .livrari-page--admin .livrari-per-operator {
+    background: rgba(31, 41, 55, 0.6);
+    border-radius: 14px;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .livrari-page--admin .livrari-per-operator-title {
+    margin: 0 0 18px 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #E5E7EB;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .livrari-page--admin .livrari-per-operator-title i { color: var(--brand); }
+  .livrari-page--admin .livrari-per-operator-table-wrap {
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
   .livrari-page--admin .livrari-per-operator-table { margin: 0; }
-  .livrari-page--admin .livrari-per-operator-table thead tr { background: rgba(55,65,81,0.6); }
-  .livrari-page--admin .livrari-per-operator-table th { padding: 14px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #9CA3AF; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: left; }
+  .livrari-page--admin .livrari-per-operator-table thead tr { background: rgba(55, 65, 81, 0.5); }
+  .livrari-page--admin .livrari-per-operator-table th {
+    padding: 14px 20px;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-weight: 700;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: left;
+  }
   .livrari-page--admin .livrari-per-operator-table th.livrari-th-num { text-align: right; width: 120px; }
-  .livrari-page--admin .livrari-per-operator-table td { padding: 14px 20px; font-size: 14px; color: #E5E7EB; border-bottom: 1px solid rgba(255,255,255,0.04); background: rgba(17,24,39,0.4); }
-  .livrari-page--admin .livrari-per-operator-table td.livrari-td-num { text-align: right; color: #FFEE00; font-size: 15px; }
-  .livrari-page--admin .livrari-per-operator-table tbody tr:hover td { background: rgba(255,238,0,0.05); }
+  .livrari-page--admin .livrari-per-operator-table td {
+    padding: 14px 20px;
+    font-size: 0.9375rem;
+    color: #E5E7EB;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(17, 24, 39, 0.35);
+  }
+  .livrari-page--admin .livrari-per-operator-table td.livrari-td-num {
+    text-align: right;
+    color: var(--brand);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .livrari-page--admin .livrari-per-operator-table tbody tr:hover td { background: rgba(255, 238, 0, 0.06); }
   .livrari-page--admin .livrari-per-operator-table tbody tr:last-child td { border-bottom: none; }
-  .livrari-page--admin .livrari-operator-name { font-weight: 500; color: #fff; }
+  .livrari-page--admin .livrari-operator-name { font-weight: 600; color: #fff; }
+  .livrari-page--admin .livrari-table-wrap { border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.06); }
+  .livrari-page--admin .livrari-table th { padding: 14px 18px; font-size: 0.6875rem; }
+  .livrari-page--admin .livrari-table td { padding: 14px 18px; font-size: 0.875rem; }
+  .livrari-page--admin .livrari-table tbody tr:hover { background: rgba(255, 238, 0, 0.04); }
+
   @media (max-width: 768px) {
     .livrari-page--admin .livrari-admin-kpi .livrari-kpi-body { grid-template-columns: 1fr; padding: 20px 20px 24px; }
     .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header { padding: 20px 20px 18px; flex-wrap: wrap; }
     .livrari-page--admin .livrari-kpi-total-card { flex-direction: column; align-items: flex-start; }
-    .livrari-page--admin .livrari-kpi-total-value { font-size: 32px; }
+    .livrari-page--admin .livrari-kpi-total-value { font-size: 1.75rem; }
   }
-  .livrari-page--admin .livrari-card h2 { font-size: 22px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px; color: #fff; letter-spacing: 0.3px; }
-  .livrari-page--admin .livrari-table-wrap { border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
-  .livrari-page--admin .livrari-table th { padding: 16px 18px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.3px; }
-  .livrari-page--admin .livrari-table td { padding: 14px 18px; font-size: 14px; }
-  .livrari-page--admin .livrari-table tbody tr:hover { background: rgba(255,238,0,0.06); }
 </style>
 @endpush
 
@@ -232,7 +607,7 @@
   @endif
 
   @if(!$isAdmin)
-  <div style="margin-bottom: 24px;">
+  <div class="livrari-operator-actions">
     <button type="button" class="livrari-btn-open-modal" id="livrariOpenModalBtn" aria-label="Adaugă livrare">
       <i class="fas fa-plus-circle"></i> Adaugă livrare
     </button>
@@ -279,7 +654,7 @@
         </div>
         <div class="livrari-add-actions" style="display: flex; gap: 12px; align-items: center;">
           <button type="submit" class="livrari-btn livrari-btn-primary livrari-btn-add" id="livrariModalSubmitBtn"><i class="fas fa-check"></i> Salvează livrarea</button>
-          <button type="button" class="livrari-modal-close" id="livrariModalCloseBottom" style="padding: 10px 20px; font-size: 14px;">Închide</button>
+          <button type="button" class="livrari-modal-close livrari-btn-secondary" id="livrariModalCloseBottom">Închide</button>
         </div>
       </form>
     </div>
