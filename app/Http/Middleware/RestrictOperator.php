@@ -14,6 +14,7 @@ class RestrictOperator
         'datele-mele',
         'livrari',
         'livrari.store',
+        'livrari.update',
         'setari',
         'setari.update',
         'setari.password',
