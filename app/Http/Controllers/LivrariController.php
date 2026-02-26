@@ -166,6 +166,55 @@ class LivrariController extends Controller
         return redirect()->route('livrari')->with('success', 'Livrarea a fost adăugată.');
     }
 
+    /**
+     * Actualizează o livrare existentă.
+     * Operator: doar propriile livrări. Admin: orice livrare.
+     */
+    public function update(Request $request, Livrare $livrare)
+    {
+        $user = Auth::user();
+        $isAdmin = $user && in_array(strtolower((string) ($user->role ?? '')), ['admin', 'administrator'], true);
+
+        if (!$isAdmin && (int) $livrare->user_id !== (int) $user->id) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Nu aveți permisiunea de a edita această livrare.'], 403);
+            }
+            return redirect()->route('livrari')->with('error', 'Nu aveți permisiunea de a edita această livrare.');
+        }
+
+        $validated = $request->validate([
+            'numar_comanda' => 'required|string|max:100',
+            'data' => 'required|date',
+            'adresa_livrarii' => 'required|string|max:500',
+            'localitate' => 'required|string|max:255',
+            'nr_client' => 'required|string|max:100',
+            'data_livrarii' => 'required|date',
+        ]);
+
+        $localitate = trim((string) $validated['localitate']);
+        $validated['in_chisinau'] = $this->isChisinau($localitate);
+        $livrare->update($validated);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Livrarea a fost actualizată.',
+                'livrare' => [
+                    'id' => $livrare->id,
+                    'numar_comanda' => $livrare->numar_comanda,
+                    'data' => $livrare->data->format('d.m.Y'),
+                    'localitate' => $livrare->localitate,
+                    'adresa_livrarii' => $livrare->adresa_livrarii,
+                    'nr_client' => $livrare->nr_client,
+                    'data_livrarii' => $livrare->data_livrarii->format('d.m.Y'),
+                    'locatie' => $livrare->in_chisinau ? 'În Chișinău' : 'În afara',
+                ],
+            ]);
+        }
+
+        return redirect()->route('livrari')->with('success', 'Livrarea a fost actualizată.');
+    }
+
     /** Returnează true dacă localitatea este Chișinău (ignoră diacritice și majuscule). */
     private function isChisinau(string $localitate): bool
     {

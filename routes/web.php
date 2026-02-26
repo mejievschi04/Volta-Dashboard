@@ -26,6 +26,7 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
     // Livrări: operator adaugă date, admin vede toate + KPI
     Route::get('/livrari', [LivrariController::class, 'index'])->name('livrari');
     Route::post('/livrari', [LivrariController::class, 'store'])->name('livrari.store');
+    Route::put('/livrari/{livrare}', [LivrariController::class, 'update'])->name('livrari.update');
 
     // Rute operatori (listă 1C – doar pentru non-operatori sau admin)
     Route::get('/operatori', [OperatoriController::class, 'index'])->name('operatori');

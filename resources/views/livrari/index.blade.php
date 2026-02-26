@@ -147,6 +147,14 @@
     box-shadow: 0 4px 14px rgba(255, 238, 0, 0.35);
   }
   .livrari-btn-primary:hover { box-shadow: 0 6px 20px rgba(255, 238, 0, 0.45); }
+  .livrari-btn-edit {
+    padding: 8px 14px;
+    font-size: 0.8125rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--brand);
+    border: 1px solid rgba(255, 238, 0, 0.3);
+  }
+  .livrari-btn-edit:hover { background: rgba(255, 238, 0, 0.15); }
 
   /* ---------- Data table ---------- */
   .livrari-table-card { padding: 24px 28px; }
@@ -675,11 +683,18 @@
             <th>Data livrării</th>
             <th>Locație</th>
             @if($isAdmin)<th>Operator</th>@endif
+            <th>Acțiuni</th>
           </tr>
         </thead>
         <tbody id="livrariTableBody">
           @forelse($livrari as $l)
-          <tr>
+          <tr data-id="{{ $l->id }}"
+              data-numar-comanda="{{ e($l->numar_comanda) }}"
+              data-data="{{ $l->data->format('Y-m-d') }}"
+              data-localitate="{{ e($l->localitate) }}"
+              data-adresa="{{ e($l->adresa_livrarii) }}"
+              data-nr-client="{{ e($l->nr_client) }}"
+              data-data-livrarii="{{ $l->data_livrarii->format('Y-m-d') }}">
             <td>{{ $l->numar_comanda }}</td>
             <td>{{ $l->data->format('d.m.Y') }}</td>
             <td>{{ $l->localitate ?? '—' }}</td>
@@ -690,10 +705,15 @@
             @if($isAdmin)
             <td>{{ $l->user ? (trim($l->user->full_name ?? $l->user->name ?? '') ?: $l->user->username) : '—' }}</td>
             @endif
+            <td>
+              <button type="button" class="livrari-btn livrari-btn-edit" aria-label="Editează" title="Editează">
+                <i class="fas fa-edit"></i> Editează
+              </button>
+            </td>
           </tr>
           @empty
           <tr id="livrariEmptyRow">
-            <td colspan="{{ $isAdmin ? 9 : 8 }}" style="text-align: center; color: #9CA3AF; padding: 32px;">Nicio livrare înregistrată.</td>
+            <td colspan="{{ $isAdmin ? 10 : 9 }}" style="text-align: center; color: #9CA3AF; padding: 32px;">Nicio livrare înregistrată.</td>
           </tr>
           @endforelse
         </tbody>
@@ -704,6 +724,53 @@
       {{ $livrari->links() }}
     </div>
     @endif
+  </div>
+
+  <!-- Modal Editează livrare (disponibil pentru operator și admin) -->
+  <div class="livrari-modal-overlay" id="livrariEditModal" aria-hidden="true" data-update-url="{{ route('livrari.update', ['livrare' => '__ID__']) }}">
+    <div class="livrari-modal" role="dialog" aria-labelledby="livrariEditModalTitle">
+      <div class="livrari-modal-header">
+        <h2 class="livrari-modal-title" id="livrariEditModalTitle"><i class="fas fa-edit"></i> Editează livrarea</h2>
+        <button type="button" class="livrari-modal-close" id="livrariEditModalClose" aria-label="Închide">&times;</button>
+      </div>
+      <div class="livrari-modal-success" id="livrariEditModalSuccess"></div>
+      <div class="livrari-modal-error" id="livrariEditModalError"></div>
+      <form id="livrariEditForm" method="post" class="livrari-add-form" action="">
+        @csrf
+        @method('PUT')
+        <input type="hidden" name="data" id="edit-data-comanda">
+        <div class="livrari-add-row">
+          <div class="livrari-add-field">
+            <label for="edit_data_livrarii">Data livrării *</label>
+            <input type="date" id="edit_data_livrarii" name="data_livrarii" required>
+          </div>
+          <div class="livrari-add-field">
+            <label for="edit_numar_comanda">Număr comandă *</label>
+            <input type="text" id="edit_numar_comanda" name="numar_comanda" required maxlength="100" placeholder="Ex: CMD-001">
+          </div>
+        </div>
+        <div class="livrari-add-row">
+          <div class="livrari-add-field">
+            <label for="edit_localitate">Raion *</label>
+            <input type="text" id="edit_localitate" name="localitate" required maxlength="255" placeholder="Ex: Chișinău, Bălți...">
+          </div>
+          <div class="livrari-add-field">
+            <label for="edit_nr_client">Nr. de telefon *</label>
+            <input type="text" id="edit_nr_client" name="nr_client" required maxlength="100" placeholder="Ex: 069123456">
+          </div>
+        </div>
+        <div class="livrari-add-row livrari-add-row-full">
+          <div class="livrari-add-field">
+            <label for="edit_adresa_livrarii">Adresa *</label>
+            <input type="text" id="edit_adresa_livrarii" name="adresa_livrarii" required maxlength="500" placeholder="Strada, nr., bloc...">
+          </div>
+        </div>
+        <div class="livrari-add-actions">
+          <button type="submit" class="livrari-btn livrari-btn-primary livrari-btn-add" id="livrariEditModalSubmitBtn"><i class="fas fa-check"></i> Salvează modificările</button>
+          <button type="button" class="livrari-modal-close livrari-btn-secondary" id="livrariEditModalCloseBottom">Închide</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 @if(!$isAdmin)
@@ -758,8 +825,16 @@
   function addRowToTable(livrare) {
     if (!tbody) return;
     if (emptyRow) emptyRow.remove();
-    var colCount = isAdmin ? 9 : 8;
+    var dataYmd = livrare.data ? livrare.data.split('.').reverse().join('-') : '';
+    var dataLivrariiYmd = livrare.data_livrarii ? livrare.data_livrarii.split('.').reverse().join('-') : '';
     var tr = document.createElement('tr');
+    tr.setAttribute('data-id', livrare.id || '');
+    tr.setAttribute('data-numar-comanda', livrare.numar_comanda || '');
+    tr.setAttribute('data-data', dataYmd);
+    tr.setAttribute('data-localitate', livrare.localitate || '');
+    tr.setAttribute('data-adresa', livrare.adresa_livrarii || '');
+    tr.setAttribute('data-nr-client', livrare.nr_client || '');
+    tr.setAttribute('data-data-livrarii', dataLivrariiYmd);
     tr.innerHTML =
       '<td>' + (livrare.numar_comanda || '') + '</td>' +
       '<td>' + (livrare.data || '') + '</td>' +
@@ -768,7 +843,8 @@
       '<td>' + (livrare.nr_client || '') + '</td>' +
       '<td>' + (livrare.data_livrarii || '') + '</td>' +
       '<td>' + (livrare.locatie || '—') + '</td>' +
-      (isAdmin ? '<td>—</td>' : '');
+      (isAdmin ? '<td>—</td>' : '') +
+      '<td><button type="button" class="livrari-btn livrari-btn-edit" aria-label="Editează" title="Editează"><i class="fas fa-edit"></i> Editează</button></td>';
     tbody.insertBefore(tr, tbody.firstChild);
   }
 
@@ -827,4 +903,124 @@
 </script>
 @endpush
 @endif
+
+@push('scripts')
+<script>
+(function() {
+  var editModal = document.getElementById('livrariEditModal');
+  var editForm = document.getElementById('livrariEditForm');
+  var editSuccessEl = document.getElementById('livrariEditModalSuccess');
+  var editErrorEl = document.getElementById('livrariEditModalError');
+  var editSubmitBtn = document.getElementById('livrariEditModalSubmitBtn');
+  var editDataComanda = document.getElementById('edit-data-comanda');
+  var editDataLivrarii = document.getElementById('edit_data_livrarii');
+  var updateUrlTemplate = editModal ? editModal.getAttribute('data-update-url') : '';
+  var currentEditRow = null;
+
+  function openEditModal() {
+    if (editModal) {
+      editModal.classList.add('is-open');
+      editModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+  function closeEditModal() {
+    if (editModal) {
+      editModal.classList.remove('is-open');
+      editModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      currentEditRow = null;
+    }
+  }
+  function showEditSuccess(msg) {
+    if (editSuccessEl) { editSuccessEl.textContent = msg; editSuccessEl.classList.add('is-visible'); }
+    if (editErrorEl) editErrorEl.classList.remove('is-visible');
+  }
+  function showEditError(msg) {
+    if (editErrorEl) { editErrorEl.textContent = msg; editErrorEl.classList.add('is-visible'); }
+    if (editSuccessEl) editSuccessEl.classList.remove('is-visible');
+  }
+  function hideEditMessages() {
+    if (editSuccessEl) editSuccessEl.classList.remove('is-visible');
+    if (editErrorEl) editErrorEl.classList.remove('is-visible');
+  }
+
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.livrari-btn-edit');
+    if (!btn) return;
+    var row = btn.closest('tr');
+    if (!row || !row.dataset.id) return;
+    currentEditRow = row;
+    var id = row.dataset.id;
+    document.getElementById('edit_numar_comanda').value = row.dataset.numarComanda || '';
+    editDataComanda.value = row.dataset.data || '';
+    editDataLivrarii.value = row.dataset.dataLivrarii || '';
+    document.getElementById('edit_localitate').value = row.dataset.localitate || '';
+    document.getElementById('edit_nr_client').value = row.dataset.nrClient || '';
+    document.getElementById('edit_adresa_livrarii').value = row.dataset.adresa || '';
+    editForm.action = updateUrlTemplate.replace('__ID__', id);
+    hideEditMessages();
+    openEditModal();
+  });
+
+  if (editDataLivrarii && editDataComanda) {
+    editDataLivrarii.addEventListener('change', function() { editDataComanda.value = editDataLivrarii.value; });
+  }
+
+  [document.getElementById('livrariEditModalClose'), document.getElementById('livrariEditModalCloseBottom')].forEach(function(el) {
+    if (el) el.addEventListener('click', closeEditModal);
+  });
+  if (editModal) {
+    editModal.addEventListener('click', function(e) {
+      if (e.target === editModal) closeEditModal();
+    });
+  }
+
+  if (editForm) {
+    editForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!currentEditRow || !editForm.action) return;
+      if (editSubmitBtn) editSubmitBtn.disabled = true;
+      hideEditMessages();
+      var formData = new FormData(editForm);
+      var csrf = document.querySelector('meta[name="csrf-token"]');
+      if (csrf) formData.append('_token', csrf.getAttribute('content'));
+
+      fetch(editForm.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+      })
+      .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, status: r.status, data: d }; }).catch(function() { return { ok: false, status: r.status, data: {} }; }); })
+      .then(function(result) {
+        if (result.ok && result.data.success && result.data.livrare) {
+          showEditSuccess(result.data.message || 'Livrarea a fost actualizată.');
+          var L = result.data.livrare;
+          var cells = currentEditRow.querySelectorAll('td');
+          cells[0].textContent = L.numar_comanda || '';
+          cells[1].textContent = L.data || '';
+          cells[2].textContent = L.localitate || '—';
+          cells[3].textContent = L.adresa_livrarii || '';
+          cells[4].textContent = L.nr_client || '';
+          cells[5].textContent = L.data_livrarii || '';
+          cells[6].textContent = L.locatie || '—';
+          currentEditRow.dataset.numarComanda = L.numar_comanda || '';
+          currentEditRow.dataset.data = L.data ? L.data.split('.').reverse().join('-') : '';
+          currentEditRow.dataset.dataLivrarii = L.data_livrarii ? L.data_livrarii.split('.').reverse().join('-') : '';
+          currentEditRow.dataset.localitate = L.localitate || '';
+          currentEditRow.dataset.nrClient = L.nr_client || '';
+          currentEditRow.dataset.adresa = L.adresa_livrarii || '';
+        } else {
+          var msg = result.data && result.data.message ? result.data.message : 'Eroare la actualizare.';
+          if (result.data && result.data.errors) msg = Object.values(result.data.errors).flat().join(' ');
+          showEditError(msg);
+        }
+      })
+      .catch(function() { showEditError('Eroare de rețea. Încearcă din nou.'); })
+      .finally(function() { if (editSubmitBtn) editSubmitBtn.disabled = false; });
+    });
+  }
+})();
+</script>
+@endpush
 @endsection
