@@ -514,7 +514,7 @@
   <p class="subtitle">{{ $isAdmin ? 'Toate livrările și KPI per operator' : 'Adaugă și vizualizează livrările tale' }}</p>
 
   @php
-    $filters = $filters ?? ['luna' => '', 'operator_id' => '', 'locatie' => '', 'cauta' => ''];
+    $filters = $filters ?? ['luna' => '', 'operator_id' => '', 'locatie' => '', 'cauta' => '', 'data' => ''];
     $operatorsForFilter = $operatorsForFilter ?? collect();
   @endphp
 
@@ -524,6 +524,10 @@
       <div class="livrari-search-wrap">
         <label for="cauta">Căutare</label>
         <input type="text" id="cauta" name="cauta" value="{{ $filters['cauta'] ?? '' }}" placeholder="Nr. comandă, adresă, raion, nr. telefon..." class="livrari-search-input" maxlength="200">
+      </div>
+      <div>
+        <label for="data_livrarii">Data livrării</label>
+        <input type="date" id="data_livrarii" name="data" value="{{ $filters['data'] ?? '' }}" class="livrari-search-input" style="min-width: 160px;">
       </div>
       <div>
         <label>Lună</label>

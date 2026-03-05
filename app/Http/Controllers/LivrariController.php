@@ -22,10 +22,13 @@ class LivrariController extends Controller
         $operatorId = $request->input('operator_id');
         $locatie = $request->input('locatie'); // 'chisinau' | 'afara' | ''
         $cauta = trim((string) $request->input('cauta', ''));
+        $dataLivrarii = $request->input('data'); // YYYY-MM-DD - filtrează după data livrării (o singură zi)
 
         $query = $isAdmin ? Livrare::with('user') : Livrare::where('user_id', $user->id);
 
-        if ($luna !== null && $luna !== '') {
+        if ($dataLivrarii !== null && $dataLivrarii !== '') {
+            $query->whereDate('data_livrarii', $dataLivrarii);
+        } elseif ($luna !== null && $luna !== '') {
             $query->whereRaw('DATE_FORMAT(data_livrarii, "%Y-%m") = ?', [$luna]);
         }
         if ($isAdmin && $operatorId !== null && $operatorId !== '') {
@@ -50,9 +53,6 @@ class LivrariController extends Controller
 
         if ($isAdmin) {
             $baseCount = Livrare::query();
-            if ($luna) {
-                $baseCount->whereRaw('DATE_FORMAT(data_livrarii, "%Y-%m") = ?', [$luna]);
-            }
             if ($operatorId) {
                 $baseCount->where('user_id', $operatorId);
             }
@@ -70,12 +70,19 @@ class LivrariController extends Controller
                         ->orWhere('nr_client', 'like', $term);
                 });
             }
+            if ($dataLivrarii !== null && $dataLivrarii !== '') {
+                $baseCount->whereDate('data_livrarii', $dataLivrarii);
+            } elseif ($luna) {
+                $baseCount->whereRaw('DATE_FORMAT(data_livrarii, "%Y-%m") = ?', [$luna]);
+            }
             $totalLivrari = $baseCount->count();
 
             $perOperatorQuery = Livrare::query()
                 ->selectRaw('user_id, COUNT(*) as total')
                 ->groupBy('user_id');
-            if ($luna) {
+            if ($dataLivrarii !== null && $dataLivrarii !== '') {
+                $perOperatorQuery->whereDate('data_livrarii', $dataLivrarii);
+            } elseif ($luna) {
                 $perOperatorQuery->whereRaw('DATE_FORMAT(data_livrarii, "%Y-%m") = ?', [$luna]);
             }
             if ($locatie === 'chisinau') {
@@ -111,7 +118,7 @@ class LivrariController extends Controller
                 'totalLivrari' => $totalLivrari,
                 'perOperator' => $perOperator,
                 'isAdmin' => true,
-                'filters' => ['luna' => $luna, 'operator_id' => $operatorId, 'locatie' => $locatie, 'cauta' => $cauta],
+                'filters' => ['luna' => $luna, 'operator_id' => $operatorId, 'locatie' => $locatie, 'cauta' => $cauta, 'data' => $dataLivrarii ?? ''],
                 'operatorsForFilter' => $operatorsForFilter,
             ]);
         }
@@ -121,7 +128,7 @@ class LivrariController extends Controller
             'totalLivrari' => $livrari->total(),
             'perOperator' => collect(),
             'isAdmin' => false,
-            'filters' => ['luna' => $luna, 'operator_id' => null, 'locatie' => $locatie, 'cauta' => $cauta],
+            'filters' => ['luna' => $luna, 'operator_id' => null, 'locatie' => $locatie, 'cauta' => $cauta, 'data' => $dataLivrarii ?? ''],
             'operatorsForFilter' => collect(),
         ]);
     }
