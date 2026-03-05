@@ -9,7 +9,7 @@
       <div class="operatori-page-icon"><i class="fas fa-users"></i></div>
       <div>
         <h1 class="operatori-page-title">Operatori</h1>
-        <p class="operatori-page-subtitle">Date din 1C (ianuarie 2023 – prezent)</p>
+        <p class="operatori-page-subtitle">Date din 1C · {{ $perioadaLabel ?? 'toată perioada' }}</p>
       </div>
     </div>
   </header>
@@ -25,30 +25,33 @@
   </div>
   @endif
 
-  @if(isset($operatori1c) && count($operatori1c) > 0)
-  <!-- Carduri KPI per operator -->
-  <div class="operatori-kpi-cards-wrap">
-    @foreach($operatori1c as $op)
-    <div class="operatori-kpi-operator-block">
-      <h3 class="operatori-kpi-operator-name">{{ $op['nume'] }}</h3>
-      <div class="operatori-kpi-cards-row">
-        <div class="operatori-kpi-mini-card operatori-kpi-fara-tva">
-          <span class="operatori-kpi-mini-label">Vânzări fără TVA</span>
-          <span class="operatori-kpi-mini-value">{{ number_format($op['vanzari_fara_tva'], 2, ',', '.') }} MDL</span>
-        </div>
-        <div class="operatori-kpi-mini-card operatori-kpi-cu-tva">
-          <span class="operatori-kpi-mini-label">Vânzări cu TVA</span>
-          <span class="operatori-kpi-mini-value">{{ number_format($op['vanzari_cu_tva'], 2, ',', '.') }} MDL</span>
-        </div>
-        <div class="operatori-kpi-mini-card operatori-kpi-profit">
-          <span class="operatori-kpi-mini-label">Profit</span>
-          <span class="operatori-kpi-mini-value">{{ number_format($op['profit'], 2, ',', '.') }} MDL</span>
-        </div>
+  <!-- Filtru perioadă -->
+  <form method="get" action="{{ route('operatori') }}" class="operatori-filter-card">
+    <div class="operatori-filter-row">
+      <div class="operatori-filter-group">
+        <label for="an">An</label>
+        <select name="an" id="an">
+          @foreach(range((int)date('Y'), 2023, -1) as $y)
+          <option value="{{ $y }}" {{ (isset($an) && (int)$an === $y) ? 'selected' : '' }}>{{ $y }}</option>
+          @endforeach
+        </select>
+      </div>
+      <div class="operatori-filter-group">
+        <label for="luna">Lună</label>
+        <select name="luna" id="luna">
+          <option value="">Toate lunile</option>
+          @foreach($luniNume ?? [] as $nr => $numeLuna)
+          <option value="{{ $nr }}" {{ (isset($luna) && (int)$luna === $nr) ? 'selected' : '' }}>{{ $numeLuna }}</option>
+          @endforeach
+        </select>
+      </div>
+      <div class="operatori-filter-actions">
+        <button type="submit" class="operatori-btn operatori-btn-primary"><i class="fas fa-filter"></i> Aplică</button>
       </div>
     </div>
-    @endforeach
-  </div>
+  </form>
 
+  @if(isset($operatori1c) && count($operatori1c) > 0)
   <div class="operatori-card operatori-card-main">
     @if(isset($chartData1c) && count($chartData1c) > 0)
     <section class="operatori-chart-section">

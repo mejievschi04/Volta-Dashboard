@@ -15,9 +15,24 @@ use Illuminate\Support\Facades\DB;
 
 class OperatoriController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Date din 1C (ianuarie 2023); excludem operatorii dezactivați (Operator.activ = 0)
+        // Perioadă: an + lună opțională (dacă lună = null = toate lunile din an)
+        $an = $request->input('an', date('Y'));
+        $luna = $request->input('luna'); // 1-12 sau null
+        $an = max(2023, min((int) $an, (int) date('Y')));
+        $luna = $luna === '' || $luna === null ? null : (int) $luna;
+        if ($luna !== null) {
+            $luna = max(1, min(12, $luna));
+        }
+
+        $periodStart = $luna
+            ? sprintf('%04d-%02d-01', $an, $luna)
+            : sprintf('%04d-01-01', $an);
+        $periodEnd = $luna
+            ? date('Y-m-t', strtotime($periodStart))
+            : sprintf('%04d-12-31', $an);
+
         $operatori1c = [];
         $chartData1c = [];
         $dezactivatedNume = Operator::where('activ', false)
@@ -28,9 +43,13 @@ class OperatoriController extends Controller
             ->toArray();
 
         try {
-            $rows = OnecKpiOperator::query()
+            $query = OnecKpiOperator::query()
                 ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
                 ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
+                ->where('onec_kpi_syncs.period_start', '>=', $periodStart)
+                ->where('onec_kpi_syncs.period_start', '<=', $periodEnd);
+
+            $rows = (clone $query)
                 ->selectRaw('
                     onec_kpi_operatori.operator_nume as nume,
                     COALESCE(SUM(onec_kpi_operatori.vanzari_fara_tva), 0) as total_vanzari_fara_tva,
@@ -74,7 +93,16 @@ class OperatoriController extends Controller
 
         $operatoriDezactivati = Operator::where('activ', false)->orderBy('nume')->get();
 
-        return view('operatori.index', compact('operatori1c', 'chartData1c', 'operatoriDezactivati'));
+        $luniNume = [
+            1 => 'Ianuarie', 2 => 'Februarie', 3 => 'Martie', 4 => 'Aprilie',
+            5 => 'Mai', 6 => 'Iunie', 7 => 'Iulie', 8 => 'August',
+            9 => 'Septembrie', 10 => 'Octombrie', 11 => 'Noiembrie', 12 => 'Decembrie',
+        ];
+        $perioadaLabel = $luna
+            ? $luniNume[$luna] . ' ' . $an
+            : 'Anul ' . $an;
+
+        return view('operatori.index', compact('operatori1c', 'chartData1c', 'operatoriDezactivati', 'an', 'luna', 'perioadaLabel', 'luniNume'));
     }
 
     /**
