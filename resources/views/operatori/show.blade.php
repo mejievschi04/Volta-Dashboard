@@ -190,6 +190,7 @@
                 <th style="padding: 14px 16px; text-align: left; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Lună</th>
                 <th style="padding: 14px 16px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Comenzi</th>
                 <th style="padding: 14px 16px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Vânzări (fără TVA)</th>
+                <th style="padding: 14px 16px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Vânzări (cu TVA)</th>
                 <th style="padding: 14px 16px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Profit</th>
               </tr>
             </thead>
@@ -199,6 +200,7 @@
                 <td style="padding: 14px 16px; color: #fff; font-weight: 600;">{{ $luna->luna_label }}</td>
                 <td style="padding: 14px 16px; text-align: center; color: #fff;">{{ $luna->comenzi }}</td>
                 <td style="padding: 14px 16px; text-align: center; color: #fff; font-weight: 600;">{{ number_format($luna->vanzari_luna, 2, ',', '.') }} MDL</td>
+                <td style="padding: 14px 16px; text-align: center; color: #fff; font-weight: 600;">{{ number_format($luna->vanzari_cu_tva, 2, ',', '.') }} MDL</td>
                 <td style="padding: 14px 16px; text-align: center; color: #10B981; font-weight: 700;">{{ number_format($luna->profit, 2, ',', '.') }} MDL</td>
               </tr>
               @endforeach

@@ -26,6 +26,29 @@
   @endif
 
   @if(isset($operatori1c) && count($operatori1c) > 0)
+  <!-- Carduri KPI per operator -->
+  <div class="operatori-kpi-cards-wrap">
+    @foreach($operatori1c as $op)
+    <div class="operatori-kpi-operator-block">
+      <h3 class="operatori-kpi-operator-name">{{ $op['nume'] }}</h3>
+      <div class="operatori-kpi-cards-row">
+        <div class="operatori-kpi-mini-card operatori-kpi-fara-tva">
+          <span class="operatori-kpi-mini-label">Vânzări fără TVA</span>
+          <span class="operatori-kpi-mini-value">{{ number_format($op['vanzari_fara_tva'], 2, ',', '.') }} MDL</span>
+        </div>
+        <div class="operatori-kpi-mini-card operatori-kpi-cu-tva">
+          <span class="operatori-kpi-mini-label">Vânzări cu TVA</span>
+          <span class="operatori-kpi-mini-value">{{ number_format($op['vanzari_cu_tva'], 2, ',', '.') }} MDL</span>
+        </div>
+        <div class="operatori-kpi-mini-card operatori-kpi-profit">
+          <span class="operatori-kpi-mini-label">Profit</span>
+          <span class="operatori-kpi-mini-value">{{ number_format($op['profit'], 2, ',', '.') }} MDL</span>
+        </div>
+      </div>
+    </div>
+    @endforeach
+  </div>
+
   <div class="operatori-card operatori-card-main">
     @if(isset($chartData1c) && count($chartData1c) > 0)
     <section class="operatori-chart-section">
@@ -52,6 +75,7 @@
             <tr>
               <th>Operator</th>
               <th class="tc">Vânzări fără TVA</th>
+              <th class="tc">Vânzări cu TVA</th>
               <th class="tc">Profit</th>
               <th class="tc">Comenzi</th>
               <th class="tc">Acțiuni</th>
@@ -62,6 +86,7 @@
             <tr>
               <td><strong>{{ $op['nume'] }}</strong></td>
               <td class="tc">{{ number_format($op['vanzari_fara_tva'], 2, ',', '.') }} MDL</td>
+              <td class="tc">{{ number_format($op['vanzari_cu_tva'], 2, ',', '.') }} MDL</td>
               <td class="tc operatori-profit">{{ number_format($op['profit'], 2, ',', '.') }} MDL</td>
               <td class="tc">{{ number_format($op['nr_comenzi'], 0, ',', '.') }}</td>
               <td class="tc operatori-actions">

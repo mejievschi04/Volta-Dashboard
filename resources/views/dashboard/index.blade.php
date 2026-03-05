@@ -21,6 +21,22 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
   $isAdmin = auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator');
 @endphp
 <div class="kpi-grid">
+  <div class="card">
+    <h4>Vânzări fără TVA</h4>
+    <div class="value" id="vanzari-luna">-</div>
+  </div>
+  <div class="card">
+    <h4>Vânzări cu TVA</h4>
+    <div class="value" id="vanzari-cu-tva">-</div>
+  </div>
+  <div class="card">
+    <h4>Profit</h4>
+    <div class="value" id="profit">-</div>
+  </div>
+  <div class="card">
+    <h4>CEC mediu</h4>
+    <div class="value" id="cec-mediu">-</div>
+  </div>
   <div class="card{{ $isAdmin ? ' editable-plan' : '' }}">
     <h4>
       Plan luna curentă
@@ -31,16 +47,8 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
     <div class="value" id="plan-luna">-</div>
   </div>
   <div class="card">
-    <h4>Vânzări luna curentă</h4>
-    <div class="value" id="vanzari-luna">-</div>
-  </div>
-  <div class="card">
     <h4>Progres plan</h4>
     <div class="value" id="progres-plan">-</div>
-  </div>
-  <div class="card">
-    <h4>Diferență față de plan</h4>
-    <div class="value" id="diferenta-plan">-</div>
   </div>
   <div class="card">
     <h4>Prognoză plan</h4>
@@ -49,6 +57,10 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
   <div class="card">
     <h4>Prognoză plan %</h4>
     <div class="value" id="prognoza-plan-procent">-</div>
+  </div>
+  <div class="card">
+    <h4>Diferență față de plan</h4>
+    <div class="value" id="diferenta-plan">-</div>
   </div>
   <div class="card">
     <h4>Comenzi</h4>
@@ -65,18 +77,6 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
   <div class="card">
     <h4>Conversie</h4>
     <div class="value" id="conversie">-</div>
-  </div>
-  <div class="card">
-    <h4>Profit</h4>
-    <div class="value" id="profit">-</div>
-  </div>
-  <div class="card">
-    <h4>Vânzări cu TVA</h4>
-    <div class="value" id="vanzari-cu-tva">-</div>
-  </div>
-  <div class="card">
-    <h4>CEC mediu</h4>
-    <div class="value" id="cec-mediu">-</div>
   </div>
   <div class="card">
     <h4>Total livrări lună</h4>

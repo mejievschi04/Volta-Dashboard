@@ -111,6 +111,72 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* Carduri KPI per operator (pagina listă operatori) */
+.operatori-kpi-cards-wrap {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.operatori-kpi-operator-block {
+  background: linear-gradient(160deg, #1F2937 0%, #111827 100%);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+.operatori-kpi-operator-name {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #FFEE00;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 238, 0, 0.2);
+}
+.operatori-kpi-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.operatori-kpi-mini-card {
+  padding: 14px 12px;
+  border-radius: 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.operatori-kpi-mini-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9CA3AF;
+}
+.operatori-kpi-mini-value {
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+}
+.operatori-kpi-mini-card.operatori-kpi-fara-tva {
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+.operatori-kpi-mini-card.operatori-kpi-fara-tva .operatori-kpi-mini-value { color: #60A5FA; }
+.operatori-kpi-mini-card.operatori-kpi-cu-tva {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.operatori-kpi-mini-card.operatori-kpi-profit {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.operatori-kpi-mini-card.operatori-kpi-profit .operatori-kpi-mini-value { color: #34D399; }
+@media (max-width: 400px) {
+  .operatori-kpi-cards-row { grid-template-columns: 1fr; }
+}
+
 .operatori-chart-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
