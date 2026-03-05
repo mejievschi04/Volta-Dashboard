@@ -5,6 +5,7 @@
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/operatori.css') }}">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
   /* ---------- Page base ---------- */
   .livrari-page {
@@ -76,48 +77,74 @@
   .livrari-alert i { font-size: 1.25rem; flex-shrink: 0; }
 
   /* ---------- Filters card ---------- */
-  .livrari-filters-card { padding: 24px 28px; }
-  .livrari-filters-card h2 { margin-bottom: 20px; }
+  .livrari-filters-card { padding: 16px 20px; }
+  .livrari-filters-card h2 { margin-bottom: 14px; font-size: 1rem; }
+  .livrari-filters-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 14px;
+  }
+  .livrari-filters-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 14px;
+  }
+  .livrari-filters-block + .livrari-filters-block {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .livrari-filters-block-title {
+    width: 100%;
+    margin: 0 0 8px 0;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
   .livrari-filters {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
-    gap: 20px;
+    gap: 14px;
   }
   .livrari-filters label {
     display: block;
     color: var(--muted);
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
-  .livrari-search-wrap { min-width: 240px; }
+  .livrari-search-wrap { min-width: 180px; }
   .livrari-search-input {
-    padding: 12px 16px;
+    padding: 8px 12px;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 10px;
+    border-radius: 8px;
     background: rgba(17, 24, 39, 0.6);
     color: #fff;
     min-width: 100%;
-    font-size: 0.9375rem;
+    font-size: 0.8125rem;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
   .livrari-search-input::placeholder { color: #6B7280; }
   .livrari-search-input:focus {
     outline: none;
     border-color: var(--brand);
-    box-shadow: 0 0 0 3px rgba(255, 238, 0, 0.12);
+    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.15);
   }
   .livrari-filters select {
-    padding: 12px 16px;
+    padding: 8px 12px;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 10px;
+    border-radius: 8px;
     background: rgba(17, 24, 39, 0.6);
     color: #E5E7EB;
-    min-width: 180px;
-    font-size: 0.9375rem;
+    min-width: 140px;
+    font-size: 0.8125rem;
     font-weight: 500;
     cursor: pointer;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -125,9 +152,90 @@
   .livrari-filters select:focus {
     outline: none;
     border-color: var(--brand);
-    box-shadow: 0 0 0 3px rgba(255, 238, 0, 0.12);
+    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.15);
   }
-  .livrari-filters .livrari-btn { padding: 12px 22px; font-size: 0.9375rem; }
+  .livrari-filters .livrari-btn { padding: 8px 16px; font-size: 0.8125rem; }
+  .livrari-perioada-wrap { min-width: 200px; flex: 1 1 220px; }
+  .livrari-perioada-wrap label { display: block; margin-bottom: 4px; font-size: 0.6875rem; }
+  .livrari-perioada-field {
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    background: rgba(17, 24, 39, 0.6);
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .livrari-perioada-field:hover { border-color: rgba(255, 238, 0, 0.4); }
+  .livrari-perioada-field:focus-within { border-color: var(--brand); box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.15); }
+  .livrari-perioada-field input {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    color: #E5E7EB;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    min-width: 0;
+  }
+  .livrari-perioada-field input::placeholder { color: #6B7280; }
+  .livrari-perioada-field input:focus { outline: none; }
+  .livrari-perioada-icon {
+    padding: 8px 10px;
+    color: var(--brand);
+    opacity: 0.9;
+    font-size: 0.875rem;
+  }
+  .livrari-perioada-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+    align-items: center;
+  }
+  .livrari-preset-btn {
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
+    color: #9CA3AF;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+  }
+  .livrari-preset-btn:hover {
+    background: rgba(255, 238, 0, 0.12);
+    color: var(--brand);
+    border-color: rgba(255, 238, 0, 0.3);
+  }
+  .livrari-filter-item { display: flex; flex-direction: column; gap: 4px; }
+  .livrari-filter-item label { margin-bottom: 0; font-size: 0.6875rem; }
+  .livrari-filter-item select {
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    background-color: rgba(17, 24, 39, 0.6);
+    color: #E5E7EB;
+    min-width: 140px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%239CA3AF' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+  }
+  .livrari-filter-item select:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.15);
+  }
+  .livrari-filter-item select:hover { border-color: rgba(255, 255, 255, 0.2); }
+  .livrari-search-wrap.livrari-filter-item { min-width: 160px; flex: 1 1 180px; }
   .livrari-btn {
     padding: 12px 24px;
     border-radius: 10px;
@@ -157,8 +265,8 @@
   .livrari-btn-edit:hover { background: rgba(255, 238, 0, 0.15); }
 
   /* ---------- Data table ---------- */
-  .livrari-table-card { padding: 24px 28px; }
-  .livrari-table-card h2 { margin-bottom: 20px; }
+  .livrari-table-card { padding: 18px 20px; }
+  .livrari-table-card h2 { margin-bottom: 14px; font-size: 1rem; }
   .livrari-table-wrap {
     overflow-x: auto;
     border-radius: 12px;
@@ -168,21 +276,22 @@
   .livrari-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
   }
   .livrari-table th {
     background: rgba(255, 238, 0, 0.08);
     color: var(--brand);
-    padding: 14px 18px;
+    padding: 10px 14px;
     text-align: left;
     font-weight: 700;
-    font-size: 0.6875rem;
+    font-size: 0.625rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     border-bottom: 1px solid rgba(255, 238, 0, 0.2);
   }
   .livrari-table td {
-    padding: 14px 18px;
+    padding: 10px 14px;
+    font-size: 0.8125rem;
     color: #E5E7EB;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
@@ -356,8 +465,11 @@
     .livrari-page { padding: 20px 16px 32px; }
     .livrari-card { padding: 20px; }
     .livrari-filters { gap: 16px; }
+    .livrari-filters-block + .livrari-filters-block { margin-top: 20px; padding-top: 20px; }
     .livrari-filters select { min-width: 100%; }
+    .livrari-filter-item select { min-width: 100%; }
     .livrari-search-wrap { min-width: 100%; }
+    .livrari-perioada-wrap { min-width: 100%; flex: 1 1 100%; }
   }
 
   /* ---------- Admin: KPI & extra polish ---------- */
@@ -505,6 +617,90 @@
     .livrari-page--admin .livrari-kpi-total-card { flex-direction: column; align-items: flex-start; }
     .livrari-page--admin .livrari-kpi-total-value { font-size: 1.75rem; }
   }
+  /* Flatpickr – calendar compact și stilizat */
+  .livrari-page .flatpickr-calendar {
+    background: #1F2937;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border-radius: 12px;
+  }
+  .livrari-page .flatpickr-calendar.open { z-index: 1100; }
+  .livrari-page .flatpickr-months { background: #1F2937; padding: 8px 4px 4px; }
+  .livrari-page .flatpickr-current-month {
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0 0 6px 0;
+  }
+  .livrari-page .flatpickr-prev-month,
+  .livrari-page .flatpickr-next-month {
+    padding: 6px 10px;
+    top: 8px;
+  }
+  .livrari-page .flatpickr-prev-month svg,
+  .livrari-page .flatpickr-next-month svg { fill: #FFEE00; width: 12px; height: 12px; }
+  .livrari-page .flatpickr-prev-month:hover svg,
+  .livrari-page .flatpickr-next-month:hover svg { fill: #fff; }
+  .livrari-page .flatpickr-weekdays { background: #1F2937; }
+  .livrari-page span.flatpickr-weekday {
+    color: #9CA3AF;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .livrari-page .flatpickr-days {
+    background: #1F2937;
+    border-color: rgba(255,255,255,0.06);
+    padding: 4px;
+  }
+  .livrari-page .dayContainer { padding: 0; }
+  .livrari-page .flatpickr-day {
+    color: #E5E7EB;
+    font-size: 0.8125rem;
+    max-width: 32px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 8px;
+  }
+  .livrari-page .flatpickr-day:hover {
+    background: rgba(255, 238, 0, 0.2);
+    border-color: rgba(255, 238, 0, 0.3);
+    color: #fff;
+  }
+  .livrari-page .flatpickr-day.selected,
+  .livrari-page .flatpickr-day.startRange,
+  .livrari-page .flatpickr-day.endRange {
+    background: #FFEE00;
+    border-color: #FFEE00;
+    color: #0a0a0a;
+    font-weight: 600;
+  }
+  .livrari-page .flatpickr-day.inRange {
+    background: rgba(255, 238, 0, 0.22);
+    border-color: rgba(255, 238, 0, 0.25);
+    box-shadow: none;
+    color: #fff;
+  }
+  .livrari-page .flatpickr-day.flatpickr-disabled { color: #6B7280; }
+  .livrari-page .flatpickr-monthDropdown-months {
+    background: #111827;
+    color: #fff;
+    font-size: 0.8125rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .livrari-page .numInputWrapper { width: 36px; }
+  .livrari-page .numInputWrapper input {
+    font-size: 0.8125rem;
+    padding: 4px 6px;
+    background: rgba(17, 24, 39, 0.8);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    color: #fff;
+  }
+  .livrari-page .numInputWrapper span.arrowUp:after { border-bottom-color: #FFEE00; }
+  .livrari-page .numInputWrapper span.arrowDown:after { border-top-color: #FFEE00; }
 </style>
 @endpush
 
@@ -514,53 +710,74 @@
   <p class="subtitle">{{ $isAdmin ? 'Toate livrările și KPI per operator' : 'Adaugă și vizualizează livrările tale' }}</p>
 
   @php
-    $filters = $filters ?? ['luna' => '', 'operator_id' => '', 'locatie' => '', 'cauta' => '', 'data' => ''];
+    $filters = $filters ?? ['luna' => '', 'operator_id' => '', 'locatie' => '', 'cauta' => '', 'data' => '', 'data_de_la' => '', 'data_pana' => ''];
     $operatorsForFilter = $operatorsForFilter ?? collect();
   @endphp
 
   <form method="get" action="{{ route('livrari') }}" class="livrari-card livrari-filters-card" style="margin-bottom: 20px;">
-    <h2 style="margin-bottom: 16px;"><i class="fas fa-filter"></i> Filtre și căutare</h2>
-    <div class="livrari-filters">
-      <div class="livrari-search-wrap">
-        <label for="cauta">Căutare</label>
-        <input type="text" id="cauta" name="cauta" value="{{ $filters['cauta'] ?? '' }}" placeholder="Nr. comandă, adresă, raion, nr. telefon..." class="livrari-search-input" maxlength="200">
+    <h2 style="margin-bottom: 20px;"><i class="fas fa-filter"></i> Filtre și căutare</h2>
+
+    <div class="livrari-filters-block">
+      <span class="livrari-filters-block-title">Perioadă</span>
+      <div class="livrari-filters-row" style="width: 100%;">
+        <div class="livrari-perioada-wrap">
+          <label for="livrari_perioada_input">Interval date</label>
+          <div class="livrari-perioada-field" id="livrariPerioadaTrigger">
+            <input type="text" id="livrari_perioada_input" readonly placeholder="Click pentru a alege perioada..." value="{{ isset($filters['data_de_la']) && isset($filters['data_pana']) && $filters['data_de_la'] !== '' && $filters['data_pana'] !== '' ? \Carbon\Carbon::parse($filters['data_de_la'])->format('d.m.Y') . ' – ' . \Carbon\Carbon::parse($filters['data_pana'])->format('d.m.Y') : '' }}">
+            <span class="livrari-perioada-icon"><i class="fas fa-calendar-alt"></i></span>
+          </div>
+          <input type="hidden" name="data_de_la" id="data_de_la" value="{{ $filters['data_de_la'] ?? '' }}">
+          <input type="hidden" name="data_pana" id="data_pana" value="{{ $filters['data_pana'] ?? '' }}">
+          <div class="livrari-perioada-presets">
+            <button type="button" class="livrari-preset-btn" data-days="7">7 zile</button>
+            <button type="button" class="livrari-preset-btn" data-days="30">30 zile</button>
+            <button type="button" class="livrari-preset-btn" data-range="month">Luna aceasta</button>
+            <button type="button" class="livrari-preset-btn" data-range="prev-month">Luna trecută</button>
+          </div>
+        </div>
       </div>
-      <div>
-        <label for="data_livrarii">Data livrării</label>
-        <input type="date" id="data_livrarii" name="data" value="{{ $filters['data'] ?? '' }}" class="livrari-search-input" style="min-width: 160px;">
-      </div>
-      <div>
-        <label>Lună</label>
-        <select name="luna">
-          <option value="">Toate lunile</option>
-          @foreach(range(now()->year, now()->year - 2, -1) as $y)
-            @foreach(range(1, 12) as $m)
-              @php $ym = sprintf('%04d-%02d', $y, $m); @endphp
-              <option value="{{ $ym }}" {{ ($filters['luna'] ?? '') == $ym ? 'selected' : '' }}>{{ \Carbon\Carbon::createFromFormat('Y-m', $ym)->translatedFormat('F Y') }}</option>
+    </div>
+
+    <div class="livrari-filters-block">
+      <span class="livrari-filters-block-title">Alte filtre</span>
+      <div class="livrari-filters-row">
+        <div class="livrari-search-wrap livrari-filter-item">
+          <label for="cauta">Căutare</label>
+          <input type="text" id="cauta" name="cauta" value="{{ $filters['cauta'] ?? '' }}" placeholder="Nr. comandă, adresă, raion..." class="livrari-search-input" maxlength="200">
+        </div>
+        <div class="livrari-filter-item">
+          <label for="luna">Lună</label>
+          <select name="luna" id="luna">
+            <option value="">Toate lunile</option>
+            @foreach(range(now()->year, now()->year - 2, -1) as $y)
+              @foreach(range(1, 12) as $m)
+                @php $ym = sprintf('%04d-%02d', $y, $m); @endphp
+                <option value="{{ $ym }}" {{ ($filters['luna'] ?? '') == $ym ? 'selected' : '' }}>{{ \Carbon\Carbon::createFromFormat('Y-m', $ym)->translatedFormat('F Y') }}</option>
+              @endforeach
             @endforeach
-          @endforeach
-        </select>
+          </select>
+        </div>
+        @if($isAdmin)
+        <div class="livrari-filter-item">
+          <label for="operator_id">Operator</label>
+          <select name="operator_id" id="operator_id">
+            <option value="">Toți operatorii</option>
+            @foreach($operatorsForFilter as $u)
+              <option value="{{ $u->id }}" {{ ($filters['operator_id'] ?? '') == $u->id ? 'selected' : '' }}>{{ trim($u->full_name ?? $u->name ?? '') ?: $u->username }}</option>
+            @endforeach
+          </select>
+        </div>
+        @endif
+        <div class="livrari-filter-item">
+          <label for="locatie">Locație</label>
+          <select name="locatie" id="locatie">
+            <option value="">Toate</option>
+            <option value="chisinau" {{ ($filters['locatie'] ?? '') === 'chisinau' ? 'selected' : '' }}>În Chișinău</option>
+            <option value="afara" {{ ($filters['locatie'] ?? '') === 'afara' ? 'selected' : '' }}>În afara</option>
+          </select>
+        </div>
+        <button type="submit" class="livrari-btn livrari-btn-primary"><i class="fas fa-search"></i> Filtrează</button>
       </div>
-      @if($isAdmin)
-      <div>
-        <label>Operator</label>
-        <select name="operator_id">
-          <option value="">Toți operatorii</option>
-          @foreach($operatorsForFilter as $u)
-            <option value="{{ $u->id }}" {{ ($filters['operator_id'] ?? '') == $u->id ? 'selected' : '' }}>{{ trim($u->full_name ?? $u->name ?? '') ?: $u->username }}</option>
-          @endforeach
-        </select>
-      </div>
-      @endif
-      <div>
-        <label>Locație</label>
-        <select name="locatie">
-          <option value="">Toate</option>
-          <option value="chisinau" {{ ($filters['locatie'] ?? '') === 'chisinau' ? 'selected' : '' }}>În Chișinău</option>
-          <option value="afara" {{ ($filters['locatie'] ?? '') === 'afara' ? 'selected' : '' }}>În afara</option>
-        </select>
-      </div>
-      <button type="submit" class="livrari-btn livrari-btn-primary"><i class="fas fa-search"></i> Filtrează</button>
     </div>
   </form>
 
@@ -1024,6 +1241,91 @@
       .finally(function() { if (editSubmitBtn) editSubmitBtn.disabled = false; });
     });
   }
+})();
+</script>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ro.js"></script>
+<script>
+(function() {
+  var trigger = document.getElementById('livrariPerioadaTrigger');
+  var displayInput = document.getElementById('livrari_perioada_input');
+  var hiddenDeLa = document.getElementById('data_de_la');
+  var hiddenPana = document.getElementById('data_pana');
+  if (!trigger || !displayInput || !hiddenDeLa || !hiddenPana) return;
+
+  function formatRO(d) {
+    var day = ('0' + d.getDate()).slice(-2);
+    var month = ('0' + (d.getMonth() + 1)).slice(-2);
+    var year = d.getFullYear();
+    return day + '.' + month + '.' + year;
+  }
+  function setHidden(from, to) {
+    if (!from || !to) return;
+    hiddenDeLa.value = from.getFullYear() + '-' + ('0' + (from.getMonth() + 1)).slice(-2) + '-' + ('0' + from.getDate()).slice(-2);
+    hiddenPana.value = to.getFullYear() + '-' + ('0' + (to.getMonth() + 1)).slice(-2) + '-' + ('0' + to.getDate()).slice(-2);
+    displayInput.value = formatRO(from) + ' – ' + formatRO(to);
+  }
+
+  var defaultDate = [];
+  if (hiddenDeLa.value && hiddenPana.value) {
+    defaultDate = [hiddenDeLa.value, hiddenPana.value];
+  }
+
+  var fp = flatpickr(displayInput, {
+    mode: 'range',
+    dateFormat: 'Y-m-d',
+    locale: 'ro',
+    defaultDate: defaultDate,
+    allowInput: false,
+    onChange: function(selectedDates, dateStr, instance) {
+      if (selectedDates.length === 2) {
+        setHidden(selectedDates[0], selectedDates[1]);
+      } else if (selectedDates.length === 1) {
+        hiddenDeLa.value = dateStr;
+        hiddenPana.value = '';
+        displayInput.value = formatRO(selectedDates[0]) + ' – ...';
+      }
+    },
+    onClose: function(selectedDates, dateStr, instance) {
+      if (selectedDates.length === 1) {
+        setHidden(selectedDates[0], selectedDates[0]);
+        displayInput.value = formatRO(selectedDates[0]);
+      }
+    }
+  });
+
+  trigger.addEventListener('click', function(e) {
+    if (e.target.closest('.livrari-preset-btn')) return;
+    if (e.target.closest('#livrariPerioadaTrigger')) fp.open();
+  });
+
+  document.querySelectorAll('.livrari-preset-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var now = new Date();
+      var start, end;
+      var days = btn.getAttribute('data-days');
+      var range = btn.getAttribute('data-range');
+      if (days) {
+        var n = parseInt(days, 10);
+        end = new Date(now);
+        start = new Date(now);
+        start.setDate(start.getDate() - n + 1);
+      } else if (range === 'month') {
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+        end = new Date(now);
+      } else if (range === 'prev-month') {
+        start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        end = new Date(now.getFullYear(), now.getMonth(), 0);
+      } else {
+        return;
+      }
+      fp.setDate([start, end], true);
+      setHidden(start, end);
+    });
+  });
 })();
 </script>
 @endpush
