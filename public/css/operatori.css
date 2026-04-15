@@ -1,3 +1,320 @@
+/* ========== PORTAL OPERATOR (layouts.operator) ========== */
+body.operator-portal {
+  min-height: 100vh;
+}
+
+.operator-portal .operator-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--text-primary);
+  background: transparent;
+}
+
+.operator-portal .operator-app::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.45;
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(255, 238, 0, 0.12), transparent 50%),
+    radial-gradient(ellipse 60% 50% at 100% 50%, rgba(59, 130, 246, 0.06), transparent 45%),
+    radial-gradient(ellipse 50% 40% at 0% 80%, rgba(139, 92, 246, 0.05), transparent 40%);
+}
+
+.operator-portal .operator-nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  padding: 0 clamp(16px, 3vw, 28px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(17, 24, 39, 0.78);
+  backdrop-filter: blur(16px) saturate(1.25);
+  -webkit-backdrop-filter: blur(16px) saturate(1.25);
+  box-shadow:
+    0 1px 0 rgba(255, 238, 0, 0.04) inset,
+    0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.operator-portal .operator-nav-inner {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 24px);
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 0;
+}
+
+.operator-portal .operator-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text-primary);
+  flex-shrink: 0;
+  border-radius: 14px;
+  padding: 4px 8px 4px 4px;
+  margin: -4px -8px -4px -4px;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.operator-portal .operator-nav-brand:hover {
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.operator-portal .operator-nav-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.operator-portal .operator-nav-mark img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  display: block;
+}
+
+.operator-portal .operator-nav-wordmark {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.35em;
+  font-family: var(--font-wordmark, "Space Grotesk", "Noto Sans", system-ui, sans-serif);
+  font-weight: 600;
+  font-size: 1.125rem;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+
+.operator-portal .operator-nav-wordmark-volta {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.operator-portal .operator-nav-wordmark-stats {
+  color: var(--brand, #ffee00);
+  font-weight: 700;
+}
+
+.operator-portal .operator-nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 6px;
+  padding: 4px;
+  margin: 0 -4px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.operator-portal .operator-nav-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+}
+
+.operator-portal .operator-nav-links a:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+}
+
+.operator-portal .operator-nav-links a.active {
+  background: var(--brand-10, rgba(255, 238, 0, 0.12));
+  color: var(--brand, #ffee00);
+  border-color: rgba(255, 238, 0, 0.2);
+  box-shadow: 0 0 20px rgba(255, 238, 0, 0.08);
+}
+
+.operator-portal .operator-nav-links a i {
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+.operator-portal .operator-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.operator-portal .operator-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 4px 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.operator-portal .operator-user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--brand, #ffee00);
+  color: var(--text-inverse, #0f172a);
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(15, 23, 42, 0.35);
+  box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.operator-portal .operator-user-info {
+  text-align: right;
+  min-width: 0;
+}
+
+.operator-portal .operator-user-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-primary);
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.operator-portal .operator-user-role {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-transform: capitalize;
+}
+
+.operator-portal .operator-logout form {
+  margin: 0;
+}
+
+.operator-portal .operator-logout button {
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.28);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.operator-portal .operator-logout button:hover {
+  background: rgba(239, 68, 68, 0.28);
+  color: #fff;
+  border-color: rgba(239, 68, 68, 0.45);
+}
+
+.operator-portal .operator-logout button:active {
+  transform: scale(0.98);
+}
+
+.operator-portal .operator-main {
+  flex: 1;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: clamp(20px, 3vw, 32px) clamp(16px, 3vw, 32px) 48px;
+}
+
+@media (max-width: 1024px) {
+  .operator-portal .operator-nav-inner {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+
+  .operator-portal .operator-nav-links {
+    order: 3;
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    -webkit-mask-image: linear-gradient(to right, #000 92%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 92%, transparent 100%);
+  }
+
+  .operator-portal .operator-nav-right {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .operator-portal .operator-nav-wordmark {
+    font-size: 1rem;
+  }
+
+  .operator-portal .operator-nav-mark {
+    width: 40px;
+    height: 40px;
+  }
+
+  .operator-portal .operator-nav-mark img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .operator-portal .operator-nav-links a {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .operator-portal .operator-user-info {
+    display: none;
+  }
+
+  .operator-portal .operator-user {
+    padding: 4px;
+  }
+
+  .operator-portal .operator-main {
+    padding: 16px 14px 40px;
+  }
+}
+
+@media (max-width: 400px) {
+  .operator-portal .operator-nav-links a span {
+    display: none;
+  }
+
+  .operator-portal .operator-nav-links a {
+    padding: 10px 14px;
+  }
+
+  .operator-portal .operator-nav-links a i {
+    margin: 0;
+    font-size: 16px;
+  }
+}
+
 /* ========== PAGINA OPERATORI (index + raport + show) ========== */
 /* Context comun - asigură că designul nu e suprascris de alte reguli */
 .operatori-page,

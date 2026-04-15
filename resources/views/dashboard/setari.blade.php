@@ -1,6 +1,6 @@
 @extends(auth()->check() && auth()->user()->isOperator() ? 'layouts.operator' : 'layouts.app')
 
-@section('title', 'Setări – VOLTA')
+@section('title', auth()->check() && auth()->user()->isOperator() ? 'Setări – VOLTA STATS' : 'Setări – VOLTA')
 
 @push('styles')
 <link rel="stylesheet" href="{{ url('css/setari.css') }}">

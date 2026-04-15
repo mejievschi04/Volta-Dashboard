@@ -74,6 +74,7 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
         Route::get('/rapoarte/raport-lunar', [RaportLunarController::class, 'index'])->name('rapoarte.raport-lunar');
+        Route::post('/rapoarte/raport-lunar/inputs', [RaportLunarController::class, 'storeInputs'])->name('rapoarte.raport-lunar.inputs');
     });
     
     // Ruta show trebuie să fie după create pentru a evita conflictele

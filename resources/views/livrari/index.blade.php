@@ -1,6 +1,6 @@
 @extends(auth()->check() && auth()->user()->isOperator() ? 'layouts.operator' : 'layouts.app')
 
-@section('title', 'Livrări – VOLTA')
+@section('title', auth()->check() && auth()->user()->isOperator() ? 'Livrări – VOLTA STATS' : 'Livrări – VOLTA')
 @section('header-title', 'Livrări')
 
 @push('styles')

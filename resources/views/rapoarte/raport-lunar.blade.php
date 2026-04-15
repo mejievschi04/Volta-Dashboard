@@ -11,8 +11,11 @@
     <div class="raport-lunar-hero__text">
       <h1 class="raport-lunar-title">Raport lunar call center</h1>
       <p class="raport-lunar-intro">
-        Aceeași structură ca în Excel: <strong>TOTAL</strong>, <strong>Chaturi</strong>, <strong>Apeluri</strong>, <strong>Vânzări</strong>.
-        Date din 1C și plan lunar; coloanele fără sursă în baza de date rămân goale până le legați de CRM / telefonie.
+        Aceeași logică ca în Excelul analizat: <strong>pondere chaturi</strong> = chaturi operator / Σ chaturi;
+        <strong>pondere apeluri</strong> = apeluri / Σ apeluri;
+        <strong>aport activitate</strong> (coloana „Aport în %” din TOTAL) = (chaturi + apeluri operator) / (Σ chaturi + Σ apeluri);
+        <strong>aport vânzări</strong> = vânzări fără TVA operator / Σ vânzări (doar operatorii afișați).
+        În raport intră <strong>doar operatorii marcați activi</strong> în pagina Operatori și prezenți în KPI 1C pentru luna aleasă.
       </p>
     </div>
   </header>
@@ -36,12 +39,35 @@
     </form>
   </div>
 
+  @if (session('status'))
+    <div class="raport-lunar-flash raport-lunar-flash--ok" role="status">{{ session('status') }}</div>
+  @endif
+  @if ($errors->any())
+    <div class="raport-lunar-flash raport-lunar-flash--err" role="alert">
+      <ul class="raport-lunar-flash-list">
+        @foreach ($errors->all() as $err)
+          <li>{{ $err }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
   @if(!$has_sync && count($operator_rows) === 0)
     <div class="raport-lunar-empty" role="status">
       <span class="raport-lunar-empty__icon" aria-hidden="true"><i class="fas fa-database"></i></span>
       <div>
         <strong class="raport-lunar-empty__title">Fără date 1C pentru {{ $luna_label }}</strong>
-        <p class="raport-lunar-empty__text">După sincronizarea KPI, reîncarcă pagina. Poți descărca totuși Excel-ul cu structura goală.</p>
+        <p class="raport-lunar-empty__text">După sincronizarea KPI, reîncarcă pagina.</p>
+      </div>
+    </div>
+  @endif
+
+  @if($has_sync && count($operator_rows) === 0)
+    <div class="raport-lunar-empty raport-lunar-empty--info" role="status">
+      <span class="raport-lunar-empty__icon" aria-hidden="true"><i class="fas fa-user-slash"></i></span>
+      <div>
+        <strong class="raport-lunar-empty__title">Niciun operator activ cu KPI pentru {{ $luna_label }}</strong>
+        <p class="raport-lunar-empty__text">Marchează operatorii ca activi în <a href="{{ route('operatori') }}">Operatori</a> și asigură-te că numele din 1C se potrivește (fără diferențe majore de ortografie).</p>
       </div>
     </div>
   @endif
@@ -61,8 +87,19 @@
         <span class="raport-lunar-stat__value">{{ $sync_vanzari_fara_tva !== null ? number_format($sync_vanzari_fara_tva, 2, ',', ' ') . ' MDL' : '—' }}</span>
       </div>
     @endif
+    @if(count($operator_rows) > 0)
+      <div class="raport-lunar-stat">
+        <span class="raport-lunar-stat__label">Σ Chaturi (introduse)</span>
+        <span class="raport-lunar-stat__value">{{ $footer_total['chaturi'] ?? '0' }}</span>
+      </div>
+      <div class="raport-lunar-stat">
+        <span class="raport-lunar-stat__label">Σ Apeluri (introduse)</span>
+        <span class="raport-lunar-stat__value">{{ $footer_total['apeluri'] ?? '0' }}</span>
+      </div>
+    @endif
   </div>
 
+  @if(count($operator_rows) > 0)
   <section class="raport-lunar-panel" aria-labelledby="raport-total-h">
     <div class="raport-lunar-panel__head">
       <span class="raport-lunar-panel__icon" aria-hidden="true"><i class="fas fa-table"></i></span>
@@ -77,9 +114,9 @@
               <th>NP</th>
               <th>Chaturi</th>
               <th>Apeluri</th>
-              <th>Aport în %</th>
+              <th title="(chaturi+apeluri operator) / (Σ chaturi + Σ apeluri)">Aport activitate</th>
               <th class="text-right">Vânzări (fără TVA, lei)</th>
-              <th>Aport în %</th>
+              <th title="Vânzări operator / Σ vânzări (operatori activi)">Aport vânzări</th>
               <th>Plan individual</th>
               <th>Îndeplinirea plan</th>
             </tr>
@@ -88,19 +125,19 @@
             @foreach($operator_rows as $r)
               <tr>
                 <td class="text-left raport-lunar-col-np">{{ $r['np'] }}</td>
-                <td class="text-center raport-lunar-col-muted">{{ $r['chaturi'] !== '' ? $r['chaturi'] : '—' }}</td>
-                <td class="text-center raport-lunar-col-muted">{{ $r['apeluri'] !== '' ? $r['apeluri'] : '—' }}</td>
-                <td class="text-center raport-lunar-col-muted">{{ $r['aport_activitate'] !== '' ? $r['aport_activitate'] : '—' }}</td>
-                <td class="text-right raport-lunar-num">{{ $r['vanzari_fara_tva'] !== '' ? $r['vanzari_fara_tva'] : '—' }}</td>
-                <td class="text-center">{{ $r['aport_vanzari'] !== '' ? $r['aport_vanzari'] : '—' }}</td>
-                <td class="text-center raport-lunar-col-muted">{{ $r['plan_individual'] !== '' ? $r['plan_individual'] : '—' }}</td>
-                <td class="text-center">{{ $r['indeplinire_plan'] !== '' ? $r['indeplinire_plan'] : '—' }}</td>
+                <td class="text-center">{{ $r['chaturi'] }}</td>
+                <td class="text-center">{{ $r['apeluri'] }}</td>
+                <td class="text-center raport-lunar-mono">{{ $r['aport_activitate'] !== '' ? $r['aport_activitate'] : '—' }}</td>
+                <td class="text-right raport-lunar-num">{{ $r['vanzari_fara_tva'] }}</td>
+                <td class="text-center raport-lunar-mono">{{ $r['aport_vanzari'] !== '' ? $r['aport_vanzari'] : '—' }}</td>
+                <td class="text-center raport-lunar-col-muted">—</td>
+                <td class="text-center raport-lunar-col-muted">—</td>
               </tr>
             @endforeach
             <tr class="raport-lunar-total-row">
               <td class="text-left"><strong>TOTAL</strong></td>
-              <td class="text-center raport-lunar-col-muted">—</td>
-              <td class="text-center raport-lunar-col-muted">—</td>
+              <td class="text-center"><strong>{{ $footer_total['chaturi'] ?? '0' }}</strong></td>
+              <td class="text-center"><strong>{{ $footer_total['apeluri'] ?? '0' }}</strong></td>
               <td class="text-center raport-lunar-col-muted">—</td>
               <td class="text-right raport-lunar-num"><strong>{{ $footer_total['vanzari_fara_tva'] !== '' ? $footer_total['vanzari_fara_tva'] : '—' }}</strong></td>
               <td class="text-center raport-lunar-col-muted">—</td>
@@ -120,70 +157,89 @@
     </div>
   </section>
 
-  <div class="raport-lunar-split">
-    <section class="raport-lunar-panel raport-lunar-panel--compact" aria-labelledby="raport-chat-h">
-      <div class="raport-lunar-panel__head">
-        <span class="raport-lunar-panel__icon raport-lunar-panel__icon--chat" aria-hidden="true"><i class="fas fa-comments"></i></span>
-        <h2 id="raport-chat-h" class="raport-lunar-panel__title">Chaturi</h2>
-      </div>
-      <div class="raport-lunar-table-shell">
-        <div class="raport-lunar-table-scroll raport-lunar-table-scroll--narrow">
-          <table class="raport-lunar-table">
-            <thead>
-              <tr>
-                <th>NP</th>
-                <th class="text-center">Chaturi</th>
-                <th class="text-center">Pondere</th>
-              </tr>
-            </thead>
-            <tbody>
-              @forelse($operator_rows as $r)
-                <tr>
-                  <td class="text-left raport-lunar-col-np">{{ $r['np'] }}</td>
-                  <td class="text-center raport-lunar-col-muted">—</td>
-                  <td class="text-center raport-lunar-col-muted">—</td>
-                </tr>
-              @empty
-                <tr><td colspan="3" class="text-center raport-lunar-col-muted">Niciun operator în KPI pentru această lună.</td></tr>
-              @endforelse
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+  <form method="post" action="{{ route('rapoarte.raport-lunar.inputs') }}" class="raport-lunar-inputs-form">
+    @csrf
+    <input type="hidden" name="month" value="{{ $ym }}">
+    @foreach($operator_rows as $r)
+      <input type="hidden" name="operators[]" value="{{ $r['np'] }}">
+    @endforeach
 
-    <section class="raport-lunar-panel raport-lunar-panel--compact" aria-labelledby="raport-apel-h">
-      <div class="raport-lunar-panel__head">
-        <span class="raport-lunar-panel__icon raport-lunar-panel__icon--phone" aria-hidden="true"><i class="fas fa-phone-alt"></i></span>
-        <h2 id="raport-apel-h" class="raport-lunar-panel__title">Apeluri</h2>
-      </div>
-      <div class="raport-lunar-table-shell">
-        <div class="raport-lunar-table-scroll raport-lunar-table-scroll--narrow">
-          <table class="raport-lunar-table">
-            <thead>
-              <tr>
-                <th>NP</th>
-                <th class="text-center">Apeluri</th>
-                <th class="text-center">Pondere</th>
-              </tr>
-            </thead>
-            <tbody>
-              @forelse($operator_rows as $r)
-                <tr>
-                  <td class="text-left raport-lunar-col-np">{{ $r['np'] }}</td>
-                  <td class="text-center raport-lunar-col-muted">—</td>
-                  <td class="text-center raport-lunar-col-muted">—</td>
-                </tr>
-              @empty
-                <tr><td colspan="3" class="text-center raport-lunar-col-muted">Niciun operator în KPI pentru această lună.</td></tr>
-              @endforelse
-            </tbody>
-          </table>
+    <div class="raport-lunar-split">
+      <section class="raport-lunar-panel raport-lunar-panel--compact" aria-labelledby="raport-chat-h">
+        <div class="raport-lunar-panel__head">
+          <span class="raport-lunar-panel__icon raport-lunar-panel__icon--chat" aria-hidden="true"><i class="fas fa-comments"></i></span>
+          <h2 id="raport-chat-h" class="raport-lunar-panel__title">Chaturi</h2>
+          <span class="raport-lunar-panel__tag raport-lunar-panel__tag--soft" title="chaturi / Σ chaturi">Pondere</span>
         </div>
-      </div>
-    </section>
-  </div>
+        <div class="raport-lunar-table-shell">
+          <div class="raport-lunar-table-scroll raport-lunar-table-scroll--narrow">
+            <table class="raport-lunar-table">
+              <thead>
+                <tr>
+                  <th>NP</th>
+                  <th class="text-center">Chaturi</th>
+                  <th class="text-center">Pondere</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($operator_rows as $r)
+                  <tr>
+                    <td class="text-left raport-lunar-col-np">{{ $r['np'] }}</td>
+                    <td class="text-center">
+                      <input type="number" name="chaturi[]" class="raport-lunar-num-input" min="0" max="99999999" step="1" value="{{ (int) $r['chaturi_int'] }}" inputmode="numeric" aria-label="Chaturi {{ $r['np'] }}">
+                    </td>
+                    <td class="text-center raport-lunar-mono raport-lunar-col-muted">{{ $r['pondere_chaturi'] !== '' ? $r['pondere_chaturi'] : '—' }}</td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
+      <section class="raport-lunar-panel raport-lunar-panel--compact" aria-labelledby="raport-apel-h">
+        <div class="raport-lunar-panel__head">
+          <span class="raport-lunar-panel__icon raport-lunar-panel__icon--phone" aria-hidden="true"><i class="fas fa-phone-alt"></i></span>
+          <h2 id="raport-apel-h" class="raport-lunar-panel__title">Apeluri</h2>
+          <span class="raport-lunar-panel__tag raport-lunar-panel__tag--soft" title="apeluri / Σ apeluri">Pondere</span>
+        </div>
+        <div class="raport-lunar-table-shell">
+          <div class="raport-lunar-table-scroll raport-lunar-table-scroll--narrow">
+            <table class="raport-lunar-table">
+              <thead>
+                <tr>
+                  <th>NP</th>
+                  <th class="text-center">Apeluri</th>
+                  <th class="text-center">Pondere</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($operator_rows as $r)
+                  <tr>
+                    <td class="text-left raport-lunar-col-np">{{ $r['np'] }}</td>
+                    <td class="text-center">
+                      <input type="number" name="apeluri[]" class="raport-lunar-num-input" min="0" max="99999999" step="1" value="{{ (int) $r['apeluri_int'] }}" inputmode="numeric" aria-label="Apeluri {{ $r['np'] }}">
+                    </td>
+                    <td class="text-center raport-lunar-mono raport-lunar-col-muted">{{ $r['pondere_apeluri'] !== '' ? $r['pondere_apeluri'] : '—' }}</td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="raport-lunar-form-actions">
+      <button type="submit" class="btn raport-lunar-btn-icon">
+        <i class="fas fa-save" aria-hidden="true"></i><span>Salvează chaturi și apeluri</span>
+      </button>
+      <p class="raport-lunar-form-hint">După salvare, procentele din TOTAL și foile Excel se recalculează automat. Valorile sunt stocate per lună și per nume operator (din 1C).</p>
+    </div>
+  </form>
+  @endif
+
+  @if(count($vanzari_rows) > 0)
   <section class="raport-lunar-panel" aria-labelledby="raport-vanzari-h">
     <div class="raport-lunar-panel__head">
       <span class="raport-lunar-panel__icon raport-lunar-panel__icon--money" aria-hidden="true"><i class="fas fa-coins"></i></span>
@@ -202,21 +258,20 @@
             </tr>
           </thead>
           <tbody>
-            @forelse($vanzari_rows as $vr)
+            @foreach($vanzari_rows as $vr)
               <tr @class(['raport-lunar-row--callcenter' => strtoupper(trim($vr['manager'])) === 'CALL-CENTER'])>
                 <td class="text-left raport-lunar-col-np">{{ $vr['manager'] }}</td>
                 <td class="text-right raport-lunar-num">{{ $vr['fara_tva'] !== '' ? $vr['fara_tva'] : '—' }}</td>
                 <td class="text-right raport-lunar-num">{{ $vr['cu_tva'] !== '' ? $vr['cu_tva'] : '—' }}</td>
                 <td class="text-right raport-lunar-num">{{ $vr['profit'] !== '' ? $vr['profit'] : '—' }}</td>
               </tr>
-            @empty
-              <tr><td colspan="4" class="text-center raport-lunar-col-muted">Nu există rânduri de vânzări pentru luna selectată.</td></tr>
-            @endforelse
+            @endforeach
           </tbody>
         </table>
       </div>
     </div>
   </section>
+  @endif
 </div>
 
 @push('scripts')

@@ -1,6 +1,6 @@
 @extends('layouts.operator')
 
-@section('title', 'Datele mele – VOLTA')
+@section('title', 'Datele mele – VOLTA STATS')
 
 @push('styles')
 <style>

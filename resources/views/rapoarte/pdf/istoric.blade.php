@@ -229,7 +229,7 @@
             @endif
         </div>
         <div class="header-center">
-            <div class="header-title">VOLTA Dashboard</div>
+            <div class="header-title">VOLTA STATS</div>
             <div class="header-subtitle">Raport Istoric Complet</div>
         </div>
         <div class="header-right">
@@ -339,7 +339,7 @@
     
     <!-- Footer -->
     <div class="footer">
-        <p><strong>VOLTA Dashboard</strong> - Sistem de Management și Analiză</p>
+        <p><strong>VOLTA STATS</strong> - Sistem de Management și Analiză</p>
         <p>Acest raport a fost generat automat pe {{ date('d.m.Y') }} la {{ date('H:i') }}</p>
         <p>© {{ date('Y') }} VOLTA. Toate drepturile rezervate.</p>
     </div>

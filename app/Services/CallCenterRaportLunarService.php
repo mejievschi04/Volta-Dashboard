@@ -3,13 +3,24 @@
 namespace App\Services;
 
 use App\Models\OnecKpiSync;
+use App\Models\Operator;
 use App\Models\PlanVanzari;
+use App\Models\RaportLunarCallCenterInput;
 use App\Support\DbDate;
 use App\Support\LunaRomana;
+use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
+
 /**
- * Agregă date disponibile în dashboard pentru un raport lunar tip „call center”
- * (structură similară cu exportul Excel manual: TOTAL, Chaturi, Apeluri, Vânzări).
- * Coloane fără sursă în DB (chat, apeluri, plan per operator) rămân goale.
+ * Raport lunar tip „call center”: 1C + plan + input manual chaturi/apeluri (admin).
+ *
+ * Procente (ca în Excel-ul analizat):
+ * - Pondere chaturi: chaturi operator / SUM(chaturi toți operatorii)
+ * - Pondere apeluri: apeluri operator / SUM(apeluri toți)
+ * - Aport activitate (coloana „Aport in %” din TOTAL): (chaturi+apeluri operator) / (SUM chaturi + SUM apeluri)
+ * - Aport vânzări: vânzări fără TVA operator / SUM(vânzări fără TVA) pe operatorii afișați (activi)
+ *
+ * Se afișează doar operatorii din KPI 1C care există în tabelul operatori cu activ = true (nume normalizat).
  */
 final class CallCenterRaportLunarService
 {
@@ -31,6 +42,48 @@ final class CallCenterRaportLunarService
     }
 
     /**
+     * Numele exacte (din 1C) permise pentru o lună — operatori activi prezenți în KPI.
+     *
+     * @return list<string>
+     */
+    public function allowedOperatorDisplayNames(string $ym): array
+    {
+        $ym = $this->normalizeYm($ym);
+        $sync = $this->loadSync($ym);
+        $filtered = $this->filterActiveKpiOperatori($sync);
+
+        return $filtered->map(fn ($op) => trim((string) ($op->operator_nume ?? '')))
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  list<array{operator_nume: string, chaturi: int, apeluri: int}>  $rows
+     */
+    public function saveOperatorInputs(string $ym, array $rows): void
+    {
+        $ym = $this->normalizeYm($ym);
+        $allowed = array_flip($this->allowedOperatorDisplayNames($ym));
+
+        foreach ($rows as $i => $row) {
+            $name = trim((string) ($row['operator_nume'] ?? ''));
+            if ($name === '' || ! isset($allowed[$name])) {
+                throw ValidationException::withMessages([
+                    "rows.$i.operator_nume" => 'Operator necunoscut sau inactiv pentru această lună: '.$name,
+                ]);
+            }
+            $ch = max(0, min(99999999, (int) ($row['chaturi'] ?? 0)));
+            $ap = max(0, min(99999999, (int) ($row['apeluri'] ?? 0)));
+
+            RaportLunarCallCenterInput::query()->updateOrCreate(
+                ['ym' => $ym, 'operator_nume' => $name],
+                ['chaturi' => $ch, 'apeluri' => $ap]
+            );
+        }
+    }
+
+    /**
      * @return array{
      *   ym: string,
      *   luna_label: string,
@@ -39,20 +92,8 @@ final class CallCenterRaportLunarService
      *   sync_vanzari_fara_tva: ?float,
      *   sync_vanzari_cu_tva: ?float,
      *   sync_profit: ?float,
-     *   operator_rows: list<array{
-     *     np: string,
-     *     chaturi: string,
-     *     apeluri: string,
-     *     aport_activitate: string,
-     *     vanzari_fara_tva: string,
-     *     aport_vanzari: string,
-     *     plan_individual: string,
-     *     indeplinire_plan: string,
-     *   }>,
-     *   footer_total: array{
-     *     vanzari_fara_tva: string,
-     *     plan_lunar: string,
-     *   },
+     *   operator_rows: list<array<string, mixed>>,
+     *   footer_total: array{vanzari_fara_tva: string, plan_lunar: string, chaturi: string, apeluri: string},
      *   vanzari_rows: list<array{manager: string, fara_tva: string, cu_tva: string, profit: string}>,
      *   excel_sheets: list<array{name: string, aoa: list<list<mixed>>}>
      * }
@@ -72,34 +113,65 @@ final class CallCenterRaportLunarService
         }
         $planLunar = $planRow ? (float) $planRow->valoare : null;
 
-        $sync = null;
+        $sync = $this->loadSync($ym);
+        $operatori = $this->filterActiveKpiOperatori($sync);
+
+        $inputsByName = collect();
         try {
-            $sync = OnecKpiSync::query()
-                ->whereRaw(DbDate::month('period_start').' = ?', [$ym])
-                ->orderByDesc('created_at')
-                ->with(['operatori' => fn ($q) => $q->orderBy('operator_nume')])
-                ->first();
+            $inputsByName = RaportLunarCallCenterInput::query()
+                ->where('ym', $ym)
+                ->get()
+                ->keyBy(fn (RaportLunarCallCenterInput $r) => trim($r->operator_nume));
         } catch (\Throwable) {
         }
 
-        $operatori = $sync ? $sync->operatori : collect();
-        $totalFtva = (float) $operatori->sum(fn ($o) => (float) $o->vanzari_fara_tva);
-
-        $operatorRows = [];
+        $rows = [];
         foreach ($operatori as $op) {
-            $v = (float) $op->vanzari_fara_tva;
-            $aportV = $totalFtva > 0 ? round($v / $totalFtva, 6) : null;
-
-            $operatorRows[] = [
-                'np' => trim((string) ($op->operator_nume ?? '')) ?: '—',
-                'chaturi' => '',
-                'apeluri' => '',
+            $np = trim((string) ($op->operator_nume ?? '')) ?: '—';
+            $input = $inputsByName->get($np);
+            $ch = $input ? (int) $input->chaturi : 0;
+            $ap = $input ? (int) $input->apeluri : 0;
+            $rows[] = [
+                'np' => $np,
+                'chaturi_int' => $ch,
+                'apeluri_int' => $ap,
+                'chaturi' => (string) $ch,
+                'apeluri' => (string) $ap,
                 'aport_activitate' => '',
-                'vanzari_fara_tva' => $this->fmtNum($v),
-                'aport_vanzari' => $aportV !== null ? (string) $aportV : '',
+                'vanzari_fara_tva' => $this->fmtNum((float) $op->vanzari_fara_tva),
+                'aport_vanzari' => '',
                 'plan_individual' => '',
                 'indeplinire_plan' => '',
+                'pondere_chaturi' => '',
+                'pondere_apeluri' => '',
             ];
+        }
+
+        $sumCh = (int) array_sum(array_column($rows, 'chaturi_int'));
+        $sumAp = (int) array_sum(array_column($rows, 'apeluri_int'));
+        $sumAct = $sumCh + $sumAp;
+
+        $totalFtva = (float) collect($rows)->sum(function ($r) {
+            return (float) str_replace(',', '', (string) $r['vanzari_fara_tva']);
+        });
+
+        foreach ($rows as $i => $r) {
+            $ch = $r['chaturi_int'];
+            $ap = $r['apeluri_int'];
+            $v = (float) str_replace(',', '', (string) $r['vanzari_fara_tva']);
+
+            $rows[$i]['aport_activitate'] = $sumAct > 0
+                ? (string) round(($ch + $ap) / $sumAct, 10)
+                : '';
+            $rows[$i]['aport_vanzari'] = $totalFtva > 0
+                ? (string) round($v / $totalFtva, 10)
+                : '';
+            $rows[$i]['pondere_chaturi'] = $sumCh > 0
+                ? (string) round($ch / $sumCh, 10)
+                : '';
+            $rows[$i]['pondere_apeluri'] = $sumAp > 0
+                ? (string) round($ap / $sumAp, 10)
+                : '';
         }
 
         $syncFtva = $sync ? (float) $sync->vanzari_fara_tva : null;
@@ -111,6 +183,8 @@ final class CallCenterRaportLunarService
         $footerTotal = [
             'vanzari_fara_tva' => $sumDisplay,
             'plan_lunar' => $planLunar !== null ? $this->fmtNum($planLunar) : '',
+            'chaturi' => (string) $sumCh,
+            'apeluri' => (string) $sumAp,
         ];
 
         $vanzariRows = [];
@@ -134,7 +208,7 @@ final class CallCenterRaportLunarService
         $excelSheets = $this->buildExcelSheets(
             LunaRomana::labelFromYm($ym),
             $planLunar,
-            $operatorRows,
+            $rows,
             $footerTotal,
             $vanzariRows,
             $sync !== null
@@ -148,11 +222,76 @@ final class CallCenterRaportLunarService
             'sync_vanzari_fara_tva' => $syncFtva,
             'sync_vanzari_cu_tva' => $syncCtva,
             'sync_profit' => $syncProfit,
-            'operator_rows' => $operatorRows,
+            'operator_rows' => $rows,
             'footer_total' => $footerTotal,
             'vanzari_rows' => $vanzariRows,
             'excel_sheets' => $excelSheets,
         ];
+    }
+
+    private function loadSync(?string $ym): ?OnecKpiSync
+    {
+        if ($ym === null) {
+            return null;
+        }
+        try {
+            return OnecKpiSync::query()
+                ->whereRaw(DbDate::month('period_start').' = ?', [$ym])
+                ->orderByDesc('created_at')
+                ->with(['operatori' => fn ($q) => $q->orderBy('operator_nume')])
+                ->first();
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    /**
+     * @return Collection<int, \App\Models\OnecKpiOperator>
+     */
+    private function filterActiveKpiOperatori(?OnecKpiSync $sync): Collection
+    {
+        if (! $sync) {
+            return collect();
+        }
+
+        $activeKeys = $this->activeOperatorNameKeys();
+
+        return $sync->operatori->filter(function ($op) use ($activeKeys) {
+            $key = $this->normalizeOpName((string) ($op->operator_nume ?? ''));
+
+            return $key !== '' && isset($activeKeys[$key]);
+        })->values();
+    }
+
+    /**
+     * @return array<string, true> chei normalizate pentru operatori activi
+     */
+    private function activeOperatorNameKeys(): array
+    {
+        try {
+            $names = Operator::query()
+                ->where('activ', true)
+                ->pluck('nume');
+        } catch (\Throwable) {
+            return [];
+        }
+
+        $keys = [];
+        foreach ($names as $n) {
+            $k = $this->normalizeOpName((string) $n);
+            if ($k !== '') {
+                $keys[$k] = true;
+            }
+        }
+
+        return $keys;
+    }
+
+    private function normalizeOpName(string $name): string
+    {
+        $t = trim(preg_replace('/\s+/u', ' ', $name));
+
+        return mb_strtolower($t, 'UTF-8');
     }
 
     private function fmtNum(float $n): string
@@ -165,8 +304,8 @@ final class CallCenterRaportLunarService
     }
 
     /**
-     * @param  list<array<string, string>>  $operatorRows
-     * @param  array{vanzari_fara_tva: string, plan_lunar: string}  $footerTotal
+     * @param  list<array<string, mixed>>  $operatorRows
+     * @param  array{vanzari_fara_tva: string, plan_lunar: string, chaturi: string, apeluri: string}  $footerTotal
      * @param  list<array{manager: string, fara_tva: string, cu_tva: string, profit: string}>  $vanzariRows
      * @return list<array{name: string, aoa: list<list<mixed>>}>
      */
@@ -193,10 +332,10 @@ final class CallCenterRaportLunarService
         foreach ($operatorRows as $r) {
             $totalAoa[] = [
                 $r['np'],
-                $r['chaturi'] === '' ? null : $r['chaturi'],
-                $r['apeluri'] === '' ? null : $r['apeluri'],
-                $r['aport_activitate'] === '' ? null : $r['aport_activitate'],
-                $r['vanzari_fara_tva'] === '' ? null : (float) str_replace(',', '', $r['vanzari_fara_tva']),
+                (int) $r['chaturi_int'],
+                (int) $r['apeluri_int'],
+                $r['aport_activitate'] === '' ? null : (float) $r['aport_activitate'],
+                $r['vanzari_fara_tva'] === '' ? null : (float) str_replace(',', '', (string) $r['vanzari_fara_tva']),
                 $r['aport_vanzari'] === '' ? null : (float) $r['aport_vanzari'],
                 $r['plan_individual'] === '' ? null : $r['plan_individual'],
                 $r['indeplinire_plan'] === '' ? null : $r['indeplinire_plan'],
@@ -209,10 +348,12 @@ final class CallCenterRaportLunarService
         $indeplFooter = ($ftvaFooter !== null && $planFooter !== null && $planFooter > 0)
             ? round($ftvaFooter / $planFooter, 8)
             : null;
+        $sumCh = isset($footerTotal['chaturi']) ? (int) $footerTotal['chaturi'] : 0;
+        $sumAp = isset($footerTotal['apeluri']) ? (int) $footerTotal['apeluri'] : 0;
         $totalAoa[] = [
             'TOTAL',
-            null,
-            null,
+            $sumCh > 0 ? $sumCh : null,
+            $sumAp > 0 ? $sumAp : null,
             null,
             $ftvaFooter,
             null,
@@ -225,10 +366,15 @@ final class CallCenterRaportLunarService
             ['', '', ''],
         ];
         foreach ($operatorRows as $r) {
-            $chaturiAoa[] = [$r['np'], '', ''];
+            $pond = $r['pondere_chaturi'] === '' ? null : (float) $r['pondere_chaturi'];
+            $chaturiAoa[] = [
+                $r['np'],
+                (int) $r['chaturi_int'],
+                $pond,
+            ];
         }
         $chaturiAoa[] = ['', '', ''];
-        $chaturiAoa[] = ['TOTAL', '', ''];
+        $chaturiAoa[] = ['TOTAL', $sumCh > 0 ? $sumCh : null, null];
 
         $apeluriAoa = [
             ['APELURI', '', ''],
@@ -236,10 +382,15 @@ final class CallCenterRaportLunarService
             ['', '', ''],
         ];
         foreach ($operatorRows as $r) {
-            $apeluriAoa[] = [$r['np'], '', ''];
+            $pondA = $r['pondere_apeluri'] === '' ? null : (float) $r['pondere_apeluri'];
+            $apeluriAoa[] = [
+                $r['np'],
+                (int) $r['apeluri_int'],
+                $pondA,
+            ];
         }
         $apeluriAoa[] = ['', '', ''];
-        $apeluriAoa[] = ['TOTAL', '', ''];
+        $apeluriAoa[] = ['TOTAL', $sumAp > 0 ? $sumAp : null, null];
 
         $vanzariAoa = [
             ['', '', '', '', ''],
