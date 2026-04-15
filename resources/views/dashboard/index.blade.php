@@ -90,27 +90,55 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
 
 <!-- GRAFICE -->
 <div class="charts-grid">
-  <div class="chart-container">
-    <h2><i class="fas fa-chart-line" style="margin-right: 8px;"></i>Grafic lunar</h2>
-    <div class="chart-wrapper" title="Click pentru vizualizare mare">
+  <div class="chart-container chart-panel">
+    <div class="chart-panel__head">
+      <span class="chart-panel__icon" aria-hidden="true"><i class="fas fa-chart-line"></i></span>
+      <div class="chart-panel__titles">
+        <h2 class="chart-panel__title">Grafic lunar</h2>
+        <p class="chart-panel__subtitle">Plan vs. vânzări reale</p>
+      </div>
+      <span class="chart-panel__hint">Mărește</span>
+    </div>
+    <div class="chart-wrapper chart-wrapper--glow" title="Click pentru vizualizare mare">
       <canvas id="salesChart"></canvas>
     </div>
   </div>
-  <div class="chart-container">
-    <h2><i class="fas fa-shopping-cart" style="margin-right: 8px;"></i>Comenzi per lună</h2>
-    <div class="chart-wrapper" title="Click pentru vizualizare mare">
+  <div class="chart-container chart-panel">
+    <div class="chart-panel__head">
+      <span class="chart-panel__icon" aria-hidden="true"><i class="fas fa-shopping-cart"></i></span>
+      <div class="chart-panel__titles">
+        <h2 class="chart-panel__title">Comenzi per lună</h2>
+        <p class="chart-panel__subtitle">Volum comenzi</p>
+      </div>
+      <span class="chart-panel__hint">Mărește</span>
+    </div>
+    <div class="chart-wrapper chart-wrapper--glow" title="Click pentru vizualizare mare">
       <canvas id="comenziLunarChart"></canvas>
     </div>
   </div>
-  <div class="chart-container">
-    <h2><i class="fas fa-percentage" style="margin-right: 8px;"></i>Conversie per lună</h2>
-    <div class="chart-wrapper" title="Click pentru vizualizare mare">
+  <div class="chart-container chart-panel">
+    <div class="chart-panel__head">
+      <span class="chart-panel__icon chart-panel__icon--coral" aria-hidden="true"><i class="fas fa-percentage"></i></span>
+      <div class="chart-panel__titles">
+        <h2 class="chart-panel__title">Conversie per lună</h2>
+        <p class="chart-panel__subtitle">Comenzi / sesiuni</p>
+      </div>
+      <span class="chart-panel__hint">Mărește</span>
+    </div>
+    <div class="chart-wrapper chart-wrapper--glow" title="Click pentru vizualizare mare">
       <canvas id="conversieLunarChart"></canvas>
     </div>
   </div>
-  <div class="chart-container">
-    <h2><i class="fas fa-network-wired" style="margin-right: 8px;"></i>Sesiuni per lună</h2>
-    <div class="chart-wrapper" title="Click pentru vizualizare mare">
+  <div class="chart-container chart-panel">
+    <div class="chart-panel__head">
+      <span class="chart-panel__icon chart-panel__icon--sky" aria-hidden="true"><i class="fas fa-network-wired"></i></span>
+      <div class="chart-panel__titles">
+        <h2 class="chart-panel__title">Sesiuni per lună</h2>
+        <p class="chart-panel__subtitle">Trafic site</p>
+      </div>
+      <span class="chart-panel__hint">Mărește</span>
+    </div>
+    <div class="chart-wrapper chart-wrapper--glow" title="Click pentru vizualizare mare">
       <canvas id="sesiuniChart"></canvas>
     </div>
   </div>
@@ -317,39 +345,19 @@ async function loadVanzariTotale() {
     }
 
     selectLuna.innerHTML = '';
-    
-    // Debug: logăm toate lunile primite
-    console.log('=== DEBUG LUNI ===');
-    console.log('Număr total luni primite de la API:', dataLunare.luni.length);
-    console.log('Toate lunile primite:', dataLunare.luni);
-    console.log('Primele 5 luni:', dataLunare.luni.slice(0, 5));
-    console.log('Ultimele 5 luni:', dataLunare.luni.slice(-5));
-    
-    // Sortăm lunile în ordine descrescătoare (ultimele primele)
+
     const luniSortate = [...dataLunare.luni].sort((a, b) => {
-      // Comparăm valorile YYYY-MM
       if (b.value > a.value) return 1;
       if (b.value < a.value) return -1;
       return 0;
     });
-    
-    console.log('Luni sortate (descrescător):', luniSortate);
-    
-    luniSortate.forEach((luna, index) => {
+
+    luniSortate.forEach((luna) => {
       const opt = document.createElement("option");
       opt.value = luna.value;
       opt.textContent = luna.label;
       selectLuna.appendChild(opt);
-      
-      // Log pentru primele și ultimele 3 opțiuni
-      if (index < 3 || index >= luniSortate.length - 3) {
-        console.log(`Opțiune ${index + 1}: ${luna.value} - ${luna.label}`);
-      }
     });
-    
-    console.log('Total opțiuni adăugate în selector:', selectLuna.options.length);
-    console.log('Toate opțiunile din selector:', Array.from(selectLuna.options).map(opt => opt.value + ' - ' + opt.text));
-    console.log('=== END DEBUG ===');
 
     // Grafic lunar agregat + Comenzi + Conversie (aceeași sursă, același stil)
     const labels = dataLunare.data.map(d => d.luna_label || d.luna);
@@ -362,14 +370,21 @@ async function loadVanzariTotale() {
     const isDashMobile = window.innerWidth <= 768;
     const barChartOptions = typeof VoltaChartTheme !== "undefined"
       ? VoltaChartTheme.cartesianDefaults({
+          datasets: {
+            bar: {
+              categoryPercentage: 0.72,
+              barPercentage: 0.86,
+              maxBarThickness: isDashMobile ? 40 : 52,
+            },
+          },
           plugins: {
             legend: {
               display: true,
               position: "top",
               labels: {
                 color: VoltaChartTheme.colors.textSecondary,
-                font: { family: VoltaChartTheme.font, size: isDashMobile ? 11 : 13, weight: "500" },
-                padding: isDashMobile ? 10 : 14,
+                font: { family: VoltaChartTheme.font, size: isDashMobile ? 11 : 12, weight: "600" },
+                padding: isDashMobile ? 12 : 16,
                 usePointStyle: true,
                 pointStyle: "rectRounded",
               },
@@ -398,6 +413,14 @@ async function loadVanzariTotale() {
           responsive: true,
           maintainAspectRatio: false,
           interaction: { mode: "index", intersect: false },
+          datasets: {
+            bar: {
+              categoryPercentage: 0.72,
+              barPercentage: 0.86,
+              maxBarThickness: isDashMobile ? 40 : 52,
+              borderRadius: isDashMobile ? 9 : 12,
+            },
+          },
           plugins: {
             legend: { display: true, position: "top", labels: { color: "#e2e8f0", font: { size: 13 }, usePointStyle: true } },
             tooltip: { backgroundColor: "rgba(30,41,59,0.96)", titleColor: "#FFEE00", bodyColor: "#f8fafc", borderColor: "#334155", borderWidth: 1, padding: 12, cornerRadius: 10 },
@@ -405,8 +428,8 @@ async function loadVanzariTotale() {
           scales: {
             x: { ticks: { color: "#cbd5e1", maxRotation: isDashMobile ? 45 : 0 }, grid: { color: "rgba(148,163,184,0.12)", drawBorder: false } },
             y: { ticks: { color: "#cbd5e1" }, grid: { color: "rgba(148,163,184,0.12)", drawBorder: false }, beginAtZero: true },
-        },
-      };
+          },
+        };
 
     const optSales = optionsWithExpandToModal("Grafic lunar – vizualizare mare", barChartOptions);
     const optComenzi = optionsWithExpandToModal("Comenzi per lună – vizualizare mare", barChartOptions);
@@ -415,55 +438,130 @@ async function loadVanzariTotale() {
 
     destroyChart("salesChart");
     const ctxSales = document.getElementById("salesChart");
+    const planFill = function (ctx) {
+      const c = ctx.chart;
+      const a = c.chartArea;
+      if (!a) return "rgba(251, 113, 133, 0.06)";
+      const g = c.ctx.createLinearGradient(0, a.top, 0, a.bottom);
+      g.addColorStop(0, "rgba(251, 113, 133, 0.22)");
+      g.addColorStop(1, "rgba(251, 113, 133, 0)");
+      return g;
+    };
+    const brandBar = typeof VoltaChartTheme !== "undefined" && VoltaChartTheme.barGradients
+      ? (ctx) => VoltaChartTheme.barGradients.brand(ctx.chart.ctx, ctx.chart.chartArea)
+      : "rgba(255, 238, 0, 0.55)";
     if (ctxSales) {
       charts["salesChart"] = { instance: new Chart(ctxSales.getContext("2d"), {
         data: {
           labels,
           datasets: [
-            { type: "line", label: "Plan", data: plan, borderColor: "#F87171", backgroundColor: "rgba(248, 113, 113, 0.08)", borderWidth: 2.5, tension: 0.35, pointRadius: window.innerWidth <= 768 ? 2 : 4, pointBackgroundColor: "#F87171", pointBorderColor: "rgb(15,23,42)", pointBorderWidth: 1, fill: false, order: 1 },
-            { type: "bar", label: "Vânzări reale", data: vanzari, backgroundColor: "rgba(255, 238, 0, 0.5)", hoverBackgroundColor: "rgba(255, 238, 0, 0.78)", borderColor: "rgba(255, 238, 0, 0.35)", borderWidth: 1, borderRadius: 8, borderSkipped: false, order: 2 }
-          ]
+            {
+              type: "line",
+              label: "Plan",
+              data: plan,
+              borderColor: "rgb(251, 113, 133)",
+              backgroundColor: planFill,
+              borderWidth: 2.75,
+              tension: 0.38,
+              cubicInterpolationMode: "monotone",
+              pointRadius: window.innerWidth <= 768 ? 0 : 3,
+              pointHoverRadius: 6,
+              pointBackgroundColor: "#fda4af",
+              pointBorderColor: "rgb(15,23,42)",
+              pointBorderWidth: 2,
+              fill: true,
+              order: 1,
+            },
+            {
+              type: "bar",
+              label: "Vânzări reale",
+              data: vanzari,
+              backgroundColor: brandBar,
+              hoverBackgroundColor: "rgba(255, 238, 0, 0.88)",
+              borderColor: "rgba(255, 238, 0, 0.35)",
+              borderWidth: 1,
+              borderRadius: isDashMobile ? 9 : 12,
+              borderSkipped: false,
+              order: 2,
+            },
+          ],
         },
-        options: optSales
+        options: optSales,
       }) };
     }
 
     destroyChart("comenziLunarChart");
     const ctxComenzi = document.getElementById("comenziLunarChart");
+    const comenziBar = typeof VoltaChartTheme !== "undefined" && VoltaChartTheme.barGradients
+      ? (ctx) => VoltaChartTheme.barGradients.brand(ctx.chart.ctx, ctx.chart.chartArea)
+      : "rgba(255, 238, 0, 0.5)";
     if (ctxComenzi) {
       charts["comenziLunarChart"] = { instance: new Chart(ctxComenzi.getContext("2d"), {
         type: "bar",
         data: {
           labels,
-          datasets: [{ label: "Comenzi", data: comenziData, backgroundColor: "rgba(255, 238, 0, 0.5)", hoverBackgroundColor: "rgba(255, 238, 0, 0.78)", borderColor: "rgba(255, 238, 0, 0.35)", borderWidth: 1, borderRadius: 8, borderSkipped: false }]
+          datasets: [{
+            label: "Comenzi",
+            data: comenziData,
+            backgroundColor: comenziBar,
+            hoverBackgroundColor: "rgba(255, 238, 0, 0.9)",
+            borderColor: "rgba(255, 238, 0, 0.28)",
+            borderWidth: 1,
+            borderRadius: isDashMobile ? 9 : 12,
+            borderSkipped: false,
+          }],
         },
-        options: optComenzi
+        options: optComenzi,
       }) };
     }
 
     destroyChart("conversieLunarChart");
     const ctxConversie = document.getElementById("conversieLunarChart");
+    const coralBar = typeof VoltaChartTheme !== "undefined" && VoltaChartTheme.barGradients
+      ? (ctx) => VoltaChartTheme.barGradients.coral(ctx.chart.ctx, ctx.chart.chartArea)
+      : "rgba(248, 113, 113, 0.45)";
     if (ctxConversie) {
       charts["conversieLunarChart"] = { instance: new Chart(ctxConversie.getContext("2d"), {
         type: "bar",
         data: {
           labels,
-          datasets: [{ label: "Conversie (%)", data: conversieData, backgroundColor: "rgba(248, 113, 113, 0.45)", hoverBackgroundColor: "rgba(248, 113, 113, 0.7)", borderColor: "rgba(248, 113, 113, 0.4)", borderWidth: 1, borderRadius: 8, borderSkipped: false }]
+          datasets: [{
+            label: "Conversie (%)",
+            data: conversieData,
+            backgroundColor: coralBar,
+            hoverBackgroundColor: "rgba(251, 113, 133, 0.92)",
+            borderColor: "rgba(251, 113, 133, 0.35)",
+            borderWidth: 1,
+            borderRadius: isDashMobile ? 9 : 12,
+            borderSkipped: false,
+          }],
         },
-        options: optConversie
+        options: optConversie,
       }) };
     }
 
     destroyChart("sesiuniChart");
     const ctxSesiuni = document.getElementById("sesiuniChart");
+    const skyBar = typeof VoltaChartTheme !== "undefined" && VoltaChartTheme.barGradients
+      ? (ctx) => VoltaChartTheme.barGradients.sky(ctx.chart.ctx, ctx.chart.chartArea)
+      : "rgba(96, 165, 250, 0.45)";
     if (ctxSesiuni) {
       charts["sesiuniChart"] = { instance: new Chart(ctxSesiuni.getContext("2d"), {
         type: "bar",
         data: {
           labels,
-          datasets: [{ label: "Total sesiuni", data: sesiuniData, backgroundColor: "rgba(96, 165, 250, 0.45)", hoverBackgroundColor: "rgba(96, 165, 250, 0.72)", borderColor: "rgba(59, 130, 246, 0.45)", borderWidth: 1, borderRadius: 8, borderSkipped: false }]
+          datasets: [{
+            label: "Total sesiuni",
+            data: sesiuniData,
+            backgroundColor: skyBar,
+            hoverBackgroundColor: "rgba(96, 165, 250, 0.92)",
+            borderColor: "rgba(59, 130, 246, 0.38)",
+            borderWidth: 1,
+            borderRadius: isDashMobile ? 9 : 12,
+            borderSkipped: false,
+          }],
         },
-        options: optSesiuni
+        options: optSesiuni,
       }) };
     }
 

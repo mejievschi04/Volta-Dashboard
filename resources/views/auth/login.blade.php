@@ -79,6 +79,8 @@
     </div>
   </div>
 
+  <p class="login-powered-by" aria-hidden="true">powered by Mejievski</p>
+
   <div id="loginWelcomeOverlay" class="login-welcome-overlay" hidden aria-hidden="true">
     <div class="login-welcome-inner">
       <p class="login-welcome-line login-welcome-ink" id="loginWelcomeGreeting" aria-hidden="true"></p>

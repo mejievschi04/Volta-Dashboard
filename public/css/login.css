@@ -66,6 +66,24 @@ body {
   opacity: 0.9;
 }
 
+/* Credit discret, jos pe ecran */
+.login-powered-by {
+  position: fixed;
+  bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0 16px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(148, 163, 184, 0.55);
+  z-index: 12;
+  pointer-events: none;
+  user-select: none;
+}
+
 /* Fix pentru mobile Safari */
 @supports (-webkit-touch-callout: none) {
   body {

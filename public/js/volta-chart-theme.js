@@ -46,18 +46,22 @@
   function tooltip() {
     return {
       enabled: true,
-      backgroundColor: C.surface,
-      titleColor: C.textPrimary,
-      bodyColor: C.textSecondary,
-      borderColor: C.border,
+      backgroundColor: "rgba(15, 23, 42, 0.94)",
+      titleColor: C.brand,
+      bodyColor: C.textPrimary,
+      borderColor: "rgba(255, 238, 0, 0.22)",
       borderWidth: 1,
-      padding: 12,
-      cornerRadius: 10,
-      titleFont: { family: C.font, size: 13, weight: "600" },
+      padding: 14,
+      cornerRadius: 14,
+      titleFont: { family: C.font, size: 13, weight: "700" },
       bodyFont: { family: C.font, size: 12, weight: "500" },
       displayColors: true,
-      boxPadding: 6,
-      caretSize: 6,
+      boxPadding: 8,
+      boxWidth: 10,
+      boxHeight: 10,
+      usePointStyle: true,
+      caretSize: 7,
+      caretPadding: 10,
     };
   }
 
@@ -82,6 +86,21 @@
    * Opțiuni implicite pentru grafice cartesiene (bar / line / mixed).
    * @param {object} [overrides] — merge adânc doar la primul nivel în plugins/scales dacă e nevoie, altfel înlocuiește chei.
    */
+  /**
+   * Gradient vertical în zona graficului (pentru bare / umpleri).
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {{top:number,bottom:number,left:number,right:number}|undefined} chartArea
+   * @param {{offset:number,color:string}[]} stops
+   */
+  function verticalGradient(ctx, chartArea, stops) {
+    if (!chartArea || !stops || !stops.length) return stops && stops[0] ? stops[0].color : C.brand;
+    var g = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+    for (var i = 0; i < stops.length; i++) {
+      g.addColorStop(stops[i].offset, stops[i].color);
+    }
+    return g;
+  }
+
   function cartesianDefaults(overrides) {
     var m = isMobile();
     var base = {
@@ -89,8 +108,24 @@
       maintainAspectRatio: false,
       interaction: { mode: "index", intersect: false },
       animation: {
-        duration: m ? 500 : 900,
-        easing: "easeOutQuart",
+        duration: m ? 520 : 1100,
+        easing: "easeOutCubic",
+      },
+      layout: {
+        padding: { top: 10, right: 8, bottom: 6, left: 4 },
+      },
+      elements: {
+        line: {
+          borderJoinStyle: "round",
+          borderCapStyle: "round",
+        },
+        bar: {
+          borderRadius: m ? 8 : 11,
+          borderSkipped: false,
+        },
+        point: {
+          hoverBorderWidth: 2,
+        },
       },
       plugins: {
         legend: legendTop(m),
@@ -102,13 +137,13 @@
             maxRotation: m ? 45 : 0,
             minRotation: m ? 45 : 0,
           }),
-          grid: gridLines(),
+          grid: gridLines({ lineWidth: 1, borderDash: [3, 5] }),
           border: { display: false },
         },
         y: {
           beginAtZero: true,
           ticks: ticks(10, 12),
-          grid: gridLines(),
+          grid: gridLines({ lineWidth: 1, borderDash: [3, 5] }),
           border: { display: false },
         },
       },
@@ -150,5 +185,30 @@
     tooltip: tooltip,
     legendTop: legendTop,
     cartesianDefaults: cartesianDefaults,
+    verticalGradient: verticalGradient,
+    /** Preseturi gradient pentru bare dashboard */
+    barGradients: {
+      brand: function (ctx, chartArea) {
+        return verticalGradient(ctx, chartArea, [
+          { offset: 0, color: "rgba(255, 238, 0, 0.12)" },
+          { offset: 0.45, color: "rgba(255, 238, 0, 0.42)" },
+          { offset: 1, color: "rgba(250, 204, 21, 0.92)" },
+        ]);
+      },
+      coral: function (ctx, chartArea) {
+        return verticalGradient(ctx, chartArea, [
+          { offset: 0, color: "rgba(251, 113, 133, 0.12)" },
+          { offset: 0.5, color: "rgba(251, 113, 133, 0.45)" },
+          { offset: 1, color: "rgba(244, 63, 94, 0.88)" },
+        ]);
+      },
+      sky: function (ctx, chartArea) {
+        return verticalGradient(ctx, chartArea, [
+          { offset: 0, color: "rgba(56, 189, 248, 0.1)" },
+          { offset: 0.5, color: "rgba(96, 165, 250, 0.42)" },
+          { offset: 1, color: "rgba(59, 130, 246, 0.88)" },
+        ]);
+      },
+    },
   };
 })(typeof window !== "undefined" ? window : this);

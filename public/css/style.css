@@ -2135,27 +2135,109 @@ select option {
 .charts-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(14px, 2vw, 22px);
+  gap: clamp(16px, 2.2vw, 26px);
   margin-top: var(--space-6);
 }
 
 .chart-container {
-  background-color: var(--bg-elevated) !important;
-  border: 1px solid var(--border-primary);
-  border-radius: var(--card-radius);
-  padding: var(--space-4);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(10px);
-  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  background: linear-gradient(
+    155deg,
+    rgba(30, 41, 59, 0.98) 0%,
+    rgba(15, 23, 42, 0.55) 100%
+  ) !important;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: calc(var(--card-radius) + 4px);
+  padding: clamp(14px, 2vw, 18px);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px) saturate(140%);
+  transition:
+    border-color 0.28s ease,
+    box-shadow 0.28s ease,
+    transform 0.28s ease;
   min-height: 300px;
   display: flex;
   flex-direction: column;
 }
 
 .chart-container:hover {
-  box-shadow: var(--shadow-lg);
-  border-color: var(--border-secondary);
-  transform: translateY(-1px);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(255, 238, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 238, 0, 0.18);
+  transform: translateY(-2px);
+}
+
+.chart-panel__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.chart-panel__icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(255, 238, 0, 0.18), rgba(255, 238, 0, 0.05));
+  color: var(--brand);
+  font-size: 1rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.chart-panel__icon--coral {
+  background: linear-gradient(145deg, rgba(251, 113, 133, 0.25), rgba(251, 113, 133, 0.06));
+  color: #fda4af;
+}
+
+.chart-panel__icon--sky {
+  background: linear-gradient(145deg, rgba(56, 189, 248, 0.22), rgba(59, 130, 246, 0.06));
+  color: #7dd3fc;
+}
+
+.chart-panel__titles {
+  flex: 1;
+  min-width: 0;
+}
+
+.chart-panel__title {
+  color: var(--text-primary);
+  font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+  font-weight: 700;
+  text-align: left;
+  margin: 0 0 2px 0;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.chart-panel__subtitle {
+  margin: 0;
+  font-size: var(--font-size-xs, 12px);
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+}
+
+.chart-panel__hint {
+  flex-shrink: 0;
+  align-self: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.65);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(15, 23, 42, 0.35);
 }
 
 .chart-container h2 {
@@ -2176,6 +2258,17 @@ select option {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  border-radius: 14px;
+  padding: 6px 4px 2px;
+  background: radial-gradient(
+    ellipse 120% 80% at 50% 0%,
+    rgba(255, 238, 0, 0.06) 0%,
+    transparent 52%
+  );
+}
+
+.chart-wrapper--glow {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
 .chart-container canvas {
@@ -2220,10 +2313,17 @@ select option {
   max-height: min(92vh, 900px);
   display: flex;
   flex-direction: column;
-  background: var(--bg-elevated, #1e293b);
-  border: 1px solid var(--border-primary, #334155);
-  border-radius: var(--card-radius, 14px);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+  background: linear-gradient(
+    165deg,
+    rgba(30, 41, 59, 0.98) 0%,
+    rgba(15, 23, 42, 0.97) 55%,
+    rgba(15, 23, 42, 0.99) 100%
+  );
+  border: 1px solid rgba(255, 238, 0, 0.12);
+  border-radius: calc(var(--card-radius, 12px) + 6px);
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
   overflow: hidden;
 }
 
@@ -2344,11 +2444,33 @@ select option {
     margin: 0 0 8px 0;
     padding: 0;
   }
+
+  .chart-panel__head {
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+
+  .chart-panel__icon {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+
+  .chart-panel__title {
+    font-size: 0.9rem;
+  }
+
+  .chart-panel__hint {
+    font-size: 9px;
+    padding: 5px 8px;
+  }
   
   .chart-wrapper {
     min-height: 250px;
     margin: 0;
-    padding: 0;
+    padding: 4px 2px 0;
   }
 }
 
@@ -2408,11 +2530,19 @@ select option {
     margin: 0 0 6px 0;
     padding: 0;
   }
+
+  .chart-panel__hint {
+    display: none;
+  }
+
+  .chart-panel__subtitle {
+    font-size: 11px;
+  }
   
   .chart-wrapper {
     min-height: 230px;
     margin: 0;
-    padding: 0;
+    padding: 2px 0 0;
   }
 }
 
@@ -2799,6 +2929,458 @@ select option {
   .istoric-data-table td {
     padding: 8px 6px;
     font-size: 11px;
+  }
+}
+
+/* —— Raport lunar call center (admin) —— */
+.raport-lunar-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: var(--space-8, 32px);
+}
+
+.raport-lunar-page .text-left {
+  text-align: left;
+}
+
+.raport-lunar-page .text-center {
+  text-align: center;
+}
+
+.raport-lunar-page .text-right {
+  text-align: right;
+}
+
+.raport-lunar-hero {
+  display: flex;
+  gap: clamp(14px, 2.5vw, 22px);
+  align-items: flex-start;
+  margin-bottom: clamp(18px, 2.5vw, 26px);
+  padding: clamp(18px, 2.5vw, 24px);
+  border-radius: calc(var(--card-radius) + 6px);
+  background: linear-gradient(
+    155deg,
+    rgba(30, 41, 59, 0.95) 0%,
+    rgba(15, 23, 42, 0.88) 100%
+  );
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.raport-lunar-hero__badge {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  font-size: 1.35rem;
+  color: var(--brand);
+  background: linear-gradient(145deg, rgba(255, 238, 0, 0.2), rgba(255, 238, 0, 0.05));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.raport-lunar-hero__text {
+  min-width: 0;
+}
+
+.raport-lunar-title {
+  margin: 0 0 8px;
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.raport-lunar-intro {
+  margin: 0;
+  max-width: 52rem;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm, 14px);
+  line-height: 1.65;
+}
+
+.raport-lunar-intro strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.raport-lunar-toolbar-card {
+  margin-bottom: clamp(18px, 2.2vw, 24px);
+  padding: 14px 16px;
+  border-radius: calc(var(--card-radius) + 4px);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.raport-lunar-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 20px;
+}
+
+.raport-lunar-toolbar__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: min(100%, 200px);
+}
+
+.raport-lunar-toolbar__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-xs, 12px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.raport-lunar-toolbar__label i {
+  color: var(--brand);
+  opacity: 0.9;
+}
+
+.raport-lunar-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.raport-lunar-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.raport-lunar-btn-icon i {
+  font-size: 0.95em;
+}
+
+.raport-lunar-month-input {
+  min-width: 12rem;
+  min-height: 46px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font: inherit;
+  font-weight: 600;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.raport-lunar-month-input:hover {
+  border-color: var(--border-secondary);
+}
+
+.raport-lunar-month-input:focus {
+  outline: none;
+  border-color: rgba(255, 238, 0, 0.45);
+  box-shadow: 0 0 0 3px rgba(255, 238, 0, 0.12);
+}
+
+.raport-lunar-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: clamp(22px, 3vw, 30px);
+}
+
+.raport-lunar-stat {
+  padding: 14px 16px;
+  border-radius: var(--card-radius);
+  background: linear-gradient(160deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.75));
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.raport-lunar-stat--accent {
+  border-color: rgba(255, 238, 0, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(255, 238, 0, 0.06);
+}
+
+.raport-lunar-stat__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.raport-lunar-stat__value {
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.raport-lunar-stat--accent .raport-lunar-stat__value {
+  color: var(--brand);
+}
+
+.raport-lunar-empty {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 22px;
+  padding: 16px 18px;
+  border-radius: var(--card-radius);
+  border: 1px dashed rgba(245, 158, 11, 0.45);
+  background: rgba(30, 41, 59, 0.55);
+}
+
+.raport-lunar-empty__icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--warning);
+  font-size: 1.1rem;
+}
+
+.raport-lunar-empty__title {
+  display: block;
+  margin: 0 0 6px;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.raport-lunar-empty__text {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.raport-lunar-panel {
+  margin-bottom: clamp(18px, 2.5vw, 24px);
+  border-radius: calc(var(--card-radius) + 4px);
+  background: linear-gradient(
+    165deg,
+    rgba(30, 41, 59, 0.98) 0%,
+    rgba(15, 23, 42, 0.55) 100%
+  );
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+.raport-lunar-panel--compact {
+  margin-bottom: 0;
+}
+
+.raport-lunar-panel__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.raport-lunar-panel__icon {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  font-size: 0.95rem;
+  color: var(--brand);
+  background: linear-gradient(145deg, rgba(255, 238, 0, 0.18), rgba(255, 238, 0, 0.04));
+}
+
+.raport-lunar-panel__icon--chat {
+  color: #7dd3fc;
+  background: linear-gradient(145deg, rgba(56, 189, 248, 0.2), rgba(59, 130, 246, 0.06));
+}
+
+.raport-lunar-panel__icon--phone {
+  color: #a7f3d0;
+  background: linear-gradient(145deg, rgba(52, 211, 153, 0.22), rgba(16, 185, 129, 0.06));
+}
+
+.raport-lunar-panel__icon--money {
+  color: #fde047;
+  background: linear-gradient(145deg, rgba(250, 204, 21, 0.22), rgba(234, 179, 8, 0.06));
+}
+
+.raport-lunar-panel__title {
+  flex: 1;
+  margin: 0;
+  min-width: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.raport-lunar-panel__tag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: var(--brand);
+  border: 1px solid rgba(255, 238, 0, 0.28);
+  background: rgba(255, 238, 0, 0.08);
+}
+
+.raport-lunar-panel__tag--soft {
+  color: var(--text-secondary);
+  border-color: var(--border-primary);
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.raport-lunar-table-shell {
+  padding: 0 12px 12px;
+}
+
+.raport-lunar-table-scroll {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-secondary);
+  -webkit-overflow-scrolling: touch;
+}
+
+.raport-lunar-table-scroll--narrow {
+  max-width: 100%;
+}
+
+.raport-lunar-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.raport-lunar-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 11px 12px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  background: rgba(15, 23, 42, 0.97);
+  border-bottom: 1px solid var(--border-primary);
+  white-space: nowrap;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.raport-lunar-table tbody td {
+  padding: 11px 12px;
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(51, 65, 85, 0.65);
+  background: var(--bg-elevated);
+  vertical-align: middle;
+}
+
+.raport-lunar-table tbody tr:nth-child(even) td {
+  background: rgba(30, 41, 59, 0.65);
+}
+
+.raport-lunar-table tbody tr:hover td {
+  background: rgba(51, 65, 85, 0.45);
+}
+
+.raport-lunar-col-np {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.raport-lunar-col-muted {
+  color: var(--text-tertiary);
+}
+
+.raport-lunar-num {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.raport-lunar-total-row td {
+  background: rgba(255, 238, 0, 0.09) !important;
+  border-bottom: none;
+  color: var(--text-primary);
+}
+
+.raport-lunar-total-row .raport-lunar-col-muted {
+  color: var(--text-secondary);
+}
+
+.raport-lunar-row--callcenter td {
+  background: rgba(255, 238, 0, 0.07) !important;
+  font-weight: 700;
+}
+
+.raport-lunar-row--callcenter .raport-lunar-col-np {
+  color: var(--brand);
+}
+
+.raport-lunar-split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 20px);
+  margin-bottom: clamp(18px, 2.5vw, 24px);
+}
+
+@media (max-width: 900px) {
+  .raport-lunar-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .raport-lunar-hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .raport-lunar-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .raport-lunar-toolbar__actions {
+    width: 100%;
+  }
+
+  .raport-lunar-toolbar__actions .btn {
+    flex: 1;
+    justify-content: center;
+    min-height: 48px;
+  }
+
+  .raport-lunar-month-input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .raport-lunar-table thead th,
+  .raport-lunar-table tbody td {
+    padding: 9px 10px;
+    font-size: 12px;
   }
 }
 

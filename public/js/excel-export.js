@@ -77,6 +77,21 @@
     downloadWorkbook(wb, (options && options.fileName) || ('date_' + nowStamp()));
   }
 
+  /**
+   * Export multi-foaie din array de { name: string, aoa: any[][] }.
+   * @param {{ name: string, aoa: any[][] }[]} sheets
+   */
+  function exportSheets(sheets, fileName) {
+    ensureXlsx();
+    var wb = createWorkbook();
+    var usedNames = new Set();
+    (sheets || []).forEach(function (s) {
+      var aoa = s && s.aoa ? s.aoa : [];
+      appendUniqueAoaSheet(wb, aoa, (s && s.name) || 'Foaie', usedNames);
+    });
+    downloadWorkbook(wb, fileName || ('export_' + nowStamp()));
+  }
+
   function exportChart(chart, options) {
     ensureXlsx();
     if (!chart || !chart.data) {
@@ -163,6 +178,7 @@
     nowStamp: nowStamp,
     exportTable: exportTable,
     exportRows: exportRows,
+    exportSheets: exportSheets,
     exportChart: exportChart,
     exportCurrentPage: exportCurrentPage,
   };

@@ -55,6 +55,9 @@
           <i class="fas fa-cog"></i><span class="txt">Setări</span>
         </a>
         @if(auth()->check() && in_array(strtolower(trim(auth()->user()->role ?? '')), ['admin', 'administrator']))
+        <a href="{{ route('rapoarte.raport-lunar') }}" class="{{ request()->routeIs('rapoarte.raport-lunar') ? 'active' : '' }}">
+          <i class="fas fa-file-contract"></i><span class="txt">Raport lunar</span>
+        </a>
         <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users*') ? 'active' : '' }}">
           <i class="fas fa-user-shield"></i><span class="txt">Utilizatori</span>
         </a>
