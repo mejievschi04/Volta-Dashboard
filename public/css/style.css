@@ -354,50 +354,61 @@ h1 {
 }
 
 @media (min-width: 1101px) {
-  body.sidebar-collapsed .sidebar {
+  body.sidebar-collapsed .sidebar,
+  html.sidebar-collapsed .sidebar {
     width: 92px;
   }
 
-  body.sidebar-collapsed .main {
+  body.sidebar-collapsed .main,
+  html.sidebar-collapsed .main {
     margin-left: 92px;
     width: calc(100% - 92px);
   }
 
-  body.sidebar-collapsed .logo {
+  body.sidebar-collapsed .logo,
+  html.sidebar-collapsed .logo {
     justify-content: center;
     padding-left: 12px;
     padding-right: 12px;
   }
 
-  body.sidebar-collapsed .logo:hover .logo-mark {
+  body.sidebar-collapsed .logo:hover .logo-mark,
+  html.sidebar-collapsed .logo:hover .logo-mark {
     transform: rotate(90deg) scale(1.04);
   }
 
   body.sidebar-collapsed .logo h1,
+  html.sidebar-collapsed .logo h1,
   body.sidebar-collapsed .nav h3,
-  body.sidebar-collapsed .nav a .txt {
+  html.sidebar-collapsed .nav h3,
+  body.sidebar-collapsed .nav a .txt,
+  html.sidebar-collapsed .nav a .txt {
     display: none;
   }
 
-  body.sidebar-collapsed .nav a {
+  body.sidebar-collapsed .nav a,
+  html.sidebar-collapsed .nav a {
     justify-content: center;
     padding-left: 12px;
     padding-right: 12px;
   }
 
-  body.sidebar-collapsed .nav a i {
+  body.sidebar-collapsed .nav a i,
+  html.sidebar-collapsed .nav a i {
     width: auto;
     font-size: 18px;
   }
 
-  body.sidebar-collapsed .logout-container {
+  body.sidebar-collapsed .logout-container,
+  html.sidebar-collapsed .logout-container {
     display: flex;
     justify-content: center;
     padding-left: 8px;
     padding-right: 8px;
   }
 
-  body.sidebar-collapsed .logout-btn {
+  body.sidebar-collapsed .logout-btn,
+  html.sidebar-collapsed .logout-btn {
     width: 44px;
     height: 44px;
     min-width: 44px;
@@ -407,10 +418,20 @@ h1 {
     font-size: 0;
   }
 
-  body.sidebar-collapsed .logout-btn i {
+  body.sidebar-collapsed .logout-btn i,
+  html.sidebar-collapsed .logout-btn i {
     margin: 0;
     font-size: 16px;
   }
+}
+
+html.preload-sidebar-state .sidebar,
+html.preload-sidebar-state .main,
+html.preload-sidebar-state .logo,
+html.preload-sidebar-state .logo-mark,
+html.preload-sidebar-state .nav a,
+html.preload-sidebar-state .logout-btn {
+  transition: none !important;
 }
 
 .content {
@@ -2249,17 +2270,10 @@ select option {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 6px 4px 2px;
-  background: radial-gradient(
-    ellipse 120% 80% at 50% 0%,
-    rgba(255, 238, 0, 0.06) 0%,
-    transparent 52%
-  );
-}
-
-.chart-wrapper--glow {
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  background: rgba(15, 23, 42, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .chart-container canvas {
@@ -2292,8 +2306,8 @@ select option {
 .dashboard-chart-modal__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(2, 6, 23, 0.72);
-  backdrop-filter: blur(6px);
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
   cursor: pointer;
 }
 
@@ -2306,15 +2320,15 @@ select option {
   flex-direction: column;
   background: linear-gradient(
     165deg,
-    rgba(30, 41, 59, 0.98) 0%,
-    rgba(15, 23, 42, 0.97) 55%,
-    rgba(15, 23, 42, 0.99) 100%
+    rgba(51, 65, 85, 0.97) 0%,
+    rgba(30, 41, 59, 0.98) 50%,
+    rgba(30, 41, 59, 0.99) 100%
   );
-  border: 1px solid rgba(255, 238, 0, 0.12);
+  border: 1px solid rgba(255, 238, 0, 0.18);
   border-radius: calc(var(--card-radius, 12px) + 6px);
   box-shadow:
-    0 28px 90px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
   overflow: hidden;
 }
 
@@ -2366,6 +2380,9 @@ select option {
   width: 100%;
   height: min(72vh, 640px);
   min-height: 280px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .dashboard-chart-modal__chart-wrap canvas {
@@ -3459,5 +3476,4 @@ select option {
   color: var(--text-tertiary);
   line-height: 1.5;
 }
-
 

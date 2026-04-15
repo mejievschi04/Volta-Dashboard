@@ -284,7 +284,10 @@
   btn.addEventListener('click', function () {
     try {
       var slug = String(ym || '').replace(/-/g, '_');
-      window.VoltaExcelExport.exportSheets(sheets, 'centru-apeluri_statistica_' + slug);
+      Promise.resolve(window.VoltaExcelExport.exportSheets(sheets, 'centru-apeluri_statistica_' + slug)).catch(function (e) {
+        console.error(e);
+        alert('Nu s-a putut genera fisierul Excel.');
+      });
     } catch (e) {
       console.error(e);
       alert('Nu s-a putut genera fișierul Excel.');

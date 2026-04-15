@@ -211,14 +211,12 @@ document.addEventListener('DOMContentLoaded', function() {
         alert('Nu există tabel pentru export.');
         return;
       }
-      try {
-        window.VoltaExcelExport.exportTable(table, {
-          fileName: 'operatori_tabel_' + window.VoltaExcelExport.nowStamp(),
-          sheetName: 'Operatori'
-        });
-      } catch (error) {
+      Promise.resolve(window.VoltaExcelExport.exportTable(table, {
+        fileName: 'operatori_tabel_' + window.VoltaExcelExport.nowStamp(),
+        sheetName: 'Operatori'
+      })).catch(function (error) {
         alert('Nu am putut exporta Excel: ' + error.message);
-      }
+      });
     });
   }
 });

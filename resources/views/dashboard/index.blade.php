@@ -98,7 +98,7 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
         <p class="chart-panel__subtitle">Plan vs. vânzări reale</p>
       </div>
     </div>
-    <div class="chart-wrapper chart-wrapper--glow" title="Click pentru vizualizare mare">
+    <div class="chart-wrapper" title="Click pentru vizualizare mare">
       <canvas id="salesChart"></canvas>
     </div>
   </div>
@@ -110,7 +110,7 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
         <p class="chart-panel__subtitle">Volum comenzi</p>
       </div>
     </div>
-    <div class="chart-wrapper chart-wrapper--glow" title="Click pentru vizualizare mare">
+    <div class="chart-wrapper" title="Click pentru vizualizare mare">
       <canvas id="comenziLunarChart"></canvas>
     </div>
   </div>
@@ -122,7 +122,7 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
         <p class="chart-panel__subtitle">Comenzi / sesiuni</p>
       </div>
     </div>
-    <div class="chart-wrapper chart-wrapper--glow" title="Click pentru vizualizare mare">
+    <div class="chart-wrapper" title="Click pentru vizualizare mare">
       <canvas id="conversieLunarChart"></canvas>
     </div>
   </div>
@@ -134,7 +134,7 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
         <p class="chart-panel__subtitle">Trafic site</p>
       </div>
     </div>
-    <div class="chart-wrapper chart-wrapper--glow" title="Click pentru vizualizare mare">
+    <div class="chart-wrapper" title="Click pentru vizualizare mare">
       <canvas id="sesiuniChart"></canvas>
     </div>
   </div>
@@ -186,25 +186,6 @@ function cloneDashboardChartOptions(base) {
   }
 }
 
-function boostModalChartOptions(opts) {
-  if (!opts || typeof opts !== "object") return opts;
-  const p = opts.plugins;
-  if (p && p.legend && p.legend.labels && p.legend.labels.font) {
-    const s = p.legend.labels.font.size;
-    p.legend.labels.font.size = typeof s === "number" ? s + 4 : 15;
-  }
-  if (opts.scales) {
-    Object.keys(opts.scales).forEach(function (k) {
-      const sc = opts.scales[k];
-      if (sc && sc.ticks && sc.ticks.font) {
-        const sz = sc.ticks.font.size;
-        sc.ticks.font.size = typeof sz === "number" ? sz + 2 : 13;
-      }
-    });
-  }
-  return opts;
-}
-
 function optionsWithExpandToModal(title, baseOpts) {
   const o = cloneDashboardChartOptions(baseOpts);
   o.onClick = function (evt, elements, chart) {
@@ -236,7 +217,6 @@ function openChartExpandModal(title, sourceChart) {
     return;
   }
 
-  boostModalChartOptions(optionsCopy);
   optionsCopy.maintainAspectRatio = false;
   optionsCopy.onClick = null;
 
@@ -274,7 +254,7 @@ function initChart(chartId, label, color="#FFEE00") {
   if(!canvas) return;
   const ctx = canvas.getContext("2d");
   const isM = window.innerWidth <= 768;
-  const fill = color.length === 7 ? color + "22" : color;
+  const fill = color.length === 7 ? color + "1A" : color;
   const baseOptsRaw = typeof VoltaChartTheme !== "undefined"
     ? VoltaChartTheme.cartesianDefaults({
         plugins: {
@@ -303,12 +283,12 @@ function initChart(chartId, label, color="#FFEE00") {
         data: [],
         borderColor: color,
         backgroundColor: fill,
-        tension: 0.35,
+        tension: 0.15,
         borderWidth: 2,
         pointRadius: isM ? 2 : 3,
-        pointHoverRadius: isM ? 4 : 6,
+        pointHoverRadius: isM ? 4 : 5,
         pointBackgroundColor: color,
-        pointBorderColor: "rgba(15,23,42,0.9)",
+        pointBorderColor: "#E2E8F0",
         pointBorderWidth: 1,
         fill: true,
       }],
@@ -366,6 +346,7 @@ async function loadVanzariTotale() {
     const isDashMobile = window.innerWidth <= 768;
     const barChartOptions = typeof VoltaChartTheme !== "undefined"
       ? VoltaChartTheme.cartesianDefaults({
+          animation: false,
           datasets: {
             bar: {
               categoryPercentage: 0.72,
@@ -396,18 +377,19 @@ async function loadVanzariTotale() {
                 maxRotation: isDashMobile ? 45 : 0,
                 minRotation: isDashMobile ? 45 : 0,
               }),
-              grid: VoltaChartTheme.gridLines(),
+              grid: VoltaChartTheme.gridLines({ borderDash: [] }),
             },
             y: {
               beginAtZero: true,
               ticks: VoltaChartTheme.ticks(10, 12),
-              grid: VoltaChartTheme.gridLines(),
+              grid: VoltaChartTheme.gridLines({ borderDash: [] }),
             },
           },
         })
       : {
           responsive: true,
           maintainAspectRatio: false,
+          animation: false,
           interaction: { mode: "index", intersect: false },
           datasets: {
             bar: {
@@ -434,18 +416,14 @@ async function loadVanzariTotale() {
 
     destroyChart("salesChart");
     const ctxSales = document.getElementById("salesChart");
-    const planFill = function (ctx) {
-      const c = ctx.chart;
-      const a = c.chartArea;
-      if (!a) return "rgba(251, 113, 133, 0.06)";
-      const g = c.ctx.createLinearGradient(0, a.top, 0, a.bottom);
-      g.addColorStop(0, "rgba(251, 113, 133, 0.22)");
-      g.addColorStop(1, "rgba(251, 113, 133, 0)");
-      return g;
-    };
-    const brandBar = typeof VoltaChartTheme !== "undefined" && VoltaChartTheme.barGradients
-      ? (ctx) => VoltaChartTheme.barGradients.brand(ctx.chart.ctx, ctx.chart.chartArea)
-      : "rgba(255, 238, 0, 0.55)";
+    const SOL = (typeof VoltaChartTheme !== "undefined" && VoltaChartTheme.barSolid) ? VoltaChartTheme.barSolid : {};
+    const yellow = SOL.brand || "#FFEE00";
+    const yellowHi = SOL.brandHover || "#FFF59A";
+    const rose = SOL.coral || "#FB7185";
+    const roseHi = SOL.coralHover || "#FDA4AF";
+    const sky = SOL.sky || "#38BDF8";
+    const skyHi = SOL.skyHover || "#7DD3FC";
+    const planFillStatic = "rgba(251, 113, 133, 0.12)";
     if (ctxSales) {
       charts["salesChart"] = { instance: new Chart(ctxSales.getContext("2d"), {
         data: {
@@ -455,16 +433,16 @@ async function loadVanzariTotale() {
               type: "line",
               label: "Plan",
               data: plan,
-              borderColor: "rgb(251, 113, 133)",
-              backgroundColor: planFill,
-              borderWidth: 2.75,
-              tension: 0.38,
-              cubicInterpolationMode: "monotone",
+              borderColor: rose,
+              backgroundColor: planFillStatic,
+              borderWidth: 2.5,
+              tension: 0.2,
+              cubicInterpolationMode: "default",
               pointRadius: window.innerWidth <= 768 ? 0 : 3,
-              pointHoverRadius: 6,
-              pointBackgroundColor: "#fda4af",
-              pointBorderColor: "rgb(15,23,42)",
-              pointBorderWidth: 2,
+              pointHoverRadius: 5,
+              pointBackgroundColor: rose,
+              pointBorderColor: "#F8FAFC",
+              pointBorderWidth: 1,
               fill: true,
               order: 1,
             },
@@ -472,11 +450,11 @@ async function loadVanzariTotale() {
               type: "bar",
               label: "Vânzări reale",
               data: vanzari,
-              backgroundColor: brandBar,
-              hoverBackgroundColor: "rgba(250, 204, 21, 0.78)",
-              borderColor: "rgba(250, 204, 21, 0.28)",
+              backgroundColor: yellow,
+              hoverBackgroundColor: yellowHi,
+              borderColor: "rgba(15, 23, 42, 0.35)",
               borderWidth: 1,
-              borderRadius: isDashMobile ? 9 : 12,
+              borderRadius: 6,
               borderSkipped: false,
               order: 2,
             },
@@ -488,9 +466,6 @@ async function loadVanzariTotale() {
 
     destroyChart("comenziLunarChart");
     const ctxComenzi = document.getElementById("comenziLunarChart");
-    const comenziBar = typeof VoltaChartTheme !== "undefined" && VoltaChartTheme.barGradients
-      ? (ctx) => VoltaChartTheme.barGradients.brand(ctx.chart.ctx, ctx.chart.chartArea)
-      : "rgba(255, 238, 0, 0.5)";
     if (ctxComenzi) {
       charts["comenziLunarChart"] = { instance: new Chart(ctxComenzi.getContext("2d"), {
         type: "bar",
@@ -499,11 +474,11 @@ async function loadVanzariTotale() {
           datasets: [{
             label: "Comenzi",
             data: comenziData,
-            backgroundColor: comenziBar,
-            hoverBackgroundColor: "rgba(250, 204, 21, 0.8)",
-            borderColor: "rgba(250, 204, 21, 0.24)",
+            backgroundColor: yellow,
+            hoverBackgroundColor: yellowHi,
+            borderColor: "rgba(15, 23, 42, 0.35)",
             borderWidth: 1,
-            borderRadius: isDashMobile ? 9 : 12,
+            borderRadius: 6,
             borderSkipped: false,
           }],
         },
@@ -513,9 +488,6 @@ async function loadVanzariTotale() {
 
     destroyChart("conversieLunarChart");
     const ctxConversie = document.getElementById("conversieLunarChart");
-    const coralBar = typeof VoltaChartTheme !== "undefined" && VoltaChartTheme.barGradients
-      ? (ctx) => VoltaChartTheme.barGradients.coral(ctx.chart.ctx, ctx.chart.chartArea)
-      : "rgba(248, 113, 113, 0.45)";
     if (ctxConversie) {
       charts["conversieLunarChart"] = { instance: new Chart(ctxConversie.getContext("2d"), {
         type: "bar",
@@ -524,11 +496,11 @@ async function loadVanzariTotale() {
           datasets: [{
             label: "Conversie (%)",
             data: conversieData,
-            backgroundColor: coralBar,
-            hoverBackgroundColor: "rgba(251, 113, 133, 0.92)",
-            borderColor: "rgba(251, 113, 133, 0.35)",
+            backgroundColor: rose,
+            hoverBackgroundColor: roseHi,
+            borderColor: "rgba(15, 23, 42, 0.35)",
             borderWidth: 1,
-            borderRadius: isDashMobile ? 9 : 12,
+            borderRadius: 6,
             borderSkipped: false,
           }],
         },
@@ -538,9 +510,6 @@ async function loadVanzariTotale() {
 
     destroyChart("sesiuniChart");
     const ctxSesiuni = document.getElementById("sesiuniChart");
-    const skyBar = typeof VoltaChartTheme !== "undefined" && VoltaChartTheme.barGradients
-      ? (ctx) => VoltaChartTheme.barGradients.sky(ctx.chart.ctx, ctx.chart.chartArea)
-      : "rgba(96, 165, 250, 0.45)";
     if (ctxSesiuni) {
       charts["sesiuniChart"] = { instance: new Chart(ctxSesiuni.getContext("2d"), {
         type: "bar",
@@ -549,11 +518,11 @@ async function loadVanzariTotale() {
           datasets: [{
             label: "Total sesiuni",
             data: sesiuniData,
-            backgroundColor: skyBar,
-            hoverBackgroundColor: "rgba(96, 165, 250, 0.92)",
-            borderColor: "rgba(59, 130, 246, 0.38)",
+            backgroundColor: sky,
+            hoverBackgroundColor: skyHi,
+            borderColor: "rgba(15, 23, 42, 0.35)",
             borderWidth: 1,
-            borderRadius: isDashMobile ? 9 : 12,
+            borderRadius: 6,
             borderSkipped: false,
           }],
         },
@@ -787,9 +756,9 @@ function loadComenziSiConversieLunare() {
   destroyChart("comenziLunarChart");
   destroyChart("conversieLunarChart");
   destroyChart("sesiuniChart");
-  initChart("comenziLunarChart", "Comenzi", "#06b6d4");
-  initChart("conversieLunarChart", "Conversie %", "#f97316");
-  initChart("sesiuniChart", "Total sesiuni", "#a78bfa");
+  initChart("comenziLunarChart", "Comenzi", "#FFEE00");
+  initChart("conversieLunarChart", "Conversie %", "#FB7185");
+  initChart("sesiuniChart", "Total sesiuni", "#38BDF8");
 }
 
 // ---------------- DOCUMENT READY ---------------- 
@@ -807,10 +776,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dashboardModalChart) dashboardModalChart.resize();
   });
 
-  initChart("salesChart", "Vânzări lunare", "#facc15");
-  initChart("comenziLunarChart", "Comenzi", "#06b6d4");
-  initChart("conversieLunarChart", "Conversie %", "#f97316");
-  initChart("sesiuniChart", "Total sesiuni", "#a78bfa");
+  initChart("salesChart", "Vânzări lunare", "#FFEE00");
+  initChart("comenziLunarChart", "Comenzi", "#FFEE00");
+  initChart("conversieLunarChart", "Conversie %", "#FB7185");
+  initChart("sesiuniChart", "Total sesiuni", "#38BDF8");
 
   loadVanzariTotale();
 });

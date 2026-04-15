@@ -421,14 +421,12 @@ document.addEventListener("DOMContentLoaded", () => {
         alert('Nu există date pentru export.');
         return;
       }
-      try {
-        window.VoltaExcelExport.exportTable(table, {
-          fileName: 'raport_comparare_' + window.VoltaExcelExport.nowStamp(),
-          sheetName: 'Comparare'
-        });
-      } catch (error) {
+      Promise.resolve(window.VoltaExcelExport.exportTable(table, {
+        fileName: 'raport_comparare_' + window.VoltaExcelExport.nowStamp(),
+        sheetName: 'Comparare'
+      })).catch(function (error) {
         alert('Nu am putut exporta Excel: ' + error.message);
-      }
+      });
     });
   }
   if (pdfBtn) {

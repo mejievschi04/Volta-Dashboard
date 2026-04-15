@@ -6,6 +6,15 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Dashboard – VOLTA')</title>
   <link rel="icon" type="image/png" href="{{ asset('images/volta-logo.png') }}">
+  <script>
+    (function() {
+      try {
+        var collapsed = localStorage.getItem('volta.sidebar.collapsed') === '1';
+        document.documentElement.classList.toggle('sidebar-collapsed', collapsed);
+      } catch (e) {}
+      document.documentElement.classList.add('preload-sidebar-state');
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -114,8 +123,8 @@
     </section>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="{{ asset('js/excel-export.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <script src="{{ asset('js/excel-export-exceljs.js') }}"></script>
   <script src="{{ asset('js/volta-chart-theme.js') }}"></script>
   @stack('scripts')
   <script>
@@ -151,6 +160,7 @@
         const applyDesktopCollapsed = (collapsed) => {
           if (window.innerWidth <= 1100) return;
           document.body.classList.toggle('sidebar-collapsed', collapsed);
+          document.documentElement.classList.toggle('sidebar-collapsed', collapsed);
         };
 
         const storedCollapsed = localStorage.getItem(collapseStorageKey) === '1';
@@ -163,6 +173,7 @@
             }
             const nextCollapsed = !document.body.classList.contains('sidebar-collapsed');
             document.body.classList.toggle('sidebar-collapsed', nextCollapsed);
+            document.documentElement.classList.toggle('sidebar-collapsed', nextCollapsed);
             localStorage.setItem(collapseStorageKey, nextCollapsed ? '1' : '0');
           });
         }
@@ -172,6 +183,8 @@
           hamburgerBtn.style.display = 'flex';
           hamburgerBtn.style.visibility = 'visible';
           hamburgerBtn.style.opacity = '1';
+          document.body.classList.remove('sidebar-collapsed');
+          document.documentElement.classList.remove('sidebar-collapsed');
         }
         
         hamburgerBtn.addEventListener('click', function(e) {
@@ -211,6 +224,7 @@
             hamburgerBtn.style.visibility = 'visible';
             hamburgerBtn.style.opacity = '1';
             document.body.classList.remove('sidebar-collapsed');
+            document.documentElement.classList.remove('sidebar-collapsed');
           } else {
             hamburgerBtn.style.display = 'none';
             sidebar.classList.remove('open');
@@ -228,9 +242,13 @@
         });
       }
 
+      window.requestAnimationFrame(function() {
+        window.requestAnimationFrame(function() {
+          document.documentElement.classList.remove('preload-sidebar-state');
+        });
+      });
     });
 
   </script>
 </body>
 </html>
-

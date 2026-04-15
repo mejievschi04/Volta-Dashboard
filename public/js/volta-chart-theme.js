@@ -7,20 +7,21 @@
     textPrimary: "rgb(248, 250, 252)",
     textSecondary: "rgb(203, 213, 225)",
     textMuted: "rgb(148, 163, 184)",
-    grid: "rgba(148, 163, 184, 0.10)",
-    gridAxis: "rgba(148, 163, 184, 0.18)",
+    grid: "rgba(148, 163, 184, 0.12)",
+    gridAxis: "rgba(148, 163, 184, 0.2)",
     border: "rgba(71, 85, 105, 0.7)",
-    surface: "rgba(15, 23, 42, 0.96)",
-    brand: "rgb(250, 204, 21)",
-    brandSoft: "rgba(250, 204, 21, 0.2)",
+    surface: "rgba(30, 41, 59, 0.96)",
+    /** Accent principal Volta (galben curat) */
+    brand: "rgb(255, 238, 0)",
+    brandSoft: "rgba(255, 238, 0, 0.16)",
     font: "'Noto Sans', system-ui, -apple-system, sans-serif",
     series: {
-      amber: { line: "rgb(250, 204, 21)", area: "rgba(250, 204, 21, 0.2)" },
-      cyan: { line: "rgb(6, 182, 212)", area: "rgba(6, 182, 212, 0.2)" },
-      violet: { line: "rgb(167, 139, 250)", area: "rgba(167, 139, 250, 0.2)" },
-      emerald: { line: "rgb(16, 185, 129)", area: "rgba(16, 185, 129, 0.2)" },
-      rose: { line: "rgb(244, 63, 94)", area: "rgba(244, 63, 94, 0.2)" },
-      slate: { line: "rgb(148, 163, 184)", area: "rgba(148, 163, 184, 0.2)" },
+      amber: { line: "rgb(255, 238, 0)", area: "rgba(255, 238, 0, 0.14)" },
+      cyan: { line: "rgb(56, 189, 248)", area: "rgba(56, 189, 248, 0.16)" },
+      violet: { line: "rgb(167, 139, 250)", area: "rgba(167, 139, 250, 0.16)" },
+      emerald: { line: "rgb(52, 211, 153)", area: "rgba(52, 211, 153, 0.16)" },
+      rose: { line: "rgb(251, 113, 133)", area: "rgba(251, 113, 133, 0.16)" },
+      slate: { line: "rgb(148, 163, 184)", area: "rgba(148, 163, 184, 0.14)" },
     },
   };
 
@@ -55,13 +56,13 @@
   function tooltip() {
     return {
       enabled: true,
-      backgroundColor: "rgba(2, 6, 23, 0.92)",
+      backgroundColor: "rgba(30, 41, 59, 0.96)",
       titleColor: C.brand,
       bodyColor: C.textPrimary,
-      borderColor: "rgba(250, 204, 21, 0.28)",
+      borderColor: "rgba(255, 238, 0, 0.25)",
       borderWidth: 1,
       padding: 12,
-      cornerRadius: 14,
+      cornerRadius: 10,
       titleFont: { family: C.font, size: 13, weight: "700" },
       bodyFont: { family: C.font, size: 12, weight: "500" },
       displayColors: true,
@@ -147,13 +148,13 @@
             maxRotation: m ? 45 : 0,
             minRotation: m ? 45 : 0,
           }),
-          grid: gridLines({ lineWidth: 1, borderDash: [2, 5] }),
+          grid: gridLines({ lineWidth: 1, borderDash: [] }),
           border: { display: false },
         },
         y: {
           beginAtZero: true,
           ticks: ticks(10, 12),
-          grid: gridLines({ lineWidth: 1, borderDash: [2, 5] }),
+          grid: gridLines({ lineWidth: 1, borderDash: [] }),
           border: { display: false },
         },
       },
@@ -200,28 +201,14 @@
       return C.series;
     },
     /** Preseturi gradient pentru bare dashboard */
-    barGradients: {
-      brand: function (ctx, chartArea) {
-        return verticalGradient(ctx, chartArea, [
-          { offset: 0, color: "rgba(255, 238, 0, 0.12)" },
-          { offset: 0.45, color: "rgba(255, 238, 0, 0.42)" },
-          { offset: 1, color: "rgba(250, 204, 21, 0.92)" },
-        ]);
-      },
-      coral: function (ctx, chartArea) {
-        return verticalGradient(ctx, chartArea, [
-          { offset: 0, color: "rgba(251, 113, 133, 0.12)" },
-          { offset: 0.5, color: "rgba(251, 113, 133, 0.45)" },
-          { offset: 1, color: "rgba(244, 63, 94, 0.88)" },
-        ]);
-      },
-      sky: function (ctx, chartArea) {
-        return verticalGradient(ctx, chartArea, [
-          { offset: 0, color: "rgba(56, 189, 248, 0.1)" },
-          { offset: 0.5, color: "rgba(96, 165, 250, 0.42)" },
-          { offset: 1, color: "rgba(59, 130, 246, 0.88)" },
-        ]);
-      },
+    /** Culori solide (fără gradient) — compatibile cu clone JSON în modal */
+    barSolid: {
+      brand: "rgb(255, 238, 0)",
+      brandHover: "rgb(255, 247, 120)",
+      coral: "rgb(251, 113, 133)",
+      coralHover: "rgb(253, 164, 175)",
+      sky: "rgb(56, 189, 248)",
+      skyHover: "rgb(125, 211, 252)",
     },
   };
 })(typeof window !== "undefined" ? window : this);

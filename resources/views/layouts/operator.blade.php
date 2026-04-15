@@ -59,8 +59,8 @@
       @yield('content')
     </main>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="{{ asset('js/excel-export.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <script src="{{ asset('js/excel-export-exceljs.js') }}"></script>
   <script src="{{ asset('js/volta-chart-theme.js') }}"></script>
   @stack('scripts')
 </body>

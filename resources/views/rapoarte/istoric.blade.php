@@ -460,14 +460,12 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Nu există date în tabel pentru export.');
       return;
     }
-    try {
-      window.VoltaExcelExport.exportTable(table, {
-        fileName: 'istoric_tabel_' + window.VoltaExcelExport.nowStamp(),
-        sheetName: 'Istoric'
-      });
-    } catch (error) {
+    Promise.resolve(window.VoltaExcelExport.exportTable(table, {
+      fileName: 'istoric_tabel_' + window.VoltaExcelExport.nowStamp(),
+      sheetName: 'Istoric'
+    })).catch(function (error) {
       alert('Nu am putut exporta Excel: ' + error.message);
-    }
+    });
   });
   document.getElementById('istoricExportPdfBtn').addEventListener('click', function () {
     const an = document.getElementById('filterAn').value || '';
