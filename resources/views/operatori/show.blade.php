@@ -2,33 +2,27 @@
 
 @section('title', 'Profil Operator – VOLTA')
 
+@section('header-title', $operator->nume ?? 'Profil operator')
+
 @push('styles')
-<style>
-  @media (max-width: 900px) {
-    .operator-me-grid { grid-template-columns: 1fr !important; margin-top: 80px !important; }
-    .operator-me-cover { height: 220px !important; }
-    .operator-me-avatar { width: 100px !important; height: 100px !important; font-size: 40px !important; bottom: -50px !important; left: 20px !important; }
-    .operator-me-title { font-size: 24px !important; }
-  }
-</style>
+<link rel="stylesheet" href="{{ url('css/operatori.css') }}">
 @endpush
 
 @section('content')
+<div class="operatori-detail-page operatori-show-page">
 @if(session('success'))
-<div style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%); color: #fff; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
-  <i class="fas fa-check-circle" style="font-size: 20px;"></i>
-  <span style="font-weight: 600;">{{ session('success') }}</span>
+<div class="operatori-alert operatori-alert-success">
+  <i class="fas fa-check-circle" aria-hidden="true"></i><span>{{ session('success') }}</span>
 </div>
 @endif
 @if(session('error'))
-<div style="background: rgba(239, 68, 68, 0.2); color: #F87171; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; border: 1px solid rgba(239, 68, 68, 0.4);">
-  <i class="fas fa-exclamation-circle" style="font-size: 20px;"></i>
-  <span style="font-weight: 600;">{{ session('error') }}</span>
+<div class="operatori-alert operatori-alert-error">
+  <i class="fas fa-exclamation-circle" aria-hidden="true"></i><span>{{ session('error') }}</span>
 </div>
 @endif
 
-<a href="{{ route('operatori') }}" style="display: inline-flex; align-items: center; gap: 8px; color: #9CA3AF; text-decoration: none; font-size: 14px; margin-bottom: 20px;" onmouseover="this.style.color='#FFEE00'" onmouseout="this.style.color='#9CA3AF'">
-  <i class="fas fa-arrow-left"></i> Înapoi la Operatori
+<a href="{{ route('operatori') }}" class="operatori-back">
+  <i class="fas fa-arrow-left" aria-hidden="true"></i> Înapoi la Operatori
 </a>
 
 @if(isset($date) && $date)
@@ -37,171 +31,123 @@
     $lunaCurentaData = $vanzariLunare1c->firstWhere('luna', $lunaCurenta);
   @endphp
 
-  <!-- Cover + profil (identic cu Datele mele) -->
-  <div class="operator-me-cover" style="background: linear-gradient(135deg, rgba(255, 238, 0, 0.3) 0%, rgba(255, 238, 0, 0.2) 50%, rgba(255, 238, 0, 0.1) 100%); background-color: #1F2937; border-radius: 16px 16px 0 0; height: 280px; position: relative; margin-bottom: 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); @if($operator->photo_coperta_url) background-image: url('{{ $operator->photo_coperta_url }}'); background-size: cover; background-position: center; @endif">
-    <div style="position: absolute; bottom: -70px; left: 40px; display: flex; align-items: flex-end; gap: 20px;">
+  <div class="operatori-cover operatori-cover--show" @if($operator->photo_coperta_url) style="background-image: url('{{ $operator->photo_coperta_url }}'); background-size: cover; background-position: center;" @endif>
+    <div class="operatori-cover-inner">
       @if($operator->photo_profil_url)
-      <div class="operator-me-avatar" style="width: 140px; height: 140px; border-radius: 50%; background: url('{{ $operator->photo_profil_url }}') center/cover; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); border: 5px solid #111827;"></div>
+      <div class="operatori-avatar operatori-avatar--img" style="background-image: url('{{ $operator->photo_profil_url }}');"></div>
       @else
-      <div class="operator-me-avatar" style="width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); display: flex; align-items: center; justify-content: center; font-size: 56px; font-weight: 700; color: #000; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); border: 5px solid #111827;">
-        {{ strtoupper(mb_substr($date['nume'], 0, 1)) }}
-      </div>
+      <div class="operatori-avatar" aria-hidden="true">{{ strtoupper(mb_substr($date['nume'], 0, 1)) }}</div>
       @endif
-      <div style="padding-bottom: 16px;">
-        <h1 class="operator-me-title" style="color: #fff; margin: 0 0 8px 0; font-size: 32px; font-weight: 800; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);">
-          {{ $date['nume'] }}
-        </h1>
-        <span style="background: rgba(17, 24, 39, 0.9); color: #FFEE00; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #FFEE00;">
-          <i class="fas fa-database"></i> Rezultate din 1C (ian. 2023 – prezent)
+      <div class="operatori-detail-name-wrap">
+        <h1 class="operatori-detail-title">{{ $date['nume'] }}</h1>
+        <span class="kpi-source-badge">
+          <i class="fas fa-database" aria-hidden="true"></i> Rezultate pentru perioada selectată
         </span>
       </div>
     </div>
   </div>
 
-  <div class="operator-me-grid" style="display: grid; grid-template-columns: 300px 1fr; gap: 20px; margin-top: 90px;">
-    <!-- Coloană stânga: Luna curentă -->
+  <div class="operatori-detail-grid">
     <div>
-      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
-        <h3 style="color: #fff; margin: 0 0 20px 0; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
-          <i class="fas fa-calendar-check" style="color: #3b82f6;"></i> Luna curentă
-        </h3>
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(59, 130, 246, 0.1); border-radius: 10px; border: 1px solid rgba(59, 130, 246, 0.2);">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(59, 130, 246, 0.2); display: flex; align-items: center; justify-content: center;">
-              <i class="fas fa-shopping-cart" style="color: #3b82f6;"></i>
-            </div>
-            <div style="flex: 1;">
-              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Vânzări (fără TVA)</div>
-              <div style="color: #fff; font-size: 16px; font-weight: 700;">{{ $lunaCurentaData ? number_format($lunaCurentaData->vanzari_luna, 2, ',', '.') : '0,00' }} MDL</div>
+      <div class="operatori-sidebar-card">
+        <h3 class="operatori-sidebar-title"><i class="fas fa-calendar-check" aria-hidden="true"></i> Luna curentă</h3>
+        <div class="operatori-stat-list">
+          <div class="operatori-stat-row">
+            <div class="operatori-stat-icon"><i class="fas fa-shopping-cart" aria-hidden="true"></i></div>
+            <div class="operatori-stat-row-body">
+              <div class="operatori-stat-label">Vânzări (fără TVA)</div>
+              <div class="operatori-stat-value">{{ $lunaCurentaData ? number_format($lunaCurentaData->vanzari_luna, 2, ',', '.') : '0,00' }} MDL</div>
             </div>
           </div>
-          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(74, 222, 128, 0.1); border-radius: 10px; border: 1px solid rgba(74, 222, 128, 0.2);">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(74, 222, 128, 0.2); display: flex; align-items: center; justify-content: center;">
-              <i class="fas fa-trophy" style="color: #10B981;"></i>
-            </div>
-            <div style="flex: 1;">
-              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Profit</div>
-              <div style="color: #10B981; font-size: 16px; font-weight: 700;">{{ $lunaCurentaData ? number_format($lunaCurentaData->profit, 2, ',', '.') : '0,00' }} MDL</div>
+          <div class="operatori-stat-row operatori-stat-row--profit">
+            <div class="operatori-stat-icon"><i class="fas fa-trophy" aria-hidden="true"></i></div>
+            <div class="operatori-stat-row-body">
+              <div class="operatori-stat-label">Profit</div>
+              <div class="operatori-stat-value">{{ $lunaCurentaData ? number_format($lunaCurentaData->profit, 2, ',', '.') : '0,00' }} MDL</div>
             </div>
           </div>
-          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(255, 255, 255, 0.03); border-radius: 10px;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 238, 0, 0.2); display: flex; align-items: center; justify-content: center;">
-              <i class="fas fa-list" style="color: #FFEE00;"></i>
-            </div>
-            <div style="flex: 1;">
-              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Comenzi</div>
-              <div style="color: #fff; font-size: 16px; font-weight: 700;">{{ $lunaCurentaData ? (int) $lunaCurentaData->comenzi : 0 }}</div>
+          <div class="operatori-stat-row operatori-stat-row--neutral">
+            <div class="operatori-stat-icon"><i class="fas fa-list" aria-hidden="true"></i></div>
+            <div class="operatori-stat-row-body">
+              <div class="operatori-stat-label">Comenzi</div>
+              <div class="operatori-stat-value">{{ $lunaCurentaData ? (int) $lunaCurentaData->comenzi : 0 }}</div>
             </div>
           </div>
-          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 10px; border: 1px solid rgba(245, 158, 11, 0.2);">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(245, 158, 11, 0.2); display: flex; align-items: center; justify-content: center;">
-              <i class="fas fa-truck" style="color: #F59E0B;"></i>
-            </div>
-            <div style="flex: 1;">
-              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Livrări (luna curentă)</div>
-              <div style="color: #F59E0B; font-size: 16px; font-weight: 700;">{{ $nrLivrariLunaCurenta ?? 0 }}</div>
+          <div class="operatori-stat-row operatori-stat-row--delivery">
+            <div class="operatori-stat-icon"><i class="fas fa-truck" aria-hidden="true"></i></div>
+            <div class="operatori-stat-row-body">
+              <div class="operatori-stat-label">Livrări (luna curentă)</div>
+              <div class="operatori-stat-value operatori-stat-value--delivery">{{ $nrLivrariLunaCurenta ?? 0 }}</div>
             </div>
           </div>
-          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(139, 92, 246, 0.1); border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.2);">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(139, 92, 246, 0.2); display: flex; align-items: center; justify-content: center;">
-              <i class="fas fa-store" style="color: #8B5CF6;"></i>
-            </div>
-            <div style="flex: 1;">
-              <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 4px;">Pick-up (luna curentă)</div>
-              <div style="color: #8B5CF6; font-size: 16px; font-weight: 700;">{{ $pickupLunaCurenta ?? 0 }}</div>
+          <div class="operatori-stat-row operatori-stat-row--pickup">
+            <div class="operatori-stat-icon"><i class="fas fa-store" aria-hidden="true"></i></div>
+            <div class="operatori-stat-row-body">
+              <div class="operatori-stat-label">Pick-up (luna curentă)</div>
+              <div class="operatori-stat-value operatori-stat-value--pickup">{{ $pickupLunaCurenta ?? 0 }}</div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Coloană dreapta: Statistici totale + grafic + tabel -->
-    <div style="display: flex; flex-direction: column; gap: 20px;">
-      <!-- Statistici totale (1C) -->
-      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
-        <div style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
-          <h2 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px;">
-            <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); display: flex; align-items: center; justify-content: center;">
-              <i class="fas fa-chart-line" style="color: #fff; font-size: 20px;"></i>
-            </div>
-            Statistici totale (1C)
-          </h2>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px;">
-          <div style="background: rgba(59, 130, 246, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2); text-align: center;">
-            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Vânzări fără TVA</div>
-            <div style="color: #fff; font-size: 22px; font-weight: 800;">{{ number_format($date['vanzari_fara_tva'], 2, ',', '.') }} <span style="font-size: 12px; color: #9CA3AF;">MDL</span></div>
+    <div class="operatori-main-feed">
+      <div class="operatori-content-card">
+        <h2 class="operatori-section-title">Statistici totale</h2>
+        <div class="operatori-stats-grid">
+          <div class="operatori-stat-box">
+            <div class="operatori-stat-label">Vânzări fără TVA</div>
+            <div class="operatori-stat-value">{{ number_format($date['vanzari_fara_tva'], 2, ',', '.') }} MDL</div>
           </div>
-          <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
-            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Vânzări cu TVA</div>
-            <div style="color: #fff; font-size: 22px; font-weight: 700;">{{ number_format($date['vanzari_cu_tva'], 2, ',', '.') }} <span style="font-size: 12px; color: #9CA3AF;">MDL</span></div>
+          <div class="operatori-stat-box operatori-stat-box--neutral">
+            <div class="operatori-stat-label">Vânzări cu TVA</div>
+            <div class="operatori-stat-value">{{ number_format($date['vanzari_cu_tva'], 2, ',', '.') }} MDL</div>
           </div>
-          <div style="background: rgba(74, 222, 128, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(74, 222, 128, 0.2); text-align: center;">
-            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Profit</div>
-            <div style="color: #10B981; font-size: 22px; font-weight: 800;">{{ number_format($date['profit'], 2, ',', '.') }} <span style="font-size: 12px; color: #9CA3AF;">MDL</span></div>
+          <div class="operatori-stat-box operatori-stat-box--profit">
+            <div class="operatori-stat-label">Profit</div>
+            <div class="operatori-stat-value">{{ number_format($date['profit'], 2, ',', '.') }} MDL</div>
           </div>
-          <div style="background: rgba(255, 238, 0, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(255, 238, 0, 0.2); text-align: center;">
-            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Comenzi</div>
-            <div style="color: #FFEE00; font-size: 22px; font-weight: 800;">{{ number_format($date['nr_comenzi'], 0, ',', '.') }}</div>
+          <div class="operatori-stat-box operatori-stat-box--neutral">
+            <div class="operatori-stat-label">Comenzi</div>
+            <div class="operatori-stat-value operatori-stat-value--primary">{{ number_format($date['nr_comenzi'], 0, ',', '.') }}</div>
           </div>
-          <div style="background: rgba(245, 158, 11, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.2); text-align: center;">
-            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Livrări (total)</div>
-            <div style="color: #F59E0B; font-size: 22px; font-weight: 800;">{{ number_format($nrLivrariTotal ?? 0, 0, ',', '.') }}</div>
+          <div class="operatori-stat-box operatori-stat-box--amber">
+            <div class="operatori-stat-label">Livrări (total)</div>
+            <div class="operatori-stat-value operatori-stat-value--delivery">{{ number_format($nrLivrariTotal ?? 0, 0, ',', '.') }}</div>
           </div>
-          <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.2); text-align: center;">
-            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Pick-up (total)</div>
-            <div style="color: #8B5CF6; font-size: 22px; font-weight: 800;">{{ number_format($pickupTotal ?? 0, 0, ',', '.') }}</div>
+          <div class="operatori-stat-box operatori-stat-box--violet">
+            <div class="operatori-stat-label">Pick-up (total)</div>
+            <div class="operatori-stat-value operatori-stat-value--pickup">{{ number_format($pickupTotal ?? 0, 0, ',', '.') }}</div>
           </div>
         </div>
       </div>
 
-      <!-- Grafic vânzări pe luni -->
       @if($vanzariLunare1c->count() > 0)
-      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
-        <div style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
-          <h2 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px;">
-            <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); display: flex; align-items: center; justify-content: center;">
-              <i class="fas fa-chart-line" style="color: #fff; font-size: 20px;"></i>
-            </div>
-            Vânzări pe luni (fără TVA)
-          </h2>
-        </div>
-        <div style="position: relative; height: 320px;">
-          <canvas id="vanzariChartMe"></canvas>
-        </div>
+      <div class="operatori-content-card">
+        <h2 class="operatori-section-title">Vânzări pe luni (fără TVA)</h2>
+        <div class="operatori-chart-wrap"><canvas id="vanzariChartMe"></canvas></div>
       </div>
-      @endif
-
-      <!-- Tabel vânzări pe luni -->
-      @if($vanzariLunare1c->count() > 0)
-      <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
-        <div style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
-          <h2 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px;">
-            <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); display: flex; align-items: center; justify-content: center;">
-              <i class="fas fa-calendar-alt" style="color: #000; font-size: 20px;"></i>
-            </div>
-            Vânzări pe luni
-          </h2>
-        </div>
-        <div style="overflow-x: auto;">
-          <table style="width: 100%; border-collapse: collapse;">
+      <div class="operatori-content-card">
+        <h2 class="operatori-section-title">Vânzări pe luni</h2>
+        <div class="operatori-table-wrap">
+          <table class="operatori-table">
             <thead>
-              <tr style="background: linear-gradient(135deg, rgba(255, 238, 0, 0.2) 0%, rgba(255, 238, 0, 0.1) 100%);">
-                <th style="padding: 14px 16px; text-align: left; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Lună</th>
-                <th style="padding: 14px 16px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Comenzi</th>
-                <th style="padding: 14px 16px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Vânzări (fără TVA)</th>
-                <th style="padding: 14px 16px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Vânzări (cu TVA)</th>
-                <th style="padding: 14px 16px; text-align: center; border-bottom: 2px solid rgba(255, 238, 0, 0.3); font-weight: 700; color: #fff;">Profit</th>
+              <tr>
+                <th>Lună</th>
+                <th class="tc">Comenzi</th>
+                <th class="tc">Vânzări (fără TVA)</th>
+                <th class="tc">Vânzări (cu TVA)</th>
+                <th class="tc">Profit</th>
               </tr>
             </thead>
             <tbody>
               @foreach($vanzariLunare1c as $luna)
-              <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.06); transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 238, 0, 0.08)'" onmouseout="this.style.background='transparent'">
-                <td style="padding: 14px 16px; color: #fff; font-weight: 600;">{{ $luna->luna_label }}</td>
-                <td style="padding: 14px 16px; text-align: center; color: #fff;">{{ $luna->comenzi }}</td>
-                <td style="padding: 14px 16px; text-align: center; color: #fff; font-weight: 600;">{{ number_format($luna->vanzari_luna, 2, ',', '.') }} MDL</td>
-                <td style="padding: 14px 16px; text-align: center; color: #fff; font-weight: 600;">{{ number_format($luna->vanzari_cu_tva, 2, ',', '.') }} MDL</td>
-                <td style="padding: 14px 16px; text-align: center; color: #10B981; font-weight: 700;">{{ number_format($luna->profit, 2, ',', '.') }} MDL</td>
+              <tr>
+                <td class="operatori-table-strong">{{ $luna->luna_label }}</td>
+                <td class="tc">{{ $luna->comenzi }}</td>
+                <td class="tc operatori-table-strong">{{ number_format($luna->vanzari_luna, 2, ',', '.') }} MDL</td>
+                <td class="tc operatori-table-strong">{{ number_format($luna->vanzari_cu_tva, 2, ',', '.') }} MDL</td>
+                <td class="tc operatori-profit">{{ number_format($luna->profit, 2, ',', '.') }} MDL</td>
               </tr>
               @endforeach
             </tbody>
@@ -222,6 +168,66 @@
     const vanzariLunare = @json($vanzariLunare1c->sortBy('luna')->values());
     const labels = vanzariLunare.map(function(v) { return v.luna_label || v.luna; });
     const data = vanzariLunare.map(function(v) { return parseFloat(v.vanzari_luna) || 0; });
+    var chartOptions = (function() {
+      if (typeof VoltaChartTheme !== 'undefined') {
+        return VoltaChartTheme.cartesianDefaults({
+          plugins: {
+            tooltip: Object.assign({}, VoltaChartTheme.tooltip(), {
+              titleColor: VoltaChartTheme.colors.brand,
+              bodyColor: VoltaChartTheme.colors.textPrimary,
+              callbacks: {
+                label: function(ctx) {
+                  return 'Vânzări: ' + new Intl.NumberFormat('ro-RO', { minimumFractionDigits: 2 }).format(ctx.parsed.y) + ' MDL';
+                }
+              }
+            }),
+          },
+          scales: {
+            x: { ticks: { maxRotation: 45, minRotation: 0 } },
+            y: {
+              ticks: {
+                callback: function(v) {
+                  return new Intl.NumberFormat('ro-RO', { maximumFractionDigits: 0 }).format(v) + ' MDL';
+                }
+              }
+            }
+          }
+        });
+      }
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { color: '#e2e8f0', font: { size: 12 } } },
+          tooltip: {
+            backgroundColor: 'rgba(30,41,59,0.96)',
+            titleColor: '#FFEE00',
+            bodyColor: '#f8fafc',
+            borderColor: '#334155',
+            borderWidth: 1,
+            padding: 12,
+            cornerRadius: 10,
+            callbacks: {
+              label: function(ctx) {
+                return 'Vânzări: ' + new Intl.NumberFormat('ro-RO', { minimumFractionDigits: 2 }).format(ctx.parsed.y) + ' MDL';
+              }
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { color: '#cbd5e1', maxRotation: 45 }, grid: { color: 'rgba(148,163,184,0.12)', drawBorder: false } },
+          y: {
+            ticks: {
+              color: '#cbd5e1',
+              callback: function(v) { return new Intl.NumberFormat('ro-RO', { maximumFractionDigits: 0 }).format(v) + ' MDL'; }
+            },
+            grid: { color: 'rgba(148,163,184,0.12)', drawBorder: false },
+            beginAtZero: true
+          }
+        }
+      };
+    })();
     new Chart(canvas.getContext('2d'), {
       type: 'line',
       data: {
@@ -240,42 +246,18 @@
           pointBorderWidth: 2
         }]
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { labels: { color: '#fff', font: { size: 12 } } },
-          tooltip: {
-            backgroundColor: 'rgba(0,0,0,0.9)',
-            titleColor: '#3b82f6',
-            bodyColor: '#fff',
-            callbacks: {
-              label: function(ctx) {
-                return 'Vânzări: ' + new Intl.NumberFormat('ro-RO', { minimumFractionDigits: 2 }).format(ctx.parsed.y) + ' MDL';
-              }
-            }
-          }
-        },
-        scales: {
-          x: { ticks: { color: '#9CA3AF', maxRotation: 45 }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          y: {
-            ticks: { color: '#9CA3AF', callback: function(v) { return new Intl.NumberFormat('ro-RO', { maximumFractionDigits: 0 }).format(v) + ' MDL'; } },
-            grid: { color: 'rgba(255,255,255,0.05)' },
-            beginAtZero: true
-          }
-        }
-      }
+      options: chartOptions
     });
   });
   </script>
   @endpush
   @endif
 @else
-  <!-- Fără date 1C pentru acest operator -->
-  <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border: 2px dashed rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 48px 24px; text-align: center; margin-top: 20px;">
-    <i class="fas fa-database" style="font-size: 56px; color: #9CA3AF; margin-bottom: 20px; display: block; opacity: 0.7;"></i>
-    <p style="color: #E5E7EB; font-size: 18px; margin: 0; font-weight: 600;">Nu există date din 1C pentru acest operator</p>
-    <p style="color: #9CA3AF; font-size: 14px; margin: 12px 0 0 0;">Nume: <strong style="color: #FFEE00;">{{ $operator->nume ?? '—' }}</strong></p>
+  <div class="operatori-card operatori-card-empty" style="margin-top: 20px;">
+    <i class="fas fa-database" aria-hidden="true"></i>
+    <p>Nu există date pentru acest operator.</p>
+    <p class="operatori-empty-hint">Nume: <strong>{{ $operator->nume ?? '—' }}</strong></p>
   </div>
 @endif
+</div>
 @endsection

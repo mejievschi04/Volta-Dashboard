@@ -8,6 +8,7 @@ use App\Models\PlanVanzari;
 use App\Models\TrafficSource;
 use App\Models\OnecKpiSync;
 use App\Models\Livrare;
+use App\Support\DbDate;
 use Illuminate\Support\Facades\Auth;
 
 class KpiController extends Controller
@@ -30,8 +31,7 @@ class KpiController extends Controller
             ];
             $lunaNume = $luniRomana[$lunaNum] ?? '';
             
-            // Date doar din 1C (onec_kpi_syncs)
-            $onecSync = OnecKpiSync::whereRaw("DATE_FORMAT(period_start, '%Y-%m') = ?", [$luna])
+            $onecSync = OnecKpiSync::whereRaw(DbDate::month('period_start') . ' = ?', [$luna])
                 ->orderByDesc('created_at')
                 ->first();
 
@@ -58,7 +58,7 @@ class KpiController extends Controller
             // Total sesiuni pentru luna selectată
             $sesiuniData = TrafficSource::selectRaw('SUM(visits) as total_sesiuni')
                 ->where('source', 'total')
-                ->whereRaw("DATE_FORMAT(date, '%Y-%m') = ?", [$luna])
+                ->whereRaw(DbDate::month('date') . ' = ?', [$luna])
                 ->first();
             
             // Calculează KPI-urile
@@ -97,7 +97,7 @@ class KpiController extends Controller
             $cecMediu = $comenzi > 0 ? round($vanzariLuna / $comenzi, 2) : 0;
             
             // Total livrări în luna selectată (din tabelul livrari)
-            $totalLivrariLuna = Livrare::whereRaw("DATE_FORMAT(data_livrarii, '%Y-%m') = ?", [$luna])->count();
+            $totalLivrariLuna = Livrare::whereRaw(DbDate::month('data_livrarii') . ' = ?', [$luna])->count();
             
             // Pickup = total comenzi - livrări
             $pickup = max(0, $comenzi - $totalLivrariLuna);
@@ -126,7 +126,7 @@ class KpiController extends Controller
                 'pickup' => $pickup,
                 'zile_activitate' => 0,
                 'progres_zilnic' => $progresZilnic,
-                'kpi_source' => $onecSync ? 'onec_db' : 'onec_db',
+                'kpi_source' => $onecSync ? 'sync' : 'sync',
             ]);
             
         } catch (\Exception $e) {

@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Log;
 class OneCController extends Controller
 {
     /**
-     * Sincronizare KPI din 1C.
-     * - Fără force: nu se apelează 1C dacă perioada există deja în DB.
-     * - Cu smart=1: se verifică lunile din 1 ianuarie 2023 până în prezent; pentru fiecare lună care lipsește se apelează 1C.
+     * Actualizare KPI din sursa externă.
+     * - Fără force: nu se reapelează datele dacă perioada există deja în DB.
+     * - Cu smart=1: se verifică lunile din 1 ianuarie 2023 până în prezent; pentru fiecare lună care lipsește se actualizează datele.
      */
     public function syncKpi(Request $request)
     {
@@ -31,7 +31,7 @@ class OneCController extends Controller
             $dateStart = $request->input('date_start', date('Y-m-01'));
             $dateEnd = $request->input('date_end', date('Y-m-d'));
 
-            // Nu apelăm 1C dacă avem deja această perioadă (decât cu force)
+            // Nu reîncărcăm dacă avem deja această perioadă (decât cu force)
             if (! $force) {
                 $existing = OnecKpiSync::where('period_start', $dateStart)
                     ->where('period_end', $dateEnd)
@@ -43,7 +43,7 @@ class OneCController extends Controller
                     ]);
                     return response()->json([
                         'success' => true,
-                        'message' => 'Datele pentru această perioadă există deja. Nu s-a efectuat niciun apel către 1C.',
+                        'message' => 'Datele pentru această perioadă există deja. Nu s-a efectuat nicio actualizare.',
                         'date_start' => $dateStart,
                         'date_end' => $dateEnd,
                         'sync_id' => $existing->id,
@@ -60,7 +60,7 @@ class OneCController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'API 1C a răspuns cu succes. Datele au fost salvate în baza de date.',
+                'message' => 'Sursa externă a răspuns cu succes. Datele au fost salvate în baza de date.',
                 'date_start' => $dateStart,
                 'date_end' => $dateEnd,
                 'sync_id' => $sync->id,
@@ -73,11 +73,11 @@ class OneCController extends Controller
                 'line' => $e->getLine(),
             ]);
 
-            $userMessage = 'Eroare la sincronizarea cu 1C.';
+            $userMessage = 'Eroare la actualizarea datelor.';
             if (str_contains($message, 'Connection refused')) {
-                $userMessage = 'Serverul 1C nu răspunde (conexiune refuzată). Verificați că serverul este pornit și accesibil.';
+                $userMessage = 'Serverul nu răspunde (conexiune refuzată). Verificați că serverul este pornit și accesibil.';
             } elseif (str_contains($message, 'timed out') || str_contains($message, 'timeout')) {
-                $userMessage = 'Serverul 1C nu răspunde în timp util (timeout). Încercați din nou sau verificați rețeaua.';
+                $userMessage = 'Serverul nu răspunde în timp util (timeout). Încercați din nou sau verificați rețeaua.';
             }
 
             return response()->json([
@@ -89,8 +89,8 @@ class OneCController extends Controller
     }
 
     /**
-     * Hard refresh: rescrie toate datele 1C pentru lunile trecute (doar admin).
-     * Pentru fiecare lună în trecut (ultimele N luni, implicit 12) se apelează 1C și se suprascrie în DB.
+     * Hard refresh: rescrie toate datele pentru lunile trecute (doar admin).
+     * Pentru fiecare lună în trecut (ultimele N luni, implicit 12) se reîncarcă și se suprascrie în DB.
      */
     public function hardRefresh(Request $request): JsonResponse
     {
@@ -111,7 +111,7 @@ class OneCController extends Controller
         foreach ($periods as $p) {
             $result = $this->fetchFromOneCAndSave($p['start'], $p['end']);
             if ($result instanceof JsonResponse) {
-                $errors[] = ['period' => $p['label'], 'message' => 'Eroare 1C'];
+                $errors[] = ['period' => $p['label'], 'message' => 'Eroare de actualizare'];
                 continue;
             }
             $synced[] = ['period' => $p['label'], 'sync_id' => $result->id];
@@ -119,7 +119,7 @@ class OneCController extends Controller
 
         $total = count($periods);
         $ok = count($synced);
-        $message = "Hard refresh finalizat: {$ok}/{$total} luni reîncărcate din 1C.";
+        $message = "Reîmprospătare finalizată: {$ok}/{$total} luni reîncărcate.";
         if (count($errors) > 0) {
             $message .= ' Erori: ' . count($errors) . ' lun(i).';
         }
@@ -136,7 +136,7 @@ class OneCController extends Controller
 
     /**
      * Sync smart: perioade din 1 ianuarie 2023 până în prezent care lipsesc.
-     * Pentru fiecare lună: dacă există deja în DB și nu e force, nu se apelează 1C.
+     * Pentru fiecare lună: dacă există deja în DB și nu e force, nu se reapelează.
      */
     private function syncKpiSmart(Request $request, bool $force): JsonResponse
     {
@@ -194,8 +194,8 @@ class OneCController extends Controller
 
         $oneCCalls = count($synced);
         $message = $oneCCalls === 0 && count($skipped) > 0
-            ? 'Toate perioadele existau deja. Nu s-a efectuat niciun apel către 1C.'
-            : "Sincronizare finalizată: {$oneCCalls} apel(uri) către 1C, " . count($skipped) . ' perioade deja existente.';
+            ? 'Toate perioadele existau deja. Nu s-a efectuat nicio actualizare.'
+            : "Sincronizare finalizată: {$oneCCalls} actualizare(i), " . count($skipped) . ' perioade deja existente.';
         if (count($errors) > 0) {
             $message .= ' Erori: ' . count($errors) . ' perioad(e).';
         }
@@ -212,7 +212,7 @@ class OneCController extends Controller
     }
 
     /**
-     * Apelează 1C pentru perioada dată și salvează în DB.
+     * Reîncarcă datele pentru perioada dată și salvează în DB.
      * Returnează OnecKpiSync la succes sau JsonResponse la eroare.
      */
     private function fetchFromOneCAndSave(string $dateStart, string $dateEnd): OnecKpiSync|JsonResponse
@@ -244,7 +244,7 @@ class OneCController extends Controller
             ]);
             return response()->json([
                 'success' => false,
-                'message' => 'Eroare la apelarea API-ului 1C',
+                'message' => 'Eroare la apelarea sursei externe',
                 'status' => $response->status(),
                 'body' => $response->body(),
             ], $response->status() ?: 500, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
@@ -258,7 +258,7 @@ class OneCController extends Controller
     }
 
     /**
-     * Citește o valoare numerică din array încercând mai multe variante de chei (1C poate trimite camelCase / snake_case / PascalCase).
+     * Citește o valoare numerică din array încercând mai multe variante de chei.
      */
     private function getNumeric(array $arr, array $keyVariants, float $default = 0): float
     {
@@ -271,9 +271,9 @@ class OneCController extends Controller
     }
 
     /**
-     * Salvează răspunsul 1C în onec_kpi_syncs și onec_kpi_operatori.
+     * Salvează răspunsul în tabelele de KPI.
      * O singură înregistrare per lună: dacă există deja un sync pentru aceeași lună (period_start în aceeași lună),
-     * îl actualizează ca să nu dublăm vanzarile la raportare (ex. februarie parțial + februarie completă).
+     * îl actualizează ca să nu dublăm vânzările la raportare (ex. februarie parțial + februarie completă).
      */
     private function saveOneCResponseToDb(string $dateStart, string $dateEnd, array $data): ?OnecKpiSync
     {
@@ -353,4 +353,3 @@ class OneCController extends Controller
         return $sync;
     }
 }
-

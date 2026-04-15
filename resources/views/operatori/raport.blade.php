@@ -2,6 +2,8 @@
 
 @section('title', 'Raport operator – ' . ($date['nume'] ?? $operatorNume) . ' – VOLTA')
 
+@section('header-title', ($date ?? [])['nume'] ?? ($operatorNume ?? 'Raport operator'))
+
 @push('styles')
 <style>
   @media (max-width: 900px) {
@@ -35,8 +37,8 @@
       @endif
       <div class="operatori-detail-name-wrap">
         <h1 class="operatori-detail-title">{{ $date['nume'] }}</h1>
-        <span class="operatori-badge">
-          <i class="fas fa-database"></i> Raport 1C (ian. 2023 – prezent)
+        <span class="kpi-source-badge">
+          <i class="fas fa-database" aria-hidden="true"></i> Raport pentru perioada selectată
         </span>
       </div>
     </div>
@@ -70,7 +72,7 @@
     </div>
     <div class="operatori-main-feed">
       <div class="operatori-content-card">
-        <h2 class="operatori-section-title">Statistici totale (1C)</h2>
+        <h2 class="operatori-section-title">Statistici totale</h2>
         <div class="operatori-stats-grid">
           <div class="operatori-stat-box">
             <div class="operatori-stat-label">Vânzări fără TVA</div>
@@ -84,9 +86,9 @@
             <div class="operatori-stat-label">Profit</div>
             <div class="operatori-stat-value">{{ number_format($date['profit'], 2, ',', '.') }} MDL</div>
           </div>
-          <div class="operatori-stat-box operatori-stat-box--yellow">
+          <div class="operatori-stat-box operatori-stat-box--neutral">
             <div class="operatori-stat-label">Comenzi</div>
-            <div class="operatori-stat-value">{{ number_format($date['nr_comenzi'], 0, ',', '.') }}</div>
+            <div class="operatori-stat-value operatori-stat-value--primary">{{ number_format($date['nr_comenzi'], 0, ',', '.') }}</div>
           </div>
         </div>
       </div>
@@ -134,14 +136,70 @@
     const vanzariLunare = @json($vanzariLunare1c->sortBy('luna')->values());
     const labels = vanzariLunare.map(function(v) { return v.luna_label || v.luna; });
     const data = vanzariLunare.map(function(v) { return parseFloat(v.vanzari_luna) || 0; });
+    var chartOptions = (function() {
+      if (typeof VoltaChartTheme !== 'undefined') {
+        return VoltaChartTheme.cartesianDefaults({
+          plugins: {
+            tooltip: Object.assign({}, VoltaChartTheme.tooltip(), {
+              titleColor: VoltaChartTheme.colors.brand,
+              bodyColor: VoltaChartTheme.colors.textPrimary,
+              callbacks: {
+                label: function(ctx) {
+                  return 'Vânzări: ' + new Intl.NumberFormat('ro-RO', { minimumFractionDigits: 2 }).format(ctx.parsed.y) + ' MDL';
+                }
+              }
+            }),
+          },
+          scales: {
+            x: { ticks: { maxRotation: 45, minRotation: 0 } },
+            y: {
+              ticks: {
+                callback: function(v) {
+                  return new Intl.NumberFormat('ro-RO', { maximumFractionDigits: 0 }).format(v) + ' MDL';
+                }
+              }
+            }
+          }
+        });
+      }
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { color: '#e2e8f0', font: { size: 12 } } },
+          tooltip: {
+            backgroundColor: 'rgba(30,41,59,0.96)',
+            titleColor: '#FFEE00',
+            bodyColor: '#f8fafc',
+            borderColor: '#334155',
+            borderWidth: 1,
+            padding: 12,
+            cornerRadius: 10,
+            callbacks: {
+              label: function(ctx) {
+                return 'Vânzări: ' + new Intl.NumberFormat('ro-RO', { minimumFractionDigits: 2 }).format(ctx.parsed.y) + ' MDL';
+              }
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { color: '#cbd5e1', maxRotation: 45 }, grid: { color: 'rgba(148,163,184,0.12)', drawBorder: false } },
+          y: {
+            ticks: {
+              color: '#cbd5e1',
+              callback: function(v) { return new Intl.NumberFormat('ro-RO', { maximumFractionDigits: 0 }).format(v) + ' MDL'; }
+            },
+            grid: { color: 'rgba(148,163,184,0.12)', drawBorder: false },
+            beginAtZero: true
+          }
+        }
+      };
+    })();
     new Chart(canvas.getContext('2d'), {
       type: 'line',
-      data: { labels: labels, datasets: [{ label: 'Vânzări (fără TVA) MDL', data: data, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', borderWidth: 3, tension: 0.4, fill: true, pointRadius: 4 }] },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: '#fff' } }, tooltip: { backgroundColor: 'rgba(0,0,0,0.9)', bodyColor: '#fff' } },
-        scales: { x: { ticks: { color: '#9CA3AF' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { color: '#9CA3AF' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true } }
-      }
+      data: { labels: labels, datasets: [{ label: 'Vânzări (fără TVA) MDL', data: data, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', borderWidth: 3, tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#3b82f6', pointBorderColor: '#fff', pointBorderWidth: 2 }] },
+      options: chartOptions
     });
   });
   </script>
@@ -150,7 +208,7 @@
 @else
   <div class="operatori-detail-empty">
     <i class="fas fa-database"></i>
-    <p>Nu există date din 1C pentru <strong>{{ $operatorNume ?: '—' }}</strong>.</p>
+    <p>Nu există date pentru <strong>{{ $operatorNume ?: '—' }}</strong>.</p>
   </div>
 @endif
 </div>

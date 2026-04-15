@@ -42,7 +42,7 @@
           {{ $date['nume'] }}
         </h1>
         <span style="background: rgba(17, 24, 39, 0.9); color: #FFEE00; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #FFEE00;">
-          <i class="fas fa-database"></i> Rezultate din 1C (ian. 2023 – prezent)
+          <i class="fas fa-database"></i> Rezultate pentru perioada selectată
         </span>
         @if(isset($operatorRecord) && $operatorRecord)
         <a href="{{ route('setari') }}#poze" style="margin-left: 12px; color: #9CA3AF; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" title="Schimbă pozele din Setări"><i class="fas fa-cog"></i> Poze în Setări</a>
@@ -117,7 +117,7 @@
             <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); display: flex; align-items: center; justify-content: center;">
               <i class="fas fa-chart-line" style="color: #fff; font-size: 20px;"></i>
             </div>
-            Statistici totale (1C)
+            Statistici totale
           </h2>
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px;">
@@ -262,12 +262,12 @@
   @endpush
   @endif
 @else
-  <!-- Fără date 1C -->
+  <!-- Fără date -->
   <div style="background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%); border: 2px dashed rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 48px 24px; text-align: center; margin-top: 20px;">
     <i class="fas fa-database" style="font-size: 56px; color: #9CA3AF; margin-bottom: 20px; display: block; opacity: 0.7;"></i>
-    <p style="color: #E5E7EB; font-size: 18px; margin: 0; font-weight: 600;">Nu există date din 1C pentru contul tău</p>
+    <p style="color: #E5E7EB; font-size: 18px; margin: 0; font-weight: 600;">Nu există date pentru contul tău</p>
     <p style="color: #9CA3AF; font-size: 14px; margin: 12px 0 0 0;">Nume asociat: <strong style="color: #FFEE00;">{{ $operatorNume ?: '—' }}</strong></p>
-    <p style="color: #6B7280; font-size: 13px; margin: 8px 0 0 0;">Contactează administratorul pentru a seta rolul „Operator” și numele de operator (să coincidă cu 1C).</p>
+    <p style="color: #6B7280; font-size: 13px; margin: 8px 0 0 0;">Contactează administratorul pentru a seta rolul „Operator” și numele asociat.</p>
   </div>
 @endif
 @endsection

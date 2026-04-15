@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TrafficSource;
+use App\Support\DbDate;
 use Illuminate\Support\Facades\DB;
 
 class SesiuniController extends Controller
@@ -16,11 +17,11 @@ class SesiuniController extends Controller
         try {
             $rows = TrafficSource::selectRaw('
                 date,
-                DATE_FORMAT(date, "%d.%m.%Y") as data_formatata,
+                ' . DbDate::day('date') . ' as data_formatata,
                 SUM(visits) as total_sesiuni
             ')
             ->where('source', 'total')
-            ->whereRaw("DATE_FORMAT(date, '%Y-%m') = ?", [$luna])
+            ->whereRaw(DbDate::month('date') . ' = ?', [$luna])
             ->groupBy('date')
             ->orderBy('date', 'ASC')
             ->get();

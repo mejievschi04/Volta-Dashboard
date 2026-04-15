@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TrafficSource;
+use App\Support\DbDate;
 use Illuminate\Support\Facades\DB;
 
 class TraficController extends Controller
@@ -23,11 +24,11 @@ class TraficController extends Controller
                 $query->whereBetween('date', [$startDate, $endDate]);
             } elseif ($luna) {
                 // Altfel folosim luna
-                $query->whereRaw("DATE_FORMAT(date, '%Y-%m') = ?", [$luna]);
+                $query->whereRaw(DbDate::month('date') . ' = ?', [$luna]);
             } else {
                 // Implicit: luna curentă
                 $luna = date('Y-m');
-                $query->whereRaw("DATE_FORMAT(date, '%Y-%m') = ?", [$luna]);
+                $query->whereRaw(DbDate::month('date') . ' = ?', [$luna]);
             }
             
             // Date pentru grafic de tendință - grupate pe perioadă și sursă
@@ -54,11 +55,11 @@ class TraficController extends Controller
                     // Pentru perioade până la 3 luni, grupăm pe săptămâni
                     $rows = (clone $query)->selectRaw('
                         source,
-                        YEARWEEK(date, 1) as week,
+                        ' . DbDate::yearWeek('date') . ' as week,
                         MIN(date) as week_start_date,
                         SUM(visits) as total
                     ')
-                    ->groupBy('source', DB::raw('YEARWEEK(date, 1)'))
+                    ->groupBy('source', DB::raw(DbDate::yearWeek('date')))
                     ->orderBy('week', 'ASC')
                     ->get();
                     
@@ -100,11 +101,11 @@ class TraficController extends Controller
                     // Pentru perioade mai mari, grupăm pe luni
                     $rows = (clone $query)->selectRaw('
                         source,
-                        DATE_FORMAT(date, "%Y-%m") as month,
-                        DATE_FORMAT(date, "%m.%Y") as month_label,
+                        ' . DbDate::month('date') . ' as month,
+                        ' . DbDate::monthLabel('date') . ' as month_label,
                         SUM(visits) as total
                     ')
-                    ->groupBy('source', DB::raw('DATE_FORMAT(date, "%Y-%m")'), DB::raw('DATE_FORMAT(date, "%m.%Y")'))
+                    ->groupBy('source', DB::raw(DbDate::month('date')), DB::raw(DbDate::monthLabel('date')))
                     ->orderBy('month', 'ASC')
                     ->get();
                     
@@ -147,10 +148,10 @@ class TraficController extends Controller
                 $rows = (clone $query)->selectRaw('
                     source,
                     date,
-                    DATE_FORMAT(date, "%d.%m") as day_label,
+                    ' . DbDate::dayShort('date') . ' as day_label,
                     SUM(visits) as total
                 ')
-                ->groupBy('source', 'date', DB::raw('DATE_FORMAT(date, "%d.%m")'))
+                ->groupBy('source', 'date', DB::raw(DbDate::dayShort('date')))
                 ->orderBy('date', 'ASC')
                 ->get();
                 
@@ -278,4 +279,3 @@ class TraficController extends Controller
         }
     }
 }
-

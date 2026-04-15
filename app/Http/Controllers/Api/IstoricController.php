@@ -8,6 +8,7 @@ use App\Models\PlanVanzari;
 use App\Models\TrafficSource;
 use App\Models\OnecKpiSync;
 use App\Models\Livrare;
+use App\Support\DbDate;
 use Illuminate\Support\Facades\DB;
 
 class IstoricController extends Controller
@@ -62,7 +63,7 @@ class IstoricController extends Controller
                 $lunaNum = (int) ($parts[1] ?? 1);
                 $planKey = $an . '-' . str_pad($lunaNum, 2, '0', STR_PAD_LEFT);
 
-                $onecSync = OnecKpiSync::whereRaw("DATE_FORMAT(period_start, '%Y-%m') = ?", [$luna])
+                $onecSync = OnecKpiSync::whereRaw(DbDate::month('period_start') . ' = ?', [$luna])
                     ->orderByDesc('created_at')
                     ->first();
 
@@ -74,7 +75,7 @@ class IstoricController extends Controller
                 $planLuna = $planMap[$planKey] ?? 0;
                 $sesiuniData = TrafficSource::selectRaw('SUM(visits) as total_sesiuni')
                     ->where('source', 'total')
-                    ->whereRaw("DATE_FORMAT(date, '%Y-%m') = ?", [$luna])
+                    ->whereRaw(DbDate::month('date') . ' = ?', [$luna])
                     ->first();
                 $totalSesiuni = intval($sesiuniData->total_sesiuni ?? 0);
                 
@@ -90,7 +91,7 @@ class IstoricController extends Controller
                 $progresPlan = $planLuna > 0 ? round(($vanzariLuna / $planLuna) * 100, 2) : 0;
                 $diferentaPlan = $vanzariLuna - $planLuna;
                 $cecMediu = $comenzi > 0 ? round($vanzariLuna / $comenzi, 2) : 0;
-                $totalLivrariLuna = Livrare::whereRaw("DATE_FORMAT(data_livrarii, '%Y-%m') = ?", [$luna])->count();
+                $totalLivrariLuna = Livrare::whereRaw(DbDate::month('data_livrarii') . ' = ?', [$luna])->count();
                 $pickup = max(0, $comenzi - $totalLivrariLuna);
                 
                 // Calculează zilele trecute pentru prognoză
@@ -135,7 +136,7 @@ class IstoricController extends Controller
                     'total_livrari_luna' => $totalLivrariLuna,
                     'pickup' => $pickup,
                     'zile_activitate' => 0,
-                    'kpi_source' => 'onec_db',
+                    'kpi_source' => 'sync',
                 ];
             }
             
@@ -169,4 +170,3 @@ class IstoricController extends Controller
         }
     }
 }
-

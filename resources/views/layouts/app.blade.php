@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="ro" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="{{ asset('images/volta-logo.png') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url('css/style.css') }}"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   @stack('styles')
@@ -17,12 +17,11 @@
   <div class="app">
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-      <div class="logo">
+      <button type="button" class="logo" id="sidebarLogoToggle" aria-label="Restrange meniul lateral">
         <img src="{{ asset('images/volta-logo.png') }}" alt="VOLTA Logo" class="logo-mark">
-        <h1>VOLTA Dashboard</h1>
-      </div>
+        <h1>VOLTA STATS</h1>
+      </button>
       <nav class="nav">
-        <h3>Menu</h3>
         @if(auth()->check() && auth()->user()->isOperator())
         <a href="{{ route('datele-mele') }}" class="{{ request()->routeIs('datele-mele') ? 'active' : '' }}">
           <i class="fas fa-chart-bar"></i><span class="txt">Datele mele</span>
@@ -30,14 +29,14 @@
         <a href="{{ route('livrari') }}" class="{{ request()->routeIs('livrari*') ? 'active' : '' }}">
           <i class="fas fa-truck"></i><span class="txt">Livrări</span>
         </a>
-        <a href="{{ route('setari') }}" class="{{ request()->routeIs('setari') ? 'active' : '' }}">
+        <a href="{{ route('setari') }}" class="{{ request()->routeIs('setari*') ? 'active' : '' }}">
           <i class="fas fa-cog"></i><span class="txt">Setări</span>
         </a>
         @else
         <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
           <i class="fas fa-home"></i><span class="txt">Acasă</span>
         </a>
-        <a href="{{ route('rapoarte') }}" class="{{ request()->routeIs('rapoarte') ? 'active' : '' }}">
+        <a href="{{ route('rapoarte') }}" class="{{ request()->routeIs('rapoarte', 'rapoarte.comparare') ? 'active' : '' }}">
           <i class="fas fa-chart-line"></i><span class="txt">Rapoarte</span>
         </a>
         <a href="{{ route('istoric') }}" class="{{ request()->routeIs('istoric') ? 'active' : '' }}">
@@ -49,13 +48,13 @@
         <a href="{{ route('livrari') }}" class="{{ request()->routeIs('livrari*') ? 'active' : '' }}">
           <i class="fas fa-truck"></i><span class="txt">Livrări</span>
         </a>
-        <a href="{{ route('trafic') }}" class="{{ request()->routeIs('trafic') ? 'active' : '' }}">
+        <a href="{{ route('trafic') }}" class="{{ request()->routeIs('trafic*') ? 'active' : '' }}">
           <i class="fas fa-network-wired"></i><span class="txt">Trafic</span>
         </a>
-        <a href="{{ route('setari') }}" class="{{ request()->routeIs('setari') ? 'active' : '' }}">
+        <a href="{{ route('setari') }}" class="{{ request()->routeIs('setari*') ? 'active' : '' }}">
           <i class="fas fa-cog"></i><span class="txt">Setări</span>
         </a>
-        @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
+        @if(auth()->check() && in_array(strtolower(trim(auth()->user()->role ?? '')), ['admin', 'administrator']))
         <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users*') ? 'active' : '' }}">
           <i class="fas fa-user-shield"></i><span class="txt">Utilizatori</span>
         </a>
@@ -86,12 +85,12 @@
           </button>
           <div class="top-bar-brand">
             <img src="{{ asset('images/volta-logo.png') }}" alt="VOLTA Logo" class="top-bar-logo">
-            <h2 class="top-bar-title">VOLTA Dashboard</h2>
+            <h2 class="top-bar-title">VOLTA STATS</h2>
           </div>
         </div>
       </div>
 
-      <!-- TOPBAR - pe dashboard și pe Datele mele (operatori) -->
+      <!-- TOPBAR - doar pe prima pagină -->
       @if(request()->routeIs('dashboard') || request()->routeIs('datele-mele'))
       <div class="header">
         <h1>@yield('header-title', request()->routeIs('datele-mele') ? 'Datele mele' : 'Dashboard')</h1>
@@ -112,6 +111,9 @@
     </section>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="{{ asset('js/excel-export.js') }}"></script>
+  <script src="{{ asset('js/volta-chart-theme.js') }}"></script>
   @stack('scripts')
   <script>
     // Suprimă erorile de la extensiile browserului
@@ -135,12 +137,33 @@
       const hamburgerBtn = document.getElementById('hamburgerBtn');
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('sidebarOverlay');
+      const logoToggle = document.getElementById('sidebarLogoToggle');
+      const collapseStorageKey = 'volta.sidebar.collapsed';
       
       console.log('Hamburger button:', hamburgerBtn);
       console.log('Sidebar:', sidebar);
       console.log('Overlay:', overlay);
       
       if (hamburgerBtn && sidebar && overlay) {
+        const applyDesktopCollapsed = (collapsed) => {
+          if (window.innerWidth <= 1100) return;
+          document.body.classList.toggle('sidebar-collapsed', collapsed);
+        };
+
+        const storedCollapsed = localStorage.getItem(collapseStorageKey) === '1';
+        applyDesktopCollapsed(storedCollapsed);
+
+        if (logoToggle) {
+          logoToggle.addEventListener('click', function() {
+            if (window.innerWidth <= 1100) {
+              return;
+            }
+            const nextCollapsed = !document.body.classList.contains('sidebar-collapsed');
+            document.body.classList.toggle('sidebar-collapsed', nextCollapsed);
+            localStorage.setItem(collapseStorageKey, nextCollapsed ? '1' : '0');
+          });
+        }
+
         // Asigură că hamburger-ul este vizibil pe mobile
         if (window.innerWidth <= 1100) {
           hamburgerBtn.style.display = 'flex';
@@ -184,12 +207,14 @@
             hamburgerBtn.style.display = 'flex';
             hamburgerBtn.style.visibility = 'visible';
             hamburgerBtn.style.opacity = '1';
+            document.body.classList.remove('sidebar-collapsed');
           } else {
             hamburgerBtn.style.display = 'none';
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
             hamburgerBtn.classList.remove('active');
             document.body.style.overflow = '';
+            applyDesktopCollapsed(localStorage.getItem(collapseStorageKey) === '1');
           }
         });
       } else {
@@ -199,6 +224,7 @@
           overlay: !!overlay
         });
       }
+
     });
 
   </script>

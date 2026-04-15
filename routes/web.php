@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
@@ -11,6 +12,17 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Api\OneCController;
 use App\Http\Controllers\LivrariController;
 
+// Punct de intrare local: merge direct cu `php artisan serve`
+Route::get('/', function () {
+    if (!Auth::check()) {
+        return redirect()->route('login');
+    }
+
+    return Auth::user()->isOperator()
+        ? redirect()->route('datele-mele')
+        : redirect()->route('dashboard');
+})->name('home');
+
 // Rute publice
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
@@ -18,8 +30,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Rute protejate (RestrictOperator redirecționează rolul „Operator” doar către Datele mele / Setări)
 Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.alias');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Pagina „Datele mele” pentru utilizatori cu rol Operator
     Route::get('/datele-mele', [OperatoriController::class, 'me'])->name('datele-mele');
@@ -27,6 +38,7 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
     Route::get('/livrari', [LivrariController::class, 'index'])->name('livrari');
     Route::post('/livrari', [LivrariController::class, 'store'])->name('livrari.store');
     Route::put('/livrari/{livrare}', [LivrariController::class, 'update'])->name('livrari.update');
+    Route::delete('/livrari/{livrare}', [LivrariController::class, 'destroy'])->name('livrari.destroy');
 
     // Rute operatori (listă 1C – doar pentru non-operatori sau admin)
     Route::get('/operatori', [OperatoriController::class, 'index'])->name('operatori');
@@ -88,6 +100,7 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
     Route::get('/api/vanzari-detalii', [\App\Http\Controllers\Api\VanzariDetaliiController::class, 'index'])->name('api.vanzari.detalii');
     Route::get('/api/istoric', [\App\Http\Controllers\Api\IstoricController::class, 'index'])->name('api.istoric');
     Route::get('/export/istoric/pdf', [\App\Http\Controllers\ExportPdfController::class, 'exportIstoric'])->name('export.istoric.pdf');
+    Route::get('/export/comparare/pdf', [\App\Http\Controllers\ExportPdfController::class, 'exportComparare'])->name('export.comparare.pdf');
     
     // Google Analytics Routes
     Route::post('/api/ga/sync', [\App\Http\Controllers\GoogleAnalyticsController::class, 'sync'])->name('api.ga.sync');

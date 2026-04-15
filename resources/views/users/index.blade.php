@@ -6,11 +6,11 @@
 <div style="padding: 20px; width: 100%; box-sizing: border-box;">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
     <div>
-      <h1 style="color: #FFEE00; margin: 0; font-size: 32px; font-weight: 800; text-shadow: 0 0 20px rgba(255, 238, 0, 0.5);">Utilizatori</h1>
+      <h1 style="color: #FFEE00; margin: 0; font-size: 32px; font-weight: 800;">Utilizatori</h1>
       <p style="color: #9CA3AF; margin: 5px 0 0 0; font-size: 14px;">Gestionare utilizatori și permisiuni</p>
     </div>
     @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
-    <a href="{{ route('users.create') }}" style="background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); color: #000; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(255, 238, 0, 0.3); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 238, 0, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 238, 0, 0.3)'">
+    <a href="{{ route('users.create') }}" style="background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); color: #000; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.35); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 18px rgba(0,0,0,0.45)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.35)'">
       <i class="fas fa-user-plus"></i> Adaugă Utilizator
     </a>
     @endif
@@ -116,7 +116,7 @@
       <i class="fas fa-users" style="font-size: 64px; color: #9CA3AF; margin-bottom: 20px; display: block;"></i>
       <p style="color: #9CA3AF; font-size: 18px; margin: 0 0 20px 0;">Nu există utilizatori în sistem momentan.</p>
       @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
-      <a href="{{ route('users.create') }}" style="background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); color: #000; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(255, 238, 0, 0.3);">
+      <a href="{{ route('users.create') }}" style="background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); color: #000; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.35);">
         <i class="fas fa-user-plus"></i>Adaugă Primul Utilizator
       </a>
       @endif

@@ -1,518 +1,88 @@
 @extends('layouts.app')
 
-@section('title', 'Comparare Rapoarte – VOLTA')
+@section('title', 'Rapoarte – VOLTA')
+
+@section('header-title', 'Rapoarte')
 
 @section('content')
-<style>
-.comparare-container {
-  padding: 30px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
+<div class="rapoarte-page">
+  <p class="rapoarte-lead">
+    Alege două luni pentru a compara KPI-uri, grafice și diferențe — același limbaj vizual ca în restul dashboardului.
+  </p>
 
-.comparare-header {
-  background: linear-gradient(135deg, #1F2937 0%, #1F2937 100%);
-  border: 2px solid #ffee00;
-  border-radius: 12px;
-  padding: 25px;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 20px rgba(255, 238, 0, 0.1);
-}
-
-.comparare-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-.control-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.control-group label {
-  color: #ffee00;
-  font-weight: 600;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.control-group select {
-  padding: 12px 16px;
-  border-radius: 8px;
-  background: #1F2937;
-  color: #ffee00;
-  border: 2px solid #ffee00;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.control-group select:hover {
-  background: #111;
-  box-shadow: 0 0 10px rgba(255, 238, 0, 0.3);
-}
-
-.control-group select:focus {
-  outline: none;
-  box-shadow: 0 0 15px rgba(255, 238, 0, 0.5);
-}
-
-.comparare-kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
-.comparare-kpi-card {
-  background: #1F2937;
-  border: 1px solid #9CA3AF;
-  border-radius: 10px;
-  padding: 20px;
-  position: relative;
-  overflow: hidden;
-}
-
-.comparare-kpi-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: #ffee00;
-}
-
-.comparare-kpi-card h4 {
-  color: #888;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin: 0 0 12px 0;
-  font-weight: 600;
-}
-
-.comparare-kpi-card .value-current {
-  color: #ffee00;
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.comparare-kpi-card .value-compare {
-  color: #999;
-  font-size: 18px;
-  font-weight: 500;
-  margin-bottom: 10px;
-}
-
-.comparare-kpi-card .value-diff {
-  font-size: 14px;
-  font-weight: 600;
-  padding: 6px 12px;
-  border-radius: 6px;
-  display: inline-block;
-}
-
-.value-diff.positive {
-  background: rgba(0, 255, 0, 0.1);
-  color: #0f0;
-  border: 1px solid #0f0;
-}
-
-.value-diff.negative {
-  background: rgba(255, 0, 0, 0.1);
-  color: #f00;
-  border: 1px solid #f00;
-}
-
-.comparare-charts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 25px;
-  margin-bottom: 30px;
-}
-
-.comparare-chart-container {
-  background: #1F2937;
-  border: 1px solid #9CA3AF;
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.comparare-chart-container h3 {
-  color: #ffee00;
-  font-size: 18px;
-  margin: 0 0 20px 0;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 600;
-}
-
-.comparare-chart-container canvas {
-  max-height: 350px;
-}
-
-.comparare-table-container {
-  background: #1F2937;
-  border: 1px solid #9CA3AF;
-  border-radius: 12px;
-  padding: 25px;
-  overflow-x: auto;
-}
-
-.comparare-table-container h3 {
-  color: #ffee00;
-  font-size: 18px;
-  margin: 0 0 20px 0;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 600;
-}
-
-.comparare-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.comparare-table th {
-  background: var(--bg-soft);
-  color: #ffee00;
-  padding: 15px;
-  text-align: left;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 12px;
-  letter-spacing: 1px;
-  border-bottom: 2px solid #ffee00;
-}
-
-.comparare-table td {
-  padding: 12px 15px;
-  color: #fff;
-  border-bottom: 1px solid #9CA3AF;
-  background-color: var(--bg-soft);
-}
-
-.comparare-table tr:hover {
-  background: var(--bg-soft);
-}
-
-.comparare-table .diff-positive {
-  color: #0f0;
-  font-weight: 600;
-  background-color: var(--bg-soft);
-}
-
-.comparare-table .diff-negative {
-  color: #f00;
-  font-weight: 600;
-  background-color: var(--bg-soft);
-}
-
-/* === Optimizări Mobile === */
-@media (max-width: 768px) {
-  .comparare-container {
-    padding: 15px;
-  }
-  
-  .comparare-header {
-    padding: 15px;
-    margin-bottom: 15px;
-  }
-  
-  .comparare-header h1 {
-    font-size: 20px !important;
-    margin-bottom: 8px !important;
-  }
-  
-  .comparare-header p {
-    font-size: 12px !important;
-  }
-  
-  .comparare-controls {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin-bottom: 15px;
-  }
-  
-  .control-group label {
-    font-size: 11px;
-  }
-  
-  .control-group select {
-    padding: 14px 16px;
-    font-size: 16px;
-    min-height: 48px;
-  }
-  
-  .comparare-kpi-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
-  
-  .comparare-kpi-card:last-child:nth-child(odd) {
-    grid-column: span 2;
-  }
-  
-  .comparare-kpi-card {
-    padding: 12px;
-  }
-  
-  .comparare-kpi-card h4 {
-    font-size: 10px;
-    margin-bottom: 8px;
-  }
-  
-  .comparare-kpi-card .value-current {
-    font-size: 18px;
-    margin-bottom: 4px;
-  }
-  
-  .comparare-kpi-card .value-compare {
-    font-size: 12px;
-    margin-bottom: 6px;
-  }
-  
-  .comparare-kpi-card .value-diff {
-    font-size: 10px;
-    padding: 4px 8px;
-  }
-  
-  .comparare-charts-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin-bottom: 15px;
-  }
-  
-  .comparare-chart-container {
-    padding: 12px;
-  }
-  
-  .comparare-chart-container h3 {
-    font-size: 13px;
-    margin-bottom: 10px;
-  }
-  
-  .comparare-chart-container canvas {
-    max-height: 250px;
-  }
-  
-  .comparare-table-container {
-    padding: 12px;
-    overflow-x: auto;
-  }
-  
-  .comparare-table-container h3 {
-    font-size: 13px;
-    margin-bottom: 10px;
-  }
-  
-  .comparare-table {
-    font-size: 11px;
-    min-width: 600px;
-  }
-  
-  .comparare-table th {
-    padding: 8px 10px;
-    font-size: 10px;
-  }
-  
-  .comparare-table td {
-    padding: 8px 10px;
-    font-size: 11px;
-  }
-}
-
-@media (max-width: 480px) {
-  .comparare-container {
-    padding: 10px;
-  }
-  
-  .comparare-header {
-    padding: 12px;
-    margin-bottom: 12px;
-  }
-  
-  .comparare-header h1 {
-    font-size: 18px !important;
-    margin-bottom: 6px !important;
-  }
-  
-  .comparare-header p {
-    font-size: 11px !important;
-  }
-  
-  .comparare-controls {
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  
-  .control-group label {
-    font-size: 10px;
-  }
-  
-  .control-group select {
-    padding: 12px 14px;
-    font-size: 16px;
-  }
-  
-  .comparare-kpi-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  
-  .comparare-kpi-card:last-child:nth-child(odd) {
-    grid-column: span 2;
-  }
-  
-  .comparare-kpi-card {
-    padding: 10px;
-  }
-  
-  .comparare-kpi-card h4 {
-    font-size: 9px;
-    margin-bottom: 6px;
-  }
-  
-  .comparare-kpi-card .value-current {
-    font-size: 16px;
-    margin-bottom: 3px;
-  }
-  
-  .comparare-kpi-card .value-compare {
-    font-size: 11px;
-    margin-bottom: 4px;
-  }
-  
-  .comparare-kpi-card .value-diff {
-    font-size: 9px;
-    padding: 3px 6px;
-  }
-  
-  .comparare-charts-grid {
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  
-  .comparare-chart-container {
-    padding: 10px;
-  }
-  
-  .comparare-chart-container h3 {
-    font-size: 12px;
-    margin-bottom: 8px;
-  }
-  
-  .comparare-chart-container canvas {
-    max-height: 220px;
-  }
-  
-  .comparare-table-container {
-    padding: 10px;
-  }
-  
-  .comparare-table-container h3 {
-    font-size: 12px;
-    margin-bottom: 8px;
-  }
-  
-  .comparare-table {
-    font-size: 10px;
-    min-width: 500px;
-  }
-  
-  .comparare-table th {
-    padding: 6px 8px;
-    font-size: 9px;
-  }
-  
-  .comparare-table td {
-    padding: 6px 8px;
-    font-size: 10px;
-  }
-}
-</style>
-
-<div class="comparare-container">
-  <div class="comparare-header">
-    <h1 style="color: #ffee00; margin: 0 0 10px 0; font-size: 28px; text-transform: uppercase; letter-spacing: 2px;">
-      Comparare Rapoarte
-    </h1>
-    <p style="color: #999; margin: 0; font-size: 14px;">
-      Compară performanța între două perioade pentru a analiza evoluția indicatorilor cheie
-    </p>
-  </div>
-
-  <div class="comparare-controls">
-    <div class="control-group">
-      <label for="selectLuna1">Perioada 1 (Curentă)</label>
-      <select id="selectLuna1"></select>
+  <div class="rapoarte-periods-grid">
+    <div class="month-selector-modern">
+      <div class="month-selector-wrapper">
+        <i class="fas fa-calendar-day" aria-hidden="true"></i>
+        <label for="selectLuna1">Perioada 1</label>
+        <select id="selectLuna1" class="dashboard-month-select"></select>
+      </div>
     </div>
-    <div class="control-group">
-      <label for="selectLuna2">Perioada 2 (Comparare)</label>
-      <select id="selectLuna2"></select>
+    <div class="month-selector-modern">
+      <div class="month-selector-wrapper">
+        <i class="fas fa-calendar-check" aria-hidden="true"></i>
+        <label for="selectLuna2">Perioada 2</label>
+        <select id="selectLuna2" class="dashboard-month-select"></select>
+      </div>
     </div>
   </div>
 
-  <!-- Sursa date KPI (1C / local) -->
-  <div id="comparareKpiSource" class="comparare-kpi-source" style="display: none; margin-bottom: 12px; font-size: 13px; color: #10B981;">
-    <i class="fas fa-database"></i>
-    <span id="comparareKpiSourceText"></span>
-  </div>
+  <div class="kpi-grid comparare-kpi-grid" id="kpiGrid"></div>
 
-  <!-- KPI Cards cu Comparare -->
-  <div class="comparare-kpi-grid" id="kpiGrid">
-    <!-- KPI cards vor fi populate dinamic -->
-  </div>
-
-  <!-- Grafice Comparare -->
-  <div class="comparare-charts-grid">
-    <div class="comparare-chart-container">
-      <h3>Vânzări Comparare</h3>
-      <canvas id="vanzariCompareChart"></canvas>
+  <div class="rapoarte-charts-grid">
+    <div class="chart-container">
+      <h3><i class="fas fa-coins" aria-hidden="true"></i> Vânzări fără TVA</h3>
+      <div class="chart-wrapper">
+        <canvas id="vanzariCompareChart"></canvas>
+      </div>
     </div>
-    <div class="comparare-chart-container">
-      <h3>Comenzi Comparare</h3>
-      <canvas id="comenziCompareChart"></canvas>
+    <div class="chart-container">
+      <h3><i class="fas fa-shopping-cart" aria-hidden="true"></i> Comenzi</h3>
+      <div class="chart-wrapper">
+        <canvas id="comenziCompareChart"></canvas>
+      </div>
     </div>
-    <div class="comparare-chart-container">
-      <h3>Profit Comparare</h3>
-      <canvas id="profitCompareChart"></canvas>
+    <div class="chart-container">
+      <h3><i class="fas fa-chart-line" aria-hidden="true"></i> Profit</h3>
+      <div class="chart-wrapper">
+        <canvas id="profitCompareChart"></canvas>
+      </div>
     </div>
-    <div class="comparare-chart-container">
-      <h3>Conversie Comparare</h3>
-      <canvas id="conversieCompareChart"></canvas>
+    <div class="chart-container">
+      <h3><i class="fas fa-percentage" aria-hidden="true"></i> Conversie</h3>
+      <div class="chart-wrapper">
+        <canvas id="conversieCompareChart"></canvas>
+      </div>
     </div>
   </div>
 
-  <!-- Tabel Comparare -->
-  <div class="comparare-table-container">
-    <h3>Tabel Comparare Detaliat</h3>
-    <table class="comparare-table" id="comparareTable">
-      <thead>
-        <tr>
-          <th>Indicator</th>
-          <th id="period1Header">Perioada 1</th>
-          <th id="period2Header">Perioada 2</th>
-          <th>Diferență</th>
-          <th>Diferență %</th>
-        </tr>
-      </thead>
-      <tbody id="comparareTableBody">
-        <!-- Rândurile vor fi populate dinamic -->
-      </tbody>
-    </table>
-  </div>
+  <section class="comparare-table-section" aria-labelledby="comparare-table-heading">
+    <h3 id="comparare-table-heading" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+      <span><i class="fas fa-table" aria-hidden="true"></i> Detalii comparare</span>
+      <span style="display:inline-flex;gap:8px;align-items:center;">
+        <button type="button" id="comparareExportExcelBtn" class="btn secondary">
+          <i class="fas fa-file-excel" aria-hidden="true"></i> Excel
+        </button>
+        <button type="button" id="comparareExportPdfBtn" class="btn secondary">
+          <i class="fas fa-file-pdf" aria-hidden="true"></i> PDF
+        </button>
+      </span>
+    </h3>
+    <div class="comparare-table-wrap">
+      <table class="comparare-table" id="comparareTable">
+        <thead>
+          <tr>
+            <th>Indicator</th>
+            <th id="period1Header">Perioada 1</th>
+            <th id="period2Header">Perioada 2</th>
+            <th>Diferență</th>
+            <th>Diferență %</th>
+          </tr>
+        </thead>
+        <tbody id="comparareTableBody"></tbody>
+      </table>
+    </div>
+  </section>
 </div>
 @endsection
 
@@ -532,8 +102,35 @@ function calculateDiff(current, compare) {
 
 function formatDiff(diff, diffPercent) {
   const sign = diff >= 0 ? '+' : '';
-  const color = diff >= 0 ? 'positive' : 'negative';
-  return `<span class="value-diff ${color}">${sign}${formatNumber(Math.abs(diff))} (${sign}${diffPercent}%)</span>`;
+  const cls = diff >= 0 ? 'comparare-diff-badge--up' : 'comparare-diff-badge--down';
+  return `<span class="comparare-diff-badge ${cls}">${sign}${formatNumber(Math.abs(diff))} (${sign}${diffPercent}%)</span>`;
+}
+
+function compareCartesianOptions() {
+  if (typeof VoltaChartTheme !== 'undefined') {
+    return VoltaChartTheme.cartesianDefaults({
+      plugins: {
+        legend: { display: true, position: 'top' },
+        tooltip: Object.assign({}, VoltaChartTheme.tooltip(), {
+          titleColor: VoltaChartTheme.colors.brand,
+          bodyColor: VoltaChartTheme.colors.textPrimary,
+        }),
+      },
+    });
+  }
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: true, labels: { color: '#e2e8f0', font: { size: 12 } } },
+      tooltip: { backgroundColor: 'rgba(30,41,59,0.96)', titleColor: '#FFEE00', bodyColor: '#f8fafc', borderColor: '#334155', borderWidth: 1, padding: 12, cornerRadius: 10 },
+    },
+    scales: {
+      x: { ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(148,163,184,0.12)', drawBorder: false } },
+      y: { ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(148,163,184,0.12)', drawBorder: false }, beginAtZero: true },
+    },
+  };
 }
 
 // ---------------- CHARTS OBJECT ---------------- 
@@ -625,16 +222,6 @@ async function updateComparare() {
     // Update KPI Cards
     updateKPICards(kpiData1, kpiData2);
 
-    // Indicator sursă date 1C
-    const src1 = (kpiData1.kpi_source === 'onec_db') ? '1C' : 'local';
-    const src2 = (kpiData2.kpi_source === 'onec_db') ? '1C' : 'local';
-    const sourceEl = document.getElementById('comparareKpiSource');
-    const sourceText = document.getElementById('comparareKpiSourceText');
-    if (sourceEl && sourceText) {
-      sourceText.textContent = `Luna 1: ${src1} · Luna 2: ${src2}`;
-      sourceEl.style.display = (src1 === '1C' || src2 === '1C') ? '' : 'none';
-    }
-    
     // Update Charts
     updateCharts(kpiData1, kpiData2, month1Name, month2Name);
     
@@ -672,11 +259,12 @@ function updateKPICards(data1, data2) {
     const { diff, diffPercent } = calculateDiff(val1, val2);
     
     const card = document.createElement('div');
-    card.className = 'comparare-kpi-card';
+    card.className = 'card comparare-kpi-card';
+    const suf = kpi.suffix ? ' ' + kpi.suffix : '';
     card.innerHTML = `
       <h4>${kpi.label}</h4>
-      <div class="value-current">${formatNumber(val1)} ${kpi.suffix}</div>
-      <div class="value-compare">vs ${formatNumber(val2)} ${kpi.suffix}</div>
+      <div class="value">${formatNumber(val1)}${suf}</div>
+      <div class="comparare-vs">vs ${formatNumber(val2)}${suf}</div>
       ${formatDiff(diff, diffPercent)}
     `;
     grid.appendChild(card);
@@ -685,196 +273,99 @@ function updateKPICards(data1, data2) {
 
 // ---------------- UPDATE CHARTS ---------------- 
 function updateCharts(data1, data2, label1, label2) {
-  // Vânzări Chart
+  const barOpts = compareCartesianOptions();
+  const labels = [label1, label2];
+
   destroyChart("vanzariCompareChart");
   const ctx1 = document.getElementById("vanzariCompareChart").getContext("2d");
   charts["vanzariCompareChart"] = {
     instance: new Chart(ctx1, {
       type: "bar",
       data: {
-        labels: [label1, label2],
+        labels,
         datasets: [{
           label: "Vânzări fără TVA",
           data: [data1.vanzari_luna || 0, data2.vanzari_luna || 0],
-          backgroundColor: ["rgba(255, 238, 0, 0.7)", "rgba(255, 238, 0, 0.4)"],
-          borderColor: "#ffee00",
-          borderWidth: 2
-        }]
+          backgroundColor: ["rgba(255, 238, 0, 0.52)", "rgba(255, 238, 0, 0.28)"],
+          hoverBackgroundColor: ["rgba(255, 238, 0, 0.72)", "rgba(255, 238, 0, 0.45)"],
+          borderColor: ["rgba(255, 238, 0, 0.35)", "rgba(255, 238, 0, 0.22)"],
+          borderWidth: 1,
+          borderRadius: 8,
+          borderSkipped: false,
+        }],
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { 
-            labels: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 10 : 12 }
-            } 
-          }
-        },
-        scales: {
-          x: { 
-            ticks: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 9 : 11 }
-            }, 
-            grid: { color: "rgba(255,255,0,0.05)" } 
-          },
-          y: { 
-            ticks: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 9 : 11 }
-            }, 
-            grid: { color: "rgba(255,255,0,0.05)" }, 
-            beginAtZero: true 
-          }
-        }
-      }
-    })
+      options: barOpts,
+    }),
   };
-  
-  // Comenzi Chart
+
   destroyChart("comenziCompareChart");
   const ctx2 = document.getElementById("comenziCompareChart").getContext("2d");
   charts["comenziCompareChart"] = {
     instance: new Chart(ctx2, {
       type: "bar",
       data: {
-        labels: [label1, label2],
+        labels,
         datasets: [{
           label: "Comenzi",
           data: [data1.comenzi || 0, data2.comenzi || 0],
-          backgroundColor: ["rgba(0, 255, 0, 0.7)", "rgba(0, 255, 0, 0.4)"],
-          borderColor: "#0f0",
-          borderWidth: 2
-        }]
+          backgroundColor: ["rgba(96, 165, 250, 0.5)", "rgba(96, 165, 250, 0.28)"],
+          hoverBackgroundColor: ["rgba(96, 165, 250, 0.68)", "rgba(96, 165, 250, 0.42)"],
+          borderColor: ["rgba(59, 130, 246, 0.45)", "rgba(59, 130, 246, 0.28)"],
+          borderWidth: 1,
+          borderRadius: 8,
+          borderSkipped: false,
+        }],
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { 
-            labels: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 10 : 12 }
-            } 
-          }
-        },
-        scales: {
-          x: { 
-            ticks: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 9 : 11 }
-            }, 
-            grid: { color: "rgba(255,255,0,0.05)" } 
-          },
-          y: { 
-            ticks: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 9 : 11 }
-            }, 
-            grid: { color: "rgba(255,255,0,0.05)" }, 
-            beginAtZero: true 
-          }
-        }
-      }
-    })
+      options: barOpts,
+    }),
   };
-  
-  // Profit Chart
+
   destroyChart("profitCompareChart");
   const ctx3 = document.getElementById("profitCompareChart").getContext("2d");
   charts["profitCompareChart"] = {
     instance: new Chart(ctx3, {
       type: "bar",
       data: {
-        labels: [label1, label2],
+        labels,
         datasets: [{
           label: "Profit",
           data: [data1.profit || 0, data2.profit || 0],
-          backgroundColor: ["rgba(255, 0, 0, 0.7)", "rgba(255, 0, 0, 0.4)"],
-          borderColor: "#f00",
-          borderWidth: 2
-        }]
+          backgroundColor: ["rgba(248, 113, 113, 0.48)", "rgba(248, 113, 113, 0.26)"],
+          hoverBackgroundColor: ["rgba(248, 113, 113, 0.68)", "rgba(248, 113, 113, 0.4)"],
+          borderColor: ["rgba(239, 68, 68, 0.4)", "rgba(239, 68, 68, 0.25)"],
+          borderWidth: 1,
+          borderRadius: 8,
+          borderSkipped: false,
+        }],
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { 
-            labels: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 10 : 12 }
-            } 
-          }
-        },
-        scales: {
-          x: { 
-            ticks: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 9 : 11 }
-            }, 
-            grid: { color: "rgba(255,255,0,0.05)" } 
-          },
-          y: { 
-            ticks: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 9 : 11 }
-            }, 
-            grid: { color: "rgba(255,255,0,0.05)" }, 
-            beginAtZero: true 
-          }
-        }
-      }
-    })
+      options: barOpts,
+    }),
   };
-  
-  // Conversie Chart
+
   destroyChart("conversieCompareChart");
   const ctx4 = document.getElementById("conversieCompareChart").getContext("2d");
   charts["conversieCompareChart"] = {
     instance: new Chart(ctx4, {
       type: "line",
       data: {
-        labels: [label1, label2],
+        labels,
         datasets: [{
           label: "Conversie (%)",
           data: [data1.conversie || 0, data2.conversie || 0],
-          borderColor: "#ffee00",
-          backgroundColor: "rgba(255, 238, 0, 0.2)",
-          borderWidth: 3,
+          borderColor: "rgb(248, 113, 113)",
+          backgroundColor: "rgba(248, 113, 113, 0.12)",
+          borderWidth: 2.5,
           fill: true,
-          tension: 0.3,
-          pointRadius: window.innerWidth <= 768 ? 2 : 6,
-          pointBackgroundColor: "#ffee00"
-        }]
+          tension: 0.35,
+          pointRadius: window.innerWidth <= 768 ? 3 : 5,
+          pointHoverRadius: window.innerWidth <= 768 ? 5 : 7,
+          pointBackgroundColor: "rgb(248, 113, 113)",
+          pointBorderColor: "rgb(15, 23, 42)",
+          pointBorderWidth: 1,
+        }],
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { 
-            labels: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 10 : 12 }
-            } 
-          }
-        },
-        scales: {
-          x: { 
-            ticks: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 9 : 11 }
-            }, 
-            grid: { color: "rgba(255,255,0,0.05)" } 
-          },
-          y: { 
-            ticks: { 
-              color: "#fff",
-              font: { size: window.innerWidth <= 768 ? 9 : 11 }
-            }, 
-            grid: { color: "rgba(255,255,0,0.05)" }, 
-            beginAtZero: true 
-          }
-        }
-      }
-    })
+      options: barOpts,
+    }),
   };
 }
 
@@ -921,8 +412,38 @@ function updateTable(data1, data2) {
 
 // ---------------- DOCUMENT READY ---------------- 
 document.addEventListener("DOMContentLoaded", () => {
+  const excelBtn = document.getElementById('comparareExportExcelBtn');
+  const pdfBtn = document.getElementById('comparareExportPdfBtn');
+  if (excelBtn) {
+    excelBtn.addEventListener('click', function () {
+      const table = document.getElementById('comparareTable');
+      if (!table) {
+        alert('Nu există date pentru export.');
+        return;
+      }
+      try {
+        window.VoltaExcelExport.exportTable(table, {
+          fileName: 'raport_comparare_' + window.VoltaExcelExport.nowStamp(),
+          sheetName: 'Comparare'
+        });
+      } catch (error) {
+        alert('Nu am putut exporta Excel: ' + error.message);
+      }
+    });
+  }
+  if (pdfBtn) {
+    pdfBtn.addEventListener('click', function () {
+      const luna1 = document.getElementById("selectLuna1").value;
+      const luna2 = document.getElementById("selectLuna2").value;
+      if (!luna1 || !luna2) {
+        alert('Selectează ambele perioade.');
+        return;
+      }
+      const params = new URLSearchParams({ luna1: luna1, luna2: luna2 });
+      window.location.href = @json(route('export.comparare.pdf')) + '?' + params.toString();
+    });
+  }
   loadLuni();
 });
 </script>
 @endpush
-

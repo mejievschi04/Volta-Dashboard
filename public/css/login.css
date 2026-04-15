@@ -1,26 +1,49 @@
-/* Variabile CSS */
+/* Variabile CSS — aliniat Volta Academy dark */
 :root {
-  --brand: #FFEE00;
-  --brand-dark: #FFEE00;
-  --brand-light: rgba(255, 238, 0, 0.1);
-  --bg-dark: #111827;
-  --bg-soft: #111827;
-  --bg-card: rgba(31, 41, 55, 0.95);
-  --text: #ffffff;
-  --text-muted: #9CA3AF;
-  --text-dark: #1F2937;
-  --border: rgba(255, 238, 0, 0.3);
+  --brand: rgb(255, 238, 0);
+  --brand-dark: rgb(230, 216, 0);
+  --brand-light: rgba(255, 238, 0, 0.12);
+  --bg-dark: rgb(15, 23, 42);
+  --bg-soft: rgb(30, 41, 59);
+  --bg-card: rgb(30, 41, 59);
+  --text: rgb(248, 250, 252);
+  --text-muted: rgb(148, 163, 184);
+  --text-dark: rgb(15, 23, 42);
+  --border: rgb(51, 65, 85);
   --error: #EF4444;
-  --success: #10B981;
-  --shadow-glow: 0 0 40px rgba(255, 238, 0, 0.2);
+  --success: #22C55E;
+  --shadow-glow: 0 8px 32px rgba(0, 0, 0, 0.45);
 }
 
-/* Fundal simplu */
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="dark"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgb(17, 24, 39) 0%,
+    rgb(15, 23, 42) 50%,
+    rgb(17, 24, 39) 100%
+  );
+}
+
+html[data-theme="dark"],
+html[data-theme="dark"] body {
+  background-color: transparent;
+}
+
+/* Fundal */
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  background: #111827;
+  font-family: 'Noto Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  background: transparent;
   min-height: 100vh;
   min-height: -webkit-fill-available;
   height: 100vh;
@@ -31,6 +54,16 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+.dark-veil-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.9;
 }
 
 /* Fix pentru mobile Safari */
@@ -62,13 +95,11 @@ body {
   background: linear-gradient(135deg, rgba(31, 41, 55, 0.95) 0%, rgba(31, 41, 55, 0.98) 100%);
   padding: 60px 50px;
   border-radius: 24px;
-  box-shadow: 
+  box-shadow:
     0 25px 80px rgba(0, 0, 0, 0.95),
-    0 0 60px rgba(255, 238, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(255, 238, 0, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   text-align: center;
-  border: 2px solid rgba(255, 238, 0, 0.25);
+  border: 1px solid rgb(51, 65, 85);
   backdrop-filter: blur(20px) saturate(180%);
   position: relative;
   overflow: hidden;
@@ -98,11 +129,9 @@ body {
   .login-box {
     padding: 70px 60px;
     border-radius: 28px;
-    box-shadow: 
+    box-shadow:
       0 30px 100px rgba(0, 0, 0, 0.95),
-      0 0 80px rgba(255, 238, 0, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      inset 0 -1px 0 rgba(255, 238, 0, 0.15);
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
     width: 100%;
     max-width: 100%;
   }
@@ -266,7 +295,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle, rgba(255, 238, 0, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
   border-radius: 50%;
   padding: 15px;
   position: relative;
@@ -282,7 +311,7 @@ body {
   background: transparent;
   border: none;
   box-shadow: none;
-  filter: drop-shadow(0 0 10px rgba(255, 238, 0, 0.3));
+  filter: none;
   position: relative;
   z-index: 1;
 }
@@ -364,11 +393,9 @@ body {
 }
 
 .input-group input:focus {
-  border-color: var(--brand);
+  border-color: rgb(71, 85, 105);
   background: rgba(31, 41, 55, 0.85);
-  box-shadow: 
-    0 0 20px rgba(255, 238, 0, 0.15),
-    inset 0 0 15px rgba(255, 238, 0, 0.05);
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.2);
   padding-left: 55px;
 }
 
@@ -598,10 +625,9 @@ body {
   .login-box {
     padding: 30px 20px;
     border-radius: 20px;
-    box-shadow: 
+    box-shadow:
       0 15px 50px rgba(0, 0, 0, 0.95),
-      0 0 40px rgba(255, 238, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
     width: 100%;
     margin: 0 auto;
     max-width: 100%;
@@ -841,5 +867,108 @@ body {
   select,
   textarea {
     font-size: 16px !important;
+  }
+}
+
+/* Ecran „Bine ai revenit” după submit — același fundal ca în app (style.css / gradient dashboard) */
+.login-welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  /* Aliniat cu html[data-theme="dark"]::before din style.css */
+  background: linear-gradient(
+    135deg,
+    rgb(17, 24, 39) 0%,
+    rgb(15, 23, 42) 50%,
+    rgb(17, 24, 39) 100%
+  );
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.55s ease, visibility 0.55s ease;
+  pointer-events: none;
+}
+
+.login-welcome-overlay.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.login-welcome-inner {
+  text-align: center;
+  max-width: min(96vw, 40rem);
+}
+
+/* Text tipar (Noto Sans), ca în aplicație */
+.login-welcome-ink {
+  margin: 0;
+  font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.login-welcome-line {
+  margin-bottom: 0.35rem;
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  font-weight: 500;
+  color: var(--text);
+}
+
+.login-welcome-name {
+  margin-top: 0;
+  font-size: clamp(2rem, 7.5vw, 3.5rem);
+  font-weight: 700;
+  color: var(--brand);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  text-shadow: 0 0 40px rgba(255, 238, 0, 0.18);
+}
+
+/* Litere care apar una câte una — animație discretă, tip tipar */
+.login-type-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.22em);
+  animation: loginTypeReveal 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--type-delay, 0ms);
+}
+
+.login-type-char.login-type-space {
+  min-width: 0.25em;
+}
+
+@keyframes loginTypeReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body.login-welcome-active .dark-veil-canvas {
+  opacity: 0 !important;
+  visibility: hidden;
+  transition: opacity 0.45s ease, visibility 0s linear 0.5s;
+}
+
+body.login-welcome-active .login-container {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-welcome-overlay {
+    transition-duration: 0.15s;
+  }
+
+  .login-type-char {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }

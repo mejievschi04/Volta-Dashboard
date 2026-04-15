@@ -11,6 +11,8 @@ use App\Models\DateOp;
 use App\Models\Livrare;
 use App\Models\OnecKpiOperator;
 use App\Models\User;
+use App\Support\DbDate;
+use App\Support\LunaRomana;
 use Illuminate\Support\Facades\DB;
 
 class OperatoriController extends Controller
@@ -37,7 +39,7 @@ class OperatoriController extends Controller
         $chartData1c = [];
         $dezactivatedNume = Operator::where('activ', false)
             ->get()
-            ->map(fn ($o) => trim((string) ($o->nume ?? '')))
+            ->map(fn ($o) => mb_strtolower(trim((string) ($o->nume ?? ''))))
             ->filter()
             ->values()
             ->toArray();
@@ -49,8 +51,8 @@ class OperatoriController extends Controller
                 ->where('onec_kpi_syncs.period_start', '>=', $periodStart)
                 ->where('onec_kpi_syncs.period_start', '<=', $periodEnd);
 
-            $rows = (clone $query)
-                ->selectRaw('
+                $rows = (clone $query)
+                    ->selectRaw('
                     onec_kpi_operatori.operator_nume as nume,
                     COALESCE(SUM(onec_kpi_operatori.vanzari_fara_tva), 0) as total_vanzari_fara_tva,
                     COALESCE(SUM(onec_kpi_operatori.vanzari_cu_tva), 0) as total_vanzari_cu_tva,
@@ -63,7 +65,7 @@ class OperatoriController extends Controller
 
             foreach ($rows as $row) {
                 $nume = trim((string) ($row->nume ?? '')) ?: 'Fără nume';
-                if (in_array($nume, $dezactivatedNume, true)) {
+                if (in_array(mb_strtolower($nume), $dezactivatedNume, true)) {
                     continue;
                 }
                 $vanzari = (float) $row->total_vanzari_fara_tva;
@@ -146,24 +148,24 @@ class OperatoriController extends Controller
                     'nr_comenzi' => (int) $row->total_comenzi,
                 ];
             }
-            $lunareRows = OnecKpiOperator::query()
-                ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
-                ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
-                ->whereRaw('TRIM(onec_kpi_operatori.operator_nume) = ?', [$nume])
-                ->selectRaw('
-                    DATE_FORMAT(onec_kpi_syncs.period_start, "%Y-%m") as luna,
-                    COALESCE(SUM(onec_kpi_operatori.vanzari_fara_tva), 0) as vanzari_luna,
-                    COALESCE(SUM(onec_kpi_operatori.vanzari_cu_tva), 0) as vanzari_cu_tva,
-                    COALESCE(SUM(onec_kpi_operatori.profit), 0) as profit,
-                    COALESCE(SUM(onec_kpi_operatori.nr_comenzi), 0) as comenzi
-                ')
-                ->groupBy(DB::raw('DATE_FORMAT(onec_kpi_syncs.period_start, "%Y-%m")'))
-                ->orderBy('luna', 'desc')
-                ->get();
+                $lunareRows = OnecKpiOperator::query()
+                    ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
+                    ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
+                    ->whereRaw('TRIM(onec_kpi_operatori.operator_nume) = ?', [$nume])
+                    ->selectRaw('
+                        ' . DbDate::month('onec_kpi_syncs.period_start') . ' as luna,
+                        COALESCE(SUM(onec_kpi_operatori.vanzari_fara_tva), 0) as vanzari_luna,
+                        COALESCE(SUM(onec_kpi_operatori.vanzari_cu_tva), 0) as vanzari_cu_tva,
+                        COALESCE(SUM(onec_kpi_operatori.profit), 0) as profit,
+                        COALESCE(SUM(onec_kpi_operatori.nr_comenzi), 0) as comenzi
+                    ')
+                    ->groupBy(DB::raw(DbDate::month('onec_kpi_syncs.period_start')))
+                    ->orderBy('luna', 'desc')
+                    ->get();
             foreach ($lunareRows as $r) {
                 $vanzariLunare1c->push((object) [
                     'luna' => $r->luna,
-                    'luna_label' => \Carbon\Carbon::createFromFormat('Y-m', $r->luna)->translatedFormat('F Y'),
+                    'luna_label' => LunaRomana::labelFromYm((string) $r->luna),
                     'vanzari_luna' => (float) $r->vanzari_luna,
                     'vanzari_cu_tva' => (float) $r->vanzari_cu_tva,
                     'profit' => (float) $r->profit,
@@ -191,12 +193,20 @@ class OperatoriController extends Controller
      */
     public function toggleActiv(Request $request)
     {
+        $operatorId = $request->input('operator_id');
         $nume = trim((string) $request->input('nume', ''));
-        if ($nume === '') {
+        if (!$operatorId && $nume === '') {
             return redirect()->route('operatori')->with('error', 'Nume invalid.');
         }
 
-        $operator = Operator::whereRaw('TRIM(nume) = ?', [$nume])->first();
+        $operator = null;
+        if ($operatorId) {
+            $operator = Operator::find($operatorId);
+        }
+        if (!$operator && $nume !== '') {
+            $operator = Operator::whereRaw('LOWER(TRIM(nume)) = ?', [mb_strtolower($nume)])->first();
+        }
+
         if ($operator) {
             $operator->activ = !$operator->activ;
             $operator->save();
@@ -259,20 +269,20 @@ class OperatoriController extends Controller
                     ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
                     ->whereRaw('TRIM(onec_kpi_operatori.operator_nume) = ?', [$operatorNume])
                     ->selectRaw('
-                        DATE_FORMAT(onec_kpi_syncs.period_start, "%Y-%m") as luna,
+                        ' . DbDate::month('onec_kpi_syncs.period_start') . ' as luna,
                         COALESCE(SUM(onec_kpi_operatori.vanzari_fara_tva), 0) as vanzari_luna,
                         COALESCE(SUM(onec_kpi_operatori.vanzari_cu_tva), 0) as vanzari_cu_tva,
                         COALESCE(SUM(onec_kpi_operatori.profit), 0) as profit,
                         COALESCE(SUM(onec_kpi_operatori.nr_comenzi), 0) as comenzi
                     ')
-                    ->groupBy(DB::raw('DATE_FORMAT(onec_kpi_syncs.period_start, "%Y-%m")'))
+                    ->groupBy(DB::raw(DbDate::month('onec_kpi_syncs.period_start')))
                     ->orderBy('luna', 'desc')
                     ->get();
 
                 foreach ($lunareRows as $r) {
                     $vanzariLunare1c->push((object) [
                         'luna' => $r->luna,
-                        'luna_label' => \Carbon\Carbon::createFromFormat('Y-m', $r->luna)->translatedFormat('F Y'),
+                        'luna_label' => LunaRomana::labelFromYm((string) $r->luna),
                         'vanzari_luna' => (float) $r->vanzari_luna,
                         'vanzari_cu_tva' => (float) $r->vanzari_cu_tva,
                         'profit' => (float) $r->profit,
@@ -297,7 +307,7 @@ class OperatoriController extends Controller
         $lunaCurenta = now()->format('Y-m');
         $nrLivrariTotal = Livrare::where('user_id', $user->id)->count();
         $nrLivrariLunaCurenta = Livrare::where('user_id', $user->id)
-            ->whereRaw('DATE_FORMAT(data_livrarii, "%Y-%m") = ?', [$lunaCurenta])
+            ->whereRaw(DbDate::month('data_livrarii') . ' = ?', [$lunaCurenta])
             ->count();
 
         $comenziTotal = $date ? (int) $date['nr_comenzi'] : 0;
@@ -360,19 +370,19 @@ class OperatoriController extends Controller
                     ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
                     ->whereRaw('LOWER(TRIM(onec_kpi_operatori.operator_nume)) = ?', [mb_strtolower($operatorNume)])
                     ->selectRaw('
-                        DATE_FORMAT(onec_kpi_syncs.period_start, "%Y-%m") as luna,
+                        ' . DbDate::month('onec_kpi_syncs.period_start') . ' as luna,
                         COALESCE(SUM(onec_kpi_operatori.vanzari_fara_tva), 0) as vanzari_luna,
                         COALESCE(SUM(onec_kpi_operatori.vanzari_cu_tva), 0) as vanzari_cu_tva,
                         COALESCE(SUM(onec_kpi_operatori.profit), 0) as profit,
                         COALESCE(SUM(onec_kpi_operatori.nr_comenzi), 0) as comenzi
                     ')
-                    ->groupBy(DB::raw('DATE_FORMAT(onec_kpi_syncs.period_start, "%Y-%m")'))
+                    ->groupBy(DB::raw(DbDate::month('onec_kpi_syncs.period_start')))
                     ->orderBy('luna', 'desc')
                     ->get();
                 foreach ($lunare1c as $r) {
                     $vanzariLunare1c->push((object) [
                         'luna' => $r->luna,
-                        'luna_label' => \Carbon\Carbon::createFromFormat('Y-m', $r->luna)->translatedFormat('F Y'),
+                        'luna_label' => LunaRomana::labelFromYm((string) $r->luna),
                         'vanzari_luna' => (float) $r->vanzari_luna,
                         'vanzari_cu_tva' => (float) $r->vanzari_cu_tva,
                         'profit' => (float) $r->profit,
@@ -400,7 +410,7 @@ class OperatoriController extends Controller
         $lunaCurenta = now()->format('Y-m');
         $nrLivrariTotal = $operatorUser ? Livrare::where('user_id', $operatorUser->id)->count() : 0;
         $nrLivrariLunaCurenta = $operatorUser
-            ? Livrare::where('user_id', $operatorUser->id)->whereRaw('DATE_FORMAT(data_livrarii, "%Y-%m") = ?', [$lunaCurenta])->count()
+            ? Livrare::where('user_id', $operatorUser->id)->whereRaw(DbDate::month('data_livrarii') . ' = ?', [$lunaCurenta])->count()
             : 0;
         $comenziTotal = $date ? (int) $date['nr_comenzi'] : 0;
         $comenziLunaCurenta = 0;

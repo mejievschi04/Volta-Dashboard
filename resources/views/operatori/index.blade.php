@@ -2,17 +2,13 @@
 
 @section('title', 'Operatori – VOLTA')
 
+@section('header-title', 'Operatori')
+
 @section('content')
 <div class="operatori-page">
-  <header class="operatori-page-header">
-    <div class="operatori-page-header-inner">
-      <div class="operatori-page-icon"><i class="fas fa-users"></i></div>
-      <div>
-        <h1 class="operatori-page-title">Operatori</h1>
-        <p class="operatori-page-subtitle">Date din 1C · {{ $perioadaLabel ?? 'toată perioada' }}</p>
-      </div>
-    </div>
-  </header>
+  <p class="rapoarte-lead operatori-page-lead">
+    Listă și pondere vânzări pentru perioada selectată. {{ $perioadaLabel ?? 'Toată perioada afișată.' }}
+  </p>
 
   @if(session('success'))
   <div class="operatori-alert operatori-alert-success">
@@ -25,28 +21,33 @@
   </div>
   @endif
 
-  <!-- Filtru perioadă -->
-  <form method="get" action="{{ route('operatori') }}" class="operatori-filter-card">
-    <div class="operatori-filter-row">
-      <div class="operatori-filter-group">
-        <label for="an">An</label>
-        <select name="an" id="an">
-          @foreach(range((int)date('Y'), 2023, -1) as $y)
-          <option value="{{ $y }}" {{ (isset($an) && (int)$an === $y) ? 'selected' : '' }}>{{ $y }}</option>
-          @endforeach
-        </select>
+  <form method="get" action="{{ route('operatori') }}" class="operatori-filter-form">
+    <div class="rapoarte-periods-grid operatori-filter-periods">
+      <div class="month-selector-modern">
+        <div class="month-selector-wrapper">
+          <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+          <label for="an">An</label>
+          <select name="an" id="an" class="dashboard-month-select">
+            @foreach(range((int)date('Y'), 2023, -1) as $y)
+            <option value="{{ $y }}" {{ (isset($an) && (int)$an === $y) ? 'selected' : '' }}>{{ $y }}</option>
+            @endforeach
+          </select>
+        </div>
       </div>
-      <div class="operatori-filter-group">
-        <label for="luna">Lună</label>
-        <select name="luna" id="luna">
-          <option value="">Toate lunile</option>
-          @foreach($luniNume ?? [] as $nr => $numeLuna)
-          <option value="{{ $nr }}" {{ (isset($luna) && (int)$luna === $nr) ? 'selected' : '' }}>{{ $numeLuna }}</option>
-          @endforeach
-        </select>
+      <div class="month-selector-modern">
+        <div class="month-selector-wrapper">
+          <i class="fas fa-calendar-day" aria-hidden="true"></i>
+          <label for="luna">Lună</label>
+          <select name="luna" id="luna" class="dashboard-month-select">
+            <option value="">Toate lunile</option>
+            @foreach($luniNume ?? [] as $nr => $numeLuna)
+            <option value="{{ $nr }}" {{ (isset($luna) && (int)$luna === $nr) ? 'selected' : '' }}>{{ $numeLuna }}</option>
+            @endforeach
+          </select>
+        </div>
       </div>
-      <div class="operatori-filter-actions">
-        <button type="submit" class="operatori-btn operatori-btn-primary"><i class="fas fa-filter"></i> Aplică</button>
+      <div class="operatori-filter-submit-wrap">
+        <button type="submit" class="operatori-btn operatori-btn-primary operatori-btn-filter-submit"><i class="fas fa-filter" aria-hidden="true"></i> Aplică filtre</button>
       </div>
     </div>
   </form>
@@ -71,7 +72,12 @@
     @endif
 
     <section class="operatori-table-section">
-      <h2 class="operatori-table-title"><i class="fas fa-list"></i> Lista operatori</h2>
+      <h2 class="operatori-table-title" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+        <span><i class="fas fa-list"></i> Lista operatori</span>
+        <button type="button" id="operatoriExportExcelBtn" class="operatori-btn operatori-btn-primary">
+          <i class="fas fa-file-excel" aria-hidden="true"></i> Export Excel
+        </button>
+      </h2>
       <div class="operatori-table-wrap">
         <table class="operatori-table">
           <thead>
@@ -98,9 +104,10 @@
                 @else
                 <a href="{{ route('operatori.raport', ['nume' => $op['nume']]) }}" class="operatori-btn operatori-btn-report"><i class="fas fa-chart-line"></i> Raport detaliat</a>
                 @endif
-                @if(auth()->check() && in_array(strtolower(auth()->user()->role ?? ''), ['admin', 'administrator']))
+                @if(auth()->check() && in_array(strtolower(trim(auth()->user()->role ?? '')), ['admin', 'administrator']))
                 <form action="{{ route('operatori.toggle-activ') }}" method="post" class="operatori-form-inline" onsubmit="return confirm('Dezactivezi acest operator? Nu va mai apărea în listă.');">
                   @csrf
+                  <input type="hidden" name="operator_id" value="{{ $op['operator_id'] ?? '' }}">
                   <input type="hidden" name="nume" value="{{ $op['nume'] }}">
                   <button type="submit" class="operatori-btn operatori-btn-deactivate"><i class="fas fa-user-slash"></i> Dezactivează</button>
                 </form>
@@ -116,12 +123,12 @@
   @else
   <div class="operatori-card operatori-card-empty">
     <i class="fas fa-database"></i>
-    <p>Nu există date din 1C pentru operatori.</p>
-    <p class="operatori-empty-hint">Sincronizează din Setări → 1C.</p>
+    <p>Nu există date pentru operatori.</p>
+    <p class="operatori-empty-hint">Adaugă sau încarcă date pentru a vedea graficele.</p>
   </div>
   @endif
 
-  @if(auth()->check() && in_array(strtolower(auth()->user()->role ?? ''), ['admin', 'administrator']) && isset($operatoriDezactivati) && $operatoriDezactivati->count() > 0)
+  @if(auth()->check() && in_array(strtolower(trim(auth()->user()->role ?? '')), ['admin', 'administrator']) && isset($operatoriDezactivati) && $operatoriDezactivati->count() > 0)
   <div class="operatori-card operatori-card-dezactivati">
     <h3><i class="fas fa-user-slash"></i> Operatori dezactivați</h3>
     <p class="operatori-dezactivati-desc">Nu apar în listă. Poți reactiva pentru a-i afișa din nou.</p>
@@ -168,20 +175,49 @@ document.addEventListener('DOMContentLoaded', function() {
         maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
-          tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
-            titleColor: '#FFEE00',
-            bodyColor: '#fff',
-            callbacks: {
-              label: function(ctx) {
+          tooltip: (function () {
+            const callbacks = {
+              label: function (ctx) {
                 const v = ctx.parsed || 0;
                 const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
                 const pct = total > 0 ? ((v / total) * 100).toFixed(2) : 0;
                 return ctx.label + ': ' + new Intl.NumberFormat('ro-RO', { minimumFractionDigits: 2 }).format(v) + ' MDL (' + pct + '%)';
-              }
+              },
+            };
+            if (typeof VoltaChartTheme !== 'undefined') {
+              return Object.assign({}, VoltaChartTheme.tooltip(), { callbacks: callbacks });
             }
-          }
-        }
+            return {
+              backgroundColor: 'rgba(30, 41, 59, 0.96)',
+              titleColor: '#FFEE00',
+              bodyColor: '#f8fafc',
+              borderColor: '#334155',
+              borderWidth: 1,
+              padding: 12,
+              cornerRadius: 10,
+              callbacks: callbacks,
+            };
+          })(),
+        },
+      },
+    });
+  }
+
+  const exportBtn = document.getElementById('operatoriExportExcelBtn');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', function () {
+      const table = document.querySelector('.operatori-table');
+      if (!table) {
+        alert('Nu există tabel pentru export.');
+        return;
+      }
+      try {
+        window.VoltaExcelExport.exportTable(table, {
+          fileName: 'operatori_tabel_' + window.VoltaExcelExport.nowStamp(),
+          sheetName: 'Operatori'
+        });
+      } catch (error) {
+        alert('Nu am putut exporta Excel: ' + error.message);
       }
     });
   }
@@ -189,4 +225,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 @endif
 @endpush
-

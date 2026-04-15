@@ -11,7 +11,7 @@
   </div>
   
   <div style="margin-bottom: 30px;">
-    <h1 style="color: #FFEE00; margin: 0; font-size: 32px; font-weight: 800; text-shadow: 0 0 20px rgba(255, 238, 0, 0.5); display: flex; align-items: center; gap: 12px;">
+    <h1 style="color: #FFEE00; margin: 0; font-size: 32px; font-weight: 800; display: flex; align-items: center; gap: 12px;">
       <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); display: flex; align-items: center; justify-content: center;">
         <i class="fas fa-user-edit" style="color: #000; font-size: 20px;"></i>
       </div>
@@ -63,15 +63,15 @@
         </div>
         <div>
           <label style="display: block; color: #FFEE00; margin-bottom: 8px; font-weight: 700; font-size: 14px;">
-            <i class="fas fa-user-check" style="margin-right: 6px;"></i>Full name (nume complet, ca în 1C)
+            <i class="fas fa-user-check" style="margin-right: 6px;"></i>Full name (nume complet)
           </label>
           <input type="text" name="full_name" value="{{ old('full_name', $user->full_name) }}" 
                  style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; transition: all 0.2s;"
                  onfocus="this.style.borderColor='#FFEE00'; this.style.background='rgba(255, 238, 0, 0.15)'"
                  onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(255, 255, 255, 0.05)'"
-                 placeholder="Exact ca în 1C – folosit pentru poze profil/copertă">
+                 placeholder="Nume complet folosit pentru profil">
           <p style="color: #9CA3AF; font-size: 12px; margin-top: 6px; margin-bottom: 0;">
-            <i class="fas fa-info-circle" style="margin-right: 4px;"></i>Trebuie identic cu numele operatorului din listă (1C) ca operatorul să poată încărca poze.
+            <i class="fas fa-info-circle" style="margin-right: 4px;"></i>Trebuie identic cu numele operatorului din listă ca să poată încărca poze.
           </p>
         </div>
 
@@ -102,15 +102,15 @@
 
         <div id="operator-nume-wrap" style="{{ in_array(strtolower(old('role', $user->role ?? '')), ['operator', 'operatori']) ? '' : 'display: none;' }}">
           <label style="display: block; color: #FFEE00; margin-bottom: 8px; font-weight: 700; font-size: 14px;">
-            <i class="fas fa-user-tag" style="margin-right: 6px;"></i>Nume operator (1C)
+            <i class="fas fa-user-tag" style="margin-right: 6px;"></i>Nume operator
           </label>
           <input type="text" name="operator_nume" value="{{ old('operator_nume', $user->operator_nume) }}" 
                  style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; transition: all 0.2s;"
                  onfocus="this.style.borderColor='#FFEE00'; this.style.background='rgba(255, 238, 0, 0.15)'"
                  onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(255, 255, 255, 0.05)'"
-                 placeholder="Exact cum apare în raportul 1C (pentru pagina „Datele mele”)">
+                 placeholder="Numele asociat contului">
           <p style="color: #9CA3AF; font-size: 12px; margin-top: 6px; margin-bottom: 0;">
-            <i class="fas fa-info-circle" style="margin-right: 4px;"></i>Trebuie să coincidă cu numele din 1C ca operatorul să vadă datele corecte.
+            <i class="fas fa-info-circle" style="margin-right: 4px;"></i>Trebuie să coincidă cu numele operatorului asociat contului.
           </p>
         </div>
 
@@ -142,7 +142,7 @@
 
       <div style="display: flex; gap: 12px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
         <button type="submit" 
-                style="background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); color: #000; padding: 14px 28px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 238, 0, 0.3); transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;"
+                style="background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%); color: #000; padding: 14px 28px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.35); transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;"
                 onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 238, 0, 0.4)'"
                 onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 238, 0, 0.3)'">
           <i class="fas fa-save"></i> Actualizează Utilizator
@@ -301,4 +301,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
-

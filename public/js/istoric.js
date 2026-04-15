@@ -66,22 +66,22 @@ function initIstoric() {
     
     // Stilizare hover pentru selector
     periodSelect.addEventListener('mouseenter', function() {
-      this.style.borderColor = 'rgba(255, 238, 0, 0.6)';
-      this.style.boxShadow = '0 0 15px rgba(255, 238, 0, 0.3)';
+      this.style.borderColor = 'rgb(71, 85, 105)';
+      this.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.25)';
     });
     
     periodSelect.addEventListener('mouseleave', function() {
-      this.style.borderColor = 'rgba(255, 238, 0, 0.3)';
+      this.style.borderColor = 'rgba(255, 255, 255, 0.15)';
       this.style.boxShadow = 'none';
     });
     
     periodSelect.addEventListener('focus', function() {
-      this.style.borderColor = '#FFEE00';
-      this.style.boxShadow = '0 0 20px rgba(255, 238, 0, 0.5)';
+      this.style.borderColor = 'rgb(71, 85, 105)';
+      this.style.boxShadow = '0 0 0 2px rgba(148, 163, 184, 0.25)';
     });
     
     periodSelect.addEventListener('blur', function() {
-      this.style.borderColor = 'rgba(255, 238, 0, 0.3)';
+      this.style.borderColor = 'rgba(255, 255, 255, 0.15)';
       this.style.boxShadow = 'none';
     });
   } else {

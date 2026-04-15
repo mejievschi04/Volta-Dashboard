@@ -1,23 +1,36 @@
 @extends(auth()->check() && auth()->user()->isOperator() ? 'layouts.operator' : 'layouts.app')
 
 @section('title', 'Livrări – VOLTA')
+@section('header-title', 'Livrări')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/operatori.css') }}">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
   /* ---------- Page base ---------- */
   .livrari-page {
-    padding: 32px 24px 48px;
-    max-width: 1280px;
+    padding: 0 0 var(--space-8, 32px);
+    max-width: 1400px;
     margin: 0 auto;
-    font-family: 'DM Sans', 'Montserrat', system-ui, sans-serif;
-    color: var(--ink-secondary, #E5E7EB);
+    font-family: 'Noto Sans', system-ui, sans-serif;
+    color: var(--text-primary, #E5E7EB);
     min-height: 60vh;
   }
+  .livrari-page--modern .livrari-filters-block .livrari-filters-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    align-items: end;
+    width: 100%;
+  }
+  .livrari-page--modern .livrari-filters-block .livrari-filters-row .livrari-btn-primary {
+    width: 100%;
+    justify-content: center;
+    min-height: 46px;
+    border-radius: 12px;
+  }
   .livrari-page h1 {
-    color: var(--brand, #FFEE00);
+    color: var(--text-primary, #f8fafc);
     margin: 0 0 6px 0;
     font-size: clamp(1.75rem, 4vw, 2rem);
     font-weight: 700;
@@ -33,18 +46,24 @@
     font-size: 0.9375rem;
     font-weight: 500;
   }
+  .livrari-page-lead {
+    margin: 0 0 var(--space-6, 24px);
+  }
 
   /* ---------- Cards ---------- */
   .livrari-card {
-    background: linear-gradient(165deg, rgba(31, 41, 55, 0.95) 0%, rgba(17, 24, 39, 0.98) 100%);
-    border-radius: 16px;
+    background: linear-gradient(165deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.96) 100%);
+    border-radius: 18px;
     padding: 28px;
     margin-bottom: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 238, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
-  .livrari-card:hover { border-color: rgba(255, 238, 0, 0.12); }
+  .livrari-card:hover {
+    border-color: rgba(255, 238, 0, 0.14);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
+  }
   .livrari-card h2 {
     color: #fff;
     margin: 0 0 20px 0;
@@ -55,7 +74,7 @@
     gap: 10px;
     letter-spacing: -0.01em;
   }
-  .livrari-card h2 i { color: var(--brand); opacity: 0.9; }
+  .livrari-card h2 i { color: var(--brand, #ffee00); opacity: 0.92; }
 
   /* ---------- Alerts ---------- */
   .livrari-alert {
@@ -77,7 +96,13 @@
   .livrari-alert i { font-size: 1.25rem; flex-shrink: 0; }
 
   /* ---------- Filters card ---------- */
-  .livrari-filters-card { padding: 16px 20px; }
+  .livrari-filters-card {
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    background: var(--bg-elevated, #1e293b);
+    border: 1px solid var(--border-primary, #334155);
+    box-shadow: var(--shadow-md, 0 4px 8px rgba(0, 0, 0, 0.4));
+  }
   .livrari-filters-card h2 { margin-bottom: 14px; font-size: 1rem; }
   .livrari-filters-row {
     display: flex;
@@ -101,7 +126,7 @@
     margin: 0 0 8px 0;
     font-size: 0.6875rem;
     font-weight: 600;
-    color: var(--muted);
+    color: var(--text-tertiary, #94a3b8);
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
@@ -134,8 +159,8 @@
   .livrari-search-input::placeholder { color: #6B7280; }
   .livrari-search-input:focus {
     outline: none;
-    border-color: var(--brand);
-    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.15);
+    border-color: rgba(255, 238, 0, 0.45);
+    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.18);
   }
   .livrari-filters select {
     padding: 8px 12px;
@@ -151,8 +176,8 @@
   }
   .livrari-filters select:focus {
     outline: none;
-    border-color: var(--brand);
-    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.15);
+    border-color: rgba(255, 238, 0, 0.45);
+    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.18);
   }
   .livrari-filters .livrari-btn { padding: 8px 16px; font-size: 0.8125rem; }
   .livrari-perioada-wrap { min-width: 200px; flex: 1 1 220px; }
@@ -166,8 +191,11 @@
     cursor: pointer;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
-  .livrari-perioada-field:hover { border-color: rgba(255, 238, 0, 0.4); }
-  .livrari-perioada-field:focus-within { border-color: var(--brand); box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.15); }
+  .livrari-perioada-field:hover { border-color: rgba(255, 238, 0, 0.28); }
+  .livrari-perioada-field:focus-within {
+    border-color: rgba(255, 238, 0, 0.45);
+    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.18);
+  }
   .livrari-perioada-field input {
     flex: 1;
     padding: 8px 12px;
@@ -182,8 +210,8 @@
   .livrari-perioada-field input:focus { outline: none; }
   .livrari-perioada-icon {
     padding: 8px 10px;
-    color: var(--brand);
-    opacity: 0.9;
+    color: var(--brand, #ffee00);
+    opacity: 0.95;
     font-size: 0.875rem;
   }
   .livrari-perioada-presets {
@@ -207,8 +235,8 @@
   }
   .livrari-preset-btn:hover {
     background: rgba(255, 238, 0, 0.12);
-    color: var(--brand);
-    border-color: rgba(255, 238, 0, 0.3);
+    color: var(--brand, #ffee00);
+    border-color: rgba(255, 238, 0, 0.35);
   }
   .livrari-filter-item { display: flex; flex-direction: column; gap: 4px; }
   .livrari-filter-item label { margin-bottom: 0; font-size: 0.6875rem; }
@@ -231,8 +259,8 @@
   }
   .livrari-filter-item select:focus {
     outline: none;
-    border-color: var(--brand);
-    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.15);
+    border-color: rgba(255, 238, 0, 0.45);
+    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.18);
   }
   .livrari-filter-item select:hover { border-color: rgba(255, 255, 255, 0.2); }
   .livrari-search-wrap.livrari-filter-item { min-width: 160px; flex: 1 1 180px; }
@@ -250,19 +278,62 @@
   }
   .livrari-btn:hover { transform: translateY(-1px); }
   .livrari-btn-primary {
-    background: linear-gradient(135deg, #FFEE00 0%, #E6D600 100%);
+    background: linear-gradient(135deg, #facc15 0%, #ffee00 55%, #e6d600 100%);
     color: #0a0a0a;
-    box-shadow: 0 4px 14px rgba(255, 238, 0, 0.35);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 238, 0, 0.15);
   }
-  .livrari-btn-primary:hover { box-shadow: 0 6px 20px rgba(255, 238, 0, 0.45); }
+  .livrari-btn-primary:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 238, 0, 0.28);
+  }
   .livrari-btn-edit {
-    padding: 8px 14px;
-    font-size: 0.8125rem;
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--brand);
-    border: 1px solid rgba(255, 238, 0, 0.3);
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 0.9rem;
+    background: rgba(255, 238, 0, 0.08);
+    color: var(--brand, #ffee00);
+    border: 1px solid rgba(255, 238, 0, 0.28);
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
-  .livrari-btn-edit:hover { background: rgba(255, 238, 0, 0.15); }
+  .livrari-btn-edit:hover {
+    background: rgba(255, 238, 0, 0.16);
+    color: #fff;
+    border-color: rgba(255, 238, 0, 0.45);
+  }
+  .livrari-actions-cell {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .livrari-btn-delete {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid rgba(248, 113, 113, 0.45);
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .livrari-btn-delete:hover {
+    background: rgba(239, 68, 68, 0.22);
+    color: #fecaca;
+    border-color: rgba(248, 113, 113, 0.65);
+  }
+  .livrari-btn-delete:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
 
   /* ---------- Data table ---------- */
   .livrari-table-card { padding: 18px 20px; }
@@ -279,15 +350,15 @@
     font-size: 0.8125rem;
   }
   .livrari-table th {
-    background: rgba(255, 238, 0, 0.08);
-    color: var(--brand);
+    background: var(--bg-secondary, #1e293b);
+    color: var(--text-secondary, #cbd5e1);
     padding: 10px 14px;
     text-align: left;
     font-weight: 700;
     font-size: 0.625rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    border-bottom: 1px solid rgba(255, 238, 0, 0.2);
+    border-bottom: 1px solid var(--border-primary, #334155);
   }
   .livrari-table td {
     padding: 10px 14px;
@@ -298,7 +369,7 @@
   .livrari-table tbody tr {
     transition: background 0.15s ease;
   }
-  .livrari-table tbody tr:hover { background: rgba(255, 238, 0, 0.04); }
+  .livrari-table tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
   .livrari-table tbody tr:last-child td { border-bottom: none; }
 
   /* ---------- Pagination ---------- */
@@ -321,8 +392,8 @@
     transition: background 0.2s, color 0.2s;
   }
   .livrari-pagination a:hover {
-    background: rgba(255, 238, 0, 0.2);
-    color: var(--brand);
+    background: rgba(255, 238, 0, 0.14);
+    color: var(--brand, #ffee00);
   }
   .livrari-pagination .disabled span { color: #6B7280; }
 
@@ -330,22 +401,22 @@
   .livrari-operator-actions { margin-bottom: 28px; }
   .livrari-btn-open-modal {
     padding: 14px 28px;
-    border-radius: 12px;
-    font-weight: 600;
+    border-radius: 14px;
+    font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
     border: none;
-    background: linear-gradient(135deg, #FFEE00 0%, #E6D600 100%);
+    background: linear-gradient(135deg, #facc15 0%, #ffee00 50%, #e6d600 100%);
     color: #0a0a0a;
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 4px 16px rgba(255, 238, 0, 0.4);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 238, 0, 0.2);
     transition: transform 0.15s ease, box-shadow 0.2s ease;
   }
   .livrari-btn-open-modal:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(255, 238, 0, 0.5);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(255, 238, 0, 0.35);
   }
 
   /* ---------- Modal ---------- */
@@ -362,15 +433,15 @@
   }
   .livrari-modal-overlay.is-open { display: flex; }
   .livrari-modal {
-    background: linear-gradient(165deg, #1F2937 0%, #111827 100%);
+    background: linear-gradient(165deg, #1e293b 0%, #0f172a 100%);
     border-radius: 20px;
     padding: 32px;
     max-width: 540px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
-    border: 1px solid rgba(255, 238, 0, 0.15);
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 238, 0, 0.12);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 238, 0, 0.06);
   }
   .livrari-modal-header {
     display: flex;
@@ -381,7 +452,7 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
   .livrari-modal-title {
-    color: var(--brand);
+    color: var(--text-primary, #f8fafc);
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0;
@@ -389,6 +460,7 @@
     align-items: center;
     gap: 10px;
   }
+  .livrari-modal-title i { color: var(--brand, #ffee00); }
   .livrari-modal-close {
     background: rgba(255, 255, 255, 0.08);
     border: none;
@@ -422,7 +494,7 @@
   .livrari-add-row-full { grid-template-columns: 1fr; }
   .livrari-add-field label {
     display: block;
-    color: var(--brand);
+    color: var(--text-secondary, #cbd5e1);
     margin-bottom: 8px;
     font-size: 0.8125rem;
     font-weight: 600;
@@ -441,8 +513,8 @@
   .livrari-add-field input:focus,
   .livrari-add-field select:focus {
     outline: none;
-    border-color: var(--brand);
-    box-shadow: 0 0 0 3px rgba(255, 238, 0, 0.12);
+    border-color: rgba(255, 238, 0, 0.45);
+    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.16);
   }
   .livrari-add-field input::placeholder { color: #6B7280; }
   .livrari-add-actions { margin-top: 8px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
@@ -485,19 +557,19 @@
     gap: 22px;
     padding: 28px 32px 26px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    background: linear-gradient(90deg, rgba(255, 238, 0, 0.06) 0%, transparent 100%);
+    background: linear-gradient(90deg, rgba(255, 238, 0, 0.08) 0%, transparent 55%);
   }
   .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header-icon {
     width: 56px;
     height: 56px;
     border-radius: 14px;
     background: linear-gradient(135deg, rgba(255, 238, 0, 0.2) 0%, rgba(250, 204, 21, 0.08) 100%);
-    border: 1px solid rgba(255, 238, 0, 0.25);
+    border: 1px solid rgba(255, 238, 0, 0.28);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-    color: var(--brand);
+    color: var(--brand, #ffee00);
     flex-shrink: 0;
   }
   .livrari-page--admin .livrari-admin-kpi .livrari-kpi-title {
@@ -520,8 +592,8 @@
     padding: 28px 32px 32px;
   }
   .livrari-page--admin .livrari-kpi-total-card {
-    background: linear-gradient(145deg, rgba(255, 238, 0, 0.1) 0%, rgba(250, 204, 21, 0.05) 100%);
-    border: 1px solid rgba(255, 238, 0, 0.2);
+    background: linear-gradient(145deg, rgba(255, 238, 0, 0.1) 0%, rgba(250, 204, 21, 0.04) 100%);
+    border: 1px solid rgba(255, 238, 0, 0.22);
     border-radius: 16px;
     padding: 28px;
     display: flex;
@@ -533,12 +605,12 @@
     width: 52px;
     height: 52px;
     border-radius: 12px;
-    background: rgba(255, 238, 0, 0.18);
+    background: rgba(255, 238, 0, 0.16);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.375rem;
-    color: var(--brand);
+    color: var(--brand, #ffee00);
     flex-shrink: 0;
   }
   .livrari-page--admin .livrari-kpi-total-content { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
@@ -552,7 +624,7 @@
   .livrari-page--admin .livrari-kpi-total-value {
     font-size: 2rem;
     font-weight: 800;
-    color: var(--brand);
+    color: var(--brand, #ffee00);
     letter-spacing: -0.03em;
     line-height: 1.1;
   }
@@ -571,7 +643,7 @@
     align-items: center;
     gap: 10px;
   }
-  .livrari-page--admin .livrari-per-operator-title i { color: var(--brand); }
+  .livrari-page--admin .livrari-per-operator-title i { color: var(--brand, #ffee00); }
   .livrari-page--admin .livrari-per-operator-table-wrap {
     overflow: hidden;
     border-radius: 12px;
@@ -599,7 +671,7 @@
   }
   .livrari-page--admin .livrari-per-operator-table td.livrari-td-num {
     text-align: right;
-    color: var(--brand);
+    color: var(--brand, #ffee00);
     font-size: 1rem;
     font-weight: 700;
   }
@@ -609,7 +681,59 @@
   .livrari-page--admin .livrari-table-wrap { border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.06); }
   .livrari-page--admin .livrari-table th { padding: 14px 18px; font-size: 0.6875rem; }
   .livrari-page--admin .livrari-table td { padding: 14px 18px; font-size: 0.875rem; }
-  .livrari-page--admin .livrari-table tbody tr:hover { background: rgba(255, 238, 0, 0.04); }
+  .livrari-page--admin .livrari-table tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
+  .livrari-alert-error {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+  }
+  .livrari-page .livrari-card h2 {
+    color: var(--text-primary, #f8fafc);
+  }
+  .livrari-page .livrari-card h2 i {
+    color: var(--brand, #ffee00);
+    opacity: 0.9;
+  }
+  .livrari-page .livrari-table-wrap {
+    border: 1px solid var(--border-primary, #334155);
+    background: var(--bg-secondary, #0f172a);
+  }
+  .livrari-page .livrari-table th {
+    background: var(--bg-secondary, #1e293b);
+    color: var(--text-secondary, #cbd5e1);
+    border-bottom: 1px solid var(--border-primary, #334155);
+  }
+  .livrari-page .livrari-table td {
+    color: var(--text-primary, #e5e7eb);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .livrari-page .livrari-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .livrari-page .livrari-btn-primary {
+    background: linear-gradient(135deg, var(--brand-dark, #facc15) 0%, var(--brand, #ffee00) 100%);
+    color: #0a0a0a;
+    box-shadow: var(--shadow-md, 0 4px 10px rgba(0, 0, 0, 0.35));
+  }
+  .livrari-page .livrari-btn-primary:hover {
+    box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.45));
+  }
+  .livrari-page .livrari-filters-row {
+    gap: 12px;
+  }
+  .livrari-page .livrari-filter-item select,
+  .livrari-page .livrari-search-input,
+  .livrari-page .livrari-perioada-field {
+    background: var(--bg-secondary, #1e293b);
+    border: 1px solid var(--border-primary, #334155);
+    color: var(--text-primary, #e5e7eb);
+  }
+  .livrari-page .livrari-filter-item select:focus,
+  .livrari-page .livrari-search-input:focus,
+  .livrari-page .livrari-perioada-field:focus-within {
+    border-color: rgba(255, 238, 0, 0.45);
+    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.16);
+  }
 
   @media (max-width: 768px) {
     .livrari-page--admin .livrari-admin-kpi .livrari-kpi-body { grid-template-columns: 1fr; padding: 20px 20px 24px; }
@@ -705,21 +829,22 @@
 @endpush
 
 @section('content')
-<div class="livrari-page {{ $isAdmin ? 'livrari-page--admin' : '' }}">
-  <h1><i class="fas fa-truck" style="margin-right: 10px;"></i> Livrări</h1>
-  <p class="subtitle">{{ $isAdmin ? 'Toate livrările și KPI per operator' : 'Adaugă și vizualizează livrările tale' }}</p>
+<div class="livrari-page livrari-page--modern {{ $isAdmin ? 'livrari-page--admin' : '' }}">
+  <p class="rapoarte-lead livrari-page-lead">
+    {{ $isAdmin ? 'Toate livrările și KPI per operator, în același format vizual ca Dashboard/Rapoarte.' : 'Adaugă și vizualizează livrările tale, cu filtre rapide și tabel unificat.' }}
+  </p>
 
   @php
     $filters = $filters ?? ['luna' => '', 'operator_id' => '', 'locatie' => '', 'cauta' => '', 'data' => '', 'data_de_la' => '', 'data_pana' => ''];
     $operatorsForFilter = $operatorsForFilter ?? collect();
   @endphp
 
-  <form method="get" action="{{ route('livrari') }}" class="livrari-card livrari-filters-card" style="margin-bottom: 20px;">
-    <h2 style="margin-bottom: 20px;"><i class="fas fa-filter"></i> Filtre și căutare</h2>
+  <form method="get" action="{{ route('livrari') }}" class="livrari-card livrari-filters-card">
+    <h2><i class="fas fa-filter"></i> Filtre și căutare</h2>
 
     <div class="livrari-filters-block">
       <span class="livrari-filters-block-title">Perioadă</span>
-      <div class="livrari-filters-row" style="width: 100%;">
+      <div class="livrari-filters-row">
         <div class="livrari-perioada-wrap">
           <label for="livrari_perioada_input">Interval date</label>
           <div class="livrari-perioada-field" id="livrariPerioadaTrigger">
@@ -752,7 +877,7 @@
             @foreach(range(now()->year, now()->year - 2, -1) as $y)
               @foreach(range(1, 12) as $m)
                 @php $ym = sprintf('%04d-%02d', $y, $m); @endphp
-                <option value="{{ $ym }}" {{ ($filters['luna'] ?? '') == $ym ? 'selected' : '' }}>{{ \Carbon\Carbon::createFromFormat('Y-m', $ym)->translatedFormat('F Y') }}</option>
+                <option value="{{ $ym }}" {{ ($filters['luna'] ?? '') == $ym ? 'selected' : '' }}>{{ \App\Support\LunaRomana::labelFromYm($ym) }}</option>
               @endforeach
             @endforeach
           </select>
@@ -787,7 +912,7 @@
   </div>
   @endif
   @if($errors->any())
-  <div class="livrari-alert" style="background: rgba(239,68,68,0.2); color: #F87171; border: 1px solid rgba(239,68,68,0.4);">
+  <div class="livrari-alert livrari-alert-error">
     <i class="fas fa-exclamation-circle"></i>
     <span>{{ $errors->first() }}</span>
   </div>
@@ -849,7 +974,7 @@
         <h2 class="livrari-modal-title" id="livrariModalTitle"><i class="fas fa-truck"></i> Adaugă livrare nouă</h2>
         <button type="button" class="livrari-modal-close" id="livrariModalClose" aria-label="Închide">&times;</button>
       </div>
-      <p class="livrari-add-hint" style="margin-bottom: 16px;">Locația (În Chișinău / În afara) se stabilește automat după raion. După salvare poți introduce altă livrare sau închide.</p>
+      <p class="livrari-add-hint">Locația (În Chișinău / În afara) se stabilește automat după raion. După salvare poți introduce altă livrare sau închide.</p>
       <div class="livrari-modal-success" id="livrariModalSuccess"></div>
       <div class="livrari-modal-error" id="livrariModalError"></div>
       <form id="livrariAddForm" action="{{ route('livrari.store') }}" method="post" class="livrari-add-form">
@@ -881,7 +1006,7 @@
             <input type="text" id="modal_adresa_livrarii" name="adresa_livrarii" required maxlength="500" placeholder="Strada, nr., bloc, scara, apartament, cod poștal">
           </div>
         </div>
-        <div class="livrari-add-actions" style="display: flex; gap: 12px; align-items: center;">
+        <div class="livrari-add-actions">
           <button type="submit" class="livrari-btn livrari-btn-primary livrari-btn-add" id="livrariModalSubmitBtn"><i class="fas fa-check"></i> Salvează livrarea</button>
           <button type="button" class="livrari-modal-close livrari-btn-secondary" id="livrariModalCloseBottom">Închide</button>
         </div>
@@ -891,7 +1016,12 @@
   @endif
 
   <div class="livrari-card livrari-table-card">
-    <h2><i class="fas fa-list"></i> {{ $isAdmin ? 'Toate livrările' : 'Livrările mele' }}</h2>
+    <h2 style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+      <span><i class="fas fa-list"></i> {{ $isAdmin ? 'Toate livrările' : 'Livrările mele' }}</span>
+      <button type="button" id="livrariExportExcelBtn" class="livrari-btn livrari-btn-primary">
+        <i class="fas fa-file-excel" aria-hidden="true"></i> Export Excel
+      </button>
+    </h2>
     <div class="livrari-table-wrap">
       <table class="livrari-table">
         <thead>
@@ -926,15 +1056,18 @@
             @if($isAdmin)
             <td>{{ $l->user ? (trim($l->user->full_name ?? $l->user->name ?? '') ?: $l->user->username) : '—' }}</td>
             @endif
-            <td>
+            <td class="livrari-actions-cell">
               <button type="button" class="livrari-btn livrari-btn-edit" aria-label="Editează" title="Editează">
-                <i class="fas fa-edit"></i> Editează
+                <i class="fas fa-edit" aria-hidden="true"></i>
+              </button>
+              <button type="button" class="livrari-btn-delete" data-delete-url="{{ route('livrari.destroy', $l) }}" aria-label="Șterge livrarea" title="Șterge">
+                <i class="fas fa-trash-alt" aria-hidden="true"></i>
               </button>
             </td>
           </tr>
           @empty
           <tr id="livrariEmptyRow">
-            <td colspan="{{ $isAdmin ? 10 : 9 }}" style="text-align: center; color: #9CA3AF; padding: 32px;">Nicio livrare înregistrată.</td>
+            <td colspan="{{ $isAdmin ? 9 : 8 }}" style="text-align: center; color: #9CA3AF; padding: 32px;">Nicio livrare înregistrată.</td>
           </tr>
           @endforelse
         </tbody>
@@ -1043,6 +1176,9 @@
     if (dataComanda) dataComanda.value = new Date().toISOString().slice(0, 10);
     if (dataLivrarii) dataLivrarii.value = new Date().toISOString().slice(0, 10);
   }
+  function livrariDestroyUrl(id) {
+    return @json(url('livrari')) + '/' + id;
+  }
   function addRowToTable(livrare) {
     if (!tbody) return;
     if (emptyRow) emptyRow.remove();
@@ -1056,6 +1192,7 @@
     tr.setAttribute('data-adresa', livrare.adresa_livrarii || '');
     tr.setAttribute('data-nr-client', livrare.nr_client || '');
     tr.setAttribute('data-data-livrarii', dataLivrariiYmd);
+    var delUrl = livrare.id ? livrariDestroyUrl(livrare.id) : '';
     tr.innerHTML =
       '<td>' + (livrare.numar_comanda || '') + '</td>' +
       '<td>' + (livrare.data || '') + '</td>' +
@@ -1065,7 +1202,10 @@
       '<td>' + (livrare.data_livrarii || '') + '</td>' +
       '<td>' + (livrare.locatie || '—') + '</td>' +
       (isAdmin ? '<td>—</td>' : '') +
-      '<td><button type="button" class="livrari-btn livrari-btn-edit" aria-label="Editează" title="Editează"><i class="fas fa-edit"></i> Editează</button></td>';
+      '<td class="livrari-actions-cell">' +
+      '<button type="button" class="livrari-btn livrari-btn-edit" aria-label="Editează" title="Editează"><i class="fas fa-edit" aria-hidden="true"></i></button>' +
+      '<button type="button" class="livrari-btn-delete" data-delete-url="' + delUrl + '" aria-label="Șterge livrarea" title="Șterge"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>' +
+      '</td>';
     tbody.insertBefore(tr, tbody.firstChild);
   }
 
@@ -1241,6 +1381,54 @@
       .finally(function() { if (editSubmitBtn) editSubmitBtn.disabled = false; });
     });
   }
+
+  var livrariEmptyColspan = {{ $isAdmin ? 9 : 8 }};
+  var livrariTableBodyEl = document.getElementById('livrariTableBody');
+  document.addEventListener('click', function(e) {
+    var delBtn = e.target.closest('.livrari-btn-delete');
+    if (!delBtn) return;
+    e.preventDefault();
+    var url = delBtn.getAttribute('data-delete-url');
+    if (!url) return;
+    if (!window.confirm('Ștergi definitiv această livrare? Acțiunea nu poate fi anulată.')) return;
+    var row = delBtn.closest('tr');
+    var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    var token = csrfMeta ? csrfMeta.getAttribute('content') : '';
+    delBtn.disabled = true;
+    fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'X-CSRF-TOKEN': token,
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json'
+      }
+    })
+      .then(function(r) {
+        return r.json().then(function(d) { return { ok: r.ok, status: r.status, data: d }; }).catch(function() { return { ok: false, status: r.status, data: {} }; });
+      })
+      .then(function(result) {
+        if (result.ok && result.data && result.data.success) {
+          if (row && row === currentEditRow) {
+            closeEditModal();
+          }
+          if (row) row.remove();
+          if (livrariTableBodyEl) {
+            var rows = livrariTableBodyEl.querySelectorAll('tr');
+            if (rows.length === 0) {
+              var trEmpty = document.createElement('tr');
+              trEmpty.id = 'livrariEmptyRow';
+              trEmpty.innerHTML = '<td colspan="' + livrariEmptyColspan + '" style="text-align:center;color:#9CA3AF;padding:32px;">Nicio livrare înregistrată.</td>';
+              livrariTableBodyEl.appendChild(trEmpty);
+            }
+          }
+        } else {
+          var dmsg = (result.data && result.data.message) ? result.data.message : 'Nu s-a putut șterge livrarea.';
+          window.alert(dmsg);
+        }
+      })
+      .catch(function() { window.alert('Eroare de rețea. Încearcă din nou.'); })
+      .finally(function() { delBtn.disabled = false; });
+  });
 })();
 </script>
 @endpush
@@ -1327,6 +1515,30 @@
     });
   });
 })();
+</script>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const exportBtn = document.getElementById('livrariExportExcelBtn');
+  if (!exportBtn) return;
+  exportBtn.addEventListener('click', function () {
+    const table = document.querySelector('.livrari-table');
+    if (!table) {
+      alert('Nu există tabel pentru export.');
+      return;
+    }
+    try {
+      window.VoltaExcelExport.exportTable(table, {
+        fileName: 'livrari_tabel_' + window.VoltaExcelExport.nowStamp(),
+        sheetName: 'Livrari'
+      });
+    } catch (error) {
+      alert('Nu am putut exporta Excel: ' + error.message);
+    }
+  });
+});
 </script>
 @endpush
 @endsection

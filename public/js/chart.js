@@ -51,38 +51,41 @@ function initChart(chartId, label, color="#FFD700") {
   if(!canvas) return;
   const ctx = canvas.getContext("2d");
   const isMobile = window.innerWidth <= 768;
+  const fill = color.length === 7 ? color + "22" : color;
+  const opts = typeof VoltaChartTheme !== "undefined"
+    ? VoltaChartTheme.cartesianDefaults({
+        plugins: {
+          tooltip: Object.assign({}, VoltaChartTheme.tooltip(), { titleColor: VoltaChartTheme.colors.brand }),
+        },
+      })
+    : {
+        responsive: true,
+        plugins: { legend: { display: true, labels: { color: "#e2e8f0", font: { size: isMobile ? 10 : 12 } } } },
+        scales: {
+          x: { ticks: { color: "#cbd5e1", font: { size: isMobile ? 9 : 11 } }, grid: { color: "rgba(148,163,184,0.12)", drawBorder: false } },
+          y: { ticks: { color: "#cbd5e1", font: { size: isMobile ? 9 : 11 } }, grid: { color: "rgba(148,163,184,0.12)", drawBorder: false }, beginAtZero: true },
+        },
+      };
   const chartInstance = new Chart(ctx, {
     type: "line",
-    data: { labels: [], datasets: [{ label, data: [], borderColor: color, backgroundColor: `${color}33`, tension: 0.3, pointRadius: isMobile ? 1 : 2 }] },
-    options: { 
-      responsive: true, 
-      plugins: { 
-        legend: { 
-          display: true, 
-          labels: { 
-            color: "#fff",
-            font: { size: isMobile ? 10 : 12 }
-          } 
-        } 
-      }, 
-      scales: { 
-        x: { 
-          ticks: { 
-            color: "#fff",
-            font: { size: isMobile ? 9 : 11 }
-          }, 
-          grid: { color: "rgba(255,255,0,0.05)" } 
-        }, 
-        y: { 
-          ticks: { 
-            color: "#fff",
-            font: { size: isMobile ? 9 : 11 }
-          }, 
-          grid: { color: "rgba(255,255,0,0.05)" }, 
-          beginAtZero: true 
-        } 
-      } 
-    }
+    data: {
+      labels: [],
+      datasets: [{
+        label,
+        data: [],
+        borderColor: color,
+        backgroundColor: fill,
+        tension: 0.35,
+        borderWidth: 2,
+        pointRadius: isMobile ? 2 : 3,
+        pointHoverRadius: isMobile ? 4 : 6,
+        pointBackgroundColor: color,
+        pointBorderColor: "rgba(15,23,42,0.9)",
+        pointBorderWidth: 1,
+        fill: true,
+      }],
+    },
+    options: opts,
   });
   charts[chartId] = { instance: chartInstance };
 }
@@ -156,8 +159,10 @@ async function loadVanzariTotale() {
     const plan = dataLunare.data.map(d => d.plan || null);
 
     destroyChart("salesChart");
-    const ctx = document.getElementById("salesChart").getContext("2d");
-    charts["salesChart"].instance = new Chart(ctx, {
+    const salesCanvas = document.getElementById("salesChart");
+    if (salesCanvas) {
+    const ctx = salesCanvas.getContext("2d");
+    charts["salesChart"] = { instance: new Chart(ctx, {
       data: {
         labels,
         datasets: [
@@ -188,31 +193,46 @@ async function loadVanzariTotale() {
           }
         ]
       },
-      options: {
+      options: typeof VoltaChartTheme !== "undefined"
+        ? VoltaChartTheme.cartesianDefaults({
+            plugins: {
+              legend: { display: true, position: "top" },
+              tooltip: Object.assign({}, VoltaChartTheme.tooltip(), { titleColor: VoltaChartTheme.colors.brand }),
+            },
+            onClick: (event, elements) => {
+              if (elements.length > 0) {
+                const element = elements[0];
+                const luna = labels[element.index];
+                openVanzariDetaliiModal(luna);
+              }
+            },
+          })
+        : {
         responsive: true,
         plugins: {
           legend: { 
             labels: { 
-              color: "#fff",
+              color: "#e2e8f0",
               font: { size: window.innerWidth <= 768 ? 10 : 12 }
             },
             display: true
-          }
+          },
+          tooltip: { backgroundColor: "rgba(30,41,59,0.96)", titleColor: "#FFEE00", bodyColor: "#f8fafc", borderColor: "#334155", borderWidth: 1, cornerRadius: 10, padding: 12 },
         },
         scales: {
           x: {
             ticks: { 
-              color: "#fff",
+              color: "#cbd5e1",
               font: { size: window.innerWidth <= 768 ? 9 : 11 }
             },
-            grid: { color: "rgba(255,255,0,0.05)" }
+            grid: { color: "rgba(148,163,184,0.12)", drawBorder: false }
           },
           y: {
             ticks: { 
-              color: "#fff",
+              color: "#cbd5e1",
               font: { size: window.innerWidth <= 768 ? 9 : 11 }
             },
-            grid: { color: "rgba(255,255,0,0.05)" },
+            grid: { color: "rgba(148,163,184,0.12)", drawBorder: false },
             beginAtZero: true
           }
         },
@@ -224,7 +244,8 @@ async function loadVanzariTotale() {
           }
         }
       }
-    });
+    }) };
+    }
 
     // Funcție pentru actualizare KPI
     async function updateKPIandChart(luna, lunaCompare = null) {
@@ -411,6 +432,7 @@ async function loadVanzariZilniceByLuna(luna) {
         } 
       }
     });
+    */
 
   } catch(err){ console.error("Eroare la graficul zilnic:", err); }
 }
@@ -462,6 +484,7 @@ async function loadSesiuniZilniceByLuna(luna) {
         } 
       }
     });
+    */
 
   } catch(err){ console.error("Eroare la graficul Sesiuni:", err); }
 }
@@ -535,6 +558,7 @@ async function loadRaportComenziSesiuniByLuna(luna) {
         } 
       }
     });
+    */
 
   } catch(err){ console.error("Eroare la grafic Comenzi vs Conversie:", err); }
 }

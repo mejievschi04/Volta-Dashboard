@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 return new class extends Migration
 {
@@ -10,30 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Check if table exists using DB query
-        $tables = DB::select("SHOW TABLES LIKE 'traffic_sources'");
-        
-        if (!empty($tables)) {
-            // Check if columns exist using DB query
-            $newUsersColumns = DB::select("SHOW COLUMNS FROM `traffic_sources` LIKE 'new_users'");
-            $returningUsersColumns = DB::select("SHOW COLUMNS FROM `traffic_sources` LIKE 'returning_users'");
-            
-            if (empty($newUsersColumns)) {
-                try {
-                    DB::statement("ALTER TABLE `traffic_sources` ADD COLUMN `new_users` INT DEFAULT 0 AFTER `visits`");
-                } catch (\Exception $e) {
-                    // Ignore if column already exists or other error
-                }
-            }
-            
-            if (empty($returningUsersColumns)) {
-                try {
-                    DB::statement("ALTER TABLE `traffic_sources` ADD COLUMN `returning_users` INT DEFAULT 0 AFTER `new_users`");
-                } catch (\Exception $e) {
-                    // Ignore if column already exists or other error
-                }
-            }
+        if (!Schema::hasTable('traffic_sources')) {
+            return;
         }
+
+        Schema::table('traffic_sources', function (Blueprint $table): void {
+            if (!Schema::hasColumn('traffic_sources', 'new_users')) {
+                $table->integer('new_users')->default(0);
+            }
+
+            if (!Schema::hasColumn('traffic_sources', 'returning_users')) {
+                $table->integer('returning_users')->default(0);
+            }
+        });
     }
 
     /**
@@ -41,29 +31,18 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Check if table exists using DB query
-        $tables = DB::select("SHOW TABLES LIKE 'traffic_sources'");
-        
-        if (!empty($tables)) {
-            // Check if columns exist using DB query
-            $newUsersColumns = DB::select("SHOW COLUMNS FROM `traffic_sources` LIKE 'new_users'");
-            $returningUsersColumns = DB::select("SHOW COLUMNS FROM `traffic_sources` LIKE 'returning_users'");
-            
-            if (!empty($newUsersColumns)) {
-                try {
-                    DB::statement("ALTER TABLE `traffic_sources` DROP COLUMN `new_users`");
-                } catch (\Exception $e) {
-                    // Ignore if column doesn't exist or other error
-                }
-            }
-            
-            if (!empty($returningUsersColumns)) {
-                try {
-                    DB::statement("ALTER TABLE `traffic_sources` DROP COLUMN `returning_users`");
-                } catch (\Exception $e) {
-                    // Ignore if column doesn't exist or other error
-                }
-            }
+        if (!Schema::hasTable('traffic_sources')) {
+            return;
         }
+
+        Schema::table('traffic_sources', function (Blueprint $table): void {
+            if (Schema::hasColumn('traffic_sources', 'returning_users')) {
+                $table->dropColumn('returning_users');
+            }
+
+            if (Schema::hasColumn('traffic_sources', 'new_users')) {
+                $table->dropColumn('new_users');
+            }
+        });
     }
 };

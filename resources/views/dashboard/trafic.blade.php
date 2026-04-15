@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Dashboard Trafic – VOLTA')
+@section('header-title', 'Trafic')
 
 @push('styles')
 <link rel="stylesheet" href="{{ url('css/trafic.css') }}">
@@ -19,7 +20,6 @@
   font-size: 28px;
   font-weight: 800;
   color: #FFEE00;
-  text-shadow: 0 0 20px rgba(255, 238, 0, 0.15);
   letter-spacing: -0.5px;
   flex-shrink: 0;
 }
@@ -114,8 +114,8 @@
 
 .year-select:focus,
 .month-select:focus {
-  border-color: rgba(255, 238, 0, 0.5);
-  box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.15);
+  border-color: rgb(71, 85, 105);
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.22);
 }
 
 .year-select option,
@@ -263,14 +263,16 @@
 @endpush
 
 @section('content')
-<div class="trafic-header">
-  <h1>Trafic</h1>
+<div class="trafic-page-shell">
+  <p class="trafic-page-lead">Monitorizează sursele de trafic și sincronizează datele GA4 în același format vizual cu restul dashboard-ului.</p>
 
-  <div class="trafic-controls">
+  <div class="trafic-toolbar">
     <form method="get" action="{{ route('trafic') }}" id="traficFilterForm" class="trafic-filters">
-      <div class="year-selector-wrapper">
-        <label for="selectAnTrafic"><i class="fas fa-calendar"></i>An:</label>
-        <select id="selectAnTrafic" name="year" onchange="updateMonthOptions(); this.form.submit();" class="year-select">
+      <div class="month-selector-modern">
+        <div class="month-selector-wrapper">
+          <i class="fas fa-calendar" aria-hidden="true"></i>
+          <label for="selectAnTrafic">An</label>
+          <select id="selectAnTrafic" name="year" onchange="updateMonthOptions(); this.form.submit();" class="dashboard-month-select year-select">
           @php
             $currentYear = request('year', date('Y'));
             $currentMonth = request('month', date('m'));
@@ -283,12 +285,15 @@
               echo "<option value=\"{$year}\" {$selected}>{$year}</option>";
             }
           @endphp
-        </select>
+          </select>
+        </div>
       </div>
       
-      <div class="month-selector-wrapper">
-        <label for="selectLunaTrafic"><i class="fas fa-calendar-alt"></i>Luna:</label>
-        <select id="selectLunaTrafic" name="month" onchange="this.form.submit()" class="month-select">
+      <div class="month-selector-modern">
+        <div class="month-selector-wrapper">
+          <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+          <label for="selectLunaTrafic">Luna</label>
+          <select id="selectLunaTrafic" name="month" onchange="this.form.submit()" class="dashboard-month-select month-select">
           @php
             $months = [
               '01' => 'Ianuarie', '02' => 'Februarie', '03' => 'Martie', '04' => 'Aprilie',
@@ -305,24 +310,19 @@
               echo "<option value=\"{$value}\" {$selected}>{$name}</option>";
             }
           @endphp
-        </select>
+          </select>
+        </div>
       </div>
     </form>
 
-    <div class="trafic-actions">
-      <a href="{{ route('trafic.stats') }}" class="stats-btn-link">
-        <button type="button" class="stat-btn-main" title="Vezi statistici generale">
-          <i class="fas fa-chart-pie"></i>
-          <span>Statistici</span>
-        </button>
+    <div class="trafic-actions-modern">
+      <a href="{{ route('trafic.stats') }}" class="trafic-action-btn" title="Vezi statistici generale">
+        <i class="fas fa-chart-pie" aria-hidden="true"></i><span>Statistici</span>
       </a>
-      <a href="{{ route('trafic.analiza') }}" class="stats-btn-link">
-        <button type="button" class="stat-btn-main" title="Analiză detaliată">
-          <i class="fas fa-chart-bar"></i>
-          <span>Analiză</span>
-        </button>
+      <a href="{{ route('trafic.analiza') }}" class="trafic-action-btn" title="Analiză detaliată">
+        <i class="fas fa-chart-bar" aria-hidden="true"></i><span>Analiză</span>
       </a>
-      <button type="button" id="syncButton" onclick="syncGoogleAnalytics()" class="sync-btn" title="Sincronizează datele din Google Analytics">
+      <button type="button" id="syncButton" onclick="syncGoogleAnalytics()" class="trafic-action-btn trafic-action-btn--primary" title="Sincronizează datele din Google Analytics">
         <i class="fas fa-sync-alt" id="syncIcon"></i>
         <span id="syncText">Sincronizează GA4</span>
       </button>
@@ -331,11 +331,11 @@
 </div>
 
 <!-- Status sincronizare -->
-<div id="syncStatus" style="display: none; margin-bottom: 20px;"></div>
+<div id="syncBanner" style="display: none; margin-bottom: 20px;"></div>
 
 <!-- Grafic principal -->
-<div class="card mb-4" style="min-height: 500px;">
-  <h5 class="card-title">Overview - toate sursele</h5>
+<div class="card mb-4 trafic-card" style="min-height: 500px;">
+  <h5 class="card-title trafic-section-title"><i class="fas fa-chart-line" aria-hidden="true"></i>Overview - toate sursele</h5>
   <div style="position: relative; height: 450px;">
     <canvas id="trafficChart" style="max-height: 450px; width: 100% !important;"></canvas>
   </div>
@@ -355,14 +355,13 @@
     $month = request('month', date('Y-m'));
   @endphp
   @foreach ($sources as $key => $label)
-    <div class="card" onclick="openDetails('{{ $key }}')">
+    <div class="card trafic-source-card trafic-source-{{ $key }}" onclick="openDetails('{{ $key }}')">
       <h5>{{ $label }}</h5>
       <p id="total-{{ $key }}">-</p>
       <small>Total vizite în luna {{ $month }}</small>
     </div>
   @endforeach
 </div>
-
 <!-- MODAL -->
 <div class="modal" id="detailsModal">
   <div class="modal-content">
@@ -382,7 +381,7 @@
   <div class="modal-content">
     <span class="modal-close" onclick="closeSyncModal()">&times;</span>
     <h5 id="syncModalTitle">Sincronizare Google Analytics</h5>
-    <div id="syncStatus"></div>
+    <div id="syncStatusModal"></div>
   </div>
 </div>
 @endsection
@@ -438,7 +437,7 @@ async function loadTrafficData() {
       Object.keys(result.totals || {}).forEach(source => {
         const element = document.getElementById(`total-${source}`);
         if (element) {
-          element.textContent = result.totals[source] || 0;
+          element.textContent = formatNumber(result.totals[source] || 0);
         }
       });
       
@@ -467,12 +466,12 @@ function drawChart() {
 
   const chartCtx = ctx.getContext('2d');
   const colors = {
-    total: "#EF4444",
-    google: "#3B82F6",
-    google_cpc: "#10B981",
-    direct: "#FFEE00",
-    yandex: "#8B5CF6",
-    other: "#9CA3AF"
+    total: "rgb(255, 238, 0)",
+    google: "rgb(52, 211, 153)",
+    google_cpc: "rgb(167, 139, 250)",
+    direct: "rgb(251, 191, 36)",
+    yandex: "rgb(251, 113, 133)",
+    other: "rgb(148, 163, 184)"
   };
 
   const sourceLabels = {
@@ -493,9 +492,12 @@ function drawChart() {
     datasets = Object.keys(trafficData.datasets).map(source => ({
       label: sourceLabels[source] || source,
       data: trafficData.datasets[source] || [],
-      borderColor: colors[source] || "#9CA3AF",
-      tension: 0.3,
-      fill: false
+      borderColor: colors[source] || "rgb(148, 163, 184)",
+      borderWidth: source === 'total' ? 3 : 2,
+      tension: 0.32,
+      fill: false,
+      pointRadius: source === 'total' ? 2.5 : 1.8,
+      pointHoverRadius: source === 'total' ? 5 : 4,
     }));
   } else {
     // Format vechi (compatibilitate înapoi)
@@ -507,9 +509,12 @@ function drawChart() {
         const found = trafficData[source].find(d => d.day == day);
         return found ? found.visits : 0;
       }),
-      borderColor: colors[source] || "#9CA3AF",
-      tension: 0.3,
-      fill: false
+      borderColor: colors[source] || "rgb(148, 163, 184)",
+      borderWidth: source === 'total' ? 3 : 2,
+      tension: 0.32,
+      fill: false,
+      pointRadius: source === 'total' ? 2.5 : 1.8,
+      pointHoverRadius: source === 'total' ? 5 : 4,
     }));
   }
 
@@ -520,54 +525,67 @@ function drawChart() {
 
   const isMobile = window.innerWidth <= 768;
   
-  window.trafficChartInstance = new Chart(chartCtx, {
-    type: 'line',
-    data: { labels: labels, datasets: datasets.map(ds => ({
-      ...ds,
-      pointRadius: isMobile ? 2 : 4,
-      pointBorderWidth: isMobile ? 1 : 2,
-      pointHoverRadius: isMobile ? 4 : 6
-    })) },
-    options: {
+  var chartOptions = (function () {
+    if (typeof VoltaChartTheme !== 'undefined') {
+      return VoltaChartTheme.cartesianDefaults({
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: VoltaChartTheme.colors.textSecondary,
+              font: { family: VoltaChartTheme.font, size: isMobile ? 10 : 12, weight: '500' },
+            }
+          },
+          tooltip: Object.assign({}, VoltaChartTheme.tooltip(), {
+            titleColor: VoltaChartTheme.colors.brand,
+            bodyColor: VoltaChartTheme.colors.textPrimary,
+          }),
+        },
+        scales: {
+          x: {
+            ticks: Object.assign({}, VoltaChartTheme.ticks(9, 12)),
+            grid: VoltaChartTheme.gridLines(),
+          },
+          y: {
+            ticks: Object.assign({}, VoltaChartTheme.ticks(9, 12)),
+            grid: VoltaChartTheme.gridLines(),
+            beginAtZero: true,
+          }
+        }
+      });
+    }
+    return {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'bottom',
-          labels: {
-            font: {
-              size: isMobile ? 10 : 14
-            },
-            padding: isMobile ? 8 : 15,
-            boxWidth: isMobile ? 8 : 12,
-            boxHeight: isMobile ? 8 : 12
-          }
+          labels: { color: '#cbd5e1' }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(30,41,59,0.96)',
+          titleColor: '#FFEE00',
+          bodyColor: '#f8fafc',
+          borderColor: '#334155',
+          borderWidth: 1
         }
       },
       scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            font: {
-              size: isMobile ? 9 : 12
-            }
-          },
-          grid: {
-            color: 'rgba(255, 255, 255, 0.1)'
-          }
-        },
-        x: {
-          ticks: {
-            font: {
-              size: isMobile ? 9 : 12
-            }
-          },
-          grid: {
-            color: 'rgba(255, 255, 255, 0.1)'
-          }
-        }
+        y: { beginAtZero: true, ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(148,163,184,0.12)' } },
+        x: { ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(148,163,184,0.12)' } }
       }
-    }
+    };
+  })();
+
+  window.trafficChartInstance = new Chart(chartCtx, {
+    type: 'line',
+    data: { labels: labels, datasets: datasets.map(ds => ({
+      ...ds,
+      pointRadius: isMobile ? Math.max(1, (ds.pointRadius || 2) - 0.5) : (ds.pointRadius || 2),
+      pointBorderWidth: isMobile ? 0 : 1,
+      pointHoverRadius: isMobile ? 4 : (ds.pointHoverRadius || 5)
+    })) },
+    options: chartOptions
   });
 }
 
@@ -623,7 +641,7 @@ async function syncGoogleAnalytics() {
   const syncIcon = document.getElementById('syncIcon');
   const syncText = document.getElementById('syncText');
   const syncModal = document.getElementById('syncModal');
-  const syncStatus = document.getElementById('syncStatus');
+  const syncStatus = document.getElementById('syncStatusModal');
   
   // Obținem luna selectată
   const urlParams = new URLSearchParams(window.location.search);

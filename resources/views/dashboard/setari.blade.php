@@ -86,7 +86,7 @@
       <div class="tab active" data-tab="general"><i class="fas fa-sliders-h"></i> Generale</div>
       <div class="tab" data-tab="security"><i class="fas fa-lock"></i> Securitate</div>
       @if($isAdmin)
-      <div class="tab" data-tab="onec-refresh"><i class="fas fa-database"></i> 1C</div>
+      <div class="tab" data-tab="data-refresh"><i class="fas fa-database"></i> Actualizare date</div>
       @endif
     </div>
 
@@ -168,27 +168,27 @@
     </form>
 
     @if($isAdmin)
-    <div class="tab-content" id="onec-refresh">
+    <div class="tab-content" id="data-refresh">
       <div class="form" style="display: block;">
         <div class="setari-1c-block">
           <div class="field">
-            <label>Sync 1C (lună curentă / lunile lipsă)</label>
-            <p class="setari-1c-desc">Sincronizează cu 1C doar perioadele care lipsesc (luna curentă, luna trecută). Nu rescrie datele existente.</p>
+            <label>Actualizare date curente</label>
+            <p class="setari-1c-desc">Actualizează doar perioadele care lipsesc și păstrează datele existente.</p>
           </div>
           <div class="field" style="margin-top: 12px;">
-            <button type="button" id="sync1cBtn" class="btn-sync-1c" title="Sincronizare 1C">
-              <i class="fas fa-sync-alt"></i> Sync 1C
+            <button type="button" id="sync1cBtn" class="btn-sync-1c" title="Actualizare date">
+              <i class="fas fa-sync-alt"></i> Actualizează
             </button>
             <div id="sync1cStatus" class="setari-sync-status" aria-live="polite"></div>
           </div>
         </div>
         <div class="setari-1c-block">
           <div class="field">
-            <label>Hard refresh 1C (lunile trecute)</label>
-            <p class="setari-1c-desc">Reîncarcă din 1C și rescrie în baza de date toate lunile trecute (ultimele 12 luni). Folosește doar dacă vrei să suprascrii datele existente cu cele de la 1C.</p>
+            <label>Reîmprospătare istoric</label>
+            <p class="setari-1c-desc">Reîncarcă și rescrie în baza de date toate lunile trecute (ultimele 12 luni). Folosește doar dacă vrei să suprascrii datele existente.</p>
           </div>
           <div class="field" style="margin-top: 12px;">
-            <button type="button" id="onecHardRefreshBtn" class="btn-hard-refresh">Rescrie 1C (lunile trecute)</button>
+            <button type="button" id="onecHardRefreshBtn" class="btn-hard-refresh">Rescrie istoricul</button>
           </div>
           <div id="onecHardRefreshStatus"></div>
         </div>
@@ -229,7 +229,7 @@ setTimeout(() => {
 }, 3000);
 @endif
 
-// Sync 1C (admin) – în Setări > Date 1C
+// Actualizare date (admin)
 @if(isset($isAdmin) && $isAdmin)
 (function() {
   const syncBtn = document.getElementById('sync1cBtn');
@@ -273,10 +273,10 @@ setTimeout(() => {
           return;
         }
         if (!response.ok || !data.success) {
-          var msg = data.message || 'Eroare la sincronizarea cu 1C.';
+          var msg = data.message || 'Eroare la actualizarea datelor.';
           if (data.error) {
             if (String(data.error).indexOf('Connection refused') !== -1) {
-              msg = 'Serverul 1C nu răspunde. Verifică accesul de pe server.';
+              msg = 'Serverul nu răspunde. Verifică accesul.';
             } else {
               msg = msg + ' ' + data.error;
             }
@@ -297,7 +297,7 @@ setTimeout(() => {
   }
 })();
 
-// Hard refresh 1C (admin)
+// Reîmprospătare istoric (admin)
 (function() {
   const btn = document.getElementById('onecHardRefreshBtn');
   const statusEl = document.getElementById('onecHardRefreshStatus');
@@ -306,7 +306,7 @@ setTimeout(() => {
     if (btn.disabled) return;
     btn.disabled = true;
     statusEl.style.display = 'block';
-    statusEl.textContent = 'Se reîncarcă datele din 1C... (poate dura câteva minute)';
+    statusEl.textContent = 'Se reîncarcă datele... (poate dura câteva minute)';
     statusEl.style.background = '#1F2937';
     statusEl.style.color = '#fff';
     const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
@@ -321,7 +321,7 @@ setTimeout(() => {
       statusEl.style.background = data.success ? '#10B981' : '#EF4444';
       statusEl.style.color = '#fff';
       if (data.onec_calls !== undefined) {
-        statusEl.textContent += ' Apeluri 1C: ' + data.onec_calls + '/' + (data.total_months || '?') + '.';
+        statusEl.textContent += ' Apeluri: ' + data.onec_calls + '/' + (data.total_months || '?') + '.';
       }
     })
     .catch(err => {

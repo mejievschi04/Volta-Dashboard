@@ -1,21 +1,21 @@
 :root {
-  --bg: #111827;
-  --bg-soft: #1F2937;
-  --ink: #ffffff;
-  --muted: #9CA3AF;
-  --brand: #FFEE00;
-  --brand-10: rgba(255,238,0,.1);
+  --bg: rgb(15, 23, 42);
+  --bg-soft: rgb(30, 41, 59);
+  --ink: rgb(248, 250, 252);
+  --muted: rgb(148, 163, 184);
+  --brand: rgb(255, 238, 0);
+  --brand-10: rgba(255,238,0,.12);
   --brand-20: rgba(255,238,0,.2);
   --card-radius: 12px;
-  --glow: 0 0 16px rgba(255,238,0,.4), 0 0 32px rgba(255,238,0,.15);
-  --shadow: 0 4px 20px rgba(0,0,0,.08);
+  --glow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  --shadow: 0 4px 8px rgba(0,0,0,.4);
   --sidebar-width: 280px;
   --header-height: 80px;
-  --transition: all 0.3s ease;
+  --transition: 200ms ease;
 }
 
 *{box-sizing:border-box;}
-body{margin:0;font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--ink);}
+body{margin:0;font-family:'Noto Sans',system-ui,sans-serif;background:transparent;color:var(--ink);}
 
 .app{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
 

@@ -21,10 +21,10 @@ class CheckAdmin
         }
 
         $user = Auth::user();
-        $role = $user->role ?? '';
+        $role = strtolower(trim((string) ($user->role ?? '')));
 
         // Verifică dacă utilizatorul este admin
-        if (strtolower($role) !== 'admin' && strtolower($role) !== 'administrator') {
+        if ($role !== 'admin' && $role !== 'administrator') {
             return redirect()->route('dashboard')->with('error', 'Nu aveți permisiunea de a accesa această pagină.');
         }
 

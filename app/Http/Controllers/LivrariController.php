@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Livrare;
 use App\Models\User;
+use App\Support\DbDate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,7 +34,7 @@ class LivrariController extends Controller
         } elseif ($dataLivrarii !== null && $dataLivrarii !== '') {
             $query->whereDate('data_livrarii', $dataLivrarii);
         } elseif ($luna !== null && $luna !== '') {
-            $query->whereRaw('DATE_FORMAT(data_livrarii, "%Y-%m") = ?', [$luna]);
+            $query->whereRaw(DbDate::month('data_livrarii') . ' = ?', [$luna]);
         }
         if ($isAdmin && $operatorId !== null && $operatorId !== '') {
             $query->where('user_id', $operatorId);
@@ -79,7 +80,7 @@ class LivrariController extends Controller
             } elseif ($dataLivrarii !== null && $dataLivrarii !== '') {
                 $baseCount->whereDate('data_livrarii', $dataLivrarii);
             } elseif ($luna) {
-                $baseCount->whereRaw('DATE_FORMAT(data_livrarii, "%Y-%m") = ?', [$luna]);
+                $baseCount->whereRaw(DbDate::month('data_livrarii') . ' = ?', [$luna]);
             }
             $totalLivrari = $baseCount->count();
 
@@ -91,7 +92,7 @@ class LivrariController extends Controller
             } elseif ($dataLivrarii !== null && $dataLivrarii !== '') {
                 $perOperatorQuery->whereDate('data_livrarii', $dataLivrarii);
             } elseif ($luna) {
-                $perOperatorQuery->whereRaw('DATE_FORMAT(data_livrarii, "%Y-%m") = ?', [$luna]);
+                $perOperatorQuery->whereRaw(DbDate::month('data_livrarii') . ' = ?', [$luna]);
             }
             if ($locatie === 'chisinau') {
                 $perOperatorQuery->where('in_chisinau', true);
@@ -228,6 +229,35 @@ class LivrariController extends Controller
         }
 
         return redirect()->route('livrari')->with('success', 'Livrarea a fost actualizată.');
+    }
+
+    /**
+     * Șterge o livrare.
+     * Operator: doar propriile livrări. Admin: orice livrare.
+     */
+    public function destroy(Request $request, Livrare $livrare)
+    {
+        $user = Auth::user();
+        $isAdmin = $user && in_array(strtolower((string) ($user->role ?? '')), ['admin', 'administrator'], true);
+
+        if (!$isAdmin && (int) $livrare->user_id !== (int) $user->id) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Nu aveți permisiunea de a șterge această livrare.'], 403);
+            }
+
+            return redirect()->route('livrari')->with('error', 'Nu aveți permisiunea de a șterge această livrare.');
+        }
+
+        $livrare->delete();
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Livrarea a fost ștearsă.',
+            ]);
+        }
+
+        return redirect()->route('livrari')->with('success', 'Livrarea a fost ștearsă.');
     }
 
     /** Returnează true dacă localitatea este Chișinău (ignoră diacritice și majuscule). */

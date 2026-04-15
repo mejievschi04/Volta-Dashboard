@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -10,21 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Check if table exists using DB query
-        $tables = DB::select("SHOW TABLES LIKE 'vanzari_1c'");
-        
-        if (!empty($tables)) {
-            // Check if column exists using DB query
-            $columns = DB::select("SHOW COLUMNS FROM `vanzari_1c` LIKE 'nr_vanzari'");
-            
-            if (empty($columns)) {
-                // Add column using raw SQL
-                try {
-                    DB::statement("ALTER TABLE `vanzari_1c` ADD COLUMN `nr_vanzari` INT DEFAULT 0 AFTER `profit`");
-                } catch (\Exception $e) {
-                    // Ignore if column already exists or other error
-                }
-            }
+        if (!Schema::hasTable('vanzari_1c')) {
+            return;
+        }
+
+        if (!Schema::hasColumn('vanzari_1c', 'nr_vanzari')) {
+            Schema::table('vanzari_1c', function (Blueprint $table): void {
+                $table->integer('nr_vanzari')->default(0);
+            });
         }
     }
 
@@ -33,21 +27,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Check if table exists using DB query
-        $tables = DB::select("SHOW TABLES LIKE 'vanzari_1c'");
-        
-        if (!empty($tables)) {
-            // Check if column exists using DB query
-            $columns = DB::select("SHOW COLUMNS FROM `vanzari_1c` LIKE 'nr_vanzari'");
-            
-            if (!empty($columns)) {
-                // Drop column using raw SQL
-                try {
-                    DB::statement("ALTER TABLE `vanzari_1c` DROP COLUMN `nr_vanzari`");
-                } catch (\Exception $e) {
-                    // Ignore if column doesn't exist or other error
-                }
-            }
+        if (!Schema::hasTable('vanzari_1c')) {
+            return;
+        }
+
+        if (Schema::hasColumn('vanzari_1c', 'nr_vanzari')) {
+            Schema::table('vanzari_1c', function (Blueprint $table): void {
+                $table->dropColumn('nr_vanzari');
+            });
         }
     }
 };

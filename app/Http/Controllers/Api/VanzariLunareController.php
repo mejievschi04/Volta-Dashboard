@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\PlanVanzari;
 use App\Models\OnecKpiSync;
 use App\Models\TrafficSource;
+use App\Support\DbDate;
 
 class VanzariLunareController extends Controller
 {
@@ -19,7 +20,7 @@ class VanzariLunareController extends Controller
             $onecByMonth = collect();
 
             try {
-                $onecByMonth = OnecKpiSync::selectRaw("DATE_FORMAT(period_start, '%Y-%m') as month, vanzari_fara_tva, nr_comenzi")
+                $onecByMonth = OnecKpiSync::selectRaw(DbDate::month('period_start') . ' as month, vanzari_fara_tva, nr_comenzi')
                     ->orderByDesc('created_at')
                     ->get()
                     ->unique('month')
@@ -30,7 +31,7 @@ class VanzariLunareController extends Controller
 
             $sesiuniByMonth = collect();
             try {
-                $sesiuniRows = TrafficSource::selectRaw("DATE_FORMAT(date, '%Y-%m') as month, SUM(visits) as total_sesiuni")
+                $sesiuniRows = TrafficSource::selectRaw(DbDate::month('date') . ' as month, SUM(visits) as total_sesiuni')
                     ->where('source', 'total')
                     ->groupBy('month')
                     ->pluck('total_sesiuni', 'month');

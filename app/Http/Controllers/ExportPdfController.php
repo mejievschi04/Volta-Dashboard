@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\IstoricController;
+use App\Http\Controllers\Api\KpiController;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -99,6 +100,77 @@ class ExportPdfController extends Controller
         } catch (\Exception $e) {
             \Log::error('Eroare export PDF: ' . $e->getMessage());
             \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return redirect()->back()->with('error', 'Eroare la generarea PDF: ' . $e->getMessage());
+        }
+    }
+
+    public function exportComparare(Request $request)
+    {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        try {
+            $luna1 = (string) $request->get('luna1', date('Y-m'));
+            $luna2 = (string) $request->get('luna2', date('Y-m', strtotime('-1 month')));
+
+            $kpiController = new KpiController();
+            $resp1 = $kpiController->index(new Request(['month' => $luna1]));
+            $resp2 = $kpiController->index(new Request(['month' => $luna2]));
+
+            $data1 = json_decode($resp1->getContent(), true);
+            $data2 = json_decode($resp2->getContent(), true);
+
+            if (!$data1 || !$data2 || !($data1['success'] ?? false) || !($data2['success'] ?? false)) {
+                return redirect()->back()->with('error', 'Nu am putut genera comparația PDF.');
+            }
+
+            $rows = [
+                ['key' => 'plan_luna', 'label' => 'Plan', 'suffix' => 'MDL'],
+                ['key' => 'vanzari_luna', 'label' => 'Vânzări fără TVA', 'suffix' => 'MDL'],
+                ['key' => 'vanzari_cu_tva', 'label' => 'Vânzări cu TVA', 'suffix' => 'MDL'],
+                ['key' => 'profit', 'label' => 'Profit', 'suffix' => 'MDL'],
+                ['key' => 'progres_plan', 'label' => 'Progres Plan', 'suffix' => '%'],
+                ['key' => 'prognoza_plan', 'label' => 'Prognoză Plan', 'suffix' => 'MDL'],
+                ['key' => 'prognoza_plan_procent', 'label' => 'Prognoză Plan %', 'suffix' => '%'],
+                ['key' => 'comenzi', 'label' => 'Comenzi', 'suffix' => ''],
+                ['key' => 'comenzi_zi', 'label' => 'Comenzi/Zi', 'suffix' => ''],
+                ['key' => 'cec_mediu', 'label' => 'CEC mediu', 'suffix' => 'MDL'],
+                ['key' => 'total_livrari_luna', 'label' => 'Total livrări lună', 'suffix' => ''],
+                ['key' => 'pickup', 'label' => 'Pickup', 'suffix' => ''],
+                ['key' => 'sesiuni', 'label' => 'Sesiuni', 'suffix' => ''],
+                ['key' => 'conversie', 'label' => 'Conversie', 'suffix' => '%'],
+            ];
+
+            $month1Label = \Carbon\Carbon::createFromFormat('Y-m', $luna1)->locale('ro')->translatedFormat('F Y');
+            $month2Label = \Carbon\Carbon::createFromFormat('Y-m', $luna2)->locale('ro')->translatedFormat('F Y');
+
+            $options = new Options();
+            $options->set([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => false,
+                'defaultFont' => 'DejaVu Sans',
+                'chroot' => [public_path(), base_path()],
+                'tempDir' => sys_get_temp_dir()
+            ]);
+
+            $pdf = new Dompdf($options);
+            $html = view('rapoarte.pdf.comparare', [
+                'rows' => $rows,
+                'data1' => $data1,
+                'data2' => $data2,
+                'month1Label' => $month1Label,
+                'month2Label' => $month2Label,
+                'logoPath' => public_path('images/volta-logo.png')
+            ])->render();
+
+            $pdf->loadHtml($html);
+            $pdf->setPaper('A4', 'landscape');
+            $pdf->render();
+
+            return $pdf->stream('comparare_' . $luna1 . '_vs_' . $luna2 . '.pdf', ['Attachment' => true]);
+        } catch (\Exception $e) {
+            \Log::error('Eroare export comparare PDF: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Eroare la generarea PDF: ' . $e->getMessage());
         }
     }

@@ -2,7 +2,7 @@
 /* Context comun - asigură că designul nu e suprascris de alte reguli */
 .operatori-page,
 .operatori-detail-page {
-  font-family: 'Montserrat', system-ui, sans-serif;
+  font-family: 'Noto Sans', system-ui, sans-serif;
   color: #E5E7EB;
   background: transparent;
   box-sizing: border-box;
@@ -26,9 +26,14 @@
 
 /* ========== PAGINA OPERATORI (index) ========== */
 .operatori-page {
-  padding: 24px 20px;
+  padding: 0 0 24px;
   max-width: 1400px;
   margin: 0 auto;
+  color: var(--text-primary, #e5e7eb);
+}
+
+.operatori-page-lead {
+  margin-bottom: var(--space-6, 24px);
 }
 
 .operatori-page-header {
@@ -45,27 +50,26 @@
   width: 52px;
   height: 52px;
   border-radius: 14px;
-  background: linear-gradient(135deg, rgba(255, 238, 0, 0.25) 0%, rgba(255, 238, 0, 0.1) 100%);
-  border: 1px solid rgba(255, 238, 0, 0.35);
+  background: var(--bg-elevated, #1e293b);
+  border: 1px solid var(--border-primary, #334155);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFEE00;
+  color: var(--brand, #ffee00);
   font-size: 22px;
 }
 
 .operatori-page .operatori-page-title,
 .operatori-page-title {
-  color: #FFEE00 !important;
+  color: var(--text-primary, #f8fafc) !important;
   margin: 0;
   font-size: 28px;
   font-weight: 800;
-  text-shadow: 0 0 24px rgba(255, 238, 0, 0.35);
   letter-spacing: -0.02em;
 }
 
 .operatori-page-subtitle {
-  color: #9CA3AF;
+  color: var(--text-secondary, #9ca3af);
   margin: 6px 0 0 0;
   font-size: 14px;
 }
@@ -111,14 +115,45 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Filtru perioadă */
+/* Filtru perioadă — aliniat Rapoarte (month-selector + grid) */
+.operatori-filter-form {
+  margin-bottom: var(--space-6, 24px);
+}
+
+.operatori-filter-periods {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 0;
+}
+
+.operatori-filter-periods .month-selector-modern {
+  margin-bottom: 0;
+}
+
+.operatori-filter-submit-wrap {
+  display: flex;
+  align-items: flex-end;
+}
+
+.operatori-btn-filter-submit {
+  width: 100%;
+  justify-content: center;
+  min-height: 48px;
+}
+
+@media (max-width: 900px) {
+  .operatori-filter-periods {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Legacy (dacă mai apare în alte view-uri) */
 .operatori-filter-card {
-  background: linear-gradient(160deg, rgba(31, 41, 55, 0.98) 0%, rgba(17, 24, 39, 0.98) 100%);
-  border-radius: 16px;
+  background: var(--bg-elevated, #1e293b);
+  border-radius: var(--card-radius, 12px);
   padding: 20px 24px;
   margin-bottom: 24px;
-  border: 1px solid rgba(255, 238, 0, 0.15);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-primary, #334155);
+  box-shadow: var(--shadow-md, 0 4px 8px rgba(0, 0, 0, 0.4));
 }
 .operatori-filter-row {
   display: flex;
@@ -136,23 +171,23 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #9CA3AF;
+  color: var(--text-secondary, #9ca3af);
 }
 .operatori-filter-group select {
   padding: 12px 16px;
   min-width: 160px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(17, 24, 39, 0.8);
-  color: #fff;
+  border: 1px solid var(--border-primary, #334155);
+  background: var(--bg-secondary, #1e293b);
+  color: var(--text-primary, #fff);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
 }
 .operatori-filter-group select:focus {
   outline: none;
-  border-color: #FFEE00;
-  box-shadow: 0 0 0 3px rgba(255, 238, 0, 0.15);
+  border-color: var(--border-secondary, #475569);
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.2);
 }
 .operatori-filter-actions {
   margin-left: 8px;
@@ -195,7 +230,7 @@
   padding: 12px 14px;
   background: rgba(255, 255, 255, 0.04);
   border-radius: 10px;
-  border-left: 4px solid rgba(255, 238, 0, 0.5);
+  border-left: 3px solid var(--border-secondary, #475569);
   gap: 12px;
 }
 
@@ -216,9 +251,9 @@
 }
 
 .operatori-legend-pct {
-  color: #FFEE00;
+  color: var(--text-primary, #f8fafc);
   font-weight: 700;
-  font-size: 16px;
+  font-size: 15px;
   min-width: 48px;
   text-align: right;
 }
@@ -238,7 +273,8 @@
 }
 
 .operatori-table-title i {
-  color: rgba(255, 238, 0, 0.8);
+  color: var(--brand, #ffee00);
+  opacity: 0.9;
 }
 
 .operatori-table-wrap {
@@ -255,18 +291,21 @@
 
 .operatori-page .operatori-table thead tr,
 .operatori-table thead tr {
-  background: rgba(255, 238, 0, 0.12) !important;
-  color: #FFEE00 !important;
+  background: var(--bg-secondary, #1e293b) !important;
+  color: var(--text-secondary, #cbd5e1) !important;
 }
 
 .operatori-page .operatori-table th,
 .operatori-table th {
   padding: 14px 16px;
   text-align: left;
-  border-bottom: 2px solid rgba(255, 238, 0, 0.25);
-  font-weight: 700;
+  border-bottom: 1px solid var(--border-primary, #334155);
+  font-weight: 600;
   white-space: nowrap;
-  color: #FFEE00 !important;
+  color: var(--text-secondary, #cbd5e1) !important;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .operatori-table th.tc {
@@ -289,6 +328,10 @@
 
 .operatori-table td.tc {
   text-align: center;
+}
+
+.operatori-table .operatori-table-strong {
+  font-weight: 600;
 }
 
 .operatori-table td.operatori-profit {
@@ -450,15 +493,28 @@
   color: #fff;
 }
 
+/* Profil operator (show) — cover fără poză: slate, nu bandă galbenă */
+.operator-me-cover.operator-me-cover--volta {
+  background-color: var(--bg-secondary, #1e293b);
+  background-image: linear-gradient(165deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.99) 55%, #020617 100%);
+}
+
+/* Profil operator (show): inițială fără chenar galben plin */
+.operatori-show-page .operatori-avatar:not(.operatori-avatar--img) {
+  background: linear-gradient(145deg, #475569 0%, #1e293b 52%, #0f172a 100%);
+  color: #f8fafc;
+  border-color: var(--border-primary, #334155);
+}
+
 .operatori-detail-page .operatori-cover,
 .operatori-cover {
-  background: linear-gradient(135deg, rgba(255, 238, 0, 0.3) 0%, rgba(255, 238, 0, 0.2) 50%, rgba(255, 238, 0, 0.1) 100%);
-  background-color: #1F2937;
+  background-color: var(--bg-secondary, #1e293b);
+  background-image: linear-gradient(165deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.99) 55%, #020617 100%);
   border-radius: 16px 16px 0 0;
   height: 280px;
   position: relative;
   margin-bottom: 0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg, 0 10px 20px rgba(0, 0, 0, 0.45));
 }
 
 .operatori-cover[style*="background-image"] {
@@ -743,15 +799,44 @@
   color: #3b82f6;
 }
 
+.operatori-stat-row-body {
+  flex: 1;
+  min-width: 0;
+}
+
 .operatori-stat-row--profit .operatori-stat-icon {
   background: rgba(74, 222, 128, 0.2);
   color: #10B981;
 }
 
-.operatori-stat-row--neutral .operatori-stat-icon,
+.operatori-stat-row--neutral .operatori-stat-icon {
+  background: rgba(148, 163, 184, 0.12);
+  color: #cbd5e1;
+}
+
 .operatori-stat-row--yellow .operatori-stat-icon {
   background: rgba(255, 238, 0, 0.2);
-  color: #FFEE00;
+  color: #ffee00;
+}
+
+.operatori-stat-row--delivery {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.22);
+}
+
+.operatori-stat-row--delivery .operatori-stat-icon {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+.operatori-stat-row--pickup {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.22);
+}
+
+.operatori-stat-row--pickup .operatori-stat-icon {
+  background: rgba(139, 92, 246, 0.2);
+  color: #8b5cf6;
 }
 
 .operatori-stat-label {
@@ -852,6 +937,28 @@
 
 .operatori-stat-box--profit .operatori-stat-value {
   color: #10B981;
+}
+
+.operatori-stat-value--primary {
+  color: var(--text-primary, #e5e7eb) !important;
+}
+
+.operatori-stat-value--delivery {
+  color: #f59e0b !important;
+}
+
+.operatori-stat-value--pickup {
+  color: #8b5cf6 !important;
+}
+
+.operatori-stat-box--amber {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.22);
+}
+
+.operatori-stat-box--violet {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.22);
 }
 
 .operatori-stat-box--yellow .operatori-stat-value {
@@ -970,12 +1077,12 @@
   transition: all 0.2s ease;
   background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%);
   color: #000;
-  box-shadow: 0 4px 12px rgba(255, 238, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
 .operatori-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 238, 0, 0.4);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
   color: #000;
 }
 

@@ -15,6 +15,7 @@ class RestrictOperator
         'livrari',
         'livrari.store',
         'livrari.update',
+        'livrari.destroy',
         'setari',
         'setari.update',
         'setari.password',

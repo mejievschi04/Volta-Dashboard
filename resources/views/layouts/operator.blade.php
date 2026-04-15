@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="ro" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,43 +8,45 @@
   <link rel="icon" type="image/png" href="{{ asset('images/volta-logo.png') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url('css/style.css') }}"/>
   <link rel="stylesheet" href="{{ url('css/operatori.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Layout operator: bară meniu sus, fără sidebar */
-    .operator-app { min-height: 100vh; background: #111827; color: #fff; }
+    /* Layout operator: bară meniu sus, fără sidebar — aceleași tokeni ca Volta Academy */
+    .operator-app { min-height: 100vh; background: transparent; color: var(--text-primary); }
     .operator-nav {
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
       padding: 12px 24px; gap: 16px;
-      background: linear-gradient(135deg, #1F2937 0%, #111827 100%);
-      border-bottom: 1px solid rgba(255, 238, 0, 0.25);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      background: var(--bg-sidebar-toggle);
+      border-bottom: 1px solid var(--border-primary);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.25);
     }
     .operator-nav-brand {
-      display: flex; align-items: center; gap: 12px; text-decoration: none; color: #fff;
+      display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-primary);
     }
     .operator-nav-brand img { height: 40px; width: auto; }
-    .operator-nav-brand span { font-weight: 800; font-size: 18px; }
+    .operator-nav-brand span { font-weight: 700; font-size: 18px; letter-spacing: -0.02em; }
     .operator-nav-links { display: flex; align-items: center; gap: 8px; }
     .operator-nav-links a {
-      padding: 10px 18px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 14px;
-      color: #fff; transition: all 0.2s;
-      border: 1px solid transparent;
+      padding: 10px 18px; border-radius: 12px; text-decoration: none; font-weight: 500; font-size: 14px;
+      color: var(--text-secondary); transition: background-color 0.2s, color 0.2s;
+      border: none;
     }
-    .operator-nav-links a:hover { background: rgba(255, 238, 0, 0.15); color: #FFEE00; border-color: rgba(255, 238, 0, 0.3); }
-    .operator-nav-links a.active { background: rgba(255, 238, 0, 0.2); color: #FFEE00; border-color: #FFEE00; }
+    .operator-nav-links a { font-weight: 600; line-height: 1.2; }
+    .operator-nav-links a:hover { background: var(--bg-secondary); color: var(--text-primary); }
+    .operator-nav-links a.active { background: var(--brand-10); color: var(--brand); }
     .operator-nav-right { display: flex; align-items: center; gap: 16px; }
     .operator-user { display: flex; align-items: center; gap: 10px; }
     .operator-user-avatar {
-      width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #FFEE00 0%, #FFEE00 100%);
-      color: #000; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: 50%; background: var(--brand);
+      color: var(--text-inverse); font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border-secondary);
     }
     .operator-user-info { text-align: right; }
-    .operator-user-name { font-weight: 700; font-size: 14px; }
-    .operator-user-role { font-size: 12px; color: #9CA3AF; }
+    .operator-user-name { font-weight: 600; font-size: 14px; color: var(--text-primary); }
+    .operator-user-role { font-size: 12px; color: var(--text-tertiary); }
     .operator-logout form { margin: 0; }
     .operator-logout button {
       padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer;
@@ -52,12 +54,12 @@
       transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;
     }
     .operator-logout button:hover { background: rgba(239, 68, 68, 0.35); color: #fff; }
-    .operator-main { padding: 24px; max-width: 1200px; margin: 0 auto; }
+    .operator-main { padding: 24px clamp(16px, 3vw, 32px); max-width: 1600px; margin: 0 auto; }
     @media (max-width: 768px) {
       .operator-nav { padding: 10px 16px; }
       .operator-nav-brand span { font-size: 16px; }
       .operator-nav-links a { padding: 8px 12px; font-size: 13px; }
-      .operator-main { padding: 16px; padding-top: 80px; }
+      .operator-main { padding: 16px; }
     }
   </style>
   @stack('styles')
@@ -100,6 +102,9 @@
       @yield('content')
     </main>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="{{ asset('js/excel-export.js') }}"></script>
+  <script src="{{ asset('js/volta-chart-theme.js') }}"></script>
   @stack('scripts')
 </body>
 </html>

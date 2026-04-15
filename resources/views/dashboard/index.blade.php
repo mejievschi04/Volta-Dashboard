@@ -92,26 +92,41 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
 <div class="charts-grid">
   <div class="chart-container">
     <h2><i class="fas fa-chart-line" style="margin-right: 8px;"></i>Grafic lunar</h2>
-    <div class="chart-wrapper">
+    <div class="chart-wrapper" title="Click pentru vizualizare mare">
       <canvas id="salesChart"></canvas>
     </div>
   </div>
   <div class="chart-container">
     <h2><i class="fas fa-shopping-cart" style="margin-right: 8px;"></i>Comenzi per lună</h2>
-    <div class="chart-wrapper">
+    <div class="chart-wrapper" title="Click pentru vizualizare mare">
       <canvas id="comenziLunarChart"></canvas>
     </div>
   </div>
   <div class="chart-container">
     <h2><i class="fas fa-percentage" style="margin-right: 8px;"></i>Conversie per lună</h2>
-    <div class="chart-wrapper">
+    <div class="chart-wrapper" title="Click pentru vizualizare mare">
       <canvas id="conversieLunarChart"></canvas>
     </div>
   </div>
   <div class="chart-container">
     <h2><i class="fas fa-network-wired" style="margin-right: 8px;"></i>Sesiuni per lună</h2>
-    <div class="chart-wrapper">
+    <div class="chart-wrapper" title="Click pentru vizualizare mare">
       <canvas id="sesiuniChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div id="dashboard-chart-modal" class="dashboard-chart-modal" aria-hidden="true">
+  <div class="dashboard-chart-modal__backdrop" data-close-chart-modal tabindex="-1"></div>
+  <div class="dashboard-chart-modal__panel" role="dialog" aria-modal="true" aria-labelledby="dashboard-chart-modal-title">
+    <div class="dashboard-chart-modal__head">
+      <h3 id="dashboard-chart-modal-title"></h3>
+      <button type="button" class="dashboard-chart-modal__close" data-close-chart-modal aria-label="Închide"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="dashboard-chart-modal__body">
+      <div class="dashboard-chart-modal__chart-wrap">
+        <canvas id="dashboard-chart-modal-canvas"></canvas>
+      </div>
     </div>
   </div>
 </div>
@@ -136,15 +151,145 @@ function destroyChart(chartId) {
   }
 }
 
+// ---------------- MODAL GRAFIC MARE (click pe canvas) ---------------- 
+let dashboardModalChart = null;
+
+function cloneDashboardChartOptions(base) {
+  try {
+    return JSON.parse(JSON.stringify(base));
+  } catch (e) {
+    return {};
+  }
+}
+
+function boostModalChartOptions(opts) {
+  if (!opts || typeof opts !== "object") return opts;
+  const p = opts.plugins;
+  if (p && p.legend && p.legend.labels && p.legend.labels.font) {
+    const s = p.legend.labels.font.size;
+    p.legend.labels.font.size = typeof s === "number" ? s + 4 : 15;
+  }
+  if (opts.scales) {
+    Object.keys(opts.scales).forEach(function (k) {
+      const sc = opts.scales[k];
+      if (sc && sc.ticks && sc.ticks.font) {
+        const sz = sc.ticks.font.size;
+        sc.ticks.font.size = typeof sz === "number" ? sz + 2 : 13;
+      }
+    });
+  }
+  return opts;
+}
+
+function optionsWithExpandToModal(title, baseOpts) {
+  const o = cloneDashboardChartOptions(baseOpts);
+  o.onClick = function (evt, elements, chart) {
+    openChartExpandModal(title, chart);
+  };
+  return o;
+}
+
+function openChartExpandModal(title, sourceChart) {
+  const modal = document.getElementById("dashboard-chart-modal");
+  const titleEl = document.getElementById("dashboard-chart-modal-title");
+  const canvas = document.getElementById("dashboard-chart-modal-canvas");
+  if (!modal || !canvas || !sourceChart) return;
+
+  if (titleEl) titleEl.textContent = title || "Grafic";
+
+  if (dashboardModalChart) {
+    dashboardModalChart.destroy();
+    dashboardModalChart = null;
+  }
+
+  let dataCopy;
+  let optionsCopy;
+  try {
+    dataCopy = JSON.parse(JSON.stringify(sourceChart.data));
+    optionsCopy = JSON.parse(JSON.stringify(sourceChart.options));
+  } catch (err) {
+    console.error("Modal grafic: nu s-au putut clona datele", err);
+    return;
+  }
+
+  boostModalChartOptions(optionsCopy);
+  optionsCopy.maintainAspectRatio = false;
+  optionsCopy.onClick = null;
+
+  modal.classList.add("is-open");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+
+  const ctx = canvas.getContext("2d");
+  const spec = { data: dataCopy, options: optionsCopy };
+  const rootType = sourceChart.config && sourceChart.config.type;
+  if (rootType) spec.type = rootType;
+  dashboardModalChart = new Chart(ctx, spec);
+
+  requestAnimationFrame(function () {
+    if (dashboardModalChart) dashboardModalChart.resize();
+  });
+}
+
+function closeDashboardChartModal() {
+  const modal = document.getElementById("dashboard-chart-modal");
+  if (dashboardModalChart) {
+    dashboardModalChart.destroy();
+    dashboardModalChart = null;
+  }
+  if (modal) {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+  }
+  document.body.style.overflow = "";
+}
+
 // ---------------- INIT CHART ---------------- 
 function initChart(chartId, label, color="#FFEE00") {
   const canvas = document.getElementById(chartId);
   if(!canvas) return;
   const ctx = canvas.getContext("2d");
+  const isM = window.innerWidth <= 768;
+  const fill = color.length === 7 ? color + "22" : color;
+  const baseOptsRaw = typeof VoltaChartTheme !== "undefined"
+    ? VoltaChartTheme.cartesianDefaults({
+        plugins: {
+          legend: { display: true, position: "top" },
+          tooltip: Object.assign({}, VoltaChartTheme.tooltip(), { titleColor: VoltaChartTheme.colors.brand }),
+        },
+      })
+    : {
+        responsive: true,
+        plugins: {
+          legend: { display: true, labels: { color: "#fff", font: { size: isM ? 10 : 12 } } },
+          tooltip: { backgroundColor: "rgba(31,41,55,0.95)", titleColor: "#FFEE00", bodyColor: "#fff", borderColor: "#475569", borderWidth: 1, padding: 12, cornerRadius: 10 },
+        },
+        scales: {
+          x: { ticks: { color: "#e2e8f0", font: { size: isM ? 9 : 11 } }, grid: { color: "rgba(148,163,184,0.12)", drawBorder: false } },
+          y: { ticks: { color: "#e2e8f0", font: { size: isM ? 9 : 11 } }, grid: { color: "rgba(148,163,184,0.12)", drawBorder: false }, beginAtZero: true },
+        },
+      };
+  const baseOpts = optionsWithExpandToModal(label + " – vizualizare mare", baseOptsRaw);
   const chartInstance = new Chart(ctx, {
     type: "line",
-    data: { labels: [], datasets: [{ label, data: [], borderColor: color, backgroundColor: `${color}33`, tension: 0.3, pointRadius: window.innerWidth <= 768 ? 1 : 2 }] },
-    options: { responsive: true, plugins: { legend: { display: true, labels: { color: "#fff", font: { size: window.innerWidth <= 768 ? 10 : 12 } } } }, scales: { x: { ticks: { color: "#fff", font: { size: window.innerWidth <= 768 ? 9 : 11 } }, grid: { color: "rgba(255,255,0,0.05)" } }, y: { ticks: { color: "#fff", font: { size: window.innerWidth <= 768 ? 9 : 11 } }, grid: { color: "rgba(255,255,0,0.05)" }, beginAtZero: true } } }
+    data: {
+      labels: [],
+      datasets: [{
+        label,
+        data: [],
+        borderColor: color,
+        backgroundColor: fill,
+        tension: 0.35,
+        borderWidth: 2,
+        pointRadius: isM ? 2 : 3,
+        pointHoverRadius: isM ? 4 : 6,
+        pointBackgroundColor: color,
+        pointBorderColor: "rgba(15,23,42,0.9)",
+        pointBorderWidth: 1,
+        fill: true,
+      }],
+    },
+    options: baseOpts,
   });
   charts[chartId] = { instance: chartInstance };
 }
@@ -214,55 +359,73 @@ async function loadVanzariTotale() {
     const sesiuniData = dataLunare.data.map(d => d.sesiuni || 0);
     const conversieData = dataLunare.data.map(d => d.conversie || 0);
 
-    const barChartOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: {
-          labels: { color: "#fff", font: { size: window.innerWidth <= 768 ? 12 : 14 }, padding: window.innerWidth <= 768 ? 8 : 15, usePointStyle: true },
-          display: true,
-          position: 'top'
+    const isDashMobile = window.innerWidth <= 768;
+    const barChartOptions = typeof VoltaChartTheme !== "undefined"
+      ? VoltaChartTheme.cartesianDefaults({
+          plugins: {
+            legend: {
+              display: true,
+              position: "top",
+              labels: {
+                color: VoltaChartTheme.colors.textSecondary,
+                font: { family: VoltaChartTheme.font, size: isDashMobile ? 11 : 13, weight: "500" },
+                padding: isDashMobile ? 10 : 14,
+                usePointStyle: true,
+                pointStyle: "rectRounded",
+              },
+            },
+            tooltip: Object.assign({}, VoltaChartTheme.tooltip(), {
+              titleColor: VoltaChartTheme.colors.brand,
+              bodyColor: VoltaChartTheme.colors.textPrimary,
+            }),
+          },
+          scales: {
+            x: {
+              ticks: Object.assign(VoltaChartTheme.ticks(9, 12), {
+                maxRotation: isDashMobile ? 45 : 0,
+                minRotation: isDashMobile ? 45 : 0,
+              }),
+              grid: VoltaChartTheme.gridLines(),
+            },
+            y: {
+              beginAtZero: true,
+              ticks: VoltaChartTheme.ticks(10, 12),
+              grid: VoltaChartTheme.gridLines(),
+            },
+          },
+        })
+      : {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: "index", intersect: false },
+          plugins: {
+            legend: { display: true, position: "top", labels: { color: "#e2e8f0", font: { size: 13 }, usePointStyle: true } },
+            tooltip: { backgroundColor: "rgba(30,41,59,0.96)", titleColor: "#FFEE00", bodyColor: "#f8fafc", borderColor: "#334155", borderWidth: 1, padding: 12, cornerRadius: 10 },
+          },
+          scales: {
+            x: { ticks: { color: "#cbd5e1", maxRotation: isDashMobile ? 45 : 0 }, grid: { color: "rgba(148,163,184,0.12)", drawBorder: false } },
+            y: { ticks: { color: "#cbd5e1" }, grid: { color: "rgba(148,163,184,0.12)", drawBorder: false }, beginAtZero: true },
         },
-        tooltip: {
-          backgroundColor: 'rgba(31, 41, 55, 0.9)',
-          titleColor: '#FFEE00',
-          bodyColor: '#fff',
-          borderColor: '#FFEE00',
-          borderWidth: 1,
-          padding: 12,
-          titleFont: { size: 14, weight: 'bold' },
-          bodyFont: { size: 13 },
-          cornerRadius: 8,
-          displayColors: true
-        }
-      },
-      scales: {
-        x: {
-          ticks: { color: "#fff", font: { size: window.innerWidth <= 768 ? 9 : 12 }, maxRotation: window.innerWidth <= 768 ? 45 : 0, minRotation: window.innerWidth <= 768 ? 45 : 0 },
-          grid: { color: "rgba(255,255,0,0.05)", drawBorder: false }
-        },
-        y: {
-          ticks: { color: "#fff", font: { size: window.innerWidth <= 768 ? 11 : 12 } },
-          grid: { color: "rgba(255,255,0,0.05)", drawBorder: false },
-          beginAtZero: true
-        }
-      }
-    };
+      };
+
+    const optSales = optionsWithExpandToModal("Grafic lunar – vizualizare mare", barChartOptions);
+    const optComenzi = optionsWithExpandToModal("Comenzi per lună – vizualizare mare", barChartOptions);
+    const optConversie = optionsWithExpandToModal("Conversie per lună – vizualizare mare", barChartOptions);
+    const optSesiuni = optionsWithExpandToModal("Sesiuni per lună – vizualizare mare", barChartOptions);
 
     destroyChart("salesChart");
     const ctxSales = document.getElementById("salesChart");
     if (ctxSales) {
-      charts["salesChart"].instance = new Chart(ctxSales.getContext("2d"), {
+      charts["salesChart"] = { instance: new Chart(ctxSales.getContext("2d"), {
         data: {
           labels,
           datasets: [
-            { type: "line", label: "Plan", data: plan, borderColor: "#EF4444", backgroundColor: "rgba(239, 68, 68, 0.1)", borderWidth: 3, tension: 0.3, pointRadius: window.innerWidth <= 768 ? 2 : 5, pointBackgroundColor: "#EF4444", pointBorderColor: "#ffffff", pointBorderWidth: 2, fill: false, order: 1 },
-            { type: "bar", label: "Vânzări reale", data: vanzari, backgroundColor: "rgba(255, 238, 0, 0.7)", borderColor: "#ffee00", borderWidth: 2, borderRadius: 6, order: 2 }
+            { type: "line", label: "Plan", data: plan, borderColor: "#F87171", backgroundColor: "rgba(248, 113, 113, 0.08)", borderWidth: 2.5, tension: 0.35, pointRadius: window.innerWidth <= 768 ? 2 : 4, pointBackgroundColor: "#F87171", pointBorderColor: "rgb(15,23,42)", pointBorderWidth: 1, fill: false, order: 1 },
+            { type: "bar", label: "Vânzări reale", data: vanzari, backgroundColor: "rgba(255, 238, 0, 0.5)", hoverBackgroundColor: "rgba(255, 238, 0, 0.78)", borderColor: "rgba(255, 238, 0, 0.35)", borderWidth: 1, borderRadius: 8, borderSkipped: false, order: 2 }
           ]
         },
-        options: barChartOptions
-      });
+        options: optSales
+      }) };
     }
 
     destroyChart("comenziLunarChart");
@@ -272,9 +435,9 @@ async function loadVanzariTotale() {
         type: "bar",
         data: {
           labels,
-          datasets: [{ label: "Comenzi", data: comenziData, backgroundColor: "rgba(255, 238, 0, 0.7)", borderColor: "#ffee00", borderWidth: 2, borderRadius: 6 }]
+          datasets: [{ label: "Comenzi", data: comenziData, backgroundColor: "rgba(255, 238, 0, 0.5)", hoverBackgroundColor: "rgba(255, 238, 0, 0.78)", borderColor: "rgba(255, 238, 0, 0.35)", borderWidth: 1, borderRadius: 8, borderSkipped: false }]
         },
-        options: barChartOptions
+        options: optComenzi
       }) };
     }
 
@@ -285,9 +448,9 @@ async function loadVanzariTotale() {
         type: "bar",
         data: {
           labels,
-          datasets: [{ label: "Conversie (%)", data: conversieData, backgroundColor: "rgba(239, 68, 68, 0.6)", borderColor: "#EF4444", borderWidth: 2, borderRadius: 6 }]
+          datasets: [{ label: "Conversie (%)", data: conversieData, backgroundColor: "rgba(248, 113, 113, 0.45)", hoverBackgroundColor: "rgba(248, 113, 113, 0.7)", borderColor: "rgba(248, 113, 113, 0.4)", borderWidth: 1, borderRadius: 8, borderSkipped: false }]
         },
-        options: barChartOptions
+        options: optConversie
       }) };
     }
 
@@ -298,9 +461,9 @@ async function loadVanzariTotale() {
         type: "bar",
         data: {
           labels,
-          datasets: [{ label: "Total sesiuni", data: sesiuniData, backgroundColor: "rgba(255, 238, 0, 0.7)", borderColor: "#ffee00", borderWidth: 2, borderRadius: 6 }]
+          datasets: [{ label: "Total sesiuni", data: sesiuniData, backgroundColor: "rgba(96, 165, 250, 0.45)", hoverBackgroundColor: "rgba(96, 165, 250, 0.72)", borderColor: "rgba(59, 130, 246, 0.45)", borderWidth: 1, borderRadius: 8, borderSkipped: false }]
         },
-        options: barChartOptions
+        options: optSesiuni
       }) };
     }
 
@@ -537,6 +700,19 @@ function loadComenziSiConversieLunare() {
 
 // ---------------- DOCUMENT READY ---------------- 
 document.addEventListener("DOMContentLoaded", () => {
+  const chartModalEl = document.getElementById("dashboard-chart-modal");
+  if (chartModalEl) {
+    chartModalEl.addEventListener("click", function (e) {
+      if (e.target.closest("[data-close-chart-modal]")) closeDashboardChartModal();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && chartModalEl.classList.contains("is-open")) closeDashboardChartModal();
+    });
+  }
+  window.addEventListener("resize", function () {
+    if (dashboardModalChart) dashboardModalChart.resize();
+  });
+
   initChart("salesChart", "Vânzări lunare", "#ffee00");
   initChart("comenziLunarChart", "Comenzi", "#ffee00");
   initChart("conversieLunarChart", "Conversie %", "#ffee00");

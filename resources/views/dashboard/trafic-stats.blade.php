@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Statistici Trafic – VOLTA')
+@section('header-title', '')
 
 @push('styles')
 <link rel="stylesheet" href="{{ url('css/trafic.css') }}">
@@ -14,8 +15,10 @@
   font-size: 32px;
   font-weight: 800;
   color: #FFEE00;
-  text-shadow: 0 0 20px rgba(255, 238, 0, 0.5);
   letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .stats-buttons {
@@ -24,6 +27,7 @@
   gap: 20px;
   margin-bottom: 40px;
 }
+
 
 .stat-btn {
   background: rgba(31, 41, 55, 0.4);
@@ -54,7 +58,7 @@
 .stat-btn:hover {
   background: rgba(255, 238, 0, 0.1);
   border-color: rgba(255, 238, 0, 0.6);
-  box-shadow: 0 0 25px rgba(255, 238, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   transform: translateY(-5px);
 }
 
@@ -65,7 +69,7 @@
 .stat-btn.active {
   background: linear-gradient(135deg, rgba(255, 238, 0, 0.2) 0%, rgba(255, 238, 0, 0.1) 100%);
   border-color: #FFEE00;
-  box-shadow: 0 0 30px rgba(255, 238, 0, 0.6);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
   color: #FFEE00;
 }
 
@@ -82,8 +86,8 @@
   background: linear-gradient(135deg, rgba(31, 41, 55, 0.8) 0%, rgba(31, 41, 55, 0.9) 100%);
   border-radius: 16px;
   padding: 30px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 238, 0, 0.1);
-  border: 1px solid rgba(255, 238, 0, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgb(51, 65, 85);
   backdrop-filter: blur(10px);
   margin-top: 30px;
 }
@@ -107,9 +111,7 @@
   border-radius: 12px;
   padding: 20px;
   border: 1px solid rgba(255, 238, 0, 0.1);
-  box-shadow: 
-    inset 0 2px 10px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(255, 238, 0, 0.05);
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
   overflow: hidden;
 }
 
@@ -160,7 +162,6 @@
 .chart-wrapper-modern canvas {
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 0 10px rgba(255, 238, 0, 0.1));
 }
 
 .stats-grid {
@@ -180,7 +181,7 @@
 .stat-item:hover {
   background: rgba(31, 41, 55, 0.6);
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(255, 238, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
 }
 
 .stat-item h4 {
@@ -197,7 +198,6 @@
   font-size: 32px;
   font-weight: 800;
   margin: 0;
-  text-shadow: 0 0 10px rgba(255, 238, 0, 0.5);
   line-height: 1.2;
 }
 
@@ -474,13 +474,13 @@
 @endpush
 
 @section('content')
-<div class="stats-page">
-  <a href="{{ route('trafic') }}" class="back-btn">
+<div class="trafic-subpage stats-page">
+  <a href="{{ route('trafic') }}" class="back-btn trafic-back-link">
     <i class="fas fa-arrow-left"></i>
     <span>Înapoi la Trafic</span>
   </a>
   
-  <h1><i class="fas fa-chart-pie" style="margin-right: 15px;"></i>Statistici Generale Trafic</h1>
+  <h1><i class="fas fa-chart-pie" aria-hidden="true"></i>Statistici Generale Trafic</h1>
   
   <div class="stats-buttons">
     <button class="stat-btn" onclick="loadStatsPeriod(3)" title="Ultimele 3 luni">
@@ -612,8 +612,8 @@ function displayStats(data) {
     'total': { 
       border: '#FFEE00', 
       background: 'linear-gradient(180deg, rgba(255, 238, 0, 0.25) 0%, rgba(255, 238, 0, 0.05) 100%)',
-      glow: 'rgba(255, 238, 0, 0.6)',
-      shadow: '0 0 15px rgba(255, 238, 0, 0.4)'
+      glow: 'rgba(0, 0, 0, 0.35)',
+      shadow: '0 2px 8px rgba(0, 0, 0, 0.35)'
     },
     'google': { 
       border: '#10B981', 
@@ -685,8 +685,8 @@ function displayStats(data) {
         pointHoverBorderWidth: 4,
         pointHoverBackgroundColor: colors[source].border,
         pointHoverBorderColor: '#fff',
-        pointHoverShadowBlur: 10,
-        pointHoverShadowColor: colors[source].glow
+        pointHoverShadowBlur: 6,
+        pointHoverShadowColor: 'rgba(0, 0, 0, 0.35)'
       };
       
       // Linie punctată pentru Google (distingere vizuală)
@@ -921,6 +921,7 @@ function displayStats(data) {
 function formatNumber(val) {
   return new Intl.NumberFormat('ro-RO').format(val || 0);
 }
+
 </script>
 @endpush
 

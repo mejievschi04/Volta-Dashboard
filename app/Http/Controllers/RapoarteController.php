@@ -8,7 +8,7 @@ class RapoarteController extends Controller
 {
     public function index()
     {
-        return view('rapoarte.index');
+        return view('rapoarte.comparare');
     }
 
     public function istoric()
@@ -16,8 +16,11 @@ class RapoarteController extends Controller
         return view('rapoarte.istoric');
     }
 
+    /**
+     * URL vechi: redirecționare către /rapoarte (conținutul comparării este pagina principală Rapoarte).
+     */
     public function comparare()
     {
-        return view('rapoarte.comparare');
+        return redirect()->route('rapoarte');
     }
 }

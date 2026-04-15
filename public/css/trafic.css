@@ -2,7 +2,7 @@
     --sidebar-width: 280px;
 }
 .body{
-    color: #ffee00;
+    color: var(--text-secondary, rgb(203, 213, 225));
 }
 
 /* Logo fără efect galben - aliniat cu restul aplicației */
@@ -21,8 +21,11 @@
 }
 
 .sidebar .logo-mark {
-  width: 42px !important;
-  height: 42px !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  flex: 0 0 36px !important;
   background: transparent !important;
   display: flex !important;
   align-items: center !important;
@@ -41,6 +44,7 @@
   height: 100% !important;
   object-fit: contain !important;
   background: transparent !important;
+  display: block !important;
 }
 
 .sidebar .logo:hover .logo-mark {
@@ -48,11 +52,13 @@
 }
 
 .sidebar .logo h1 {
-  font-size: 20px !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  flex: 0 0 auto !important;
   margin: 0 !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   color: white !important;
-  letter-spacing: -0.5px !important;
+  letter-spacing: -0.02em !important;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
   position: relative !important;
   z-index: 1 !important;
@@ -73,7 +79,6 @@
   font-size: 32px;
   font-weight: 800;
   color: #FFEE00;
-  text-shadow: 0 0 20px rgba(255, 238, 0, 0.5);
   letter-spacing: -0.5px;
 }
 
@@ -105,14 +110,13 @@
 }
 
 .container form input[type="month"]:hover {
-  border-color: rgba(255, 238, 0, 0.6);
-  box-shadow: 0 0 15px rgba(255, 238, 0, 0.3);
+  border-color: rgb(71, 85, 105);
 }
 
 .container form input[type="month"]:focus {
   outline: none;
-  border-color: #FFEE00;
-  box-shadow: 0 0 20px rgba(255, 238, 0, 0.5);
+  border-color: rgb(71, 85, 105);
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.25);
 }
 
 /* === Card pentru grafic === */
@@ -121,16 +125,16 @@
   color: white;
   border-radius: 16px;
   padding: 25px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 238, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   margin-bottom: 25px;
-  border: 1px solid rgba(255, 238, 0, 0.15);
+  border: 1px solid rgb(51, 65, 85);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
 }
 
 .card:hover {
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 238, 0, 0.2);
-  border-color: rgba(255, 238, 0, 0.3);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  border-color: rgb(71, 85, 105);
   transform: translateY(-2px);
 }
 
@@ -163,7 +167,6 @@
   color: #FFEE00;
   text-transform: uppercase;
   letter-spacing: 1px;
-  text-shadow: 0 0 10px rgba(255, 238, 0, 0.5);
 }
 
 
@@ -273,16 +276,16 @@
   
   .year-select:active,
   .month-select:active {
-    border-color: #FFEE00;
-    box-shadow: 0 0 20px rgba(255, 238, 0, 0.5);
+    border-color: rgb(71, 85, 105);
+    box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.2);
   }
   
   .year-select:focus,
   .month-select:focus {
-    border-color: #FFEE00;
-    box-shadow: 0 0 20px rgba(255, 238, 0, 0.5);
+    border-color: rgb(71, 85, 105);
+    box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.25);
     outline: none;
-    -webkit-tap-highlight-color: rgba(255, 238, 0, 0.3);
+    -webkit-tap-highlight-color: rgba(148, 163, 184, 0.25);
   }
   
   .stat-btn-main {
@@ -557,87 +560,67 @@
   }
 }
 
-.row .card {
+.row .trafic-source-card {
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(165deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.94) 100%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
 }
 
-.row .card::before {
+.row .trafic-source-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #FFEE00, #FFEE00, #FFEE00);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
+  height: 3px;
+  background: var(--source-color, #ffee00);
+  opacity: .85;
 }
 
-.row .card:hover::before {
-  transform: scaleX(1);
+.row .trafic-source-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 
-.row .card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 238, 0, 0.3);
-  border-color: rgba(255, 238, 0, 0.4);
-}
-
-/* === Stil text în carduri === */
-.card h5 {
-  margin: 0 0 15px;
-  font-size: 16px;
-  color: #FFEE00;
+/* === Stil text în KPI carduri === */
+.row .trafic-source-card h5 {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--text-secondary, #cbd5e1);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-shadow: 0 0 10px rgba(255, 238, 0, 0.4);
+  letter-spacing: 0.04em;
 }
 
-.card p {
-  font-size: 32px;
-  margin: 0 0 8px;
-  font-weight: 900;
-  color: #ffffff;
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-  line-height: 1.2;
+.row .trafic-source-card p {
+  font-size: clamp(24px, 2.4vw, 32px);
+  margin: 0 0 6px;
+  font-weight: 800;
+  color: #f8fafc;
+  line-height: 1.15;
 }
 
-.card small {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 12px;
+.row .trafic-source-card small {
+  color: rgba(148, 163, 184, 0.9);
+  font-size: 11px;
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.03em;
 }
 
-/* Culori specifice pentru fiecare sursă */
-.row .card[onclick*="total"] {
-  border-left: 4px solid #EF4444;
-}
-
-.row .card[onclick*="google"]:not([onclick*="google_cpc"]) {
-  border-left: 4px solid #3B82F6;
-}
-
-.row .card[onclick*="google_cpc"] {
-  border-left: 4px solid #10B981;
-}
-
-.row .card[onclick*="direct"] {
-  border-left: 4px solid #FFEE00;
-}
-
-.row .card[onclick*="yandex"] {
-  border-left: 4px solid #F0F3FF;
-}
-
-.row .card[onclick*="other"] {
-  border-left: 4px solid #888888;
-}
+/* Culori discrete pe surse (fără stiluri hard pe onclick) */
+.trafic-source-total { --source-color: #ffee00; }
+.trafic-source-google { --source-color: #34d399; }
+.trafic-source-google_cpc { --source-color: #a78bfa; }
+.trafic-source-direct { --source-color: #fbbf24; }
+.trafic-source-yandex { --source-color: #fb7185; }
+.trafic-source-other { --source-color: #94a3b8; }
 
 /* === Modal personalizat (fără Bootstrap) === */
 .modal {
@@ -667,8 +650,8 @@
   overflow-y: auto;
   position: relative;
   color: #f0f0f0;
-  border: 2px solid rgba(255, 238, 0, 0.3);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 238, 0, 0.2);
+  border: 1px solid rgb(51, 65, 85);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
   animation: slideUp 0.3s ease;
 }
 
@@ -693,12 +676,12 @@
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-  background: rgba(255, 238, 0, 0.3);
+  background: rgb(71, 85, 105);
   border-radius: 4px;
 }
 
 .modal-content::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 238, 0, 0.5);
+  background: rgb(100, 116, 139);
 }
 
 .modal-close {
@@ -729,7 +712,6 @@
   font-size: 24px;
   font-weight: 800;
   margin: 0 0 25px;
-  text-shadow: 0 0 15px rgba(255, 238, 0, 0.5);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -785,7 +767,7 @@
   justify-content: center;
   gap: 8px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(255, 238, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   position: relative;
   overflow: hidden;
   min-width: 160px;
@@ -805,13 +787,13 @@
 }
 .sync-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 238, 0, 0.5);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
   background: #FFEE00;
   border-color: #FFEE00;
 }
 .sync-btn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(255, 238, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 .sync-btn:disabled {
   opacity: 0.6;
@@ -840,7 +822,7 @@
   justify-content: center;
   gap: 8px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(255, 238, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   text-decoration: none;
   position: relative;
   overflow: hidden;
@@ -864,14 +846,14 @@
 
 .monthly-chart-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 238, 0, 0.5);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
   background: #FFEE00;
   border-color: #FFEE00;
 }
 
 .monthly-chart-btn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(255, 238, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
 /* === Status sincronizare === */
@@ -911,7 +893,6 @@
 
 #syncStatus.success h6 {
   color: #10B981;
-  text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
 }
 
 #syncStatus.error {
@@ -923,27 +904,214 @@
 
 #syncStatus.error h6 {
   color: #EF4444;
-  text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
 }
 
 #syncStatus.info {
   background: linear-gradient(135deg, rgba(255, 238, 0, 0.1) 0%, rgba(255, 238, 0, 0.05) 100%);
   color: #FFEE00;
-  border: 2px solid rgba(255, 238, 0, 0.3);
-  box-shadow: 0 0 20px rgba(255, 238, 0, 0.15);
+  border: 1px solid rgb(51, 65, 85);
+  box-shadow: none;
 }
 
 #syncStatus.info h6 {
   color: #FFEE00;
-  text-shadow: 0 0 10px rgba(255, 238, 0, 0.5);
 }
 
-#syncStatus small {
+#syncStatus small,
+#syncStatusModal small {
   color: rgba(255, 255, 255, 0.6);
   font-size: 12px;
 }
 
-#syncStatus em {
+#syncStatus em,
+#syncStatusModal em {
   color: rgba(255, 255, 255, 0.8);
   font-style: italic;
+}
+
+/* ===== Trafic unified design layer ===== */
+.trafic-page-shell,
+.trafic-subpage {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 0 28px;
+}
+
+.trafic-page-lead,
+.trafic-subpage-lead {
+  color: var(--text-secondary, #9ca3af);
+  margin: 0 0 22px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.trafic-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.trafic-toolbar .month-selector-modern {
+  margin-bottom: 0;
+  min-width: 220px;
+}
+
+.trafic-actions-modern {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.trafic-action-btn {
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 238, 0, 0.28);
+  background: rgba(255, 238, 0, 0.08);
+  color: var(--brand, #ffee00);
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.trafic-action-btn:hover {
+  background: rgba(255, 238, 0, 0.16);
+  border-color: rgba(255, 238, 0, 0.46);
+  color: #fff;
+}
+
+.trafic-action-btn--primary {
+  background: linear-gradient(135deg, #facc15 0%, #ffee00 55%, #e6d600 100%);
+  color: #0a0a0a;
+  border: 1px solid rgba(255, 238, 0, 0.3);
+}
+
+.trafic-action-btn--primary:hover {
+  color: #0a0a0a;
+  background: linear-gradient(135deg, #fdd835 0%, #ffee00 55%, #facc15 100%);
+}
+
+.trafic-card {
+  background: linear-gradient(165deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.96) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+}
+
+.trafic-section-title {
+  margin: 0 0 14px;
+  color: var(--text-primary, #f8fafc);
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trafic-section-title i {
+  color: var(--brand, #ffee00);
+}
+
+.trafic-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  background: rgba(255, 238, 0, 0.08);
+  border: 1px solid rgba(255, 238, 0, 0.25);
+  color: var(--brand, #ffee00);
+  font-weight: 600;
+}
+
+.trafic-back-link:hover {
+  background: rgba(255, 238, 0, 0.16);
+  color: #fff;
+}
+
+/* Keep subpages visually synchronized with the rest */
+.trafic-subpage.stats-page,
+.trafic-subpage.analiza-page {
+  padding: 0 !important;
+  min-height: auto !important;
+  background: transparent !important;
+}
+
+.trafic-subpage.stats-page h1,
+.trafic-subpage.analiza-page h1 {
+  margin: 0 0 20px !important;
+  font-size: clamp(1.5rem, 2.8vw, 2rem) !important;
+  letter-spacing: -0.03em !important;
+  color: var(--brand, #ffee00) !important;
+}
+
+.trafic-subpage.analiza-page h1::after {
+  opacity: 0.45 !important;
+}
+
+.trafic-subpage .stats-general-card,
+.trafic-subpage .section,
+.trafic-subpage .analiza-menu,
+.trafic-subpage .no-selection {
+  background: linear-gradient(165deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.96) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28) !important;
+}
+
+.trafic-subpage .section h2,
+.trafic-subpage .stats-general-card h3,
+.trafic-subpage .menu-header h3 {
+  color: var(--text-primary, #f8fafc) !important;
+}
+
+.trafic-subpage .section h2 i,
+.trafic-subpage .stats-general-card h3 i,
+.trafic-subpage .menu-header h3 i {
+  color: var(--brand, #ffee00) !important;
+}
+
+.trafic-subpage .data-table th,
+.trafic-subpage .modal th {
+  background: var(--bg-secondary, #1e293b) !important;
+  color: var(--text-secondary, #cbd5e1) !important;
+  border-color: var(--border-primary, #334155) !important;
+}
+
+.trafic-subpage .data-table td,
+.trafic-subpage .modal td {
+  background: var(--bg-elevated, #1e293b) !important;
+  color: var(--text-primary, #e5e7eb) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.trafic-subpage .data-table tbody tr:hover td,
+.trafic-subpage .modal tr:hover td {
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: var(--text-primary, #f8fafc) !important;
+}
+
+.trafic-subpage .menu-btn:hover,
+.trafic-subpage .btn-show-more:hover {
+  transform: translateY(-1px) !important;
+}
+
+@media (max-width: 900px) {
+  .trafic-actions-modern {
+    margin-left: 0;
+    width: 100%;
+  }
+  .trafic-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
