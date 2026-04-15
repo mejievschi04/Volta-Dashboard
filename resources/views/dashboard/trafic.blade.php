@@ -465,13 +465,23 @@ function drawChart() {
   }
 
   const chartCtx = ctx.getContext('2d');
+  const palette = (typeof VoltaChartTheme !== 'undefined' && VoltaChartTheme.getSeriesPalette)
+    ? VoltaChartTheme.getSeriesPalette()
+    : {
+        amber: { line: "rgb(250, 204, 21)", area: "rgba(250, 204, 21, 0.18)" },
+        emerald: { line: "rgb(16, 185, 129)", area: "rgba(16, 185, 129, 0.18)" },
+        violet: { line: "rgb(167, 139, 250)", area: "rgba(167, 139, 250, 0.18)" },
+        cyan: { line: "rgb(6, 182, 212)", area: "rgba(6, 182, 212, 0.18)" },
+        rose: { line: "rgb(244, 63, 94)", area: "rgba(244, 63, 94, 0.18)" },
+        slate: { line: "rgb(148, 163, 184)", area: "rgba(148, 163, 184, 0.16)" }
+      };
   const colors = {
-    total: "rgb(255, 238, 0)",
-    google: "rgb(52, 211, 153)",
-    google_cpc: "rgb(167, 139, 250)",
-    direct: "rgb(251, 191, 36)",
-    yandex: "rgb(251, 113, 133)",
-    other: "rgb(148, 163, 184)"
+    total: palette.amber,
+    google: palette.emerald,
+    google_cpc: palette.violet,
+    direct: palette.cyan,
+    yandex: palette.rose,
+    other: palette.slate
   };
 
   const sourceLabels = {
@@ -492,12 +502,13 @@ function drawChart() {
     datasets = Object.keys(trafficData.datasets).map(source => ({
       label: sourceLabels[source] || source,
       data: trafficData.datasets[source] || [],
-      borderColor: colors[source] || "rgb(148, 163, 184)",
-      borderWidth: source === 'total' ? 3 : 2,
-      tension: 0.32,
-      fill: false,
-      pointRadius: source === 'total' ? 2.5 : 1.8,
-      pointHoverRadius: source === 'total' ? 5 : 4,
+      borderColor: (colors[source] && colors[source].line) || "rgb(148, 163, 184)",
+      backgroundColor: (colors[source] && colors[source].area) || "rgba(148, 163, 184, 0.16)",
+      borderWidth: source === 'total' ? 3.2 : 2.4,
+      tension: 0.36,
+      fill: source === 'total',
+      pointRadius: source === 'total' ? 2.8 : 2,
+      pointHoverRadius: source === 'total' ? 5.5 : 4.2,
     }));
   } else {
     // Format vechi (compatibilitate înapoi)
@@ -509,12 +520,13 @@ function drawChart() {
         const found = trafficData[source].find(d => d.day == day);
         return found ? found.visits : 0;
       }),
-      borderColor: colors[source] || "rgb(148, 163, 184)",
-      borderWidth: source === 'total' ? 3 : 2,
-      tension: 0.32,
-      fill: false,
-      pointRadius: source === 'total' ? 2.5 : 1.8,
-      pointHoverRadius: source === 'total' ? 5 : 4,
+      borderColor: (colors[source] && colors[source].line) || "rgb(148, 163, 184)",
+      backgroundColor: (colors[source] && colors[source].area) || "rgba(148, 163, 184, 0.16)",
+      borderWidth: source === 'total' ? 3.2 : 2.4,
+      tension: 0.36,
+      fill: source === 'total',
+      pointRadius: source === 'total' ? 2.8 : 2,
+      pointHoverRadius: source === 'total' ? 5.5 : 4.2,
     }));
   }
 

@@ -372,30 +372,121 @@
   .livrari-table tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
   .livrari-table tbody tr:last-child td { border-bottom: none; }
 
-  /* ---------- Pagination ---------- */
+  /* ---------- Pagination (RO + stil Volta) ---------- */
   .livrari-pagination {
-    margin-top: 24px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
-  .livrari-pagination a,
-  .livrari-pagination span {
-    padding: 10px 16px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.06);
-    color: #fff;
-    text-decoration: none;
+  .livrari-pag { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .livrari-pag__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px 12px;
+    width: 100%;
+  }
+  .livrari-pag__edge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 12px;
     font-size: 0.875rem;
     font-weight: 600;
-    transition: background 0.2s, color 0.2s;
+    line-height: 1.2;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(30, 41, 59, 0.85);
+    color: #f1f5f9;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+    white-space: nowrap;
   }
-  .livrari-pagination a:hover {
-    background: rgba(255, 238, 0, 0.14);
+  .livrari-pag__edge i { font-size: 0.75rem; opacity: 0.9; }
+  .livrari-pag__edge--link:hover {
+    background: rgba(255, 238, 0, 0.12);
+    border-color: rgba(255, 238, 0, 0.35);
+    color: var(--brand, #ffee00);
+    transform: translateY(-1px);
+  }
+  .livrari-pag__edge--link:active { transform: translateY(0); }
+  .livrari-pag__edge--disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+    color: #94a3b8;
+    border-color: rgba(255, 255, 255, 0.06);
+    background: rgba(15, 23, 42, 0.5);
+  }
+  .livrari-pag__pages {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 4px 8px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .livrari-pag__pages > li { margin: 0; padding: 0; }
+  .livrari-pag__gap span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    color: #64748b;
+    font-weight: 700;
+    font-size: 0.875rem;
+    user-select: none;
+  }
+  .livrari-pag__num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 8px;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .livrari-pag__num--link {
+    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  .livrari-pag__num--link:hover {
+    background: rgba(255, 238, 0, 0.12);
+    border-color: rgba(255, 238, 0, 0.25);
     color: var(--brand, #ffee00);
   }
-  .livrari-pagination .disabled span { color: #6B7280; }
+  .livrari-pag__num--current {
+    color: #0f172a;
+    background: linear-gradient(135deg, #facc15 0%, #ffee00 55%, #e6d600 100%);
+    border-color: rgba(255, 238, 0, 0.45);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 4px 14px rgba(255, 238, 0, 0.2);
+  }
+  .livrari-pag__meta {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #94a3b8;
+    text-align: center;
+    max-width: 42rem;
+    line-height: 1.45;
+  }
+  .livrari-pag__meta strong { color: #e2e8f0; font-weight: 600; }
+  @media (max-width: 640px) {
+    .livrari-pag__edge span { display: none; }
+    .livrari-pag__edge { padding: 10px 14px; }
+    .livrari-pag__edge i { font-size: 0.875rem; }
+    .livrari-pag__meta { font-size: 0.75rem; }
+  }
 
   /* ---------- Add livrare button (operator) ---------- */
   .livrari-operator-actions { margin-bottom: 28px; }
@@ -1073,11 +1164,7 @@
         </tbody>
       </table>
     </div>
-    @if($livrari->hasPages())
-    <div class="livrari-pagination">
-      {{ $livrari->links() }}
-    </div>
-    @endif
+    {{ $livrari->links('vendor.pagination.livrari') }}
   </div>
 
   <!-- Modal Editează livrare (disponibil pentru operator și admin) -->

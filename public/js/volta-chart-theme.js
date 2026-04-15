@@ -7,12 +7,21 @@
     textPrimary: "rgb(248, 250, 252)",
     textSecondary: "rgb(203, 213, 225)",
     textMuted: "rgb(148, 163, 184)",
-    grid: "rgba(148, 163, 184, 0.12)",
-    gridAxis: "rgba(148, 163, 184, 0.2)",
-    border: "rgb(51, 65, 85)",
-    surface: "rgba(30, 41, 59, 0.96)",
-    brand: "rgb(255, 238, 0)",
+    grid: "rgba(148, 163, 184, 0.10)",
+    gridAxis: "rgba(148, 163, 184, 0.18)",
+    border: "rgba(71, 85, 105, 0.7)",
+    surface: "rgba(15, 23, 42, 0.96)",
+    brand: "rgb(250, 204, 21)",
+    brandSoft: "rgba(250, 204, 21, 0.2)",
     font: "'Noto Sans', system-ui, -apple-system, sans-serif",
+    series: {
+      amber: { line: "rgb(250, 204, 21)", area: "rgba(250, 204, 21, 0.2)" },
+      cyan: { line: "rgb(6, 182, 212)", area: "rgba(6, 182, 212, 0.2)" },
+      violet: { line: "rgb(167, 139, 250)", area: "rgba(167, 139, 250, 0.2)" },
+      emerald: { line: "rgb(16, 185, 129)", area: "rgba(16, 185, 129, 0.2)" },
+      rose: { line: "rgb(244, 63, 94)", area: "rgba(244, 63, 94, 0.2)" },
+      slate: { line: "rgb(148, 163, 184)", area: "rgba(148, 163, 184, 0.2)" },
+    },
   };
 
   function isMobile() {
@@ -46,12 +55,12 @@
   function tooltip() {
     return {
       enabled: true,
-      backgroundColor: "rgba(15, 23, 42, 0.94)",
+      backgroundColor: "rgba(2, 6, 23, 0.92)",
       titleColor: C.brand,
       bodyColor: C.textPrimary,
-      borderColor: "rgba(255, 238, 0, 0.22)",
+      borderColor: "rgba(250, 204, 21, 0.28)",
       borderWidth: 1,
-      padding: 14,
+      padding: 12,
       cornerRadius: 14,
       titleFont: { family: C.font, size: 13, weight: "700" },
       bodyFont: { family: C.font, size: 12, weight: "500" },
@@ -118,6 +127,7 @@
         line: {
           borderJoinStyle: "round",
           borderCapStyle: "round",
+          borderWidth: m ? 2.2 : 2.6,
         },
         bar: {
           borderRadius: m ? 8 : 11,
@@ -137,13 +147,13 @@
             maxRotation: m ? 45 : 0,
             minRotation: m ? 45 : 0,
           }),
-          grid: gridLines({ lineWidth: 1, borderDash: [3, 5] }),
+          grid: gridLines({ lineWidth: 1, borderDash: [2, 5] }),
           border: { display: false },
         },
         y: {
           beginAtZero: true,
           ticks: ticks(10, 12),
-          grid: gridLines({ lineWidth: 1, borderDash: [3, 5] }),
+          grid: gridLines({ lineWidth: 1, borderDash: [2, 5] }),
           border: { display: false },
         },
       },
@@ -186,6 +196,9 @@
     legendTop: legendTop,
     cartesianDefaults: cartesianDefaults,
     verticalGradient: verticalGradient,
+    getSeriesPalette: function () {
+      return C.series;
+    },
     /** Preseturi gradient pentru bare dashboard */
     barGradients: {
       brand: function (ctx, chartArea) {

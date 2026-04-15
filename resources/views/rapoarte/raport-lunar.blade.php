@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Raport lunar call center – VOLTA')
+@section('title', 'Raport lunar centru de apeluri – VOLTA')
 
 @section('content')
 <div class="rapoarte-page raport-lunar-page">
@@ -9,12 +9,12 @@
       <i class="fas fa-file-contract"></i>
     </div>
     <div class="raport-lunar-hero__text">
-      <h1 class="raport-lunar-title">Raport lunar call center</h1>
+      <h1 class="raport-lunar-title">Raport lunar centru de apeluri</h1>
       <p class="raport-lunar-intro">
-        Aceeași logică ca în Excelul analizat: <strong>pondere chaturi</strong> = chaturi operator / Σ chaturi;
-        <strong>pondere apeluri</strong> = apeluri / Σ apeluri;
-        <strong>aport activitate</strong> (coloana „Aport în %” din TOTAL) = (chaturi + apeluri operator) / (Σ chaturi + Σ apeluri);
-        <strong>aport vânzări</strong> = vânzări fără TVA operator / Σ vânzări (doar operatorii afișați).
+        Aceeași logică ca în Excelul analizat: <strong>pondere chaturi</strong> = chaturi operator / Σ chaturi (afișat în %);
+        <strong>pondere apeluri</strong> = apeluri / Σ apeluri (afișat în %);
+        <strong>aport activitate</strong> = (chaturi + apeluri operator) / (Σ chaturi + Σ apeluri), afișat ca procent;
+        <strong>aport vânzări</strong> = vânzări fără TVA operator / Σ vânzări (doar operatorii afișați), afișat ca procent.
         În raport intră <strong>doar operatorii marcați activi</strong> în pagina Operatori și prezenți în KPI 1C pentru luna aleasă.
       </p>
     </div>
@@ -104,7 +104,7 @@
     <div class="raport-lunar-panel__head">
       <span class="raport-lunar-panel__icon" aria-hidden="true"><i class="fas fa-table"></i></span>
       <h2 id="raport-total-h" class="raport-lunar-panel__title">TOTAL</h2>
-      <span class="raport-lunar-panel__tag">Call center</span>
+      <span class="raport-lunar-panel__tag">Centru de apeluri</span>
     </div>
     <div class="raport-lunar-table-shell">
       <div class="raport-lunar-table-scroll">
@@ -144,8 +144,8 @@
               <td class="text-center raport-lunar-num"><strong>{{ $footer_total['plan_lunar'] !== '' ? $footer_total['plan_lunar'] : '—' }}</strong></td>
               <td class="text-center raport-lunar-num">
                 @if($plan_lunar !== null && $plan_lunar > 0 && $footer_total['vanzari_fara_tva'] !== '')
-                  @php $v = (float) $footer_total['vanzari_fara_tva']; @endphp
-                  <strong>{{ number_format($v / $plan_lunar, 4, '.', '') }}</strong>
+                  @php $v = (float) str_replace(' ', '', (string) $footer_total['vanzari_fara_tva']); @endphp
+                  <strong>{{ number_format($v / $plan_lunar * 100, 2, ',', ' ') }} %</strong>
                 @else
                   —
                 @endif
@@ -169,7 +169,7 @@
         <div class="raport-lunar-panel__head">
           <span class="raport-lunar-panel__icon raport-lunar-panel__icon--chat" aria-hidden="true"><i class="fas fa-comments"></i></span>
           <h2 id="raport-chat-h" class="raport-lunar-panel__title">Chaturi</h2>
-          <span class="raport-lunar-panel__tag raport-lunar-panel__tag--soft" title="chaturi / Σ chaturi">Pondere</span>
+          <span class="raport-lunar-panel__tag raport-lunar-panel__tag--soft" title="chaturi / Σ chaturi">Pondere (%)</span>
         </div>
         <div class="raport-lunar-table-shell">
           <div class="raport-lunar-table-scroll raport-lunar-table-scroll--narrow">
@@ -178,7 +178,7 @@
                 <tr>
                   <th>NP</th>
                   <th class="text-center">Chaturi</th>
-                  <th class="text-center">Pondere</th>
+                  <th class="text-center">Pondere (%)</th>
                 </tr>
               </thead>
               <tbody>
@@ -201,7 +201,7 @@
         <div class="raport-lunar-panel__head">
           <span class="raport-lunar-panel__icon raport-lunar-panel__icon--phone" aria-hidden="true"><i class="fas fa-phone-alt"></i></span>
           <h2 id="raport-apel-h" class="raport-lunar-panel__title">Apeluri</h2>
-          <span class="raport-lunar-panel__tag raport-lunar-panel__tag--soft" title="apeluri / Σ apeluri">Pondere</span>
+          <span class="raport-lunar-panel__tag raport-lunar-panel__tag--soft" title="apeluri / Σ apeluri">Pondere (%)</span>
         </div>
         <div class="raport-lunar-table-shell">
           <div class="raport-lunar-table-scroll raport-lunar-table-scroll--narrow">
@@ -210,7 +210,7 @@
                 <tr>
                   <th>NP</th>
                   <th class="text-center">Apeluri</th>
-                  <th class="text-center">Pondere</th>
+                  <th class="text-center">Pondere (%)</th>
                 </tr>
               </thead>
               <tbody>
@@ -284,7 +284,7 @@
   btn.addEventListener('click', function () {
     try {
       var slug = String(ym || '').replace(/-/g, '_');
-      window.VoltaExcelExport.exportSheets(sheets, 'call-center_statistica_' + slug);
+      window.VoltaExcelExport.exportSheets(sheets, 'centru-apeluri_statistica_' + slug);
     } catch (e) {
       console.error(e);
       alert('Nu s-a putut genera fișierul Excel.');

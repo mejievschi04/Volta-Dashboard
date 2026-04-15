@@ -607,44 +607,23 @@ function displayStats(data) {
   // Pregătim datele pentru grafic - FĂRĂ utilizatorii noi și vechi
   const chartDatasets = [];
   
-  // Culori moderne și vibrante pentru fiecare linie
+  const chartPalette = (typeof VoltaChartTheme !== 'undefined' && VoltaChartTheme.getSeriesPalette)
+    ? VoltaChartTheme.getSeriesPalette()
+    : {
+        amber: { line: "rgb(250, 204, 21)", area: "rgba(250, 204, 21, 0.2)" },
+        emerald: { line: "rgb(16, 185, 129)", area: "rgba(16, 185, 129, 0.2)" },
+        violet: { line: "rgb(167, 139, 250)", area: "rgba(167, 139, 250, 0.2)" },
+        cyan: { line: "rgb(6, 182, 212)", area: "rgba(6, 182, 212, 0.2)" },
+        rose: { line: "rgb(244, 63, 94)", area: "rgba(244, 63, 94, 0.2)" },
+        slate: { line: "rgb(148, 163, 184)", area: "rgba(148, 163, 184, 0.18)" },
+      };
   const colors = {
-    'total': { 
-      border: '#FFEE00', 
-      background: 'linear-gradient(180deg, rgba(255, 238, 0, 0.25) 0%, rgba(255, 238, 0, 0.05) 100%)',
-      glow: 'rgba(0, 0, 0, 0.35)',
-      shadow: '0 2px 8px rgba(0, 0, 0, 0.35)'
-    },
-    'google': { 
-      border: '#10B981', 
-      background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.05) 100%)',
-      glow: 'rgba(16, 185, 129, 0.5)',
-      shadow: '0 0 12px rgba(16, 185, 129, 0.3)'
-    },
-    'google_cpc': { 
-      border: '#8B5CF6', 
-      background: 'linear-gradient(180deg, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0.05) 100%)',
-      glow: 'rgba(139, 92, 246, 0.5)',
-      shadow: '0 0 12px rgba(139, 92, 246, 0.3)'
-    },
-    'direct': { 
-      border: '#3B82F6', 
-      background: 'linear-gradient(180deg, rgba(59, 130, 246, 0.25) 0%, rgba(59, 130, 246, 0.05) 100%)',
-      glow: 'rgba(59, 130, 246, 0.5)',
-      shadow: '0 0 12px rgba(59, 130, 246, 0.3)'
-    },
-    'yandex': { 
-      border: '#EF4444', 
-      background: 'linear-gradient(180deg, rgba(239, 68, 68, 0.25) 0%, rgba(239, 68, 68, 0.05) 100%)',
-      glow: 'rgba(239, 68, 68, 0.5)',
-      shadow: '0 0 12px rgba(239, 68, 68, 0.3)'
-    },
-    'other': { 
-      border: '#06B6D4', 
-      background: 'linear-gradient(180deg, rgba(6, 182, 212, 0.25) 0%, rgba(6, 182, 212, 0.05) 100%)',
-      glow: 'rgba(6, 182, 212, 0.5)',
-      shadow: '0 0 12px rgba(6, 182, 212, 0.3)'
-    }
+    'total': { border: chartPalette.amber.line, area: chartPalette.amber.area },
+    'google': { border: chartPalette.emerald.line, area: chartPalette.emerald.area },
+    'google_cpc': { border: chartPalette.violet.line, area: chartPalette.violet.area },
+    'direct': { border: chartPalette.cyan.line, area: chartPalette.cyan.area },
+    'yandex': { border: chartPalette.rose.line, area: chartPalette.rose.area },
+    'other': { border: chartPalette.slate.line, area: chartPalette.slate.area }
   };
   
   // Nume pentru fiecare sursă
@@ -673,12 +652,12 @@ function displayStats(data) {
         label: sourceNames[source],
         data: values,
         borderColor: colors[source].border,
-        backgroundColor: colors[source].border + '25', // 25% opacity pentru fill
-        borderWidth: source === 'total' ? 4 : 3,
+        backgroundColor: colors[source].area,
+        borderWidth: source === 'total' ? 3.4 : 2.6,
         fill: true,
-        tension: 0.5,
+        tension: 0.4,
         pointRadius: 0, // Ascundem punctele normale pentru un look mai clean
-        pointHoverRadius: 8,
+        pointHoverRadius: 7,
         pointBackgroundColor: colors[source].border,
         pointBorderColor: '#000',
         pointBorderWidth: 3,
@@ -768,8 +747,8 @@ function displayStats(data) {
         },
         tooltip: {
           enabled: true,
-          backgroundColor: 'rgba(31, 41, 55, 0.95)',
-          titleColor: '#FFEE00',
+          backgroundColor: 'rgba(2, 6, 23, 0.92)',
+          titleColor: '#FACC15',
           titleFont: {
             size: isMobile ? 12 : 15,
             weight: 'bold',
@@ -781,8 +760,8 @@ function displayStats(data) {
             weight: '600',
             family: "'Montserrat', sans-serif"
           },
-          borderColor: '#FFEE00',
-          borderWidth: 2,
+          borderColor: 'rgba(250, 204, 21, 0.32)',
+          borderWidth: 1.5,
           padding: 16,
           cornerRadius: 10,
           displayColors: true,

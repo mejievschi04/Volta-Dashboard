@@ -138,12 +138,17 @@ final class CallCenterRaportLunarService
                 'chaturi' => (string) $ch,
                 'apeluri' => (string) $ap,
                 'aport_activitate' => '',
+                /** Raport 0–1 pentru export Excel (coloane % ca valori 0–100). */
+                'aport_activitate_value' => null,
                 'vanzari_fara_tva' => $this->fmtNum((float) $op->vanzari_fara_tva),
                 'aport_vanzari' => '',
+                'aport_vanzari_value' => null,
                 'plan_individual' => '',
                 'indeplinire_plan' => '',
                 'pondere_chaturi' => '',
+                'pondere_chaturi_value' => null,
                 'pondere_apeluri' => '',
+                'pondere_apeluri_value' => null,
             ];
         }
 
@@ -160,18 +165,26 @@ final class CallCenterRaportLunarService
             $ap = $r['apeluri_int'];
             $v = (float) str_replace(',', '', (string) $r['vanzari_fara_tva']);
 
-            $rows[$i]['aport_activitate'] = $sumAct > 0
-                ? (string) round(($ch + $ap) / $sumAct, 10)
-                : '';
-            $rows[$i]['aport_vanzari'] = $totalFtva > 0
-                ? (string) round($v / $totalFtva, 10)
-                : '';
-            $rows[$i]['pondere_chaturi'] = $sumCh > 0
-                ? (string) round($ch / $sumCh, 10)
-                : '';
-            $rows[$i]['pondere_apeluri'] = $sumAp > 0
-                ? (string) round($ap / $sumAp, 10)
-                : '';
+            if ($sumAct > 0) {
+                $frac = ($ch + $ap) / $sumAct;
+                $rows[$i]['aport_activitate_value'] = round($frac, 14);
+                $rows[$i]['aport_activitate'] = $this->fmtPct($frac);
+            }
+            if ($totalFtva > 0) {
+                $fracV = $v / $totalFtva;
+                $rows[$i]['aport_vanzari_value'] = round($fracV, 14);
+                $rows[$i]['aport_vanzari'] = $this->fmtPct($fracV);
+            }
+            if ($sumCh > 0) {
+                $fracCh = $ch / $sumCh;
+                $rows[$i]['pondere_chaturi_value'] = round($fracCh, 14);
+                $rows[$i]['pondere_chaturi'] = $this->fmtPct($fracCh);
+            }
+            if ($sumAp > 0) {
+                $fracAp = $ap / $sumAp;
+                $rows[$i]['pondere_apeluri_value'] = round($fracAp, 14);
+                $rows[$i]['pondere_apeluri'] = $this->fmtPct($fracAp);
+            }
         }
 
         $syncFtva = $sync ? (float) $sync->vanzari_fara_tva : null;
@@ -213,6 +226,15 @@ final class CallCenterRaportLunarService
             $vanzariRows,
             $sync !== null
         );
+
+        foreach ($rows as $i => $_) {
+            unset(
+                $rows[$i]['aport_activitate_value'],
+                $rows[$i]['aport_vanzari_value'],
+                $rows[$i]['pondere_chaturi_value'],
+                $rows[$i]['pondere_apeluri_value'],
+            );
+        }
 
         return [
             'ym' => $ym,
@@ -303,6 +325,12 @@ final class CallCenterRaportLunarService
         return number_format($n, 2, '.', '');
     }
 
+    /** Raport 0–1 afișat ca procent cu virgulă zecimală (ex. 12,34 %). */
+    private function fmtPct(float $ratio, int $decimals = 2): string
+    {
+        return number_format($ratio * 100, $decimals, ',', ' ').' %';
+    }
+
     /**
      * @param  list<array<string, mixed>>  $operatorRows
      * @param  array{vanzari_fara_tva: string, plan_lunar: string, chaturi: string, apeluri: string}  $footerTotal
@@ -324,8 +352,8 @@ final class CallCenterRaportLunarService
             [$lunaLabel, '', 'Plan lunar', $planCell, '', '', '', ''],
             ['', '', '', '', '', '', '', ''],
             [
-                'NP', 'Chaturi', 'Apeluri', 'Aport in %', 'Vanzari (fara TVA, lei)', 'Aport in %',
-                'Plan individual ', 'Indeplinirea plan',
+                'NP', 'Chaturi', 'Apeluri', 'Aport activitate (%)', 'Vanzari (fara TVA, lei)', 'Aport vanzari (%)',
+                'Plan individual ', 'Indeplinire plan (%)',
             ],
         ];
 
@@ -334,9 +362,13 @@ final class CallCenterRaportLunarService
                 $r['np'],
                 (int) $r['chaturi_int'],
                 (int) $r['apeluri_int'],
-                $r['aport_activitate'] === '' ? null : (float) $r['aport_activitate'],
+                isset($r['aport_activitate_value']) && $r['aport_activitate_value'] !== null
+                    ? round((float) $r['aport_activitate_value'] * 100, 4)
+                    : null,
                 $r['vanzari_fara_tva'] === '' ? null : (float) str_replace(',', '', (string) $r['vanzari_fara_tva']),
-                $r['aport_vanzari'] === '' ? null : (float) $r['aport_vanzari'],
+                isset($r['aport_vanzari_value']) && $r['aport_vanzari_value'] !== null
+                    ? round((float) $r['aport_vanzari_value'] * 100, 4)
+                    : null,
                 $r['plan_individual'] === '' ? null : $r['plan_individual'],
                 $r['indeplinire_plan'] === '' ? null : $r['indeplinire_plan'],
             ];
@@ -346,7 +378,7 @@ final class CallCenterRaportLunarService
         $ftvaFooter = $footerTotal['vanzari_fara_tva'] !== '' ? (float) str_replace(',', '', $footerTotal['vanzari_fara_tva']) : null;
         $planFooter = $footerTotal['plan_lunar'] !== '' ? (float) str_replace(',', '', $footerTotal['plan_lunar']) : null;
         $indeplFooter = ($ftvaFooter !== null && $planFooter !== null && $planFooter > 0)
-            ? round($ftvaFooter / $planFooter, 8)
+            ? round($ftvaFooter / $planFooter * 100, 4)
             : null;
         $sumCh = isset($footerTotal['chaturi']) ? (int) $footerTotal['chaturi'] : 0;
         $sumAp = isset($footerTotal['apeluri']) ? (int) $footerTotal['apeluri'] : 0;
@@ -366,7 +398,9 @@ final class CallCenterRaportLunarService
             ['', '', ''],
         ];
         foreach ($operatorRows as $r) {
-            $pond = $r['pondere_chaturi'] === '' ? null : (float) $r['pondere_chaturi'];
+            $pond = isset($r['pondere_chaturi_value']) && $r['pondere_chaturi_value'] !== null
+                ? round((float) $r['pondere_chaturi_value'] * 100, 4)
+                : null;
             $chaturiAoa[] = [
                 $r['np'],
                 (int) $r['chaturi_int'],
@@ -382,7 +416,9 @@ final class CallCenterRaportLunarService
             ['', '', ''],
         ];
         foreach ($operatorRows as $r) {
-            $pondA = $r['pondere_apeluri'] === '' ? null : (float) $r['pondere_apeluri'];
+            $pondA = isset($r['pondere_apeluri_value']) && $r['pondere_apeluri_value'] !== null
+                ? round((float) $r['pondere_apeluri_value'] * 100, 4)
+                : null;
             $apeluriAoa[] = [
                 $r['np'],
                 (int) $r['apeluri_int'],

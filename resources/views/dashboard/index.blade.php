@@ -97,7 +97,6 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
         <h2 class="chart-panel__title">Grafic lunar</h2>
         <p class="chart-panel__subtitle">Plan vs. vânzări reale</p>
       </div>
-      <span class="chart-panel__hint">Mărește</span>
     </div>
     <div class="chart-wrapper chart-wrapper--glow" title="Click pentru vizualizare mare">
       <canvas id="salesChart"></canvas>
@@ -110,7 +109,6 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
         <h2 class="chart-panel__title">Comenzi per lună</h2>
         <p class="chart-panel__subtitle">Volum comenzi</p>
       </div>
-      <span class="chart-panel__hint">Mărește</span>
     </div>
     <div class="chart-wrapper chart-wrapper--glow" title="Click pentru vizualizare mare">
       <canvas id="comenziLunarChart"></canvas>
@@ -123,7 +121,6 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
         <h2 class="chart-panel__title">Conversie per lună</h2>
         <p class="chart-panel__subtitle">Comenzi / sesiuni</p>
       </div>
-      <span class="chart-panel__hint">Mărește</span>
     </div>
     <div class="chart-wrapper chart-wrapper--glow" title="Click pentru vizualizare mare">
       <canvas id="conversieLunarChart"></canvas>
@@ -136,7 +133,6 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
         <h2 class="chart-panel__title">Sesiuni per lună</h2>
         <p class="chart-panel__subtitle">Trafic site</p>
       </div>
-      <span class="chart-panel__hint">Mărește</span>
     </div>
     <div class="chart-wrapper chart-wrapper--glow" title="Click pentru vizualizare mare">
       <canvas id="sesiuniChart"></canvas>
@@ -477,8 +473,8 @@ async function loadVanzariTotale() {
               label: "Vânzări reale",
               data: vanzari,
               backgroundColor: brandBar,
-              hoverBackgroundColor: "rgba(255, 238, 0, 0.88)",
-              borderColor: "rgba(255, 238, 0, 0.35)",
+              hoverBackgroundColor: "rgba(250, 204, 21, 0.78)",
+              borderColor: "rgba(250, 204, 21, 0.28)",
               borderWidth: 1,
               borderRadius: isDashMobile ? 9 : 12,
               borderSkipped: false,
@@ -504,8 +500,8 @@ async function loadVanzariTotale() {
             label: "Comenzi",
             data: comenziData,
             backgroundColor: comenziBar,
-            hoverBackgroundColor: "rgba(255, 238, 0, 0.9)",
-            borderColor: "rgba(255, 238, 0, 0.28)",
+            hoverBackgroundColor: "rgba(250, 204, 21, 0.8)",
+            borderColor: "rgba(250, 204, 21, 0.24)",
             borderWidth: 1,
             borderRadius: isDashMobile ? 9 : 12,
             borderSkipped: false,
@@ -791,9 +787,9 @@ function loadComenziSiConversieLunare() {
   destroyChart("comenziLunarChart");
   destroyChart("conversieLunarChart");
   destroyChart("sesiuniChart");
-  initChart("comenziLunarChart", "Comenzi", "#ffee00");
-  initChart("conversieLunarChart", "Conversie %", "#ffee00");
-  initChart("sesiuniChart", "Total sesiuni", "#ffee00");
+  initChart("comenziLunarChart", "Comenzi", "#06b6d4");
+  initChart("conversieLunarChart", "Conversie %", "#f97316");
+  initChart("sesiuniChart", "Total sesiuni", "#a78bfa");
 }
 
 // ---------------- DOCUMENT READY ---------------- 
@@ -811,10 +807,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dashboardModalChart) dashboardModalChart.resize();
   });
 
-  initChart("salesChart", "Vânzări lunare", "#ffee00");
-  initChart("comenziLunarChart", "Comenzi", "#ffee00");
-  initChart("conversieLunarChart", "Conversie %", "#ffee00");
-  initChart("sesiuniChart", "Total sesiuni", "#ffee00");
+  initChart("salesChart", "Vânzări lunare", "#facc15");
+  initChart("comenziLunarChart", "Comenzi", "#06b6d4");
+  initChart("conversieLunarChart", "Conversie %", "#f97316");
+  initChart("sesiuniChart", "Total sesiuni", "#a78bfa");
 
   loadVanzariTotale();
 });
