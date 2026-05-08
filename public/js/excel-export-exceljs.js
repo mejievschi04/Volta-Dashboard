@@ -371,7 +371,7 @@
     await buildStyledWorksheet(wb, (options && options.sheetName) || 'Date', aoa, {
       title: (options && options.sheetName) || 'Date',
       subtitle: 'Exportat la ' + new Date().toLocaleString('ro-RO'),
-      coerceNumbers: true
+      coerceNumbers: !(options && options.coerceNumbers === false)
     });
     await downloadWorkbook(wb, (options && options.fileName) || ('date_' + nowStamp()));
   }
@@ -395,7 +395,7 @@
       await buildStyledWorksheet(wb, name, aoa, {
         title: rawName,
         subtitle: 'Exportat la ' + new Date().toLocaleString('ro-RO'),
-        coerceNumbers: true
+        coerceNumbers: !(s && s.coerceNumbers === false)
       });
     }
     await downloadWorkbook(wb, fileName || ('export_' + nowStamp()));

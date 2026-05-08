@@ -622,6 +622,81 @@
   .livrari-modal-success.is-visible { display: block; }
   .livrari-modal-error { display: none; background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); }
   .livrari-modal-error.is-visible { display: block; }
+  .livrari-export-modal { max-width: 760px; }
+  .livrari-export-form { display: flex; flex-direction: column; gap: 18px; }
+  .livrari-export-section {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 16px;
+    background: rgba(15, 23, 42, 0.35);
+  }
+  .livrari-export-section legend,
+  .livrari-export-section-title {
+    margin: 0 0 12px;
+    color: #f8fafc;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+  .livrari-export-choices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+  }
+  .livrari-export-choice,
+  .livrari-export-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #e5e7eb;
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+  .livrari-export-choice {
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .livrari-export-choice input,
+  .livrari-export-check input { accent-color: #ffee00; }
+  .livrari-export-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .livrari-export-field { display: flex; flex-direction: column; gap: 6px; }
+  .livrari-export-field label {
+    color: #9CA3AF;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .livrari-export-field input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    background: rgba(17, 24, 39, 0.7);
+    color: #fff;
+  }
+  .livrari-export-columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+  }
+  .livrari-export-tools { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .livrari-export-tool {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #e5e7eb;
+    padding: 7px 10px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .livrari-export-tool:hover { color: #ffee00; border-color: rgba(255, 238, 0, 0.28); }
 
   @media (max-width: 600px) {
     .livrari-add-row { grid-template-columns: 1fr; }
@@ -1173,6 +1248,88 @@
     {{ $livrari->links('vendor.pagination.livrari') }}
   </div>
 
+  @php
+    $livrariExportColumns = [
+      'Număr comandă',
+      'Data',
+      'Localitate',
+      'Adresa',
+      'Nr. client',
+      'Data livrării',
+      'Locație',
+    ];
+    if ($isAdmin) {
+      $livrariExportColumns[] = 'Operator';
+    }
+  @endphp
+  <div class="livrari-modal-overlay" id="livrariExportModal" aria-hidden="true">
+    <div class="livrari-modal livrari-export-modal" role="dialog" aria-labelledby="livrariExportModalTitle">
+      <div class="livrari-modal-header">
+        <h2 class="livrari-modal-title" id="livrariExportModalTitle"><i class="fas fa-file-excel"></i> Setări export</h2>
+        <button type="button" class="livrari-modal-close" id="livrariExportModalClose" aria-label="Închide">&times;</button>
+      </div>
+      <form id="livrariExportForm" class="livrari-export-form">
+        <fieldset class="livrari-export-section">
+          <legend>Rânduri</legend>
+          <div class="livrari-export-choices">
+            <label class="livrari-export-choice">
+              <input type="radio" name="export_scope" value="all" checked>
+              <span>Toate rezultatele filtrate</span>
+            </label>
+            <label class="livrari-export-choice">
+              <input type="radio" name="export_scope" value="page">
+              <span>Doar pagina curentă</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="livrari-export-section">
+          <p class="livrari-export-section-title">Fișier</p>
+          <div class="livrari-export-grid">
+            <div class="livrari-export-field">
+              <label for="livrariExportFileName">Nume fișier</label>
+              <input type="text" id="livrariExportFileName" value="livrari_tabel" maxlength="80">
+            </div>
+            <div class="livrari-export-field">
+              <label for="livrariExportSheetName">Nume foaie</label>
+              <input type="text" id="livrariExportSheetName" value="Livrari" maxlength="31">
+            </div>
+          </div>
+        </div>
+
+        <fieldset class="livrari-export-section">
+          <legend>Coloane</legend>
+          <div class="livrari-export-tools">
+            <button type="button" class="livrari-export-tool" id="livrariExportSelectAll">Selectează toate</button>
+            <button type="button" class="livrari-export-tool" id="livrariExportClearColumns">Debifează toate</button>
+          </div>
+          <div class="livrari-export-columns">
+            @foreach($livrariExportColumns as $index => $label)
+            <label class="livrari-export-check">
+              <input type="checkbox" class="livrari-export-column" value="{{ $index }}" checked>
+              <span>{{ $label }}</span>
+            </label>
+            @endforeach
+          </div>
+        </fieldset>
+
+        @if($isAdmin)
+        <label class="livrari-export-check livrari-export-section">
+          <input type="checkbox" id="livrariExportIncludeTotals">
+          <span>Include totalurile într-o foaie separată</span>
+        </label>
+        @endif
+
+        <div class="livrari-add-actions">
+          <button type="submit" class="livrari-btn livrari-btn-primary" id="livrariExportSubmitBtn">
+            <i class="fas fa-file-export"></i> Exportă
+          </button>
+          <button type="button" class="livrari-modal-close livrari-btn-secondary" id="livrariExportModalCloseBottom">Închide</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Modal Editează livrare (disponibil pentru operator și admin) -->
   <div class="livrari-modal-overlay" id="livrariEditModal" aria-hidden="true" data-update-url="{{ route('livrari.update', ['livrare' => '__ID__']) }}">
     <div class="livrari-modal" role="dialog" aria-labelledby="livrariEditModalTitle">
@@ -1615,34 +1772,181 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const exportBtn = document.getElementById('livrariExportExcelBtn');
+  const exportModal = document.getElementById('livrariExportModal');
+  const exportForm = document.getElementById('livrariExportForm');
+  const exportSubmitBtn = document.getElementById('livrariExportSubmitBtn');
+  const exportFileName = document.getElementById('livrariExportFileName');
+  const exportSheetName = document.getElementById('livrariExportSheetName');
+  const selectAllBtn = document.getElementById('livrariExportSelectAll');
+  const clearColumnsBtn = document.getElementById('livrariExportClearColumns');
+  const includeTotals = document.getElementById('livrariExportIncludeTotals');
+  const exportColumnInputs = Array.from(document.querySelectorAll('.livrari-export-column'));
+
+  function openExportModal() {
+    if (!exportModal) return;
+    exportModal.classList.add('is-open');
+    exportModal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeExportModal() {
+    if (!exportModal) return;
+    exportModal.classList.remove('is-open');
+    exportModal.setAttribute('aria-hidden', 'true');
+  }
+
+  function selectedColumnIndexes() {
+    return exportColumnInputs
+      .filter(function (input) { return input.checked; })
+      .map(function (input) { return parseInt(input.value, 10); })
+      .filter(function (value) { return !Number.isNaN(value); });
+  }
+
+  function pickColumns(headers, rows, indexes) {
+    return {
+      headers: indexes.map(function (index) { return headers[index] || ''; }),
+      rows: (rows || []).map(function (row) {
+        return indexes.map(function (index) { return row[index] || ''; });
+      })
+    };
+  }
+
+  function currentPagePayload() {
+    const table = document.getElementById('livrariDataTable');
+    if (!table) return { headers: [], rows: [] };
+    const headers = Array.from(table.querySelectorAll('thead th'))
+      .slice(0, -1)
+      .map(function (cell) { return (cell.innerText || cell.textContent || '').trim(); });
+    const rows = Array.from(table.querySelectorAll('tbody tr'))
+      .filter(function (row) { return row.id !== 'livrariEmptyRow'; })
+      .map(function (row) {
+        return Array.from(row.querySelectorAll('td'))
+          .slice(0, headers.length)
+          .map(function (cell) { return (cell.innerText || cell.textContent || '').trim(); });
+      });
+    return { headers: headers, rows: rows };
+  }
+
+  function filteredExportUrl() {
+    const exportUrl = new URL(@json(route('livrari.export-data')), window.location.origin);
+    const params = new URLSearchParams(window.location.search);
+    params.delete('page');
+    params.forEach(function (value, key) {
+      exportUrl.searchParams.append(key, value);
+    });
+    return exportUrl.toString();
+  }
+
+  function allFilteredPayload() {
+    return fetch(filteredExportUrl(), {
+      headers: { 'Accept': 'application/json' }
+    }).then(function (response) {
+      if (!response.ok) throw new Error('Nu am putut citi datele pentru export.');
+      return response.json();
+    }).then(function (payload) {
+      return {
+        headers: payload.headers || [],
+        rows: payload.rows || []
+      };
+    });
+  }
+
+  function totalsRows() {
+    const totalsTable = document.getElementById('livrariTotalsTable');
+    const rows = [
+      ['Total livrari', @json(number_format((int) $totalLivrari, 0, ',', '.'))],
+      ['', '']
+    ];
+
+    if (totalsTable) {
+      Array.from(totalsTable.querySelectorAll('tbody tr')).forEach(function (row) {
+        const cells = Array.from(row.querySelectorAll('td'));
+        if (cells.length < 2) return;
+        rows.push([
+          (cells[0].innerText || cells[0].textContent || '').trim(),
+          (cells[1].innerText || cells[1].textContent || '').trim()
+        ]);
+      });
+    }
+
+    return rows;
+  }
+
   if (exportBtn) {
     exportBtn.addEventListener('click', function () {
-      const exportUrl = new URL(@json(route('livrari.export-data')), window.location.origin);
-      const params = new URLSearchParams(window.location.search);
-      params.delete('page');
-      params.forEach(function (value, key) {
-        exportUrl.searchParams.append(key, value);
-      });
+      openExportModal();
+    });
+  }
 
-      exportBtn.disabled = true;
-      fetch(exportUrl.toString(), {
-        headers: { 'Accept': 'application/json' }
-      })
-        .then(function (response) {
-          if (!response.ok) throw new Error('Nu am putut citi datele pentru export.');
-          return response.json();
-        })
+  if (exportModal) {
+    exportModal.addEventListener('click', function (event) {
+      if (event.target === exportModal || event.target.closest('.livrari-modal-close')) {
+        closeExportModal();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && exportModal && exportModal.classList.contains('is-open')) {
+      closeExportModal();
+    }
+  });
+
+  if (selectAllBtn) {
+    selectAllBtn.addEventListener('click', function () {
+      exportColumnInputs.forEach(function (input) { input.checked = true; });
+    });
+  }
+
+  if (clearColumnsBtn) {
+    clearColumnsBtn.addEventListener('click', function () {
+      exportColumnInputs.forEach(function (input) { input.checked = false; });
+    });
+  }
+
+  if (exportForm) {
+    exportForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const indexes = selectedColumnIndexes();
+      if (!indexes.length) {
+        alert('Alege cel putin o coloana pentru export.');
+        return;
+      }
+
+      const scopeInput = exportForm.querySelector('input[name="export_scope"]:checked');
+      const scope = scopeInput ? scopeInput.value : 'all';
+      const fileName = (exportFileName && exportFileName.value.trim() ? exportFileName.value.trim() : 'livrari_tabel')
+        + '_' + window.VoltaExcelExport.nowStamp();
+      const sheetName = exportSheetName && exportSheetName.value.trim() ? exportSheetName.value.trim() : 'Livrari';
+      const payloadPromise = scope === 'page'
+        ? Promise.resolve(currentPagePayload())
+        : allFilteredPayload();
+
+      if (exportSubmitBtn) exportSubmitBtn.disabled = true;
+      payloadPromise
         .then(function (payload) {
-          return window.VoltaExcelExport.exportRows(payload.headers || [], payload.rows || [], {
-            fileName: 'livrari_tabel_' + window.VoltaExcelExport.nowStamp(),
-            sheetName: 'Livrari'
+          const filteredPayload = pickColumns(payload.headers || [], payload.rows || [], indexes);
+          if (includeTotals && includeTotals.checked) {
+            return window.VoltaExcelExport.exportSheets([
+              { name: sheetName, aoa: [filteredPayload.headers].concat(filteredPayload.rows), coerceNumbers: false },
+              { name: 'Totaluri livrari', aoa: [['Indicator', 'Valoare']].concat(totalsRows()), coerceNumbers: false }
+            ], fileName);
+          }
+
+          return window.VoltaExcelExport.exportRows(filteredPayload.headers, filteredPayload.rows, {
+            fileName: fileName,
+            sheetName: sheetName,
+            coerceNumbers: false
           });
+        })
+        .then(function () {
+          closeExportModal();
         })
         .catch(function (error) {
           alert('Nu am putut exporta Excel: ' + error.message);
         })
         .finally(function () {
-          exportBtn.disabled = false;
+          if (exportSubmitBtn) exportSubmitBtn.disabled = false;
         });
     });
   }
@@ -1650,26 +1954,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const totalsExportBtn = document.getElementById('livrariExportTotalsExcelBtn');
   if (totalsExportBtn) {
     totalsExportBtn.addEventListener('click', function () {
-      const totalsTable = document.getElementById('livrariTotalsTable');
-      const rows = [
-        ['Total livrari', @json((int) $totalLivrari)],
-        ['', '']
-      ];
-
-      if (totalsTable) {
-        Array.from(totalsTable.querySelectorAll('tbody tr')).forEach(function (row) {
-          const cells = Array.from(row.querySelectorAll('td'));
-          if (cells.length < 2) return;
-          rows.push([
-            (cells[0].innerText || cells[0].textContent || '').trim(),
-            (cells[1].innerText || cells[1].textContent || '').trim()
-          ]);
-        });
-      }
-
-      Promise.resolve(window.VoltaExcelExport.exportRows(['Indicator', 'Valoare'], rows, {
+      Promise.resolve(window.VoltaExcelExport.exportRows(['Indicator', 'Valoare'], totalsRows(), {
         fileName: 'livrari_totaluri_' + window.VoltaExcelExport.nowStamp(),
-        sheetName: 'Totaluri livrari'
+        sheetName: 'Totaluri livrari',
+        coerceNumbers: false
       })).catch(function (error) {
         alert('Nu am putut exporta Excel: ' + error.message);
       });
