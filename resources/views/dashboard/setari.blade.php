@@ -24,7 +24,7 @@
 @php $isDev = auth()->check() && auth()->user()->isDev(); @endphp
 @php $isOperator = auth()->check() && auth()->user()->isOperator(); @endphp
 
-<div class="setari-wrap">
+<div class="setari-wrap {{ $isOperator ? 'setari-wrap--operator' : '' }}">
 @if($isOperator)
   {{-- Operator: Poze profil și copertă --}}
   @if(isset($operatorRecord) && $operatorRecord)

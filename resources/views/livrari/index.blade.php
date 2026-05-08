@@ -1000,7 +1000,7 @@
 @endpush
 
 @section('content')
-<div class="livrari-page livrari-page--modern {{ $isAdmin ? 'livrari-page--admin' : '' }}">
+<div class="livrari-page livrari-page--modern {{ $isAdmin ? 'livrari-page--admin' : '' }} {{ !$isAdmin ? 'livrari-page--operator' : '' }}">
   <p class="rapoarte-lead livrari-page-lead">
     {{ $isAdmin ? 'Toate livrările și KPI per operator, în același format vizual ca Dashboard/Rapoarte.' : 'Adaugă și vizualizează livrările tale, cu filtre rapide și tabel unificat.' }}
   </p>
@@ -1153,7 +1153,6 @@
       <div class="livrari-modal-error" id="livrariModalError"></div>
       <form id="livrariAddForm" action="{{ route('livrari.store') }}" method="post" class="livrari-add-form">
         @csrf
-        <input type="hidden" name="data" value="{{ date('Y-m-d') }}" id="livrari-data-comanda">
         <div class="livrari-add-row">
           <div class="livrari-add-field">
             <label for="modal_data_livrarii">Data livrării *</label>
@@ -1364,7 +1363,6 @@
       <form id="livrariEditForm" method="post" class="livrari-add-form" action="">
         @csrf
         @method('PUT')
-        <input type="hidden" name="data" id="edit-data-comanda">
         <div class="livrari-add-row">
           <div class="livrari-add-field">
             <label for="edit_data_livrarii">Data livrării *</label>
@@ -1411,17 +1409,30 @@
   var successEl = document.getElementById('livrariModalSuccess');
   var errorEl = document.getElementById('livrariModalError');
   var submitBtn = document.getElementById('livrariModalSubmitBtn');
-  var dataComanda = document.getElementById('livrari-data-comanda');
   var dataLivrarii = document.getElementById('modal_data_livrarii');
+  var numarComanda = document.getElementById('modal_numar_comanda');
   var tbody = document.getElementById('livrariTableBody');
   var emptyRow = document.getElementById('livrariEmptyRow');
   var isAdmin = {{ $isAdmin ? 'true' : 'false' }};
+
+  function isTypingTarget(target) {
+    if (!target) return false;
+    var tag = (target.tagName || '').toLowerCase();
+    return target.isContentEditable || tag === 'input' || tag === 'textarea' || tag === 'select';
+  }
+
+  function isAnyLivrariModalOpen() {
+    return !!document.querySelector('.livrari-modal-overlay.is-open');
+  }
 
   function openModal() {
     if (modal) {
       modal.classList.add('is-open');
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
+      window.setTimeout(function() {
+        if (numarComanda) numarComanda.focus();
+      }, 40);
     }
   }
   function closeModal() {
@@ -1445,7 +1456,6 @@
   }
   function resetForm() {
     if (form) form.reset();
-    if (dataComanda) dataComanda.value = new Date().toISOString().slice(0, 10);
     if (dataLivrarii) dataLivrarii.value = new Date().toISOString().slice(0, 10);
   }
   function livrariDestroyUrl(id) {
@@ -1482,16 +1492,21 @@
   }
 
   if (openBtn) openBtn.addEventListener('click', function() { hideMessages(); resetForm(); openModal(); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key && e.key.toLowerCase() === 'q' && !e.ctrlKey && !e.metaKey && !e.altKey && !e.repeat) {
+      if (isTypingTarget(e.target) || isAnyLivrariModalOpen()) return;
+      e.preventDefault();
+      hideMessages();
+      resetForm();
+      openModal();
+    }
+  });
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
   if (closeBtnBottom) closeBtnBottom.addEventListener('click', closeModal);
   if (modal) {
     modal.addEventListener('click', function(e) {
       if (e.target === modal) closeModal();
     });
-  }
-
-  if (dataLivrarii && dataComanda) {
-    dataLivrarii.addEventListener('change', function() { dataComanda.value = dataLivrarii.value; });
   }
 
   if (form) {
@@ -1545,7 +1560,6 @@
   var editSuccessEl = document.getElementById('livrariEditModalSuccess');
   var editErrorEl = document.getElementById('livrariEditModalError');
   var editSubmitBtn = document.getElementById('livrariEditModalSubmitBtn');
-  var editDataComanda = document.getElementById('edit-data-comanda');
   var editDataLivrarii = document.getElementById('edit_data_livrarii');
   var updateUrlTemplate = editModal ? editModal.getAttribute('data-update-url') : '';
   var currentEditRow = null;
@@ -1586,7 +1600,6 @@
     currentEditRow = row;
     var id = row.dataset.id;
     document.getElementById('edit_numar_comanda').value = row.dataset.numarComanda || '';
-    editDataComanda.value = row.dataset.data || '';
     editDataLivrarii.value = row.dataset.dataLivrarii || '';
     document.getElementById('edit_localitate').value = row.dataset.localitate || '';
     document.getElementById('edit_nr_client').value = row.dataset.nrClient || '';
@@ -1595,10 +1608,6 @@
     hideEditMessages();
     openEditModal();
   });
-
-  if (editDataLivrarii && editDataComanda) {
-    editDataLivrarii.addEventListener('change', function() { editDataComanda.value = editDataLivrarii.value; });
-  }
 
   [document.getElementById('livrariEditModalClose'), document.getElementById('livrariEditModalCloseBottom')].forEach(function(el) {
     if (el) el.addEventListener('click', closeEditModal);

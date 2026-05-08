@@ -928,7 +928,16 @@ body {
   font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   font-weight: 500;
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
+  opacity: 0;
+  transform: translateY(0.35rem);
+  will-change: opacity, transform;
+  transition: opacity 0.24s ease-out, transform 0.24s ease-out;
+}
+
+.login-welcome-ink.is-ready {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .login-welcome-line {
@@ -946,15 +955,15 @@ body {
   overflow-wrap: anywhere;
   word-break: break-word;
   text-shadow: 0 0 40px rgba(255, 238, 0, 0.18);
+  transition-delay: 0.07s;
 }
 
-/* Litere care apar una câte una — animație discretă, tip tipar */
+/* Compatibilitate pentru HTML ramas in cache; animatia pe litera este dezactivata. */
 .login-type-char {
   display: inline-block;
-  opacity: 0;
-  transform: translateY(0.22em);
-  animation: loginTypeReveal 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: var(--type-delay, 0ms);
+  opacity: 1;
+  transform: none;
+  animation: none;
 }
 
 .login-type-char.login-type-space {
@@ -983,6 +992,12 @@ body.login-welcome-active .login-container {
 @media (prefers-reduced-motion: reduce) {
   .login-welcome-overlay {
     transition-duration: 0.15s;
+  }
+
+  .login-welcome-ink {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 
   .login-type-char {

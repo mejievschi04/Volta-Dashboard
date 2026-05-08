@@ -220,7 +220,6 @@ class LivrariController extends Controller
     {
         $validated = $request->validate([
             'numar_comanda' => 'required|string|max:100',
-            'data' => 'required|date',
             'adresa_livrarii' => 'required|string|max:500',
             'localitate' => 'required|string|max:255',
             'nr_client' => 'required|string|max:100',
@@ -228,6 +227,7 @@ class LivrariController extends Controller
         ]);
 
         $localitate = trim((string) $validated['localitate']);
+        $validated['data'] = now()->toDateString();
         $validated['in_chisinau'] = $this->isChisinau($localitate);
         $validated['user_id'] = Auth::id();
         $livrare = Livrare::create($validated);
@@ -270,7 +270,6 @@ class LivrariController extends Controller
 
         $validated = $request->validate([
             'numar_comanda' => 'required|string|max:100',
-            'data' => 'required|date',
             'adresa_livrarii' => 'required|string|max:500',
             'localitate' => 'required|string|max:255',
             'nr_client' => 'required|string|max:100',
