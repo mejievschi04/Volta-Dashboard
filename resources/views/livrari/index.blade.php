@@ -1617,27 +1617,33 @@ document.addEventListener('DOMContentLoaded', function () {
   const exportBtn = document.getElementById('livrariExportExcelBtn');
   if (exportBtn) {
     exportBtn.addEventListener('click', function () {
-      const table = document.getElementById('livrariDataTable');
-      if (!table) {
-        alert('Nu exista tabel pentru export.');
-        return;
-      }
-      const headers = Array.from(table.querySelectorAll('thead th'))
-        .slice(0, -1)
-        .map(function (cell) { return (cell.innerText || cell.textContent || '').trim(); });
-      const rows = Array.from(table.querySelectorAll('tbody tr'))
-        .filter(function (row) { return row.id !== 'livrariEmptyRow'; })
-        .map(function (row) {
-          return Array.from(row.querySelectorAll('td'))
-            .slice(0, headers.length)
-            .map(function (cell) { return (cell.innerText || cell.textContent || '').trim(); });
-        });
-      Promise.resolve(window.VoltaExcelExport.exportRows(headers, rows, {
-        fileName: 'livrari_tabel_' + window.VoltaExcelExport.nowStamp(),
-        sheetName: 'Livrari'
-      })).catch(function (error) {
-        alert('Nu am putut exporta Excel: ' + error.message);
+      const exportUrl = new URL(@json(route('livrari.export-data')), window.location.origin);
+      const params = new URLSearchParams(window.location.search);
+      params.delete('page');
+      params.forEach(function (value, key) {
+        exportUrl.searchParams.append(key, value);
       });
+
+      exportBtn.disabled = true;
+      fetch(exportUrl.toString(), {
+        headers: { 'Accept': 'application/json' }
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error('Nu am putut citi datele pentru export.');
+          return response.json();
+        })
+        .then(function (payload) {
+          return window.VoltaExcelExport.exportRows(payload.headers || [], payload.rows || [], {
+            fileName: 'livrari_tabel_' + window.VoltaExcelExport.nowStamp(),
+            sheetName: 'Livrari'
+          });
+        })
+        .catch(function (error) {
+          alert('Nu am putut exporta Excel: ' + error.message);
+        })
+        .finally(function () {
+          exportBtn.disabled = false;
+        });
     });
   }
 

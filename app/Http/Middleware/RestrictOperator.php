@@ -13,6 +13,7 @@ class RestrictOperator
     private const ALLOWED_ROUTES = [
         'datele-mele',
         'livrari',
+        'livrari.export-data',
         'livrari.store',
         'livrari.update',
         'livrari.destroy',

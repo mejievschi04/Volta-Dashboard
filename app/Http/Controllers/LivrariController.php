@@ -142,6 +142,76 @@ class LivrariController extends Controller
         ]);
     }
 
+    /** Returneaza toate livrarile filtrate pentru exportul Excel. */
+    public function exportData(Request $request)
+    {
+        $user = Auth::user();
+        $isAdmin = $user && in_array(strtolower((string) ($user->role ?? '')), ['admin', 'administrator'], true);
+
+        $luna = $request->input('luna');
+        $operatorId = $request->input('operator_id');
+        $locatie = $request->input('locatie');
+        $cauta = trim((string) $request->input('cauta', ''));
+        $dataLivrarii = $request->input('data');
+        $dataDeLa = $request->input('data_de_la');
+        $dataPana = $request->input('data_pana');
+
+        $query = $isAdmin ? Livrare::with('user') : Livrare::where('user_id', $user->id);
+
+        if ($dataDeLa !== null && $dataDeLa !== '' && $dataPana !== null && $dataPana !== '') {
+            $query->whereDate('data_livrarii', '>=', $dataDeLa)->whereDate('data_livrarii', '<=', $dataPana);
+        } elseif ($dataLivrarii !== null && $dataLivrarii !== '') {
+            $query->whereDate('data_livrarii', $dataLivrarii);
+        } elseif ($luna !== null && $luna !== '') {
+            $query->whereRaw(DbDate::month('data_livrarii') . ' = ?', [$luna]);
+        }
+        if ($isAdmin && $operatorId !== null && $operatorId !== '') {
+            $query->where('user_id', $operatorId);
+        }
+        if ($locatie === 'chisinau') {
+            $query->where('in_chisinau', true);
+        } elseif ($locatie === 'afara') {
+            $query->where('in_chisinau', false);
+        }
+        if ($cauta !== '') {
+            $term = '%' . $cauta . '%';
+            $query->where(function ($q) use ($term) {
+                $q->where('numar_comanda', 'like', $term)
+                    ->orWhere('adresa_livrarii', 'like', $term)
+                    ->orWhere('localitate', 'like', $term)
+                    ->orWhere('nr_client', 'like', $term);
+            });
+        }
+
+        $headers = ['Număr comandă', 'Data', 'Localitate', 'Adresa', 'Nr. client', 'Data livrării', 'Locație'];
+        if ($isAdmin) {
+            $headers[] = 'Operator';
+        }
+
+        $rows = $query->orderByDesc('data')->orderByDesc('data_livrarii')->get()->map(function (Livrare $livrare) use ($isAdmin) {
+            $row = [
+                $livrare->numar_comanda,
+                optional($livrare->data)->format('d.m.Y'),
+                $livrare->localitate ?? '—',
+                $livrare->adresa_livrarii,
+                $livrare->nr_client,
+                optional($livrare->data_livrarii)->format('d.m.Y'),
+                isset($livrare->in_chisinau) ? ($livrare->in_chisinau ? 'În Chișinău' : 'În afara') : '—',
+            ];
+
+            if ($isAdmin) {
+                $row[] = $livrare->user ? (trim((string) ($livrare->user->full_name ?? $livrare->user->name ?? '')) ?: $livrare->user->username) : '—';
+            }
+
+            return $row;
+        })->values();
+
+        return response()->json([
+            'headers' => $headers,
+            'rows' => $rows,
+        ]);
+    }
+
     /**
      * Salvează o livrare nouă (operator sau admin).
      * Locația (în Chișinău / în afara) se setează automat după oraș: dacă orașul = Chișinău → în Chișinău, altfel → în afara.
