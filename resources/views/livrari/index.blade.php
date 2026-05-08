@@ -1038,6 +1038,52 @@
   }
   .livrari-page .numInputWrapper span.arrowUp:after { border-bottom-color: #FFEE00; }
   .livrari-page .numInputWrapper span.arrowDown:after { border-top-color: #FFEE00; }
+  .livrari-date-display {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    background: rgba(17, 24, 39, 0.6);
+    color: #E5E7EB;
+    font-size: 0.9375rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .livrari-date-display:focus {
+    outline: none;
+    border-color: rgba(255, 238, 0, 0.45);
+    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.16);
+  }
+  .livrari-flatpickr.flatpickr-calendar {
+    background: linear-gradient(165deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid rgba(255, 238, 0, 0.18);
+    box-shadow: 0 20px 46px rgba(0, 0, 0, 0.45);
+    border-radius: 12px;
+  }
+  .livrari-flatpickr .flatpickr-months,
+  .livrari-flatpickr .flatpickr-weekdays { background: transparent; }
+  .livrari-flatpickr .flatpickr-current-month,
+  .livrari-flatpickr .flatpickr-current-month .flatpickr-monthDropdown-months,
+  .livrari-flatpickr .flatpickr-current-month input.cur-year { color: #fff; }
+  .livrari-flatpickr .flatpickr-prev-month svg,
+  .livrari-flatpickr .flatpickr-next-month svg { fill: var(--brand, #FFEE00); }
+  .livrari-flatpickr .flatpickr-day { color: #E5E7EB; border-radius: 8px; }
+  .livrari-flatpickr .flatpickr-day:hover {
+    background: rgba(255, 238, 0, 0.2);
+    border-color: rgba(255, 238, 0, 0.32);
+    color: #fff;
+  }
+  .livrari-flatpickr .flatpickr-day.selected,
+  .livrari-flatpickr .flatpickr-day.startRange,
+  .livrari-flatpickr .flatpickr-day.endRange {
+    background: var(--brand, #FFEE00);
+    border-color: var(--brand, #FFEE00);
+    color: #0a0a0a;
+  }
+  .livrari-flatpickr .flatpickr-day.inRange {
+    background: rgba(255, 238, 0, 0.2);
+    border-color: rgba(255, 238, 0, 0.25);
+    color: #fff;
+  }
 </style>
 @endpush
 
@@ -1737,6 +1783,17 @@
     if (dataLivrarii) dataLivrarii.value = new Date().toISOString().slice(0, 10);
     setDuplicateComanda(false);
   }
+  function firstMissingRequired(root) {
+    if (!root) return null;
+    var fields = Array.from(root.querySelectorAll('[required]'));
+    for (var i = 0; i < fields.length; i++) {
+      var field = fields[i];
+      if (!String(field.value || '').trim()) {
+        return field;
+      }
+    }
+    return null;
+  }
   function livrariDestroyUrl(id) {
     return @json(url('livrari')) + '/' + id;
   }
@@ -1795,6 +1852,12 @@
   if (form) {
     form.addEventListener('submit', function(e) {
       e.preventDefault();
+      var missing = firstMissingRequired(form);
+      if (missing) {
+        showError('Completează toate câmpurile obligatorii, inclusiv data.');
+        missing.focus();
+        return;
+      }
       if (duplicateComanda) {
         showError(window.LivrariComandaDuplicate.message);
         return;
@@ -1896,6 +1959,17 @@
   function updateEditSubmitState() {
     if (editSubmitBtn) editSubmitBtn.disabled = editDuplicateComanda || editSaveInProgress;
   }
+  function firstMissingRequired(root) {
+    if (!root) return null;
+    var fields = Array.from(root.querySelectorAll('[required]'));
+    for (var i = 0; i < fields.length; i++) {
+      var field = fields[i];
+      if (!String(field.value || '').trim()) {
+        return field;
+      }
+    }
+    return null;
+  }
   function scheduleEditDuplicateComandaCheck() {
     if (!editNumarComanda || !window.LivrariComandaDuplicate) return;
     window.clearTimeout(editDuplicateComandaTimer);
@@ -1953,6 +2027,12 @@
   if (editForm) {
     editForm.addEventListener('submit', function(e) {
       e.preventDefault();
+      var missing = firstMissingRequired(editForm);
+      if (missing) {
+        showEditError('Completează toate câmpurile obligatorii, inclusiv data.');
+        missing.focus();
+        return;
+      }
       if (!currentEditRow || !editForm.action) return;
       if (editDuplicateComanda) {
         showEditError(window.LivrariComandaDuplicate.message);
@@ -2077,6 +2157,15 @@
     hiddenPana.value = to.getFullYear() + '-' + ('0' + (to.getMonth() + 1)).slice(-2) + '-' + ('0' + to.getDate()).slice(-2);
     displayInput.value = formatRO(from) + ' – ' + formatRO(to);
   }
+  function parseRoDate(value) {
+    var raw = String(value || '').trim();
+    if (!raw) return null;
+    var ro = raw.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+    if (ro) return new Date(parseInt(ro[3], 10), parseInt(ro[2], 10) - 1, parseInt(ro[1], 10));
+    var iso = raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    if (iso) return new Date(parseInt(iso[1], 10), parseInt(iso[2], 10) - 1, parseInt(iso[3], 10));
+    return null;
+  }
 
   var defaultDate = [];
   if (hiddenDeLa.value && hiddenPana.value) {
@@ -2112,9 +2201,16 @@
       dateFormat: 'Y-m-d',
       altInput: true,
       altFormat: 'd.m.Y',
+      altInputClass: 'livrari-date-display',
       locale: 'ro',
-      allowInput: false,
-      defaultDate: addDateInput.value || 'today'
+      allowInput: true,
+      defaultDate: addDateInput.value || 'today',
+      parseDate: parseRoDate,
+      onReady: function(selectedDates, dateStr, instance) {
+        if (instance && instance.calendarContainer) {
+          instance.calendarContainer.classList.add('livrari-flatpickr');
+        }
+      }
     });
   }
 
@@ -2124,8 +2220,15 @@
       dateFormat: 'Y-m-d',
       altInput: true,
       altFormat: 'd.m.Y',
+      altInputClass: 'livrari-date-display',
       locale: 'ro',
-      allowInput: false
+      allowInput: true,
+      parseDate: parseRoDate,
+      onReady: function(selectedDates, dateStr, instance) {
+        if (instance && instance.calendarContainer) {
+          instance.calendarContainer.classList.add('livrari-flatpickr');
+        }
+      }
     });
   }
 
