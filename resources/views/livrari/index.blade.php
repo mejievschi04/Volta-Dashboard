@@ -163,21 +163,37 @@
     box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.18);
   }
   .livrari-filters select {
-    padding: 8px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
-    background: rgba(17, 24, 39, 0.6);
-    color: #E5E7EB;
+    padding: 10px 14px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+    color: #F8FAFC;
     min-width: 140px;
-    font-size: 0.8125rem;
-    font-weight: 500;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
     cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--brand, #FFEE00) 50%),
+      linear-gradient(135deg, var(--brand, #FFEE00) 50%, transparent 50%);
+    background-position:
+      calc(100% - 15px) calc(50% - 2px),
+      calc(100% - 10px) calc(50% - 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 32px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
   .livrari-filters select:focus {
     outline: none;
-    border-color: rgba(255, 238, 0, 0.45);
-    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.18);
+    border-color: rgba(255, 238, 0, 0.5);
+    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.35) inset;
+  }
+  .livrari-filters select:hover {
+    border-color: rgba(255, 238, 0, 0.32);
+    background: linear-gradient(180deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
   }
   .livrari-filters .livrari-btn { padding: 8px 16px; font-size: 0.8125rem; }
   .livrari-perioada-wrap { min-width: 200px; flex: 1 1 220px; }
@@ -241,28 +257,49 @@
   .livrari-filter-item { display: flex; flex-direction: column; gap: 4px; }
   .livrari-filter-item label { margin-bottom: 0; font-size: 0.6875rem; }
   .livrari-filter-item select {
-    padding: 8px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
-    background-color: rgba(17, 24, 39, 0.6);
-    color: #E5E7EB;
+    padding: 10px 14px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+    color: #F8FAFC;
     min-width: 140px;
-    font-size: 0.8125rem;
-    font-weight: 500;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
     cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%239CA3AF' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 10px center;
-    padding-right: 28px;
+    padding-right: 32px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+  .livrari-filters select option,
+  .livrari-filter-item select option {
+    background: #0B1220;
+    color: #F8FAFC;
+  }
+  .livrari-filters select option:checked,
+  .livrari-filter-item select option:checked {
+    background: #1E293B;
+    color: var(--brand, #FFEE00);
+    font-weight: 700;
+  }
+  .livrari-filters select:focus-visible,
+  .livrari-filter-item select:focus-visible {
+    outline: 2px solid rgba(255, 238, 0, 0.35);
+    outline-offset: 1px;
   }
   .livrari-filter-item select:focus {
     outline: none;
-    border-color: rgba(255, 238, 0, 0.45);
-    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.18);
+    border-color: rgba(255, 238, 0, 0.5);
+    box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.35) inset;
   }
-  .livrari-filter-item select:hover { border-color: rgba(255, 255, 255, 0.2); }
+  .livrari-filter-item select:hover {
+    border-color: rgba(255, 238, 0, 0.32);
+    background: linear-gradient(180deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
+  }
   .livrari-search-wrap.livrari-filter-item { min-width: 160px; flex: 1 1 180px; }
   .livrari-btn {
     padding: 12px 24px;
@@ -1105,9 +1142,9 @@
   }
   .livrari-flatpickr .flatpickr-monthDropdown-months,
   .livrari-flatpickr .numInputWrapper input {
-    background: rgba(17, 24, 39, 0.85);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+    color: #F8FAFC;
+    border: 1px solid rgba(148, 163, 184, 0.35);
     border-radius: 6px;
   }
   .livrari-flatpickr .flatpickr-monthDropdown-months {
