@@ -1110,6 +1110,23 @@
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 6px;
   }
+  .livrari-flatpickr .flatpickr-monthDropdown-months {
+    padding-right: 24px;
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--brand, #FFEE00) 50%), linear-gradient(135deg, var(--brand, #FFEE00) 50%, transparent 50%);
+    background-position: calc(100% - 14px) calc(50% - 2px), calc(100% - 9px) calc(50% - 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+  }
+  .livrari-flatpickr .flatpickr-monthDropdown-months option {
+    background: #0f172a;
+    color: #f8fafc;
+  }
+  .livrari-flatpickr .flatpickr-monthDropdown-months option:checked,
+  .livrari-flatpickr .flatpickr-monthDropdown-months option:hover {
+    background: #1e293b;
+    color: var(--brand, #FFEE00);
+  }
   .livrari-flatpickr .numInputWrapper span.arrowUp:after { border-bottom-color: var(--brand, #FFEE00); }
   .livrari-flatpickr .numInputWrapper span.arrowDown:after { border-top-color: var(--brand, #FFEE00); }
 </style>
