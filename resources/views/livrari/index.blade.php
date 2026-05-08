@@ -650,6 +650,8 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     background: linear-gradient(90deg, rgba(255, 238, 0, 0.08) 0%, transparent 55%);
   }
+  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-copy { min-width: 0; }
+  .livrari-page--admin .livrari-admin-kpi .livrari-kpi-export { margin-left: auto; white-space: nowrap; }
   .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header-icon {
     width: 56px;
     height: 56px;
@@ -829,6 +831,7 @@
   @media (max-width: 768px) {
     .livrari-page--admin .livrari-admin-kpi .livrari-kpi-body { grid-template-columns: 1fr; padding: 20px 20px 24px; }
     .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header { padding: 20px 20px 18px; flex-wrap: wrap; }
+    .livrari-page--admin .livrari-admin-kpi .livrari-kpi-export { margin-left: 0; width: 100%; justify-content: center; }
     .livrari-page--admin .livrari-kpi-total-card { flex-direction: column; align-items: flex-start; }
     .livrari-page--admin .livrari-kpi-total-value { font-size: 1.75rem; }
   }
@@ -1013,10 +1016,13 @@
   <div class="livrari-card livrari-admin-kpi">
     <div class="livrari-kpi-header">
       <div class="livrari-kpi-header-icon"><i class="fas fa-truck"></i></div>
-      <div>
+      <div class="livrari-kpi-copy">
         <h2 class="livrari-kpi-title">KPI Livrări</h2>
         <p class="livrari-kpi-subtitle">Rezumat livrări și distribuție per operator</p>
       </div>
+      <button type="button" id="livrariExportTotalsExcelBtn" class="livrari-btn livrari-btn-primary livrari-kpi-export">
+        <i class="fas fa-file-excel" aria-hidden="true"></i> Export totaluri
+      </button>
     </div>
     <div class="livrari-kpi-body">
       <div class="livrari-kpi-total-card">
@@ -1029,7 +1035,7 @@
       <div class="livrari-per-operator">
         <h3 class="livrari-per-operator-title"><i class="fas fa-users"></i> Livrări per operator</h3>
         <div class="livrari-per-operator-table-wrap">
-          <table class="livrari-table livrari-per-operator-table">
+          <table id="livrariTotalsTable" class="livrari-table livrari-per-operator-table">
             <thead>
               <tr>
                 <th>Operator</th>
@@ -1114,7 +1120,7 @@
       </button>
     </h2>
     <div class="livrari-table-wrap">
-      <table class="livrari-table">
+      <table id="livrariDataTable" class="livrari-table">
         <thead>
           <tr>
             <th>Număr comandă</th>
@@ -1609,20 +1615,60 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const exportBtn = document.getElementById('livrariExportExcelBtn');
-  if (!exportBtn) return;
-  exportBtn.addEventListener('click', function () {
-    const table = document.querySelector('.livrari-table');
-    if (!table) {
-      alert('Nu există tabel pentru export.');
-      return;
-    }
-    Promise.resolve(window.VoltaExcelExport.exportTable(table, {
-      fileName: 'livrari_tabel_' + window.VoltaExcelExport.nowStamp(),
-      sheetName: 'Livrari'
-    })).catch(function (error) {
-      alert('Nu am putut exporta Excel: ' + error.message);
+  if (exportBtn) {
+    exportBtn.addEventListener('click', function () {
+      const table = document.getElementById('livrariDataTable');
+      if (!table) {
+        alert('Nu exista tabel pentru export.');
+        return;
+      }
+      const headers = Array.from(table.querySelectorAll('thead th'))
+        .slice(0, -1)
+        .map(function (cell) { return (cell.innerText || cell.textContent || '').trim(); });
+      const rows = Array.from(table.querySelectorAll('tbody tr'))
+        .filter(function (row) { return row.id !== 'livrariEmptyRow'; })
+        .map(function (row) {
+          return Array.from(row.querySelectorAll('td'))
+            .slice(0, headers.length)
+            .map(function (cell) { return (cell.innerText || cell.textContent || '').trim(); });
+        });
+      Promise.resolve(window.VoltaExcelExport.exportRows(headers, rows, {
+        fileName: 'livrari_tabel_' + window.VoltaExcelExport.nowStamp(),
+        sheetName: 'Livrari'
+      })).catch(function (error) {
+        alert('Nu am putut exporta Excel: ' + error.message);
+      });
     });
-  });
+  }
+
+  const totalsExportBtn = document.getElementById('livrariExportTotalsExcelBtn');
+  if (totalsExportBtn) {
+    totalsExportBtn.addEventListener('click', function () {
+      const totalsTable = document.getElementById('livrariTotalsTable');
+      const rows = [
+        ['Total livrari', @json((int) $totalLivrari)],
+        ['', '']
+      ];
+
+      if (totalsTable) {
+        Array.from(totalsTable.querySelectorAll('tbody tr')).forEach(function (row) {
+          const cells = Array.from(row.querySelectorAll('td'));
+          if (cells.length < 2) return;
+          rows.push([
+            (cells[0].innerText || cells[0].textContent || '').trim(),
+            (cells[1].innerText || cells[1].textContent || '').trim()
+          ]);
+        });
+      }
+
+      Promise.resolve(window.VoltaExcelExport.exportRows(['Indicator', 'Valoare'], rows, {
+        fileName: 'livrari_totaluri_' + window.VoltaExcelExport.nowStamp(),
+        sheetName: 'Totaluri livrari'
+      })).catch(function (error) {
+        alert('Nu am putut exporta Excel: ' + error.message);
+      });
+    });
+  }
 });
 </script>
 @endpush
