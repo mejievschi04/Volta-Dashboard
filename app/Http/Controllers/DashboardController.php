@@ -89,7 +89,7 @@ class DashboardController extends Controller
         if ($request->filled('country')) {
             $user->country = $request->country;
         }
-        if ($request->filled('theme')) {
+        if (! $user->isOperator() && $request->filled('theme')) {
             $user->theme = $request->theme;
         }
         $user->save();

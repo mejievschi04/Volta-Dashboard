@@ -685,6 +685,9 @@ function displayStats(data) {
   }
   
   const isMobile = window.innerWidth <= 768;
+  const themeStyles = getComputedStyle(document.documentElement);
+  const brand = (themeStyles.getPropertyValue('--brand') || '').trim() || '#FFEE00';
+  const brandRgb = (themeStyles.getPropertyValue('--brand-rgb') || '').trim() || '255, 238, 0';
   
   // Creăm noul grafic de tendință
   statsChart = new Chart(ctx, {
@@ -748,7 +751,7 @@ function displayStats(data) {
         tooltip: {
           enabled: true,
           backgroundColor: 'rgba(2, 6, 23, 0.92)',
-          titleColor: '#FACC15',
+          titleColor: brand,
           titleFont: {
             size: isMobile ? 12 : 15,
             weight: 'bold',
@@ -760,7 +763,7 @@ function displayStats(data) {
             weight: '600',
             family: "'Montserrat', sans-serif"
           },
-          borderColor: 'rgba(250, 204, 21, 0.32)',
+          borderColor: `rgba(${brandRgb}, 0.32)`,
           borderWidth: 1.5,
           padding: 16,
           cornerRadius: 10,
@@ -830,9 +833,9 @@ function displayStats(data) {
             backdropPadding: 4
           },
           grid: {
-            color: 'rgba(255, 238, 0, 0.15)',
+            color: `rgba(${brandRgb}, 0.15)`,
             drawBorder: true,
-            borderColor: 'rgba(255, 238, 0, 0.3)',
+            borderColor: `rgba(${brandRgb}, 0.3)`,
             borderWidth: 1,
             lineWidth: 1,
             drawOnChartArea: true,
@@ -841,7 +844,7 @@ function displayStats(data) {
           title: {
             display: true,
             text: 'Număr de sesiuni',
-            color: '#FFEE00',
+            color: brand,
             font: {
               size: isMobile ? 11 : 14,
               weight: '700',
@@ -868,9 +871,9 @@ function displayStats(data) {
             backdropPadding: 4
           },
           grid: {
-            color: 'rgba(255, 238, 0, 0.08)',
+            color: `rgba(${brandRgb}, 0.08)`,
             drawBorder: true,
-            borderColor: 'rgba(255, 238, 0, 0.2)',
+            borderColor: `rgba(${brandRgb}, 0.2)`,
             borderWidth: 1,
             lineWidth: 1,
             drawOnChartArea: true,
@@ -879,7 +882,7 @@ function displayStats(data) {
           title: {
             display: true,
             text: 'Perioadă',
-            color: '#FFEE00',
+            color: brand,
             font: {
               size: isMobile ? 11 : 14,
               weight: '700',

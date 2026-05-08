@@ -820,6 +820,93 @@ html[data-theme="dark-red"] .operator-portal .setari-photo-btn:hover {
   background: rgba(193, 18, 31, 0.24);
 }
 
+/* Dark-red: tabele si butoane (operator portal) */
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-table th,
+html[data-theme="dark-red"] .operator-portal .operator-me-table th {
+  background: rgba(193, 18, 31, 0.18);
+  border-bottom-color: rgba(193, 18, 31, 0.35);
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-table td,
+html[data-theme="dark-red"] .operator-portal .operator-me-table td {
+  color: #f5f3f4;
+  border-bottom-color: rgba(245, 243, 244, 0.08);
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-table tbody tr:hover,
+html[data-theme="dark-red"] .operator-portal .operator-me-table tbody tr:hover {
+  background: rgba(193, 18, 31, 0.10);
+}
+
+html[data-theme="dark-red"] .operator-portal .operator-me-table__profit {
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-primary,
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .btn,
+html[data-theme="dark-red"] .operator-portal .operator-logout button {
+  background: linear-gradient(135deg, #c1121f 0%, #a00f1a 100%);
+  color: #f5f3f4;
+  border-color: rgba(245, 243, 244, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-primary:hover,
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .btn:hover,
+html[data-theme="dark-red"] .operator-portal .operator-logout button:hover {
+  background: linear-gradient(135deg, #d11a28 0%, #b11320 100%);
+  border-color: rgba(245, 243, 244, 0.35);
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-reset,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-edit,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-delete {
+  border-color: rgba(193, 18, 31, 0.35);
+  color: #f5f3f4;
+  background: rgba(193, 18, 31, 0.12);
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-reset:hover,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-edit:hover,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-delete:hover {
+  background: rgba(193, 18, 31, 0.22);
+  border-color: rgba(193, 18, 31, 0.55);
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-pag__num--current {
+  background: linear-gradient(135deg, #c1121f 0%, #a00f1a 100%);
+  border-color: rgba(245, 243, 244, 0.3);
+  color: #f5f3f4;
+  box-shadow: 0 4px 14px rgba(193, 18, 31, 0.35);
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-pag__num--link:hover,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-pag__edge--link:hover {
+  background: rgba(193, 18, 31, 0.16);
+  border-color: rgba(193, 18, 31, 0.42);
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .field input[type="password"],
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .field select,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-search-input,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-filters select,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-perioada-field {
+  border-color: rgba(193, 18, 31, 0.32);
+  background: rgba(26, 18, 21, 0.86);
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .field input[type="password"]:focus,
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .field select:focus,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-search-input:focus,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-filters select:focus,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-perioada-field:focus-within {
+  border-color: rgba(193, 18, 31, 0.58);
+  box-shadow: 0 0 0 2px rgba(193, 18, 31, 0.2);
+}
+
 @media (max-width: 1024px) {
   .operator-me-grid {
     grid-template-columns: 1fr;

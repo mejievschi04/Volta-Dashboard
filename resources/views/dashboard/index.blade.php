@@ -164,6 +164,15 @@ function formatNumber(val) {
   return new Intl.NumberFormat('ro-RO').format(val || 0);
 }
 
+function getThemeBrand() {
+  try {
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
+    return v || '#FFEE00';
+  } catch (e) {
+    return '#FFEE00';
+  }
+}
+
 // ---------------- CHARTS OBJECT ---------------- 
 const charts = {};
 
@@ -266,7 +275,7 @@ function initChart(chartId, label, color="#FFEE00") {
         responsive: true,
         plugins: {
           legend: { display: true, labels: { color: "#fff", font: { size: isM ? 10 : 12 } } },
-          tooltip: { backgroundColor: "rgba(31,41,55,0.95)", titleColor: "#FFEE00", bodyColor: "#fff", borderColor: "#475569", borderWidth: 1, padding: 12, cornerRadius: 10 },
+          tooltip: { backgroundColor: "rgba(31,41,55,0.95)", titleColor: getThemeBrand(), bodyColor: "#fff", borderColor: "#475569", borderWidth: 1, padding: 12, cornerRadius: 10 },
         },
         scales: {
           x: { ticks: { color: "#e2e8f0", font: { size: isM ? 9 : 11 } }, grid: { color: "rgba(148,163,184,0.12)", drawBorder: false } },
@@ -401,7 +410,7 @@ async function loadVanzariTotale() {
           },
           plugins: {
             legend: { display: true, position: "top", labels: { color: "#e2e8f0", font: { size: 13 }, usePointStyle: true } },
-            tooltip: { backgroundColor: "rgba(30,41,59,0.96)", titleColor: "#FFEE00", bodyColor: "#f8fafc", borderColor: "#334155", borderWidth: 1, padding: 12, cornerRadius: 10 },
+            tooltip: { backgroundColor: "rgba(30,41,59,0.96)", titleColor: getThemeBrand(), bodyColor: "#f8fafc", borderColor: "#334155", borderWidth: 1, padding: 12, cornerRadius: 10 },
           },
           scales: {
             x: { ticks: { color: "#cbd5e1", maxRotation: isDashMobile ? 45 : 0 }, grid: { color: "rgba(148,163,184,0.12)", drawBorder: false } },
@@ -417,7 +426,7 @@ async function loadVanzariTotale() {
     destroyChart("salesChart");
     const ctxSales = document.getElementById("salesChart");
     const SOL = (typeof VoltaChartTheme !== "undefined" && VoltaChartTheme.barSolid) ? VoltaChartTheme.barSolid : {};
-    const yellow = SOL.brand || "#FFEE00";
+    const yellow = SOL.brand || getThemeBrand();
     const yellowHi = SOL.brandHover || "#FFF59A";
     const rose = SOL.coral || "#FB7185";
     const roseHi = SOL.coralHover || "#FDA4AF";
@@ -756,7 +765,7 @@ function loadComenziSiConversieLunare() {
   destroyChart("comenziLunarChart");
   destroyChart("conversieLunarChart");
   destroyChart("sesiuniChart");
-  initChart("comenziLunarChart", "Comenzi", "#FFEE00");
+  initChart("comenziLunarChart", "Comenzi", getThemeBrand());
   initChart("conversieLunarChart", "Conversie %", "#FB7185");
   initChart("sesiuniChart", "Total sesiuni", "#38BDF8");
 }
@@ -776,8 +785,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dashboardModalChart) dashboardModalChart.resize();
   });
 
-  initChart("salesChart", "Vânzări lunare", "#FFEE00");
-  initChart("comenziLunarChart", "Comenzi", "#FFEE00");
+  initChart("salesChart", "Vânzări lunare", getThemeBrand());
+  initChart("comenziLunarChart", "Comenzi", getThemeBrand());
   initChart("conversieLunarChart", "Conversie %", "#FB7185");
   initChart("sesiuniChart", "Total sesiuni", "#38BDF8");
 

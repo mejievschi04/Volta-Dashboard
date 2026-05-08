@@ -168,7 +168,7 @@ function istoricChartOptions() {
     interaction: { mode: 'index', intersect: false },
     plugins: {
       legend: { display: true, labels: { color: '#e2e8f0', font: { size: 12 } } },
-      tooltip: { backgroundColor: 'rgba(30,41,59,0.96)', titleColor: '#FFEE00', bodyColor: '#f8fafc', borderColor: '#334155', borderWidth: 1, padding: 12, cornerRadius: 10 },
+      tooltip: { backgroundColor: 'rgba(30,41,59,0.96)', titleColor: ((getComputedStyle(document.documentElement).getPropertyValue('--brand') || '').trim() || '#FFEE00'), bodyColor: '#f8fafc', borderColor: '#334155', borderWidth: 1, padding: 12, cornerRadius: 10 },
     },
     scales: {
       x: { ticks: { color: '#cbd5e1', maxRotation: 45 }, grid: { color: 'rgba(148,163,184,0.12)', drawBorder: false } },
@@ -348,6 +348,9 @@ function updateCharts() {
   const profit = filteredData.map(d => d.profit || 0).reverse();
   const conversie = filteredData.map(d => d.conversie || 0).reverse();
   const opts = istoricChartOptions();
+  const themeStyles = getComputedStyle(document.documentElement);
+  const brand = (themeStyles.getPropertyValue('--brand') || '').trim() || '#FFEE00';
+  const brandRgb = (themeStyles.getPropertyValue('--brand-rgb') || '').trim() || '255, 238, 0';
 
   destroyChart('vanzariChart');
   const ctx1 = document.getElementById('vanzariChart').getContext('2d');
@@ -359,14 +362,14 @@ function updateCharts() {
         datasets: [{
           label: 'Vânzări (MDL)',
           data: vanzari,
-          borderColor: 'rgba(255, 238, 0, 0.85)',
-          backgroundColor: 'rgba(255, 238, 0, 0.1)',
+          borderColor: `rgba(${brandRgb}, 0.85)`,
+          backgroundColor: `rgba(${brandRgb}, 0.1)`,
           borderWidth: 2,
           fill: true,
           tension: 0.35,
           pointRadius: window.innerWidth <= 768 ? 2 : 4,
           pointHoverRadius: window.innerWidth <= 768 ? 4 : 6,
-          pointBackgroundColor: 'rgba(255, 238, 0, 0.9)',
+          pointBackgroundColor: `rgba(${brandRgb}, 0.9)`,
           pointBorderColor: 'rgb(15, 23, 42)',
           pointBorderWidth: 1,
         }],

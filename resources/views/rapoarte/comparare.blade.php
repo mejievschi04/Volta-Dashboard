@@ -124,7 +124,7 @@ function compareCartesianOptions() {
     interaction: { mode: 'index', intersect: false },
     plugins: {
       legend: { display: true, labels: { color: '#e2e8f0', font: { size: 12 } } },
-      tooltip: { backgroundColor: 'rgba(30,41,59,0.96)', titleColor: '#FFEE00', bodyColor: '#f8fafc', borderColor: '#334155', borderWidth: 1, padding: 12, cornerRadius: 10 },
+      tooltip: { backgroundColor: 'rgba(30,41,59,0.96)', titleColor: ((getComputedStyle(document.documentElement).getPropertyValue('--brand') || '').trim() || '#FFEE00'), bodyColor: '#f8fafc', borderColor: '#334155', borderWidth: 1, padding: 12, cornerRadius: 10 },
     },
     scales: {
       x: { ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(148,163,184,0.12)', drawBorder: false } },
@@ -275,6 +275,8 @@ function updateKPICards(data1, data2) {
 function updateCharts(data1, data2, label1, label2) {
   const barOpts = compareCartesianOptions();
   const labels = [label1, label2];
+  const themeStyles = getComputedStyle(document.documentElement);
+  const brandRgb = (themeStyles.getPropertyValue('--brand-rgb') || '').trim() || '255, 238, 0';
 
   destroyChart("vanzariCompareChart");
   const ctx1 = document.getElementById("vanzariCompareChart").getContext("2d");
@@ -286,9 +288,9 @@ function updateCharts(data1, data2, label1, label2) {
         datasets: [{
           label: "Vânzări fără TVA",
           data: [data1.vanzari_luna || 0, data2.vanzari_luna || 0],
-          backgroundColor: ["rgba(255, 238, 0, 0.52)", "rgba(255, 238, 0, 0.28)"],
-          hoverBackgroundColor: ["rgba(255, 238, 0, 0.72)", "rgba(255, 238, 0, 0.45)"],
-          borderColor: ["rgba(255, 238, 0, 0.35)", "rgba(255, 238, 0, 0.22)"],
+          backgroundColor: [`rgba(${brandRgb}, 0.52)`, `rgba(${brandRgb}, 0.28)`],
+          hoverBackgroundColor: [`rgba(${brandRgb}, 0.72)`, `rgba(${brandRgb}, 0.45)`],
+          borderColor: [`rgba(${brandRgb}, 0.35)`, `rgba(${brandRgb}, 0.22)`],
           borderWidth: 1,
           borderRadius: 8,
           borderSkipped: false,

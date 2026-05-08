@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 @php
-  $uiTheme = auth()->check() ? (auth()->user()->theme ?? 'dark') : 'dark';
-  if (!in_array($uiTheme, ['dark', 'dark-red'], true)) {
-    $uiTheme = 'dark';
-  }
+  $uiTheme = 'dark';
 @endphp
 <html lang="ro" data-theme="{{ $uiTheme }}">
 <head>

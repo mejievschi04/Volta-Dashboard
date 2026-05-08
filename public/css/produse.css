@@ -1,12 +1,12 @@
 /* === Variabile generale === */
 :root {
+  --brand-rgb: 255, 238, 0;
   --bg: rgb(15, 23, 42);
   --bg-soft: rgb(30, 41, 59);
   --ink: rgb(248, 250, 252);
   --muted: rgb(148, 163, 184);
-  --brand: rgb(255, 238, 0);
-  --brand-10: rgba(255,238,0,.12);
-  --brand-20: rgba(255,238,0,.2);
+  --brand-10: rgba(var(--brand-rgb), .12);
+  --brand-20: rgba(var(--brand-rgb), .2);
   --card-radius: 12px;
   --glow: 0 2px 12px rgba(0, 0, 0, 0.35);
   --shadow: 0 4px 8px rgba(0,0,0,.4);
@@ -214,7 +214,7 @@ tr:hover td { background: var(--bg-soft); }
   
   .topbar input[type="month"]:focus,
   .topbar select:focus {
-    -webkit-tap-highlight-color: rgba(255, 238, 0, 0.3);
+    -webkit-tap-highlight-color: rgba(var(--brand-rgb), 0.3);
     outline: none;
   }
   
@@ -308,4 +308,9 @@ tr:hover td { background: var(--bg-soft); }
   #produseChart {
     min-height: 220px;
   }
+}
+
+
+html[data-theme=dark-red] {
+  --brand-rgb: 193, 18, 31;
 }

@@ -536,6 +536,7 @@ function drawChart() {
   }
 
   const isMobile = window.innerWidth <= 768;
+  const themeBrand = (getComputedStyle(document.documentElement).getPropertyValue('--brand') || '').trim() || '#FFEE00';
   
   var chartOptions = (function () {
     if (typeof VoltaChartTheme !== 'undefined') {
@@ -576,7 +577,7 @@ function drawChart() {
         },
         tooltip: {
           backgroundColor: 'rgba(30,41,59,0.96)',
-          titleColor: '#FFEE00',
+          titleColor: themeBrand,
           bodyColor: '#f8fafc',
           borderColor: '#334155',
           borderWidth: 1
