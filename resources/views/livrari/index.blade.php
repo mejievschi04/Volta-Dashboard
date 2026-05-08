@@ -608,6 +608,48 @@
     box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.16);
   }
   .livrari-add-field input::placeholder { color: #6B7280; }
+  .livrari-raion-field { position: relative; }
+  .livrari-raion-menu {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 1200;
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 6px;
+    border: 1px solid rgba(255, 238, 0, 0.2);
+    border-radius: 10px;
+    background: rgba(15, 23, 42, 0.98);
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.38);
+  }
+  .livrari-raion-menu[hidden] { display: none; }
+  .livrari-raion-option {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 34px;
+    padding: 8px 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #E5E7EB;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.875rem;
+    text-align: left;
+  }
+  .livrari-raion-option:hover,
+  .livrari-raion-option.is-active {
+    background: rgba(255, 238, 0, 0.14);
+    color: #FFEE00;
+  }
+  .livrari-raion-empty {
+    padding: 10px;
+    color: #9CA3AF;
+    font-size: 0.875rem;
+  }
   .livrari-add-actions { margin-top: 8px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
   .livrari-btn-add { padding: 14px 26px; font-size: 1rem; }
   .livrari-modal-success,
@@ -1446,11 +1488,11 @@
 <script>
 (function() {
   var raioane = @json($livrariRaioane);
-  var datalist = document.getElementById('livrariRaioaneList');
   var inputs = [
     document.getElementById('modal_localitate'),
     document.getElementById('edit_localitate')
   ].filter(Boolean);
+  var activeIndex = -1;
 
   function normalizeText(value) {
     return String(value || '')
@@ -1459,31 +1501,113 @@
       .replace(/[\u0300-\u036f]/g, '');
   }
 
-  function renderRaioane(query) {
-    if (!datalist) return;
+  function matchesRaioane(query) {
     var needle = normalizeText(query);
-    var matches = raioane.filter(function(raion) {
+    return raioane.filter(function(raion) {
       return needle === '' || normalizeText(raion).indexOf(needle) !== -1;
-    });
-
-    datalist.innerHTML = '';
-    matches.forEach(function(raion) {
-      var option = document.createElement('option');
-      option.value = raion;
-      datalist.appendChild(option);
     });
   }
 
+  function closeRaionMenus() {
+    document.querySelectorAll('.livrari-raion-menu').forEach(function(menu) {
+      menu.hidden = true;
+      menu.innerHTML = '';
+    });
+    activeIndex = -1;
+  }
+
+  function setActive(menu, index) {
+    var options = Array.from(menu.querySelectorAll('.livrari-raion-option'));
+    activeIndex = options.length ? Math.max(0, Math.min(index, options.length - 1)) : -1;
+    options.forEach(function(option, optionIndex) {
+      option.classList.toggle('is-active', optionIndex === activeIndex);
+    });
+    if (options[activeIndex]) {
+      options[activeIndex].scrollIntoView({ block: 'nearest' });
+    }
+  }
+
+  function selectRaion(input, value) {
+    input.value = value;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    closeRaionMenus();
+    input.focus();
+  }
+
+  function renderRaionMenu(input) {
+    var menu = input._raionMenu;
+    if (!menu) return;
+    var matches = matchesRaioane(input.value);
+
+    menu.innerHTML = '';
+    if (!matches.length) {
+      var empty = document.createElement('div');
+      empty.className = 'livrari-raion-empty';
+      empty.textContent = 'Niciun raion gasit';
+      menu.appendChild(empty);
+      menu.hidden = false;
+      activeIndex = -1;
+      return;
+    }
+
+    matches.forEach(function(raion) {
+      var option = document.createElement('button');
+      option.type = 'button';
+      option.className = 'livrari-raion-option';
+      option.textContent = raion;
+      option.addEventListener('mousedown', function(event) {
+        event.preventDefault();
+        selectRaion(input, raion);
+      });
+      menu.appendChild(option);
+    });
+
+    menu.hidden = false;
+    setActive(menu, -1);
+  }
+
   inputs.forEach(function(input) {
+    input.removeAttribute('list');
+    input.parentElement.classList.add('livrari-raion-field');
+
+    var menu = document.createElement('div');
+    menu.className = 'livrari-raion-menu';
+    menu.hidden = true;
+    menu.setAttribute('role', 'listbox');
+    input.parentElement.appendChild(menu);
+    input._raionMenu = menu;
+
     input.addEventListener('input', function() {
-      renderRaioane(input.value);
+      renderRaionMenu(input);
     });
     input.addEventListener('focus', function() {
-      renderRaioane(input.value);
+      renderRaionMenu(input);
+    });
+    input.addEventListener('keydown', function(event) {
+      if (menu.hidden) return;
+      var options = Array.from(menu.querySelectorAll('.livrari-raion-option'));
+      if (!options.length) return;
+
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        setActive(menu, activeIndex + 1);
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        setActive(menu, activeIndex - 1);
+      } else if (event.key === 'Enter' && activeIndex >= 0 && options[activeIndex]) {
+        event.preventDefault();
+        selectRaion(input, options[activeIndex].textContent);
+      } else if (event.key === 'Escape') {
+        closeRaionMenus();
+      }
     });
   });
 
-  renderRaioane('');
+  document.addEventListener('mousedown', function(event) {
+    if (!event.target.closest('.livrari-raion-field')) {
+      closeRaionMenus();
+    }
+  });
 })();
 </script>
 @endpush
