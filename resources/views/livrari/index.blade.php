@@ -1827,7 +1827,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function filteredExportUrl() {
-    const exportUrl = new URL(@json(route('livrari.export-data')), window.location.origin);
+    const exportUrl = new URL(@json(url('livrari/export-data')), window.location.origin);
     const params = new URLSearchParams(window.location.search);
     params.delete('page');
     params.forEach(function (value, key) {
