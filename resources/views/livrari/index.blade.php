@@ -1084,6 +1084,34 @@
     border-color: rgba(255, 238, 0, 0.25);
     color: #fff;
   }
+  .livrari-flatpickr .flatpickr-day.today {
+    border-color: rgba(255, 238, 0, 0.45);
+    color: var(--brand, #FFEE00);
+  }
+  .livrari-flatpickr .flatpickr-day.today:hover {
+    background: rgba(255, 238, 0, 0.2);
+    color: #fff;
+  }
+  .livrari-flatpickr .flatpickr-day.flatpickr-disabled,
+  .livrari-flatpickr .flatpickr-day.flatpickr-disabled:hover {
+    color: #64748b;
+    background: transparent;
+    border-color: transparent;
+  }
+  .livrari-flatpickr .flatpickr-weekday {
+    color: #9CA3AF;
+    font-weight: 600;
+    font-size: 0.6875rem;
+  }
+  .livrari-flatpickr .flatpickr-monthDropdown-months,
+  .livrari-flatpickr .numInputWrapper input {
+    background: rgba(17, 24, 39, 0.85);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+  }
+  .livrari-flatpickr .numInputWrapper span.arrowUp:after { border-bottom-color: var(--brand, #FFEE00); }
+  .livrari-flatpickr .numInputWrapper span.arrowDown:after { border-top-color: var(--brand, #FFEE00); }
 </style>
 @endpush
 
@@ -2177,6 +2205,7 @@
     dateFormat: 'Y-m-d',
     locale: 'ro',
     defaultDate: defaultDate,
+    disableMobile: true,
     allowInput: false,
     onChange: function(selectedDates, dateStr, instance) {
       if (selectedDates.length === 2) {
@@ -2203,6 +2232,7 @@
       altFormat: 'd.m.Y',
       altInputClass: 'livrari-date-display',
       locale: 'ro',
+      disableMobile: true,
       allowInput: true,
       defaultDate: addDateInput.value || 'today',
       parseDate: parseRoDate,
@@ -2222,6 +2252,7 @@
       altFormat: 'd.m.Y',
       altInputClass: 'livrari-date-display',
       locale: 'ro',
+      disableMobile: true,
       allowInput: true,
       parseDate: parseRoDate,
       onReady: function(selectedDates, dateStr, instance) {
