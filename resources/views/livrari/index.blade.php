@@ -1243,7 +1243,7 @@
         <div class="livrari-add-row">
           <div class="livrari-add-field">
             <label for="modal_data_livrarii">Data livrării *</label>
-            <input type="date" id="modal_data_livrarii" name="data_livrarii" value="{{ date('Y-m-d') }}" required>
+            <input type="date" id="modal_data_livrarii" name="data_livrarii" value="{{ date('Y-m-d') }}" lang="ro-RO" required>
           </div>
           <div class="livrari-add-field">
             <label for="modal_numar_comanda">Număr comandă *</label>
@@ -1453,7 +1453,7 @@
         <div class="livrari-add-row">
           <div class="livrari-add-field">
             <label for="edit_data_livrarii">Data livrării *</label>
-            <input type="date" id="edit_data_livrarii" name="data_livrarii" required>
+            <input type="date" id="edit_data_livrarii" name="data_livrarii" lang="ro-RO" required>
           </div>
           <div class="livrari-add-field">
             <label for="edit_numar_comanda">Număr comandă *</label>
@@ -1780,6 +1780,9 @@
       resetForm();
       openModal();
     }
+    if (e.key === 'Escape' && modal && modal.classList.contains('is-open')) {
+      closeModal();
+    }
   });
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
   if (closeBtnBottom) closeBtnBottom.addEventListener('click', closeModal);
@@ -1931,6 +1934,12 @@
   });
 
   if (editNumarComanda) editNumarComanda.addEventListener('input', scheduleEditDuplicateComandaCheck);
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && editModal && editModal.classList.contains('is-open')) {
+      closeEditModal();
+    }
+  });
 
   [document.getElementById('livrariEditModalClose'), document.getElementById('livrariEditModalCloseBottom')].forEach(function(el) {
     if (el) el.addEventListener('click', closeEditModal);
@@ -2096,6 +2105,29 @@
       }
     }
   });
+
+  var addDateInput = document.getElementById('modal_data_livrarii');
+  if (addDateInput) {
+    flatpickr(addDateInput, {
+      dateFormat: 'Y-m-d',
+      altInput: true,
+      altFormat: 'd.m.Y',
+      locale: 'ro',
+      allowInput: false,
+      defaultDate: addDateInput.value || 'today'
+    });
+  }
+
+  var editDateInput = document.getElementById('edit_data_livrarii');
+  if (editDateInput) {
+    flatpickr(editDateInput, {
+      dateFormat: 'Y-m-d',
+      altInput: true,
+      altFormat: 'd.m.Y',
+      locale: 'ro',
+      allowInput: false
+    });
+  }
 
   trigger.addEventListener('click', function(e) {
     if (e.target.closest('.livrari-preset-btn')) return;
