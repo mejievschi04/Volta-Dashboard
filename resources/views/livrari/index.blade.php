@@ -1249,6 +1249,7 @@
   </div>
 
   @php
+    $totalLivrariExportValue = number_format((int) $totalLivrari, 0, ',', '.');
     $livrariExportColumns = [
       'Număr comandă',
       'Data',
@@ -1853,7 +1854,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function totalsRows() {
     const totalsTable = document.getElementById('livrariTotalsTable');
     const rows = [
-      ['Total livrari', @json(number_format((int) $totalLivrari, 0, ',', '.'))],
+      ['Total livrari', @json($totalLivrariExportValue)],
       ['', '']
     ];
 
