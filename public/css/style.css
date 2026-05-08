@@ -92,6 +92,27 @@ html[data-theme="dark"] {
   color-scheme: dark;
 }
 
+html[data-theme="dark-red"] {
+  color-scheme: dark;
+  --bg-sidebar-toggle: rgb(38, 10, 18);
+  --bg-sidebar-toggle-hover: rgb(24, 8, 13);
+  --bg-primary: rgb(24, 8, 13);
+  --bg-secondary: rgb(46, 14, 24);
+  --bg-tertiary: rgb(76, 24, 38);
+  --bg-elevated: rgb(46, 14, 24);
+  --bg-surface: rgb(46, 14, 24);
+
+  --border-primary: rgb(98, 34, 52);
+  --border-secondary: rgb(130, 52, 74);
+
+  --brand: rgb(255, 99, 132);
+  --brand-dark: rgb(236, 72, 113);
+  --brand-on-dark: rgb(255, 99, 132);
+  --brand-10: rgba(255, 99, 132, 0.12);
+  --brand-20: rgba(255, 99, 132, 0.2);
+  --brand-30: rgba(255, 99, 132, 0.3);
+}
+
 /* Fundal pagină — gradient ca Volta Academy (splash / dark) */
 html[data-theme="dark"]::before {
   content: "";
@@ -107,8 +128,27 @@ html[data-theme="dark"]::before {
   );
 }
 
+html[data-theme="dark-red"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgb(38, 10, 18) 0%,
+    rgb(24, 8, 13) 55%,
+    rgb(46, 14, 24) 100%
+  );
+}
+
 html[data-theme="dark"],
 html[data-theme="dark"] body {
+  background-color: transparent;
+}
+
+html[data-theme="dark-red"],
+html[data-theme="dark-red"] body {
   background-color: transparent;
 }
 

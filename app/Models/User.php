@@ -31,6 +31,7 @@ class User extends Authenticatable
         'currency',
         'language',
         'country',
+        'theme',
     ];
 
     /** Utilizatorul este operator (vede doar pagina „Datele mele”). */

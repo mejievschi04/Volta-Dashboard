@@ -19,6 +19,17 @@ html[data-theme="dark"] {
   color-scheme: dark;
 }
 
+html[data-theme="dark-red"] {
+  color-scheme: dark;
+  --brand: rgb(255, 99, 132);
+  --brand-dark: rgb(236, 72, 113);
+  --brand-light: rgba(255, 99, 132, 0.12);
+  --bg-dark: rgb(24, 8, 13);
+  --bg-soft: rgb(46, 14, 24);
+  --bg-card: rgb(46, 14, 24);
+  --border: rgb(98, 34, 52);
+}
+
 html[data-theme="dark"]::before {
   content: "";
   position: fixed;
@@ -33,8 +44,27 @@ html[data-theme="dark"]::before {
   );
 }
 
+html[data-theme="dark-red"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgb(38, 10, 18) 0%,
+    rgb(24, 8, 13) 50%,
+    rgb(46, 14, 24) 100%
+  );
+}
+
 html[data-theme="dark"],
 html[data-theme="dark"] body {
+  background-color: transparent;
+}
+
+html[data-theme="dark-red"],
+html[data-theme="dark-red"] body {
   background-color: transparent;
 }
 

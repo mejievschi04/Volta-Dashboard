@@ -14,6 +14,7 @@ class RestrictOperator
         'datele-mele',
         'livrari',
         'livrari.export-data',
+        'livrari.check-comanda',
         'livrari.store',
         'livrari.update',
         'livrari.destroy',

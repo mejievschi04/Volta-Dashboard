@@ -10,6 +10,18 @@ use Illuminate\Support\Facades\Auth;
 
 class LivrariController extends Controller
 {
+    public function checkComanda(Request $request)
+    {
+        $numarComanda = trim((string) $request->query('numar_comanda', ''));
+        $ignoreId = (int) $request->query('ignore_id', 0);
+
+        if ($numarComanda === '') {
+            return response()->json(['exists' => false]);
+        }
+
+        return response()->json(['exists' => $this->numarComandaExists($numarComanda, $ignoreId)]);
+    }
+
     /**
      * Operator: listă livrările proprii + formular adăugare.
      * Admin: listă toate livrările + coloană operator + KPI. Filtre: lună, operator, Chișinău/în afara.
@@ -218,12 +230,27 @@ class LivrariController extends Controller
      */
     public function store(Request $request)
     {
+        $request->merge([
+            'numar_comanda' => trim((string) $request->input('numar_comanda')),
+        ]);
+
         $validated = $request->validate([
-            'numar_comanda' => 'required|string|max:100',
+            'numar_comanda' => [
+                'required',
+                'string',
+                'max:100',
+                function ($attribute, $value, $fail) {
+                    if ($this->numarComandaExists((string) $value)) {
+                        $fail('Această comandă există deja. Nu poate fi introdusă de două ori.');
+                    }
+                },
+            ],
             'adresa_livrarii' => 'required|string|max:500',
             'localitate' => 'required|string|max:255',
             'nr_client' => 'required|string|max:100',
             'data_livrarii' => 'required|date',
+        ], [
+            'numar_comanda.unique' => 'Această comandă există deja. Nu poate fi introdusă de două ori.',
         ]);
 
         $localitate = trim((string) $validated['localitate']);
@@ -258,6 +285,10 @@ class LivrariController extends Controller
      */
     public function update(Request $request, Livrare $livrare)
     {
+        $request->merge([
+            'numar_comanda' => trim((string) $request->input('numar_comanda')),
+        ]);
+
         $user = Auth::user();
         $isAdmin = $user && in_array(strtolower((string) ($user->role ?? '')), ['admin', 'administrator'], true);
 
@@ -269,11 +300,22 @@ class LivrariController extends Controller
         }
 
         $validated = $request->validate([
-            'numar_comanda' => 'required|string|max:100',
+            'numar_comanda' => [
+                'required',
+                'string',
+                'max:100',
+                function ($attribute, $value, $fail) use ($livrare) {
+                    if ($this->numarComandaExists((string) $value, (int) $livrare->id)) {
+                        $fail('Această comandă există deja. Nu poate fi introdusă de două ori.');
+                    }
+                },
+            ],
             'adresa_livrarii' => 'required|string|max:500',
             'localitate' => 'required|string|max:255',
             'nr_client' => 'required|string|max:100',
             'data_livrarii' => 'required|date',
+        ], [
+            'numar_comanda.unique' => 'Această comandă există deja. Nu poate fi introdusă de două ori.',
         ]);
 
         $localitate = trim((string) $validated['localitate']);
@@ -330,6 +372,21 @@ class LivrariController extends Controller
     }
 
     /** Returnează true dacă localitatea este Chișinău (ignoră diacritice și majuscule). */
+    private function numarComandaExists(string $numarComanda, int $ignoreId = 0): bool
+    {
+        $normalized = mb_strtolower(trim($numarComanda));
+        if ($normalized === '') {
+            return false;
+        }
+
+        $query = Livrare::whereRaw('LOWER(TRIM(numar_comanda)) = ?', [$normalized]);
+        if ($ignoreId > 0) {
+            $query->whereKeyNot($ignoreId);
+        }
+
+        return $query->exists();
+    }
+
     private function isChisinau(string $localitate): bool
     {
         $norm = mb_strtolower(trim($localitate));

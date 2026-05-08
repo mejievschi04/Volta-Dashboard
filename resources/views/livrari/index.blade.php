@@ -1493,6 +1493,38 @@
     document.getElementById('edit_localitate')
   ].filter(Boolean);
   var activeIndex = -1;
+  var checkComandaUrl = @json(route('livrari.check-comanda'));
+  var duplicateComandaMessage = 'Această comandă există deja. Nu poate fi introdusă de două ori.';
+
+  window.LivrariComandaDuplicate = {
+    message: duplicateComandaMessage,
+    check: function(numarComanda, ignoreId) {
+      var value = String(numarComanda || '').trim();
+      if (!value) {
+        return Promise.resolve(false);
+      }
+
+      var url = new URL(checkComandaUrl, window.location.origin);
+      url.searchParams.set('numar_comanda', value);
+      if (ignoreId) {
+        url.searchParams.set('ignore_id', ignoreId);
+      }
+
+      return fetch(url.toString(), {
+        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+      })
+      .then(function(response) {
+        if (!response.ok) return false;
+        return response.json();
+      })
+      .then(function(data) {
+        return !!(data && data.exists);
+      })
+      .catch(function() {
+        return false;
+      });
+    }
+  };
 
   function normalizeText(value) {
     return String(value || '')
@@ -1628,6 +1660,9 @@
   var tbody = document.getElementById('livrariTableBody');
   var emptyRow = document.getElementById('livrariEmptyRow');
   var isAdmin = {{ $isAdmin ? 'true' : 'false' }};
+  var duplicateComanda = false;
+  var duplicateComandaTimer = null;
+  var saveInProgress = false;
 
   function isTypingTarget(target) {
     if (!target) return false;
@@ -1668,9 +1703,39 @@
     if (successEl) successEl.classList.remove('is-visible');
     if (errorEl) errorEl.classList.remove('is-visible');
   }
+  function setDuplicateComanda(exists) {
+    duplicateComanda = !!exists;
+    updateSubmitState();
+    if (duplicateComanda) {
+      showError(window.LivrariComandaDuplicate.message);
+    } else if (errorEl && errorEl.textContent === window.LivrariComandaDuplicate.message) {
+      hideMessages();
+    }
+  }
+  function updateSubmitState() {
+    if (submitBtn) submitBtn.disabled = duplicateComanda || saveInProgress;
+  }
+  function scheduleDuplicateComandaCheck() {
+    if (!numarComanda || !window.LivrariComandaDuplicate) return;
+    window.clearTimeout(duplicateComandaTimer);
+    duplicateComandaTimer = window.setTimeout(function() {
+      var value = numarComanda.value.trim();
+      if (!value) {
+        setDuplicateComanda(false);
+        return;
+      }
+
+      window.LivrariComandaDuplicate.check(value).then(function(exists) {
+        if (numarComanda.value.trim() === value) {
+          setDuplicateComanda(exists);
+        }
+      });
+    }, 250);
+  }
   function resetForm() {
     if (form) form.reset();
     if (dataLivrarii) dataLivrarii.value = new Date().toISOString().slice(0, 10);
+    setDuplicateComanda(false);
   }
   function livrariDestroyUrl(id) {
     return @json(url('livrari')) + '/' + id;
@@ -1706,6 +1771,7 @@
   }
 
   if (openBtn) openBtn.addEventListener('click', function() { hideMessages(); resetForm(); openModal(); });
+  if (numarComanda) numarComanda.addEventListener('input', scheduleDuplicateComandaCheck);
   document.addEventListener('keydown', function(e) {
     if (e.key && e.key.toLowerCase() === 'q' && !e.ctrlKey && !e.metaKey && !e.altKey && !e.repeat) {
       if (isTypingTarget(e.target) || isAnyLivrariModalOpen()) return;
@@ -1726,7 +1792,12 @@
   if (form) {
     form.addEventListener('submit', function(e) {
       e.preventDefault();
-      if (submitBtn) submitBtn.disabled = true;
+      if (duplicateComanda) {
+        showError(window.LivrariComandaDuplicate.message);
+        return;
+      }
+      saveInProgress = true;
+      updateSubmitState();
       errorEl.textContent = '';
       hideMessages();
       var formData = new FormData(form);
@@ -1757,7 +1828,8 @@
         showError('Eroare de rețea. Încearcă din nou.');
       })
       .finally(function() {
-        if (submitBtn) submitBtn.disabled = false;
+        saveInProgress = false;
+        updateSubmitState();
       });
     });
   }
@@ -1774,9 +1846,13 @@
   var editSuccessEl = document.getElementById('livrariEditModalSuccess');
   var editErrorEl = document.getElementById('livrariEditModalError');
   var editSubmitBtn = document.getElementById('livrariEditModalSubmitBtn');
+  var editNumarComanda = document.getElementById('edit_numar_comanda');
   var editDataLivrarii = document.getElementById('edit_data_livrarii');
   var updateUrlTemplate = editModal ? editModal.getAttribute('data-update-url') : '';
   var currentEditRow = null;
+  var editDuplicateComanda = false;
+  var editDuplicateComandaTimer = null;
+  var editSaveInProgress = false;
 
   function openEditModal() {
     if (editModal) {
@@ -1805,6 +1881,36 @@
     if (editSuccessEl) editSuccessEl.classList.remove('is-visible');
     if (editErrorEl) editErrorEl.classList.remove('is-visible');
   }
+  function setEditDuplicateComanda(exists) {
+    editDuplicateComanda = !!exists;
+    updateEditSubmitState();
+    if (editDuplicateComanda) {
+      showEditError(window.LivrariComandaDuplicate.message);
+    } else if (editErrorEl && editErrorEl.textContent === window.LivrariComandaDuplicate.message) {
+      hideEditMessages();
+    }
+  }
+  function updateEditSubmitState() {
+    if (editSubmitBtn) editSubmitBtn.disabled = editDuplicateComanda || editSaveInProgress;
+  }
+  function scheduleEditDuplicateComandaCheck() {
+    if (!editNumarComanda || !window.LivrariComandaDuplicate) return;
+    window.clearTimeout(editDuplicateComandaTimer);
+    editDuplicateComandaTimer = window.setTimeout(function() {
+      var value = editNumarComanda.value.trim();
+      var ignoreId = currentEditRow ? currentEditRow.dataset.id : '';
+      if (!value) {
+        setEditDuplicateComanda(false);
+        return;
+      }
+
+      window.LivrariComandaDuplicate.check(value, ignoreId).then(function(exists) {
+        if (editNumarComanda.value.trim() === value) {
+          setEditDuplicateComanda(exists);
+        }
+      });
+    }, 250);
+  }
 
   document.addEventListener('click', function(e) {
     var btn = e.target.closest('.livrari-btn-edit');
@@ -1813,15 +1919,18 @@
     if (!row || !row.dataset.id) return;
     currentEditRow = row;
     var id = row.dataset.id;
-    document.getElementById('edit_numar_comanda').value = row.dataset.numarComanda || '';
+    if (editNumarComanda) editNumarComanda.value = row.dataset.numarComanda || '';
     editDataLivrarii.value = row.dataset.dataLivrarii || '';
     document.getElementById('edit_localitate').value = row.dataset.localitate || '';
     document.getElementById('edit_nr_client').value = row.dataset.nrClient || '';
     document.getElementById('edit_adresa_livrarii').value = row.dataset.adresa || '';
     editForm.action = updateUrlTemplate.replace('__ID__', id);
+    setEditDuplicateComanda(false);
     hideEditMessages();
     openEditModal();
   });
+
+  if (editNumarComanda) editNumarComanda.addEventListener('input', scheduleEditDuplicateComandaCheck);
 
   [document.getElementById('livrariEditModalClose'), document.getElementById('livrariEditModalCloseBottom')].forEach(function(el) {
     if (el) el.addEventListener('click', closeEditModal);
@@ -1836,7 +1945,12 @@
     editForm.addEventListener('submit', function(e) {
       e.preventDefault();
       if (!currentEditRow || !editForm.action) return;
-      if (editSubmitBtn) editSubmitBtn.disabled = true;
+      if (editDuplicateComanda) {
+        showEditError(window.LivrariComandaDuplicate.message);
+        return;
+      }
+      editSaveInProgress = true;
+      updateEditSubmitState();
       hideEditMessages();
       var formData = new FormData(editForm);
       var csrf = document.querySelector('meta[name="csrf-token"]');
@@ -1873,7 +1987,10 @@
         }
       })
       .catch(function() { showEditError('Eroare de rețea. Încearcă din nou.'); })
-      .finally(function() { if (editSubmitBtn) editSubmitBtn.disabled = false; });
+      .finally(function() {
+        editSaveInProgress = false;
+        updateEditSubmitState();
+      });
     });
   }
 

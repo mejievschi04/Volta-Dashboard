@@ -65,15 +65,18 @@ class DashboardController extends Controller
     public function updateSettings(Request $request)
     {
         $request->validate([
-            'username' => 'required|string|max:255',
+            'username' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'currency' => 'nullable|string|max:10',
             'language' => 'nullable|string|max:50',
             'country' => 'nullable|string|max:100',
+            'theme' => 'nullable|in:dark,dark-red',
         ]);
 
         $user = auth()->user();
-        $user->username = $request->username;
+        if ($request->filled('username')) {
+            $user->username = $request->username;
+        }
         if ($request->filled('email')) {
             $user->email = $request->email;
         }
@@ -85,6 +88,9 @@ class DashboardController extends Controller
         }
         if ($request->filled('country')) {
             $user->country = $request->country;
+        }
+        if ($request->filled('theme')) {
+            $user->theme = $request->theme;
         }
         $user->save();
 

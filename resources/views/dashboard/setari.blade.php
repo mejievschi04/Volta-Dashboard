@@ -26,6 +26,27 @@
 
 <div class="setari-wrap {{ $isOperator ? 'setari-wrap--operator' : '' }}">
 @if($isOperator)
+  <div class="panel setari-operator-card">
+    <h2 class="setari-section-title">
+      <i class="fas fa-palette"></i> Aspect
+    </h2>
+    <form method="POST" action="{{ route('setari.update') }}">
+      @csrf
+      <div class="form">
+        <div class="field">
+          <label>Temă interfață</label>
+          <select name="theme">
+            <option value="dark" {{ (Auth::user()->theme ?? 'dark') === 'dark' ? 'selected' : '' }}>Dark (default)</option>
+            <option value="dark-red" {{ (Auth::user()->theme ?? 'dark') === 'dark-red' ? 'selected' : '' }}>Dark Red</option>
+          </select>
+        </div>
+        <div class="field">
+          <button type="submit" name="save_theme" class="btn" style="width:100%">Salvează tema</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
   {{-- Operator: Poze profil și copertă --}}
   @if(isset($operatorRecord) && $operatorRecord)
   <div class="panel setari-operator-card setari-photos-card" id="poze">
@@ -117,6 +138,13 @@
             <option value="Română" {{ (Auth::user()->language ?? 'Română') == 'Română' ? 'selected' : '' }}>Română</option>
             <option value="English" {{ (Auth::user()->language ?? 'Română') == 'English' ? 'selected' : '' }}>English</option>
             <option value="Русский" {{ (Auth::user()->language ?? 'Română') == 'Русский' ? 'selected' : '' }}>Русский</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Temă interfață</label>
+          <select name="theme">
+            <option value="dark" {{ (Auth::user()->theme ?? 'dark') === 'dark' ? 'selected' : '' }}>Dark (default)</option>
+            <option value="dark-red" {{ (Auth::user()->theme ?? 'dark') === 'dark-red' ? 'selected' : '' }}>Dark Red</option>
           </select>
         </div>
         <div class="field">
