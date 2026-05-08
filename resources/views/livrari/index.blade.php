@@ -1008,7 +1008,52 @@
   @php
     $filters = $filters ?? ['luna' => '', 'operator_id' => '', 'locatie' => '', 'cauta' => '', 'data' => '', 'data_de_la' => '', 'data_pana' => ''];
     $operatorsForFilter = $operatorsForFilter ?? collect();
+    $livrariRaioane = [
+      'Chișinău',
+      'Bălți',
+      'Anenii Noi',
+      'Basarabeasca',
+      'Briceni',
+      'Cahul',
+      'Cantemir',
+      'Călărași',
+      'Căușeni',
+      'Cimișlia',
+      'Criuleni',
+      'Dondușeni',
+      'Drochia',
+      'Dubăsari',
+      'Edineț',
+      'Fălești',
+      'Florești',
+      'Glodeni',
+      'Hîncești',
+      'Ialoveni',
+      'Leova',
+      'Nisporeni',
+      'Ocnița',
+      'Orhei',
+      'Rezina',
+      'Rîșcani',
+      'Sîngerei',
+      'Soroca',
+      'Strășeni',
+      'Șoldănești',
+      'Ștefan Vodă',
+      'Taraclia',
+      'Telenești',
+      'Ungheni',
+      'UTA Găgăuzia',
+      'Bender',
+      'Tiraspol',
+    ];
   @endphp
+
+  <datalist id="livrariRaioaneList">
+    @foreach($livrariRaioane as $raion)
+      <option value="{{ $raion }}"></option>
+    @endforeach
+  </datalist>
 
   <form method="get" action="{{ route('livrari') }}" class="livrari-card livrari-filters-card">
     <h2><i class="fas fa-filter"></i> Filtre și căutare</h2>
@@ -1166,7 +1211,7 @@
         <div class="livrari-add-row">
           <div class="livrari-add-field">
             <label for="modal_localitate">Raion *</label>
-            <input type="text" id="modal_localitate" name="localitate" required maxlength="255" placeholder="Ex: Chișinău, Bălți, Orhei...">
+            <input type="text" id="modal_localitate" name="localitate" list="livrariRaioaneList" required maxlength="255" autocomplete="off" placeholder="Alege sau lipește raionul">
           </div>
           <div class="livrari-add-field">
             <label for="modal_nr_client">Nr. de telefon *</label>
@@ -1376,7 +1421,7 @@
         <div class="livrari-add-row">
           <div class="livrari-add-field">
             <label for="edit_localitate">Raion *</label>
-            <input type="text" id="edit_localitate" name="localitate" required maxlength="255" placeholder="Ex: Chișinău, Bălți...">
+            <input type="text" id="edit_localitate" name="localitate" list="livrariRaioaneList" required maxlength="255" autocomplete="off" placeholder="Alege sau lipește raionul">
           </div>
           <div class="livrari-add-field">
             <label for="edit_nr_client">Nr. de telefon *</label>
@@ -1397,6 +1442,51 @@
     </div>
   </div>
 </div>
+@push('scripts')
+<script>
+(function() {
+  var raioane = @json($livrariRaioane);
+  var datalist = document.getElementById('livrariRaioaneList');
+  var inputs = [
+    document.getElementById('modal_localitate'),
+    document.getElementById('edit_localitate')
+  ].filter(Boolean);
+
+  function normalizeText(value) {
+    return String(value || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function renderRaioane(query) {
+    if (!datalist) return;
+    var needle = normalizeText(query);
+    var matches = raioane.filter(function(raion) {
+      return needle === '' || normalizeText(raion).indexOf(needle) !== -1;
+    });
+
+    datalist.innerHTML = '';
+    matches.forEach(function(raion) {
+      var option = document.createElement('option');
+      option.value = raion;
+      datalist.appendChild(option);
+    });
+  }
+
+  inputs.forEach(function(input) {
+    input.addEventListener('input', function() {
+      renderRaioane(input.value);
+    });
+    input.addEventListener('focus', function() {
+      renderRaioane(input.value);
+    });
+  });
+
+  renderRaioane('');
+})();
+</script>
+@endpush
 @if(!$isAdmin)
 @push('scripts')
 <script>
