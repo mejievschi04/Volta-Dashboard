@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckAdmin
+class CheckDev
 {
     public function handle(Request $request, Closure $next): Response
     {
@@ -15,8 +15,8 @@ class CheckAdmin
             return redirect()->route('login');
         }
 
-        if (! Auth::user()->isAdmin()) {
-            return redirect()->route('dashboard')->with('error', 'Nu aveti permisiunea de a accesa aceasta pagina.');
+        if (! Auth::user()->isDev()) {
+            return redirect()->route('dashboard')->with('error', 'Doar rolul Dev poate accesa aceasta zona.');
         }
 
         return $next($request);

@@ -32,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
         
         // Configurează TrustProxies pentru ngrok și alte proxy-uri
         $middleware->trustProxies(at: '*');
+        $middleware->append(\App\Http\Middleware\DevModeLock::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Suprimăm erorile minore din ServeCommand care apar la parsing-ul output-ului PHP server

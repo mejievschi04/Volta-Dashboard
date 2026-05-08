@@ -69,7 +69,6 @@ class DashboardController extends Controller
             'email' => 'nullable|email|max:255',
             'currency' => 'nullable|string|max:10',
             'language' => 'nullable|string|max:50',
-            'role' => 'nullable|string|max:50',
             'country' => 'nullable|string|max:100',
         ]);
 
@@ -83,9 +82,6 @@ class DashboardController extends Controller
         }
         if ($request->filled('language')) {
             $user->language = $request->language;
-        }
-        if ($request->filled('role')) {
-            $user->role = $request->role;
         }
         if ($request->filled('country')) {
             $user->country = $request->country;

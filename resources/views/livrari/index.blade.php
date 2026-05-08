@@ -672,7 +672,8 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
-  .livrari-export-field input {
+  .livrari-export-field input,
+  .livrari-export-field select {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -680,6 +681,7 @@
     background: rgba(17, 24, 39, 0.7);
     color: #fff;
   }
+  .livrari-export-field select option { color: #111827; }
   .livrari-export-columns {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -1284,6 +1286,25 @@
           </div>
         </fieldset>
 
+        @if($isAdmin)
+        <div class="livrari-export-section">
+          <div class="livrari-export-field">
+            <label for="livrariExportOperator">Operator</label>
+            <select id="livrariExportOperator">
+              <option value="">Toți operatorii</option>
+              @foreach($operatorsForFilter as $u)
+                @php
+                  $operatorExportName = trim($u->full_name ?? $u->name ?? '') ?: $u->username;
+                @endphp
+                <option value="{{ $u->id }}" data-operator-name="{{ e($operatorExportName) }}" {{ ($filters['operator_id'] ?? '') == $u->id ? 'selected' : '' }}>
+                  {{ $operatorExportName }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+        </div>
+        @endif
+
         <div class="livrari-export-section">
           <p class="livrari-export-section-title">Fișier</p>
           <div class="livrari-export-grid">
@@ -1778,6 +1799,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const exportSubmitBtn = document.getElementById('livrariExportSubmitBtn');
   const exportFileName = document.getElementById('livrariExportFileName');
   const exportSheetName = document.getElementById('livrariExportSheetName');
+  const exportOperator = document.getElementById('livrariExportOperator');
   const selectAllBtn = document.getElementById('livrariExportSelectAll');
   const clearColumnsBtn = document.getElementById('livrariExportClearColumns');
   const includeTotals = document.getElementById('livrariExportIncludeTotals');
@@ -1811,34 +1833,49 @@ document.addEventListener('DOMContentLoaded', function () {
     };
   }
 
-  function currentPagePayload() {
+  function selectedOperator() {
+    if (!exportOperator || !exportOperator.value) return { id: '', name: '' };
+    const option = exportOperator.options[exportOperator.selectedIndex];
+    return {
+      id: exportOperator.value,
+      name: option ? (option.getAttribute('data-operator-name') || option.textContent || '').trim() : ''
+    };
+  }
+
+  function currentPagePayload(operatorName) {
     const table = document.getElementById('livrariDataTable');
     if (!table) return { headers: [], rows: [] };
     const headers = Array.from(table.querySelectorAll('thead th'))
       .slice(0, -1)
       .map(function (cell) { return (cell.innerText || cell.textContent || '').trim(); });
-    const rows = Array.from(table.querySelectorAll('tbody tr'))
+    const operatorIndex = headers.indexOf('Operator');
+    let rows = Array.from(table.querySelectorAll('tbody tr'))
       .filter(function (row) { return row.id !== 'livrariEmptyRow'; })
       .map(function (row) {
         return Array.from(row.querySelectorAll('td'))
           .slice(0, headers.length)
           .map(function (cell) { return (cell.innerText || cell.textContent || '').trim(); });
       });
+    if (operatorName && operatorIndex >= 0) {
+      rows = rows.filter(function (row) { return row[operatorIndex] === operatorName; });
+    }
     return { headers: headers, rows: rows };
   }
 
-  function filteredExportUrl() {
+  function filteredExportUrl(operatorId) {
     const exportUrl = new URL(@json(url('livrari/export-data')), window.location.origin);
     const params = new URLSearchParams(window.location.search);
     params.delete('page');
+    if (operatorId) params.delete('operator_id');
     params.forEach(function (value, key) {
       exportUrl.searchParams.append(key, value);
     });
+    if (operatorId) exportUrl.searchParams.set('operator_id', operatorId);
     return exportUrl.toString();
   }
 
-  function allFilteredPayload() {
-    return fetch(filteredExportUrl(), {
+  function allFilteredPayload(operatorId) {
+    return fetch(filteredExportUrl(operatorId), {
       headers: { 'Accept': 'application/json' }
     }).then(function (response) {
       if (!response.ok) throw new Error('Nu am putut citi datele pentru export.');
@@ -1870,6 +1907,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     return rows;
+  }
+
+  function exportTotalsRows(payload, operator) {
+    if (operator && operator.id) {
+      return [
+        ['Total livrari', String((payload.rows || []).length)],
+        ['', ''],
+        [operator.name || 'Operator selectat', String((payload.rows || []).length)]
+      ];
+    }
+
+    return totalsRows();
   }
 
   if (exportBtn) {
@@ -1916,12 +1965,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const scopeInput = exportForm.querySelector('input[name="export_scope"]:checked');
       const scope = scopeInput ? scopeInput.value : 'all';
+      const operator = selectedOperator();
       const fileName = (exportFileName && exportFileName.value.trim() ? exportFileName.value.trim() : 'livrari_tabel')
         + '_' + window.VoltaExcelExport.nowStamp();
       const sheetName = exportSheetName && exportSheetName.value.trim() ? exportSheetName.value.trim() : 'Livrari';
       const payloadPromise = scope === 'page'
-        ? Promise.resolve(currentPagePayload())
-        : allFilteredPayload();
+        ? Promise.resolve(currentPagePayload(operator.name))
+        : allFilteredPayload(operator.id);
 
       if (exportSubmitBtn) exportSubmitBtn.disabled = true;
       payloadPromise
@@ -1930,7 +1980,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (includeTotals && includeTotals.checked) {
             return window.VoltaExcelExport.exportSheets([
               { name: sheetName, aoa: [filteredPayload.headers].concat(filteredPayload.rows), coerceNumbers: false },
-              { name: 'Totaluri livrari', aoa: [['Indicator', 'Valoare']].concat(totalsRows()), coerceNumbers: false }
+              { name: 'Totaluri livrari', aoa: [['Indicator', 'Valoare']].concat(exportTotalsRows(payload, operator)), coerceNumbers: false }
             ], fileName);
           }
 

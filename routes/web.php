@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Api\OneCController;
 use App\Http\Controllers\LivrariController;
 use App\Http\Controllers\RaportLunarController;
+use App\Http\Controllers\DevModeController;
 
 // Punct de intrare local: merge direct cu `php artisan serve`
 Route::get('/', function () {
@@ -28,6 +29,12 @@ Route::get('/', function () {
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth', \App\Http\Middleware\CheckDev::class])->group(function () {
+    Route::get('/dev-mode', [DevModeController::class, 'panel'])->name('dev-mode.panel');
+    Route::post('/dev-mode/enable', [DevModeController::class, 'enable'])->name('dev-mode.enable');
+    Route::post('/dev-mode/disable', [DevModeController::class, 'disable'])->name('dev-mode.disable');
+});
 
 // Rute protejate (RestrictOperator redirecționează rolul „Operator” doar către Datele mele / Setări)
 Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group(function () {
@@ -66,16 +73,18 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
         Route::get('/operatori/{operatorId}/upload', [UploadOperatorVanzariController::class, 'uploadForm'])->name('operatori.upload');
         Route::post('/operatori/{operatorId}/upload', [UploadOperatorVanzariController::class, 'upload'])->name('operatori.upload.post');
         
-        // Rute utilizatori - doar pentru admin
+        Route::get('/rapoarte/raport-lunar', [RaportLunarController::class, 'index'])->name('rapoarte.raport-lunar');
+        Route::post('/rapoarte/raport-lunar/inputs', [RaportLunarController::class, 'storeInputs'])->name('rapoarte.raport-lunar.inputs');
+    });
+
+    // Rute Dev: setari tehnice, 1C si management utilizatori.
+    Route::middleware([\App\Http\Middleware\CheckDev::class])->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
         Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
         Route::post('/users', [UserController::class, 'store'])->name('users.store');
         Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
         Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-
-        Route::get('/rapoarte/raport-lunar', [RaportLunarController::class, 'index'])->name('rapoarte.raport-lunar');
-        Route::post('/rapoarte/raport-lunar/inputs', [RaportLunarController::class, 'storeInputs'])->name('rapoarte.raport-lunar.inputs');
     });
     
     // Ruta show trebuie să fie după create pentru a evita conflictele
@@ -117,6 +126,6 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
     Route::get('/api/ga/campaigns', [\App\Http\Controllers\Api\GAAnalyticsController::class, 'campaigns'])->name('api.ga.campaigns');
 
     // 1C Sync Routes
-    Route::post('/api/1c/sync-kpi', [OneCController::class, 'syncKpi'])->name('api.1c.sync.kpi');
-    Route::post('/api/1c/hard-refresh', [OneCController::class, 'hardRefresh'])->name('api.1c.hard.refresh')->middleware(\App\Http\Middleware\CheckAdmin::class);
+    Route::post('/api/1c/sync-kpi', [OneCController::class, 'syncKpi'])->name('api.1c.sync.kpi')->middleware(\App\Http\Middleware\CheckDev::class);
+    Route::post('/api/1c/hard-refresh', [OneCController::class, 'hardRefresh'])->name('api.1c.hard.refresh')->middleware(\App\Http\Middleware\CheckDev::class);
 });

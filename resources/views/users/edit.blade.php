@@ -96,6 +96,7 @@
                   onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(255, 255, 255, 0.05)'">
             <option value="user" {{ old('role', $user->role) === 'user' ? 'selected' : '' }}>User</option>
             <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
+            <option value="dev" {{ old('role', $user->role) === 'dev' ? 'selected' : '' }}>Dev</option>
             <option value="operator" {{ old('role', $user->role) === 'operator' ? 'selected' : '' }}>Operator</option>
           </select>
         </div>

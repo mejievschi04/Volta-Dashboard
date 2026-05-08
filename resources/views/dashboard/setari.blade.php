@@ -20,7 +20,8 @@
 @endpush
 
 @section('content')
-@php $isAdmin = auth()->check() && in_array(strtolower(auth()->user()->role ?? ''), ['admin', 'administrator']); @endphp
+@php $isAdmin = auth()->check() && auth()->user()->isAdmin(); @endphp
+@php $isDev = auth()->check() && auth()->user()->isDev(); @endphp
 @php $isOperator = auth()->check() && auth()->user()->isOperator(); @endphp
 
 <div class="setari-wrap">
@@ -85,7 +86,7 @@
     <div class="tabs">
       <div class="tab active" data-tab="general"><i class="fas fa-sliders-h"></i> Generale</div>
       <div class="tab" data-tab="security"><i class="fas fa-lock"></i> Securitate</div>
-      @if($isAdmin)
+      @if($isDev)
       <div class="tab" data-tab="data-refresh"><i class="fas fa-database"></i> Actualizare date</div>
       @endif
     </div>
@@ -120,11 +121,7 @@
         </div>
         <div class="field">
           <label>Rol</label>
-          <select name="role">
-            <option value="Administrator" {{ (Auth::user()->role ?? 'Administrator') == 'Administrator' ? 'selected' : '' }}>Administrator</option>
-            <option value="Manager" {{ (Auth::user()->role ?? 'Administrator') == 'Manager' ? 'selected' : '' }}>Manager</option>
-            <option value="Vizualizare" {{ (Auth::user()->role ?? 'Administrator') == 'Vizualizare' ? 'selected' : '' }}>Vizualizare</option>
-          </select>
+          <input type="text" value="{{ Auth::user()->role ?? 'User' }}" disabled>
         </div>
         <div class="field">
           <label>Țară</label>
@@ -167,7 +164,7 @@
       </div>
     </form>
 
-    @if($isAdmin)
+    @if($isDev)
     <div class="tab-content" id="data-refresh">
       <div class="form" style="display: block;">
         <div class="setari-1c-block">
@@ -230,7 +227,7 @@ setTimeout(() => {
 @endif
 
 // Actualizare date (admin)
-@if(isset($isAdmin) && $isAdmin)
+@if(isset($isDev) && $isDev)
 (function() {
   const syncBtn = document.getElementById('sync1cBtn');
   const statusEl = document.getElementById('sync1cStatus');

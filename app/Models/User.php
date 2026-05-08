@@ -40,6 +40,18 @@ class User extends Authenticatable
         return $role === 'operator' || $role === 'operatori';
     }
 
+    public function isAdmin(): bool
+    {
+        $role = strtolower(trim((string) ($this->role ?? '')));
+        return $role === 'admin' || $role === 'administrator';
+    }
+
+    public function isDev(): bool
+    {
+        $role = strtolower(trim((string) ($this->role ?? '')));
+        return $role === 'dev' || $role === 'developer';
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

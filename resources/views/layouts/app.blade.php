@@ -63,9 +63,14 @@
         <a href="{{ route('setari') }}" class="{{ request()->routeIs('setari*') ? 'active' : '' }}">
           <i class="fas fa-cog"></i><span class="txt">Setări</span>
         </a>
-        @if(auth()->check() && in_array(strtolower(trim(auth()->user()->role ?? '')), ['admin', 'administrator']))
+        @if(auth()->check() && auth()->user()->isAdmin())
         <a href="{{ route('rapoarte.raport-lunar') }}" class="{{ request()->routeIs('rapoarte.raport-lunar') ? 'active' : '' }}">
           <i class="fas fa-file-contract"></i><span class="txt">Raport lunar</span>
+        </a>
+        @endif
+        @if(auth()->check() && auth()->user()->isDev())
+        <a href="{{ route('dev-mode.panel') }}" class="{{ request()->routeIs('dev-mode.*') ? 'active' : '' }}">
+          <i class="fas fa-code"></i><span class="txt">Dev</span>
         </a>
         <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users*') ? 'active' : '' }}">
           <i class="fas fa-user-shield"></i><span class="txt">Utilizatori</span>
