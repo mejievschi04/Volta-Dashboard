@@ -390,7 +390,7 @@ body.operator-portal {
 }
 
 .operator-portal .setari-wrap--operator .setari-section-title i {
-  color: #ffee00;
+  color: var(--brand, #ffee00);
   background: rgba(255, 238, 0, 0.14);
   border: 1px solid rgba(255, 238, 0, 0.26);
 }
@@ -567,7 +567,7 @@ body.operator-portal {
 }
 
 .operator-me-avatar--initial {
-  background-image: linear-gradient(135deg, #ffee00, #facc15);
+  background-image: linear-gradient(135deg, var(--brand, #ffee00), var(--brand-dark, #facc15));
   color: #0f172a;
   font-size: 42px;
   font-weight: 800;
@@ -599,7 +599,7 @@ body.operator-portal {
   padding: 8px 14px;
   border: 1px solid rgba(255, 238, 0, 0.35);
   background: rgba(2, 6, 23, 0.54);
-  color: #ffee00;
+  color: var(--brand, #ffee00);
   font-size: 13px;
   font-weight: 600;
 }
@@ -643,7 +643,7 @@ body.operator-portal {
   font-weight: 700;
 }
 
-.operator-me-card__title i { color: #ffee00; }
+.operator-me-card__title i { color: var(--brand, #ffee00); }
 
 .operator-me-stat-list {
   display: flex;
@@ -685,7 +685,7 @@ body.operator-portal {
 
 .operator-me-stat--blue .operator-me-stat__icon { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
 .operator-me-stat--green .operator-me-stat__icon { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-.operator-me-stat--brand .operator-me-stat__icon { background: rgba(255, 238, 0, 0.2); color: #ffee00; }
+.operator-me-stat--brand .operator-me-stat__icon { background: rgba(255, 238, 0, 0.2); color: var(--brand, #ffee00); }
 .operator-me-stat--orange .operator-me-stat__icon { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
 .operator-me-stat--violet .operator-me-stat__icon { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
 
@@ -720,7 +720,7 @@ body.operator-portal {
 }
 
 .operator-me-total--green .operator-me-total__value { color: #34d399; }
-.operator-me-total--brand .operator-me-total__value { color: #ffee00; }
+.operator-me-total--brand .operator-me-total__value { color: var(--brand, #ffee00); }
 .operator-me-total--orange .operator-me-total__value { color: #f59e0b; }
 .operator-me-total--violet .operator-me-total__value { color: #a78bfa; }
 
@@ -788,8 +788,37 @@ body.operator-portal {
 }
 
 .operator-me-empty__text { margin: 0 0 8px; color: #cbd5e1; }
-.operator-me-empty__text strong { color: #ffee00; }
+.operator-me-empty__text strong { color: var(--brand, #ffee00); }
 .operator-me-empty__hint { margin: 0; color: #94a3b8; font-size: 13px; }
+
+html[data-theme="dark-red"] .operator-portal .operator-nav-wordmark-stats,
+html[data-theme="dark-red"] .operator-portal .operator-me-card__title i,
+html[data-theme="dark-red"] .operator-portal .operator-me-total--brand .operator-me-total__value,
+html[data-theme="dark-red"] .operator-portal .operator-me-empty__text strong {
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .operator-me-avatar--initial,
+html[data-theme="dark-red"] .operator-portal .operator-nav-links a.active {
+  background: linear-gradient(135deg, #c1121f 0%, #a00f1a 100%);
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .operator-me-badge,
+html[data-theme="dark-red"] .operator-portal .setari-photo-btn,
+html[data-theme="dark-red"] .operator-portal .operator-nav-links a.active {
+  border-color: rgba(193, 18, 31, 0.45);
+}
+
+html[data-theme="dark-red"] .operator-portal .operator-me-badge,
+html[data-theme="dark-red"] .operator-portal .setari-photo-btn {
+  background: rgba(193, 18, 31, 0.14);
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .setari-photo-btn:hover {
+  background: rgba(193, 18, 31, 0.24);
+}
 
 @media (max-width: 1024px) {
   .operator-me-grid {
@@ -1385,7 +1414,7 @@ body.operator-portal {
 
 .operatori-btn-photo:hover {
   background: rgba(0, 0, 0, 0.7);
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   border-color: rgba(255, 238, 0, 0.5);
 }
 
@@ -1412,7 +1441,7 @@ body.operator-portal {
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.7);
   color: #fff;
-  border: 2px solid #FFEE00;
+  border: 2px solid var(--brand, #FFEE00);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1422,7 +1451,7 @@ body.operator-portal {
 
 .operatori-btn-avatar-upload:hover {
   background: rgba(255, 238, 0, 0.3);
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
 }
 
 .operatori-sidebar-card-photos {
@@ -1457,7 +1486,7 @@ body.operator-portal {
   font-weight: 600;
   border-radius: 10px;
   background: rgba(255, 238, 0, 0.15);
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   border: 1px solid rgba(255, 238, 0, 0.4);
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
@@ -1535,7 +1564,7 @@ body.operator-portal {
 
 .operatori-badge {
   background: rgba(17, 24, 39, 0.9);
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 14px;
@@ -1543,7 +1572,7 @@ body.operator-portal {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #FFEE00;
+  border: 1px solid var(--brand, #FFEE00);
 }
 
 .operatori-detail-grid {
@@ -1645,7 +1674,7 @@ body.operator-portal {
 
 .operatori-stat-row--yellow .operatori-stat-icon {
   background: rgba(255, 238, 0, 0.2);
-  color: #ffee00;
+  color: var(--brand, #ffee00);
 }
 
 .operatori-stat-row--delivery {
@@ -1791,7 +1820,7 @@ body.operator-portal {
 }
 
 .operatori-stat-box--yellow .operatori-stat-value {
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
 }
 
 .operatori-chart-wrap {
@@ -2044,7 +2073,7 @@ body.operator-portal {
 
 .operatori-form-label {
   display: block;
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   margin-bottom: 8px;
   font-weight: 600;
   font-size: 14px;
@@ -2063,7 +2092,7 @@ body.operator-portal {
 }
 
 .operatori-form-input:focus {
-  border-color: #FFEE00;
+  border-color: var(--brand, #FFEE00);
   background: rgba(255, 255, 255, 0.1);
   outline: none;
 }
@@ -2099,7 +2128,7 @@ body.operator-portal {
 
 /* Observații card */
 .operatori-notes-card .operatori-sidebar-title i {
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
 }
 
 .operatori-notes-card p {
@@ -2255,7 +2284,7 @@ body.operator-portal {
 /* ---------- CARD STIL GENERAL ---------- */
 .operator-card {
   background: #1F2937;
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
   padding: 20px;
@@ -2333,16 +2362,16 @@ body.operator-portal {
 
 .back-button a {
   text-decoration: none;
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   font-weight: 600;
   padding: 8px 16px;
-  border: 1px solid #FFEE00;
+  border: 1px solid var(--brand, #FFEE00);
   border-radius: 8px;
   transition: all 0.2s ease;
 }
 
 .back-button a:hover {
-  background: #FFEE00;
+  background: var(--brand, #FFEE00);
   color: #000;
 }
 
@@ -2368,7 +2397,7 @@ body.operator-portal {
   flex: 1 1 calc(33.333% - 10px);
   box-sizing: border-box;
   text-decoration: none;
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   font-weight: 600;
   text-align: center;
 }
@@ -2401,7 +2430,7 @@ body.operator-portal {
   display: flex;
   align-items: center;
   background: #1F2937;
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   border-radius: 12px;
   padding: 15px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -2412,7 +2441,7 @@ body.operator-portal {
   font-size: 24px;
   font-weight: 700;
   margin-right: 15px;
-  color: #FFEE00; /* aurie pentru locul 1 */
+  color: var(--brand, #FFEE00); /* aurie pentru locul 1 */
   background-color: #dc2626;
   padding: 5px 5px 5px 5px;
   border-radius: 100%;
@@ -2687,7 +2716,7 @@ body.operator-portal {
     width: 100% !important;
   }
   
-  div[style*="color: #FFEE00; font-weight: 700; font-size: 18px; margin-left: 16px"] {
+  div[style*="color: var(--brand, #FFEE00); font-weight: 700; font-size: 18px; margin-left: 16px"] {
     font-size: 10px !important;
     margin-left: 0 !important;
     margin-top: 2px !important;
@@ -2822,7 +2851,7 @@ body.operator-portal {
     width: 100% !important;
   }
   
-  div[style*="color: #FFEE00; font-weight: 700; font-size: 18px; margin-left: 16px"] {
+  div[style*="color: var(--brand, #FFEE00); font-weight: 700; font-size: 18px; margin-left: 16px"] {
     font-size: 11px !important;
     margin-left: 0 !important;
     margin-top: 2px !important;
@@ -2924,7 +2953,7 @@ body.operator-portal {
     width: 100% !important;
   }
   
-  div[style*="color: #FFEE00; font-weight: 700; font-size: 18px; margin-left: 16px"] {
+  div[style*="color: var(--brand, #FFEE00); font-weight: 700; font-size: 18px; margin-left: 16px"] {
     font-size: 9px !important;
     margin-left: 0 !important;
     margin-top: 2px !important;

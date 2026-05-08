@@ -12,10 +12,10 @@
   .setari-photo-input { position: absolute; width: 0; height: 0; opacity: 0; }
   .setari-photo-btn {
     display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px;
-    background: rgba(255, 238, 0, 0.15); color: #FFEE00; border: 1px solid rgba(255, 238, 0, 0.4);
+    background: var(--brand-10, rgba(255, 238, 0, 0.15)); color: var(--brand, #FFEE00); border: 1px solid var(--brand-20, rgba(255, 238, 0, 0.4));
     border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s;
   }
-  .setari-photo-btn:hover { background: rgba(255, 238, 0, 0.25); }
+  .setari-photo-btn:hover { background: var(--brand-20, rgba(255, 238, 0, 0.25)); }
 </style>
 @endpush
 
