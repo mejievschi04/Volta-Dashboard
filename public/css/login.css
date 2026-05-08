@@ -21,13 +21,14 @@ html[data-theme="dark"] {
 
 html[data-theme="dark-red"] {
   color-scheme: dark;
-  --brand: rgb(255, 99, 132);
-  --brand-dark: rgb(236, 72, 113);
-  --brand-light: rgba(255, 99, 132, 0.12);
-  --bg-dark: rgb(24, 8, 13);
-  --bg-soft: rgb(46, 14, 24);
-  --bg-card: rgb(46, 14, 24);
-  --border: rgb(98, 34, 52);
+  --brand: #c1121f;
+  --brand-dark: #a00f1a;
+  --brand-light: rgba(193, 18, 31, 0.12);
+  --bg-dark: #0f0b0c;
+  --bg-soft: #1a1215;
+  --bg-card: #1a1215;
+  --text: #f5f3f4;
+  --border: #3a242b;
 }
 
 html[data-theme="dark"]::before {
@@ -52,9 +53,9 @@ html[data-theme="dark-red"]::before {
   pointer-events: none;
   background: linear-gradient(
     135deg,
-    rgb(38, 10, 18) 0%,
-    rgb(24, 8, 13) 50%,
-    rgb(46, 14, 24) 100%
+    #0f0b0c 0%,
+    #140f11 50%,
+    #1a1215 100%
   );
 }
 

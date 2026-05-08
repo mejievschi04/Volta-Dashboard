@@ -94,23 +94,27 @@ html[data-theme="dark"] {
 
 html[data-theme="dark-red"] {
   color-scheme: dark;
-  --bg-sidebar-toggle: rgb(38, 10, 18);
-  --bg-sidebar-toggle-hover: rgb(24, 8, 13);
-  --bg-primary: rgb(24, 8, 13);
-  --bg-secondary: rgb(46, 14, 24);
-  --bg-tertiary: rgb(76, 24, 38);
-  --bg-elevated: rgb(46, 14, 24);
-  --bg-surface: rgb(46, 14, 24);
+  --bg-sidebar-toggle: #0f0b0c;
+  --bg-sidebar-toggle-hover: #120d0f;
+  --bg-primary: #0f0b0c;
+  --bg-secondary: #1a1215;
+  --bg-tertiary: #26191e;
+  --bg-elevated: #1a1215;
+  --bg-surface: #1a1215;
 
-  --border-primary: rgb(98, 34, 52);
-  --border-secondary: rgb(130, 52, 74);
+  --text-primary: #f5f3f4;
+  --text-secondary: #d8cfd2;
+  --text-tertiary: #b8aab0;
 
-  --brand: rgb(255, 99, 132);
-  --brand-dark: rgb(236, 72, 113);
-  --brand-on-dark: rgb(255, 99, 132);
-  --brand-10: rgba(255, 99, 132, 0.12);
-  --brand-20: rgba(255, 99, 132, 0.2);
-  --brand-30: rgba(255, 99, 132, 0.3);
+  --border-primary: #3a242b;
+  --border-secondary: #5a343f;
+
+  --brand: #c1121f;
+  --brand-dark: #a00f1a;
+  --brand-on-dark: #f5f3f4;
+  --brand-10: rgba(193, 18, 31, 0.12);
+  --brand-20: rgba(193, 18, 31, 0.2);
+  --brand-30: rgba(193, 18, 31, 0.3);
 }
 
 /* Fundal pagină — gradient ca Volta Academy (splash / dark) */
@@ -136,9 +140,9 @@ html[data-theme="dark-red"]::before {
   pointer-events: none;
   background: linear-gradient(
     135deg,
-    rgb(38, 10, 18) 0%,
-    rgb(24, 8, 13) 55%,
-    rgb(46, 14, 24) 100%
+    #0f0b0c 0%,
+    #140f11 55%,
+    #1a1215 100%
   );
 }
 
