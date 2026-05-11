@@ -3,13 +3,13 @@
   --brand: rgb(255, 238, 0);
   --brand-dark: rgb(230, 216, 0);
   --brand-light: rgba(255, 238, 0, 0.12);
-  --bg-dark: rgb(15, 23, 42);
-  --bg-soft: rgb(30, 41, 59);
-  --bg-card: rgb(30, 41, 59);
+  --bg-dark: rgb(8, 15, 32);
+  --bg-soft: rgb(22, 24, 32);
+  --bg-card: rgb(26, 29, 38);
   --text: rgb(248, 250, 252);
   --text-muted: rgb(148, 163, 184);
-  --text-dark: rgb(15, 23, 42);
-  --border: rgb(51, 65, 85);
+  --text-dark: rgb(17, 20, 28);
+  --border: rgb(56, 62, 77);
   --error: #EF4444;
   --success: #22C55E;
   --shadow-glow: 0 8px 32px rgba(0, 0, 0, 0.45);
@@ -39,9 +39,9 @@ html[data-theme="dark"]::before {
   pointer-events: none;
   background: linear-gradient(
     135deg,
-    rgb(17, 24, 39) 0%,
-    rgb(15, 23, 42) 50%,
-    rgb(17, 24, 39) 100%
+    rgb(10, 16, 31) 0%,
+    rgb(8, 15, 32) 50%,
+    rgb(10, 16, 31) 100%
   );
 }
 
@@ -141,7 +141,7 @@ body {
 
 /* Caseta login modernă */
 .login-box {
-  background: linear-gradient(135deg, rgba(31, 41, 55, 0.95) 0%, rgba(31, 41, 55, 0.98) 100%);
+  background: linear-gradient(135deg, rgba(28, 32, 42, 0.95) 0%, rgba(18, 20, 28, 0.98) 100%);
   padding: 60px 50px;
   border-radius: 24px;
   box-shadow:
@@ -427,7 +427,7 @@ body {
   padding: 18px 20px 18px 55px;
   border: 2px solid rgba(255, 238, 0, 0.15);
   border-radius: 14px;
-  background: rgba(31, 41, 55, 0.7);
+  background: rgba(24, 27, 36, 0.78);
   color: var(--text);
   font-size: 15px;
   font-weight: 500;
@@ -444,14 +444,14 @@ body {
 
 .input-group input:focus {
   border-color: rgb(71, 85, 105);
-  background: rgba(31, 41, 55, 0.85);
+  background: rgba(30, 34, 44, 0.9);
   box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.2);
   padding-left: 55px;
 }
 
 .input-group input:hover:not(:focus) {
   border-color: rgba(255, 238, 0, 0.25);
-  background: rgba(17, 24, 39, 0.75);
+  background: rgba(20, 22, 30, 0.82);
 }
 
 .input-focus-line {
@@ -888,7 +888,7 @@ body {
 @media (hover: none) and (pointer: coarse) {
   .input-group input:hover:not(:focus) {
     border-color: rgba(255, 238, 0, 0.15);
-    background: rgba(31, 41, 55, 0.7);
+    background: rgba(24, 27, 36, 0.78);
   }
   
   .btn-login:hover {
@@ -933,9 +933,9 @@ body {
   /* Aliniat cu html[data-theme="dark"]::before din style.css */
   background: linear-gradient(
     135deg,
-    rgb(17, 24, 39) 0%,
-    rgb(15, 23, 42) 50%,
-    rgb(17, 24, 39) 100%
+    rgb(10, 16, 31) 0%,
+    rgb(8, 15, 32) 50%,
+    rgb(10, 16, 31) 100%
   );
   opacity: 0;
   visibility: hidden;

@@ -235,13 +235,13 @@
         datasets: [{
           label: 'Vânzări (fără TVA) MDL',
           data: data,
-          borderColor: '#3b82f6',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          borderColor: '#FFEE00',
+          backgroundColor: 'rgba(255, 238, 0, 0.12)',
           borderWidth: 3,
           tension: 0.4,
           fill: true,
           pointRadius: 4,
-          pointBackgroundColor: '#3b82f6',
+          pointBackgroundColor: '#FFEE00',
           pointBorderColor: '#fff',
           pointBorderWidth: 2
         }]

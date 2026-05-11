@@ -430,8 +430,8 @@ async function loadVanzariTotale() {
     const yellowHi = SOL.brandHover || "#FFF59A";
     const rose = SOL.coral || "#FB7185";
     const roseHi = SOL.coralHover || "#FDA4AF";
-    const sky = SOL.sky || "#38BDF8";
-    const skyHi = SOL.skyHover || "#7DD3FC";
+    const sky = SOL.sky || "#B4BCCC";
+    const skyHi = SOL.skyHover || "#D4DAE4";
     const planFillStatic = "rgba(251, 113, 133, 0.12)";
     if (ctxSales) {
       charts["salesChart"] = { instance: new Chart(ctxSales.getContext("2d"), {
@@ -767,7 +767,7 @@ function loadComenziSiConversieLunare() {
   destroyChart("sesiuniChart");
   initChart("comenziLunarChart", "Comenzi", getThemeBrand());
   initChart("conversieLunarChart", "Conversie %", "#FB7185");
-  initChart("sesiuniChart", "Total sesiuni", "#38BDF8");
+  initChart("sesiuniChart", "Total sesiuni", "#B4BCCC");
 }
 
 // ---------------- DOCUMENT READY ---------------- 
@@ -788,7 +788,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initChart("salesChart", "Vânzări lunare", getThemeBrand());
   initChart("comenziLunarChart", "Comenzi", getThemeBrand());
   initChart("conversieLunarChart", "Conversie %", "#FB7185");
-  initChart("sesiuniChart", "Total sesiuni", "#38BDF8");
+  initChart("sesiuniChart", "Total sesiuni", "#B4BCCC");
 
   loadVanzariTotale();
 });

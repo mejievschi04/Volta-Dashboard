@@ -471,7 +471,7 @@ function drawChart() {
         amber: { line: "rgb(250, 204, 21)", area: "rgba(250, 204, 21, 0.18)" },
         emerald: { line: "rgb(16, 185, 129)", area: "rgba(16, 185, 129, 0.18)" },
         violet: { line: "rgb(167, 139, 250)", area: "rgba(167, 139, 250, 0.18)" },
-        cyan: { line: "rgb(6, 182, 212)", area: "rgba(6, 182, 212, 0.18)" },
+        cyan: { line: "rgb(180, 188, 204)", area: "rgba(180, 188, 204, 0.18)" },
         rose: { line: "rgb(244, 63, 94)", area: "rgba(244, 63, 94, 0.18)" },
         slate: { line: "rgb(148, 163, 184)", area: "rgba(148, 163, 184, 0.16)" }
       };

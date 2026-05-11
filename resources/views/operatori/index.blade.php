@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const canvas1c = document.getElementById('vanzariPieChart1c');
   if (canvas1c) {
     const chartData1c = @json($chartData1c);
-    const colors = ['rgba(255, 238, 0, 0.8)', 'rgba(59, 130, 246, 0.8)', 'rgba(74, 222, 128, 0.8)', 'rgba(168, 85, 247, 0.8)', 'rgba(239, 68, 68, 0.8)', 'rgba(251, 146, 60, 0.8)', 'rgba(34, 197, 94, 0.8)', 'rgba(99, 102, 241, 0.8)', 'rgba(236, 72, 153, 0.8)', 'rgba(20, 184, 166, 0.8)'];
+    const colors = ['rgba(255, 238, 0, 0.8)', 'rgba(180, 188, 204, 0.8)', 'rgba(74, 222, 128, 0.8)', 'rgba(168, 85, 247, 0.8)', 'rgba(239, 68, 68, 0.8)', 'rgba(251, 146, 60, 0.8)', 'rgba(34, 197, 94, 0.8)', 'rgba(217, 119, 6, 0.8)', 'rgba(236, 72, 153, 0.8)', 'rgba(161, 161, 170, 0.8)'];
     new Chart(canvas1c.getContext('2d'), {
       type: 'pie',
       data: {

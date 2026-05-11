@@ -6,6 +6,7 @@
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/operatori.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <style>
   /* ---------- Page base ---------- */
   .livrari-page {
@@ -52,7 +53,7 @@
 
   /* ---------- Cards ---------- */
   .livrari-card {
-    background: linear-gradient(165deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.96) 100%);
+    background: linear-gradient(165deg, rgba(20, 31, 55, 0.94) 0%, rgba(9, 17, 35, 0.97) 100%);
     border-radius: 18px;
     padding: 28px;
     margin-bottom: 24px;
@@ -99,7 +100,7 @@
   .livrari-filters-card {
     padding: 18px 20px;
     margin-bottom: 20px;
-    background: var(--bg-elevated, #1e293b);
+    background: var(--bg-elevated, #16233d);
     border: 1px solid var(--border-primary, #334155);
     box-shadow: var(--shadow-md, 0 4px 8px rgba(0, 0, 0, 0.4));
   }
@@ -150,7 +151,7 @@
     padding: 8px 12px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 8px;
-    background: rgba(17, 24, 39, 0.6);
+    background: rgba(9, 17, 35, 0.78);
     color: #fff;
     min-width: 100%;
     font-size: 0.8125rem;
@@ -166,7 +167,7 @@
     padding: 10px 14px;
     border: 1px solid rgba(148, 163, 184, 0.35);
     border-radius: 10px;
-    background: linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+    background: linear-gradient(180deg, rgba(20, 31, 55, 0.98) 0%, rgba(9, 17, 35, 0.98) 100%);
     color: #F8FAFC;
     min-width: 140px;
     font-size: 0.875rem;
@@ -193,7 +194,7 @@
   }
   .livrari-filters select:hover {
     border-color: rgba(255, 238, 0, 0.32);
-    background: linear-gradient(180deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
+    background: linear-gradient(180deg, rgba(20, 31, 55, 1) 0%, rgba(9, 17, 35, 1) 100%);
   }
   .livrari-filters .livrari-btn { padding: 8px 16px; font-size: 0.8125rem; }
   .livrari-perioada-wrap { min-width: 200px; flex: 1 1 220px; }
@@ -203,7 +204,7 @@
     align-items: center;
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 8px;
-    background: rgba(17, 24, 39, 0.6);
+    background: rgba(9, 17, 35, 0.78);
     cursor: pointer;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
@@ -260,7 +261,7 @@
     padding: 10px 14px;
     border: 1px solid rgba(148, 163, 184, 0.35);
     border-radius: 10px;
-    background: linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+    background: linear-gradient(180deg, rgba(20, 31, 55, 0.98) 0%, rgba(9, 17, 35, 0.98) 100%);
     color: #F8FAFC;
     min-width: 140px;
     font-size: 0.875rem;
@@ -277,12 +278,12 @@
   }
   .livrari-filters select option,
   .livrari-filter-item select option {
-    background: #0B1220;
+    background: #0b1630;
     color: #F8FAFC;
   }
   .livrari-filters select option:checked,
   .livrari-filter-item select option:checked {
-    background: #1E293B;
+    background: #182743;
     color: var(--brand, #FFEE00);
     font-weight: 700;
   }
@@ -298,7 +299,7 @@
   }
   .livrari-filter-item select:hover {
     border-color: rgba(255, 238, 0, 0.32);
-    background: linear-gradient(180deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
+    background: linear-gradient(180deg, rgba(20, 31, 55, 1) 0%, rgba(9, 17, 35, 1) 100%);
   }
   .livrari-search-wrap.livrari-filter-item { min-width: 160px; flex: 1 1 180px; }
   .livrari-btn {
@@ -311,6 +312,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    text-decoration: none;
     transition: transform 0.15s ease, box-shadow 0.2s ease;
   }
   .livrari-btn:hover { transform: translateY(-1px); }
@@ -321,6 +323,22 @@
   }
   .livrari-btn-primary:hover {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 238, 0, 0.28);
+  }
+  .livrari-btn-muted {
+    background: rgba(9, 17, 35, 0.8);
+    color: #cbd5e1;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+  .livrari-btn-muted:hover {
+    color: #f8fafc;
+    border-color: rgba(255, 238, 0, 0.35);
+  }
+  .livrari-btn-muted.is-active {
+    color: #111827;
+    border-color: rgba(255, 238, 0, 0.72);
+    background: linear-gradient(135deg, rgba(255, 238, 0, 0.95) 0%, rgba(250, 204, 21, 0.95) 100%);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 238, 0, 0.18);
   }
   .livrari-btn-edit {
     width: 36px;
@@ -379,7 +397,7 @@
     overflow-x: auto;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.06);
-    background: rgba(17, 24, 39, 0.4);
+    background: rgba(6, 14, 30, 0.72);
   }
   .livrari-table {
     width: 100%;
@@ -387,7 +405,7 @@
     font-size: 0.8125rem;
   }
   .livrari-table th {
-    background: var(--bg-secondary, #1e293b);
+    background: var(--bg-secondary, #16233d);
     color: var(--text-secondary, #cbd5e1);
     padding: 10px 14px;
     text-align: left;
@@ -406,7 +424,7 @@
   .livrari-table tbody tr {
     transition: background 0.15s ease;
   }
-  .livrari-table tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
+  .livrari-table tbody tr:hover { background: rgba(255, 255, 255, 0.035); }
   .livrari-table tbody tr:last-child td { border-bottom: none; }
 
   /* ---------- Pagination (RO + stil Volta) ---------- */
@@ -434,7 +452,7 @@
     font-weight: 600;
     line-height: 1.2;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(30, 41, 59, 0.85);
+    background: rgba(20, 31, 55, 0.9);
     color: #f1f5f9;
     text-decoration: none;
     transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
@@ -453,7 +471,7 @@
     cursor: not-allowed;
     color: #94a3b8;
     border-color: rgba(255, 255, 255, 0.06);
-    background: rgba(15, 23, 42, 0.5);
+    background: rgba(9, 17, 35, 0.7);
   }
   .livrari-pag__pages {
     display: flex;
@@ -465,7 +483,7 @@
     margin: 0;
     padding: 4px 8px;
     border-radius: 14px;
-    background: rgba(15, 23, 42, 0.45);
+    background: rgba(9, 17, 35, 0.76);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
   .livrari-pag__pages > li { margin: 0; padding: 0; }
@@ -665,7 +683,8 @@
     display: flex;
     width: 100%;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
+    gap: 10px;
     min-height: 34px;
     padding: 8px 10px;
     border: 0;
@@ -677,11 +696,22 @@
     font-size: 0.875rem;
     text-align: left;
   }
+  .livrari-raion-option span,
+  .livrari-raion-option small {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .livrari-raion-option small {
+    color: #94A3B8;
+    font-size: 0.75rem;
+  }
   .livrari-raion-option:hover,
   .livrari-raion-option.is-active {
     background: rgba(255, 238, 0, 0.14);
     color: #FFEE00;
   }
+  .livrari-raion-option:hover small,
+  .livrari-raion-option.is-active small { color: #FDE68A; }
   .livrari-raion-empty {
     padding: 10px;
     color: #9CA3AF;
@@ -778,6 +808,165 @@
     cursor: pointer;
   }
   .livrari-export-tool:hover { color: #ffee00; border-color: rgba(255, 238, 0, 0.28); }
+  .livrari-map-modal { max-width: 1120px; }
+  .livrari-map-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    color: #94A3B8;
+    font-size: 0.875rem;
+  }
+  .livrari-map-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .livrari-map-select {
+    min-width: 210px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    background: rgba(17, 24, 39, 0.75);
+    color: #fff;
+    font-weight: 700;
+  }
+  .livrari-map-select option { color: #111827; }
+  .livrari-map-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 16px;
+  }
+  .livrari-live-map {
+    min-height: 540px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0f172a;
+  }
+  .livrari-map-side {
+    min-height: 540px;
+    max-height: 540px;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.48);
+    padding: 14px;
+  }
+  .livrari-map-total {
+    display: grid;
+    gap: 4px;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .livrari-map-total strong { color: #fff; font-size: 1.75rem; line-height: 1; }
+  .livrari-map-total span { color: #94A3B8; font-size: 0.8125rem; }
+  .livrari-map-detail {
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(255, 238, 0, 0.16);
+    border-radius: 12px;
+    background: rgba(255, 238, 0, 0.06);
+  }
+  .livrari-map-detail-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: #F8FAFC;
+    font-weight: 900;
+  }
+  .livrari-map-detail-count {
+    color: #0F172A;
+    background: #FFEE00;
+    border-radius: 999px;
+    padding: 3px 9px;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+  .livrari-map-detail-period {
+    color: #CBD5E1;
+    font-size: 0.8125rem;
+  }
+  .livrari-map-detail-localitati {
+    margin: 0;
+    padding-left: 18px;
+    color: #CBD5E1;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+  .livrari-map-list { display: grid; gap: 8px; }
+  .livrari-map-row {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #E5E7EB;
+    padding: 10px;
+    display: grid;
+    gap: 4px;
+    text-align: left;
+    cursor: pointer;
+  }
+  .livrari-map-row:hover {
+    border-color: rgba(255, 238, 0, 0.28);
+    background: rgba(255, 238, 0, 0.08);
+  }
+  .livrari-map-row-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-weight: 800;
+  }
+  .livrari-map-row-count {
+    color: #0f172a;
+    background: #ffee00;
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+  .livrari-map-row-sub {
+    color: #94A3B8;
+    font-size: 0.75rem;
+    line-height: 1.35;
+  }
+  .livrari-map-empty {
+    padding: 18px 10px;
+    color: #94A3B8;
+    text-align: center;
+  }
+  .livrari-map-popup strong { color: #111827; }
+  .livrari-map-popup ul { margin: 6px 0 0; padding-left: 18px; }
+  .livrari-map-popup li { margin: 2px 0; }
+  .livrari-map-refresh { white-space: nowrap; }
+  .livrari-map-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-top: 12px;
+    color: #CBD5E1;
+    font-size: 0.75rem;
+  }
+  .livrari-map-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .livrari-map-legend i {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    display: inline-block;
+  }
+  .leaflet-container { font-family: 'Noto Sans', system-ui, sans-serif; }
 
   @media (max-width: 600px) {
     .livrari-add-row { grid-template-columns: 1fr; }
@@ -789,6 +978,9 @@
     .livrari-filter-item select { min-width: 100%; }
     .livrari-search-wrap { min-width: 100%; }
     .livrari-perioada-wrap { min-width: 100%; flex: 1 1 100%; }
+    .livrari-map-layout { grid-template-columns: 1fr; }
+    .livrari-live-map { min-height: 420px; }
+    .livrari-map-side { min-height: auto; max-height: 320px; }
   }
 
   /* ---------- Admin: KPI & extra polish ---------- */
@@ -1166,6 +1358,32 @@
   }
   .livrari-flatpickr .numInputWrapper span.arrowUp:after { border-bottom-color: var(--brand, #FFEE00); }
   .livrari-flatpickr .numInputWrapper span.arrowDown:after { border-top-color: var(--brand, #FFEE00); }
+
+  /* ---------- Neutral dark element palette (global consistency) ---------- */
+  .livrari-card {
+    background: linear-gradient(165deg, rgba(28, 32, 42, 0.95) 0%, rgba(16, 18, 24, 0.98) 100%);
+  }
+  .livrari-filters-card { background: #1a1d26; }
+  .livrari-search-input,
+  .livrari-perioada-field {
+    background: rgba(20, 22, 30, 0.82);
+  }
+  .livrari-filters select,
+  .livrari-filter-item select {
+    background: linear-gradient(180deg, rgba(34, 38, 49, 0.98) 0%, rgba(20, 22, 30, 0.98) 100%);
+  }
+  .livrari-filters select:hover,
+  .livrari-filter-item select:hover {
+    background: linear-gradient(180deg, rgba(40, 45, 58, 1) 0%, rgba(24, 27, 36, 1) 100%);
+  }
+  .livrari-btn-muted { background: rgba(24, 27, 36, 0.86); }
+  .livrari-table-wrap { background: rgba(14, 16, 22, 0.72); }
+  .livrari-table th { background: #232836; }
+  .livrari-table tbody tr:hover { background: rgba(255, 255, 255, 0.04); }
+  .livrari-pag__edge { background: rgba(28, 32, 42, 0.92); }
+  .livrari-pag__edge--disabled { background: rgba(20, 22, 30, 0.72); }
+  .livrari-pag__pages { background: rgba(20, 22, 30, 0.8); }
+  .livrari-modal { background: linear-gradient(165deg, #232836 0%, #171b24 100%); }
 </style>
 @endpush
 
@@ -1176,57 +1394,20 @@
   </p>
 
   @php
-    $filters = $filters ?? ['luna' => '', 'operator_id' => '', 'locatie' => '', 'cauta' => '', 'data' => '', 'data_de_la' => '', 'data_pana' => ''];
+    $filters = $filters ?? ['luna' => '', 'operator_id' => '', 'locatie' => '', 'cauta' => '', 'fara_raion' => '', 'data' => '', 'data_de_la' => '', 'data_pana' => ''];
     $operatorsForFilter = $operatorsForFilter ?? collect();
-    $livrariRaioane = [
-      'Chișinău',
-      'Bălți',
-      'Anenii Noi',
-      'Basarabeasca',
-      'Briceni',
-      'Cahul',
-      'Cantemir',
-      'Călărași',
-      'Căușeni',
-      'Cimișlia',
-      'Criuleni',
-      'Dondușeni',
-      'Drochia',
-      'Dubăsari',
-      'Edineț',
-      'Fălești',
-      'Florești',
-      'Glodeni',
-      'Hîncești',
-      'Ialoveni',
-      'Leova',
-      'Nisporeni',
-      'Ocnița',
-      'Orhei',
-      'Rezina',
-      'Rîșcani',
-      'Sîngerei',
-      'Soroca',
-      'Strășeni',
-      'Șoldănești',
-      'Ștefan Vodă',
-      'Taraclia',
-      'Telenești',
-      'Ungheni',
-      'UTA Găgăuzia',
-      'Bender',
-      'Tiraspol',
-    ];
+    $livrariLocalitati = collect($livrariLocalitati ?? []);
+    $livrariRaioane = collect($livrariRaioane ?? []);
+    $missingRaionOnly = (string) ($filters['fara_raion'] ?? '') === '1';
+    $queryWithoutPage = request()->except('page');
+    $missingRaionQuery = array_merge($queryWithoutPage, ['fara_raion' => '1']);
+    $allRaioaneQuery = $queryWithoutPage;
+    unset($allRaioaneQuery['fara_raion']);
   @endphp
-
-  <datalist id="livrariRaioaneList">
-    @foreach($livrariRaioane as $raion)
-      <option value="{{ $raion }}"></option>
-    @endforeach
-  </datalist>
 
   <form method="get" action="{{ route('livrari') }}" class="livrari-card livrari-filters-card">
     <h2><i class="fas fa-filter"></i> Filtre și căutare</h2>
+    <input type="hidden" name="fara_raion" value="{{ $missingRaionOnly ? '1' : '' }}">
 
     <div class="livrari-filters-block">
       <span class="livrari-filters-block-title">Perioadă</span>
@@ -1254,7 +1435,7 @@
       <div class="livrari-filters-row">
         <div class="livrari-search-wrap livrari-filter-item">
           <label for="cauta">Căutare</label>
-          <input type="text" id="cauta" name="cauta" value="{{ $filters['cauta'] ?? '' }}" placeholder="Nr. comandă, adresă, raion..." class="livrari-search-input" maxlength="200">
+          <input type="text" id="cauta" name="cauta" value="{{ $filters['cauta'] ?? '' }}" placeholder="Nr. comandă, localitate, raion..." class="livrari-search-input" maxlength="200">
         </div>
         <div class="livrari-filter-item">
           <label for="luna">Lună</label>
@@ -1288,6 +1469,15 @@
           </select>
         </div>
         <button type="submit" class="livrari-btn livrari-btn-primary"><i class="fas fa-search"></i> Filtrează</button>
+        @if(!$missingRaionOnly)
+        <a href="{{ route('livrari', $missingRaionQuery) }}" class="livrari-btn livrari-btn-muted">
+          <i class="fas fa-triangle-exclamation"></i> Fără raion
+        </a>
+        @else
+        <a href="{{ route('livrari', $allRaioaneQuery) }}" class="livrari-btn livrari-btn-muted is-active">
+          <i class="fas fa-filter-circle-xmark"></i> Arată toate raioanele
+        </a>
+        @endif
       </div>
     </div>
   </form>
@@ -1363,7 +1553,7 @@
         <h2 class="livrari-modal-title" id="livrariModalTitle"><i class="fas fa-truck"></i> Adaugă livrare nouă</h2>
         <button type="button" class="livrari-modal-close" id="livrariModalClose" aria-label="Închide">&times;</button>
       </div>
-      <p class="livrari-add-hint">Locația (În Chișinău / În afara) se stabilește automat după raion. După salvare poți introduce altă livrare sau închide.</p>
+      <p class="livrari-add-hint">Scrie localitatea, iar raionul se completează automat. Dacă aceeași localitate există în mai multe raioane, alege raionul corect.</p>
       <div class="livrari-modal-success" id="livrariModalSuccess"></div>
       <div class="livrari-modal-error" id="livrariModalError"></div>
       <form id="livrariAddForm" action="{{ route('livrari.store') }}" method="post" class="livrari-add-form">
@@ -1380,18 +1570,26 @@
         </div>
         <div class="livrari-add-row">
           <div class="livrari-add-field">
-            <label for="modal_localitate">Raion *</label>
-            <input type="text" id="modal_localitate" name="localitate" list="livrariRaioaneList" required maxlength="255" autocomplete="off" placeholder="Alege sau lipește raionul">
+            <label for="modal_localitate">Localitate *</label>
+            <input type="text" id="modal_localitate" name="localitate" required maxlength="255" autocomplete="off" placeholder="Ex: Sipoteni">
           </div>
           <div class="livrari-add-field">
-            <label for="modal_nr_client">Nr. de telefon *</label>
-            <input type="text" id="modal_nr_client" name="nr_client" required maxlength="100" placeholder="Ex: 069123456 sau 37378123456">
+            <label for="modal_raion">Raion *</label>
+            <select id="modal_raion" name="raion" required data-placeholder="Scrie localitatea mai întâi">
+              <option value="">Scrie localitatea mai întâi</option>
+            </select>
           </div>
         </div>
         <div class="livrari-add-row livrari-add-row-full">
           <div class="livrari-add-field">
-            <label for="modal_adresa_livrarii">Adresa *</label>
-            <input type="text" id="modal_adresa_livrarii" name="adresa_livrarii" required maxlength="500" placeholder="Strada, nr., bloc, scara, apartament, cod poștal">
+            <label for="modal_adresa_livrarii">Adresa</label>
+            <input type="text" id="modal_adresa_livrarii" name="adresa_livrarii" maxlength="500" placeholder="Strada, nr., bloc, scara, apartament, cod poștal">
+          </div>
+        </div>
+        <div class="livrari-add-row livrari-add-row-full">
+          <div class="livrari-add-field">
+            <label for="modal_nr_client">Nr. de telefon *</label>
+            <input type="text" id="modal_nr_client" name="nr_client" required maxlength="100" placeholder="Ex: 069123456 sau 37378123456">
           </div>
         </div>
         <div class="livrari-add-actions">
@@ -1406,9 +1604,14 @@
   <div class="livrari-card livrari-table-card">
     <h2 style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
       <span><i class="fas fa-list"></i> {{ $isAdmin ? 'Toate livrările' : 'Livrările mele' }}</span>
-      <button type="button" id="livrariExportExcelBtn" class="livrari-btn livrari-btn-primary">
-        <i class="fas fa-file-excel" aria-hidden="true"></i> Export Excel
-      </button>
+      <span style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <a href="{{ route('livrari.map', request()->query()) }}" class="livrari-btn livrari-btn-primary">
+          <i class="fas fa-map-location-dot" aria-hidden="true"></i> Hartă live
+        </a>
+        <button type="button" id="livrariExportExcelBtn" class="livrari-btn livrari-btn-primary">
+          <i class="fas fa-file-excel" aria-hidden="true"></i> Export Excel
+        </button>
+      </span>
     </h2>
     <div class="livrari-table-wrap">
       <table id="livrariDataTable" class="livrari-table">
@@ -1417,6 +1620,7 @@
             <th>Număr comandă</th>
             <th>Data</th>
             <th>Localitate</th>
+            <th>Raion</th>
             <th>Adresa</th>
             <th>Nr. client</th>
             <th>Data livrării</th>
@@ -1431,12 +1635,14 @@
               data-numar-comanda="{{ e($l->numar_comanda) }}"
               data-data="{{ $l->data->format('Y-m-d') }}"
               data-localitate="{{ e($l->localitate) }}"
+              data-raion="{{ e($l->raion ?? '') }}"
               data-adresa="{{ e($l->adresa_livrarii) }}"
               data-nr-client="{{ e($l->nr_client) }}"
               data-data-livrarii="{{ $l->data_livrarii->format('Y-m-d') }}">
             <td>{{ $l->numar_comanda }}</td>
             <td>{{ $l->data->format('d.m.Y') }}</td>
             <td>{{ $l->localitate ?? '—' }}</td>
+            <td>{{ $l->raion ?? '—' }}</td>
             <td>{{ $l->adresa_livrarii }}</td>
             <td>{{ $l->nr_client }}</td>
             <td>{{ $l->data_livrarii->format('d.m.Y') }}</td>
@@ -1455,7 +1661,7 @@
           </tr>
           @empty
           <tr id="livrariEmptyRow">
-            <td colspan="{{ $isAdmin ? 9 : 8 }}" style="text-align: center; color: #9CA3AF; padding: 32px;">Nicio livrare înregistrată.</td>
+            <td colspan="{{ $isAdmin ? 10 : 9 }}" style="text-align: center; color: #9CA3AF; padding: 32px;">Nicio livrare înregistrată.</td>
           </tr>
           @endforelse
         </tbody>
@@ -1470,6 +1676,7 @@
       'Număr comandă',
       'Data',
       'Localitate',
+      'Raion',
       'Adresa',
       'Nr. client',
       'Data livrării',
@@ -1590,18 +1797,26 @@
         </div>
         <div class="livrari-add-row">
           <div class="livrari-add-field">
-            <label for="edit_localitate">Raion *</label>
-            <input type="text" id="edit_localitate" name="localitate" list="livrariRaioaneList" required maxlength="255" autocomplete="off" placeholder="Alege sau lipește raionul">
+            <label for="edit_localitate">Localitate *</label>
+            <input type="text" id="edit_localitate" name="localitate" required maxlength="255" autocomplete="off" placeholder="Ex: Sipoteni">
           </div>
           <div class="livrari-add-field">
-            <label for="edit_nr_client">Nr. de telefon *</label>
-            <input type="text" id="edit_nr_client" name="nr_client" required maxlength="100" placeholder="Ex: 069123456">
+            <label for="edit_raion">Raion *</label>
+            <select id="edit_raion" name="raion" required data-placeholder="Scrie localitatea mai întâi">
+              <option value="">Scrie localitatea mai întâi</option>
+            </select>
           </div>
         </div>
         <div class="livrari-add-row livrari-add-row-full">
           <div class="livrari-add-field">
-            <label for="edit_adresa_livrarii">Adresa *</label>
-            <input type="text" id="edit_adresa_livrarii" name="adresa_livrarii" required maxlength="500" placeholder="Strada, nr., bloc...">
+            <label for="edit_adresa_livrarii">Adresa</label>
+            <input type="text" id="edit_adresa_livrarii" name="adresa_livrarii" maxlength="500" placeholder="Strada, nr., bloc...">
+          </div>
+        </div>
+        <div class="livrari-add-row livrari-add-row-full">
+          <div class="livrari-add-field">
+            <label for="edit_nr_client">Nr. de telefon *</label>
+            <input type="text" id="edit_nr_client" name="nr_client" required maxlength="100" placeholder="Ex: 069123456">
           </div>
         </div>
         <div class="livrari-add-actions">
@@ -1615,11 +1830,11 @@
 @push('scripts')
 <script>
 (function() {
-  var raioane = @json($livrariRaioane);
-  var inputs = [
-    document.getElementById('modal_localitate'),
-    document.getElementById('edit_localitate')
-  ].filter(Boolean);
+  var localitati = @json($livrariLocalitati);
+  var controls = [
+    { input: document.getElementById('modal_localitate'), raion: document.getElementById('modal_raion') },
+    { input: document.getElementById('edit_localitate'), raion: document.getElementById('edit_raion') }
+  ].filter(function(control) { return control.input && control.raion; });
   var activeIndex = -1;
   var checkComandaUrl = @json(route('livrari.check-comanda'));
   var duplicateComandaMessage = 'Această comandă există deja. Nu poate fi introdusă de două ori.';
@@ -1661,11 +1876,82 @@
       .replace(/[\u0300-\u036f]/g, '');
   }
 
-  function matchesRaioane(query) {
-    var needle = normalizeText(query);
-    return raioane.filter(function(raion) {
-      return needle === '' || normalizeText(raion).indexOf(needle) !== -1;
+  function normalizeSearch(value) {
+    return normalizeText(value).replace(/[^a-z0-9]+/g, '');
+  }
+
+  function editDistance(a, b) {
+    if (a === b) return 0;
+    if (!a.length) return b.length;
+    if (!b.length) return a.length;
+
+    var previous = Array.from({ length: b.length + 1 }, function(_, index) { return index; });
+    for (var i = 0; i < a.length; i++) {
+      var current = [i + 1];
+      for (var j = 0; j < b.length; j++) {
+        var insert = current[j] + 1;
+        var remove = previous[j + 1] + 1;
+        var replace = previous[j] + (a[i] === b[j] ? 0 : 1);
+        current.push(Math.min(insert, remove, replace));
+      }
+      previous = current;
+    }
+
+    return previous[b.length];
+  }
+
+  function localitateScore(needle, candidate) {
+    if (!candidate) return null;
+    if (candidate === needle) return 0;
+    if (candidate.indexOf(needle) === 0) return 10 + Math.abs(candidate.length - needle.length);
+    var position = candidate.indexOf(needle);
+    if (position !== -1) return 25 + position + Math.abs(candidate.length - needle.length);
+    if (needle.length < 3) return null;
+
+    var distance = editDistance(needle, candidate);
+    var threshold = needle.length <= 5 ? 1 : (needle.length <= 9 ? 2 : 3);
+    if (distance > threshold) return null;
+
+    return 50 + distance * 8 + Math.abs(candidate.length - needle.length);
+  }
+
+  function uniqueRaioane(items) {
+    var seen = {};
+    return items.map(function(item) { return item.raion; }).filter(function(raion) {
+      var key = normalizeSearch(raion);
+      if (seen[key]) return false;
+      seen[key] = true;
+      return true;
+    }).sort(function(a, b) { return a.localeCompare(b, 'ro'); });
+  }
+
+  function exactLocalitateMatches(value) {
+    var key = normalizeSearch(value);
+    if (!key) return [];
+    return localitati.filter(function(item) {
+      return normalizeSearch(item.localitate) === key;
     });
+  }
+
+  function matchesLocalitati(query) {
+    var needle = normalizeSearch(query);
+    var grouped = {};
+    localitati.forEach(function(item) {
+      var key = normalizeSearch(item.localitate);
+      var score = needle === '' ? 100 : localitateScore(needle, key);
+      if (score === null) return;
+      if (!grouped[key]) grouped[key] = { localitate: item.localitate, raioane: [], score: score };
+      grouped[key].score = Math.min(grouped[key].score, score);
+      if (grouped[key].raioane.indexOf(item.raion) === -1) grouped[key].raioane.push(item.raion);
+    });
+
+    return Object.keys(grouped)
+      .map(function(key) { return grouped[key]; })
+      .sort(function(a, b) {
+        if (a.score !== b.score) return a.score - b.score;
+        return a.localitate.localeCompare(b.localitate, 'ro');
+      })
+      .slice(0, 24);
   }
 
   function closeRaionMenus() {
@@ -1687,37 +1973,98 @@
     }
   }
 
-  function selectRaion(input, value) {
-    input.value = value;
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    closeRaionMenus();
-    input.focus();
+  function setRaionOptions(select, raioane, preferredRaion) {
+    var placeholder = select.getAttribute('data-placeholder') || 'Scrie localitatea mai întâi';
+    select.innerHTML = '';
+
+    if (!raioane.length) {
+      var empty = document.createElement('option');
+      empty.value = '';
+      empty.textContent = placeholder;
+      select.appendChild(empty);
+      select.value = '';
+      return;
+    }
+
+    if (raioane.length > 1) {
+      var prompt = document.createElement('option');
+      prompt.value = '';
+      prompt.textContent = 'Alege raionul';
+      select.appendChild(prompt);
+    }
+
+    raioane.forEach(function(raion) {
+      var option = document.createElement('option');
+      option.value = raion;
+      option.textContent = raion;
+      select.appendChild(option);
+    });
+
+    if (preferredRaion && raioane.indexOf(preferredRaion) !== -1) {
+      select.value = preferredRaion;
+    } else if (raioane.length === 1) {
+      select.value = raioane[0];
+    } else {
+      select.value = '';
+    }
   }
 
-  function renderRaionMenu(input) {
+  function syncRaion(control, preferredRaion) {
+    var matches = exactLocalitateMatches(control.input.value);
+    var raioane = uniqueRaioane(matches);
+
+    if (!raioane.length) {
+      var fuzzyMatch = matchesLocalitati(control.input.value)[0];
+      if (fuzzyMatch && fuzzyMatch.score < 80) {
+        raioane = fuzzyMatch.raioane;
+        preferredRaion = fuzzyMatch.raioane.length === 1 ? fuzzyMatch.raioane[0] : preferredRaion;
+      }
+    }
+
+    if (!raioane.length && preferredRaion) {
+      raioane = [preferredRaion];
+    }
+
+    setRaionOptions(control.raion, raioane, preferredRaion);
+  }
+
+  function selectLocalitate(control, item) {
+    control.input.value = item.localitate;
+    setRaionOptions(control.raion, item.raioane, item.raioane.length === 1 ? item.raioane[0] : '');
+    closeRaionMenus();
+    control.input.focus();
+  }
+
+  function renderRaionMenu(control) {
+    var input = control.input;
     var menu = input._raionMenu;
     if (!menu) return;
-    var matches = matchesRaioane(input.value);
+    var matches = matchesLocalitati(input.value);
 
     menu.innerHTML = '';
     if (!matches.length) {
       var empty = document.createElement('div');
       empty.className = 'livrari-raion-empty';
-      empty.textContent = 'Niciun raion gasit';
+      empty.textContent = 'Nicio localitate găsită';
       menu.appendChild(empty);
       menu.hidden = false;
       activeIndex = -1;
       return;
     }
 
-    matches.forEach(function(raion) {
+    matches.forEach(function(item) {
       var option = document.createElement('button');
       option.type = 'button';
       option.className = 'livrari-raion-option';
-      option.textContent = raion;
+      var name = document.createElement('span');
+      name.textContent = item.localitate;
+      var meta = document.createElement('small');
+      meta.textContent = item.raioane.join(', ') + (item.score >= 50 ? ' · potrivire inteligentă' : '');
+      option.appendChild(name);
+      option.appendChild(meta);
       option.addEventListener('mousedown', function(event) {
         event.preventDefault();
-        selectRaion(input, raion);
+        selectLocalitate(control, item);
       });
       menu.appendChild(option);
     });
@@ -1726,9 +2073,10 @@
     setActive(menu, -1);
   }
 
-  inputs.forEach(function(input) {
-    input.removeAttribute('list');
+  controls.forEach(function(control) {
+    var input = control.input;
     input.parentElement.classList.add('livrari-raion-field');
+    syncRaion(control, control.raion.value);
 
     var menu = document.createElement('div');
     menu.className = 'livrari-raion-menu';
@@ -1738,10 +2086,11 @@
     input._raionMenu = menu;
 
     input.addEventListener('input', function() {
-      renderRaionMenu(input);
+      syncRaion(control, '');
+      renderRaionMenu(control);
     });
     input.addEventListener('focus', function() {
-      renderRaionMenu(input);
+      renderRaionMenu(control);
     });
     input.addEventListener('keydown', function(event) {
       if (menu.hidden) return;
@@ -1756,7 +2105,7 @@
         setActive(menu, activeIndex - 1);
       } else if (event.key === 'Enter' && activeIndex >= 0 && options[activeIndex]) {
         event.preventDefault();
-        selectRaion(input, options[activeIndex].textContent);
+        options[activeIndex].dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
       } else if (event.key === 'Escape') {
         closeRaionMenus();
       }
@@ -1768,6 +2117,21 @@
       closeRaionMenus();
     }
   });
+
+  window.LivrariLocationLookup = {
+    set: function(inputId, raionId, localitate, raion) {
+      var control = {
+        input: document.getElementById(inputId),
+        raion: document.getElementById(raionId)
+      };
+      if (!control.input || !control.raion) return;
+      control.input.value = localitate || '';
+      syncRaion(control, raion || '');
+    },
+    reset: function(inputId, raionId) {
+      this.set(inputId, raionId, '', '');
+    }
+  };
 })();
 </script>
 @endpush
@@ -1863,6 +2227,7 @@
   function resetForm() {
     if (form) form.reset();
     if (dataLivrarii) dataLivrarii.value = new Date().toISOString().slice(0, 10);
+    if (window.LivrariLocationLookup) window.LivrariLocationLookup.reset('modal_localitate', 'modal_raion');
     setDuplicateComanda(false);
   }
   function firstMissingRequired(root) {
@@ -1889,6 +2254,7 @@
     tr.setAttribute('data-numar-comanda', livrare.numar_comanda || '');
     tr.setAttribute('data-data', dataYmd);
     tr.setAttribute('data-localitate', livrare.localitate || '');
+    tr.setAttribute('data-raion', livrare.raion || '');
     tr.setAttribute('data-adresa', livrare.adresa_livrarii || '');
     tr.setAttribute('data-nr-client', livrare.nr_client || '');
     tr.setAttribute('data-data-livrarii', dataLivrariiYmd);
@@ -1897,6 +2263,7 @@
       '<td>' + (livrare.numar_comanda || '') + '</td>' +
       '<td>' + (livrare.data || '') + '</td>' +
       '<td>' + (livrare.localitate || '—') + '</td>' +
+      '<td>' + (livrare.raion || '—') + '</td>' +
       '<td>' + (livrare.adresa_livrarii || '') + '</td>' +
       '<td>' + (livrare.nr_client || '') + '</td>' +
       '<td>' + (livrare.data_livrarii || '') + '</td>' +
@@ -2080,7 +2447,12 @@
     var id = row.dataset.id;
     if (editNumarComanda) editNumarComanda.value = row.dataset.numarComanda || '';
     editDataLivrarii.value = row.dataset.dataLivrarii || '';
-    document.getElementById('edit_localitate').value = row.dataset.localitate || '';
+    if (window.LivrariLocationLookup) {
+      window.LivrariLocationLookup.set('edit_localitate', 'edit_raion', row.dataset.localitate || '', row.dataset.raion || '');
+    } else {
+      document.getElementById('edit_localitate').value = row.dataset.localitate || '';
+      document.getElementById('edit_raion').value = row.dataset.raion || '';
+    }
     document.getElementById('edit_nr_client').value = row.dataset.nrClient || '';
     document.getElementById('edit_adresa_livrarii').value = row.dataset.adresa || '';
     editForm.action = updateUrlTemplate.replace('__ID__', id);
@@ -2141,14 +2513,16 @@
           cells[0].textContent = L.numar_comanda || '';
           cells[1].textContent = L.data || '';
           cells[2].textContent = L.localitate || '—';
-          cells[3].textContent = L.adresa_livrarii || '';
-          cells[4].textContent = L.nr_client || '';
-          cells[5].textContent = L.data_livrarii || '';
-          cells[6].textContent = L.locatie || '—';
+          cells[3].textContent = L.raion || '—';
+          cells[4].textContent = L.adresa_livrarii || '';
+          cells[5].textContent = L.nr_client || '';
+          cells[6].textContent = L.data_livrarii || '';
+          cells[7].textContent = L.locatie || '—';
           currentEditRow.dataset.numarComanda = L.numar_comanda || '';
           currentEditRow.dataset.data = L.data ? L.data.split('.').reverse().join('-') : '';
           currentEditRow.dataset.dataLivrarii = L.data_livrarii ? L.data_livrarii.split('.').reverse().join('-') : '';
           currentEditRow.dataset.localitate = L.localitate || '';
+          currentEditRow.dataset.raion = L.raion || '';
           currentEditRow.dataset.nrClient = L.nr_client || '';
           currentEditRow.dataset.adresa = L.adresa_livrarii || '';
         } else {
@@ -2165,7 +2539,7 @@
     });
   }
 
-  var livrariEmptyColspan = {{ $isAdmin ? 9 : 8 }};
+  var livrariEmptyColspan = {{ $isAdmin ? 10 : 9 }};
   var livrariTableBodyEl = document.getElementById('livrariTableBody');
   document.addEventListener('click', function(e) {
     var delBtn = e.target.closest('.livrari-btn-delete');
@@ -2352,6 +2726,468 @@
 })();
 </script>
 @endpush
+
+{{-- Harta nu mai este modal pe pagina de livrări; este disponibilă pe /livrari/harta.
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const openBtn = document.getElementById('livrariOpenMapBtn');
+  const modal = document.getElementById('livrariMapModal');
+  const closeBtn = document.getElementById('livrariMapModalClose');
+  const refreshBtn = document.getElementById('livrariMapRefreshBtn');
+  const totalEl = document.getElementById('livrariMapTotal');
+  const listEl = document.getElementById('livrariMapList');
+  const updatedEl = document.getElementById('livrariMapUpdated');
+  const mapEl = document.getElementById('livrariLiveMap');
+  const raionSelect = document.getElementById('livrariMapRaionSelect');
+  const detailEl = document.getElementById('livrariMapDetail');
+  const mapDataUrl = @json(route('livrari.map-data'));
+  const mapGeoJsonUrl = @json(asset('data/moldova-adm1.geojson'));
+  let map = null;
+  let regionLayer = null;
+  let layersByRaion = {};
+  let geoJsonData = null;
+  let lastPayload = null;
+  let selectedRaion = '';
+  let loading = false;
+  const featureRaionAliases = {
+    balti: 'Bălți',
+    calarasi: 'Călărași',
+    causeni: 'Căușeni',
+    chisinau: 'Chișinău',
+    cimislia: 'Cimișlia',
+    donduseni: 'Dondușeni',
+    dubasari: 'Dubăsari',
+    edinet: 'Edineț',
+    falesti: 'Fălești',
+    floresti: 'Florești',
+    gagauzia: 'UTA Găgăuzia',
+    hincesti: 'Hîncești',
+    ocnita: 'Ocnița',
+    riscani: 'Rîșcani',
+    singerei: 'Sîngerei',
+    soldanesti: 'Șoldănești',
+    stefanvoda: 'Ștefan Vodă',
+    straseni: 'Strășeni',
+    telenesti: 'Telenești'
+  };
+  const hiddenFeatureRaions = {
+    transnistria: true
+  };
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, function (char) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char];
+    });
+  }
+
+  function filteredMapUrl() {
+    const url = new URL(mapDataUrl, window.location.origin);
+    const params = new URLSearchParams(window.location.search);
+    params.delete('page');
+    params.forEach(function (value, key) {
+      url.searchParams.append(key, value);
+    });
+    return url.toString();
+  }
+
+  function initMap() {
+    if (map || !mapEl || !window.L) return;
+    map = L.map(mapEl, {
+      scrollWheelZoom: true,
+      zoomControl: true
+    }).setView([47.05, 28.55], 7);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap | Boundaries: geoBoundaries'
+    }).addTo(map);
+
+  }
+
+  function normalizeRaion(value) {
+    return String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '');
+  }
+
+  function canonicalFeatureRaion(value) {
+    const key = normalizeRaion(value);
+    return featureRaionAliases[key] || String(value || '').trim();
+  }
+
+  function featureName(feature) {
+    const props = feature && feature.properties ? feature.properties : {};
+    return props.shapeName || props.name || props.NAME_1 || '';
+  }
+
+  function ratioForTotal(total, maxTotal) {
+    const safeTotal = Math.max(0, Number(total) || 0);
+    const safeMax = Math.max(1, Number(maxTotal) || 0);
+    return Math.min(1, safeTotal / safeMax);
+  }
+
+  function colorForTotal(total, maxTotal) {
+    const ratio = ratioForTotal(total, maxTotal);
+    const yellow = { r: 255, g: 238, b: 0 };
+    const r = Math.round(yellow.r * ratio);
+    const g = Math.round(yellow.g * ratio);
+    const b = Math.round(yellow.b * ratio);
+    return 'rgb(' + r + ', ' + g + ', ' + b + ')';
+  }
+
+  function popupHtml(item, periodLabel) {
+    const locals = (item.localitati || []).slice(0, 5).map(function (row) {
+      return '<li>' + escapeHtml(row.localitate) + ': <strong>' + row.total + '</strong></li>';
+    }).join('');
+
+    return '<div class="livrari-map-popup">' +
+      '<strong>' + escapeHtml(item.raion) + '</strong><br>' +
+      item.total + ' livrări<br>' +
+      'Perioada: ' + escapeHtml(periodLabel || '-') +
+      (locals ? '<ul>' + locals + '</ul>' : '') +
+      '</div>';
+  }
+
+  function itemsByRaion() {
+    const items = lastPayload && lastPayload.raioane ? lastPayload.raioane : [];
+    return items.reduce(function (acc, item) {
+      acc[item.raion] = item;
+      return acc;
+    }, {});
+  }
+
+  function itemsByNormalizedRaion(items) {
+    return (items || []).reduce(function (acc, item) {
+      acc[normalizeRaion(item.raion)] = item;
+      return acc;
+    }, {});
+  }
+
+  function itemForFeature(feature, indexedItems) {
+    const rawName = featureName(feature);
+    const canonicalName = canonicalFeatureRaion(rawName);
+    const item = indexedItems[normalizeRaion(canonicalName)] || indexedItems[normalizeRaion(rawName)];
+
+    return item || {
+      raion: canonicalName,
+      total: 0,
+      localitati: []
+    };
+  }
+
+  function renderRaionSelect(items) {
+    if (!raionSelect) return;
+    const previous = selectedRaion || raionSelect.value || '';
+    raionSelect.innerHTML = '';
+
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Selectează raion';
+    raionSelect.appendChild(placeholder);
+
+    items.slice().sort(function (a, b) {
+      return a.raion.localeCompare(b.raion, 'ro');
+    }).forEach(function (item) {
+      const option = document.createElement('option');
+      option.value = item.raion;
+      option.textContent = item.raion + ' (' + item.total + ')';
+      raionSelect.appendChild(option);
+    });
+
+    if (previous && items.some(function (item) { return item.raion === previous; })) {
+      raionSelect.value = previous;
+      selectedRaion = previous;
+    } else {
+      raionSelect.value = '';
+      selectedRaion = '';
+    }
+  }
+
+  function renderDetail(item) {
+    if (!detailEl) return;
+    const title = detailEl.querySelector('.livrari-map-detail-title span:first-child');
+    const count = detailEl.querySelector('.livrari-map-detail-count');
+    const period = detailEl.querySelector('.livrari-map-detail-period');
+    const localitati = detailEl.querySelector('.livrari-map-detail-localitati');
+    const periodLabel = lastPayload && lastPayload.period_label ? lastPayload.period_label : '-';
+
+    if (!item) {
+      if (title) title.textContent = 'Selectează un raion';
+      if (count) count.textContent = '0';
+      if (period) period.textContent = 'Perioada: ' + periodLabel;
+      if (localitati) localitati.innerHTML = '<li>Alege un raion de pe hartă sau din listă.</li>';
+      return;
+    }
+
+    if (title) title.textContent = item.raion;
+    if (count) {
+      count.textContent = item.total;
+      const maxTotal = lastPayload ? lastPayload.max_total : 0;
+      const ratio = ratioForTotal(item.total, maxTotal);
+      count.style.background = colorForTotal(item.total, maxTotal);
+      count.style.color = ratio >= 0.62 ? '#0f172a' : '#f8fafc';
+    }
+    if (period) period.textContent = 'Perioada: ' + periodLabel;
+    if (localitati) {
+      localitati.innerHTML = '';
+      const rows = item.localitati || [];
+      if (!rows.length) {
+        const li = document.createElement('li');
+        li.textContent = 'Nu sunt livrări în acest raion pentru perioada selectată.';
+        localitati.appendChild(li);
+      } else {
+        rows.slice(0, 8).forEach(function (row) {
+          const li = document.createElement('li');
+          li.textContent = row.localitate + ': ' + row.total;
+          localitati.appendChild(li);
+        });
+      }
+    }
+  }
+
+  function regionStyle(item, isSelected) {
+    const total = item ? item.total || 0 : 0;
+    const maxTotal = lastPayload ? lastPayload.max_total || 0 : 0;
+
+    return {
+      color: isSelected ? '#2563eb' : '#111827',
+      weight: isSelected ? 3 : 1.2,
+      opacity: isSelected ? 1 : 0.8,
+      fillColor: colorForTotal(total, maxTotal),
+      fillOpacity: total ? 0.72 : 0.2
+    };
+  }
+
+  function refreshRegionStyles() {
+    if (!regionLayer) return;
+    regionLayer.eachLayer(function (layer) {
+      layer.setStyle(regionStyle(layer._livrariItem, layer._livrariRaion === selectedRaion));
+    });
+  }
+
+  function selectRaion(raion, focusMap) {
+    selectedRaion = raion || '';
+    if (raionSelect) raionSelect.value = selectedRaion;
+    const item = itemsByRaion()[selectedRaion] || null;
+    renderDetail(item);
+    refreshRegionStyles();
+
+    const layer = layersByRaion[selectedRaion];
+    if (focusMap && layer && map) {
+      map.fitBounds(layer.getBounds(), { padding: [44, 44], maxZoom: 10 });
+      layer.openPopup();
+    }
+  }
+
+  function renderList(items) {
+    if (!listEl) return;
+    listEl.innerHTML = '';
+
+    if (!items.length) {
+      const empty = document.createElement('div');
+      empty.className = 'livrari-map-empty';
+      empty.textContent = 'Nu există livrări pentru filtrele curente.';
+      listEl.appendChild(empty);
+      return;
+    }
+
+    items.forEach(function (item) {
+      const row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'livrari-map-row';
+
+      const main = document.createElement('span');
+      main.className = 'livrari-map-row-main';
+      const name = document.createElement('span');
+      name.textContent = item.raion;
+      const count = document.createElement('span');
+      count.className = 'livrari-map-row-count';
+      count.textContent = item.total;
+      const maxTotal = lastPayload ? lastPayload.max_total : 0;
+      const ratio = ratioForTotal(item.total, maxTotal);
+      count.style.background = colorForTotal(item.total, maxTotal);
+      count.style.color = ratio >= 0.62 ? '#0f172a' : '#f8fafc';
+      main.appendChild(name);
+      main.appendChild(count);
+
+      const sub = document.createElement('span');
+      sub.className = 'livrari-map-row-sub';
+      sub.textContent = (item.localitati || []).slice(0, 3).map(function (localitate) {
+        return localitate.localitate + ' ' + localitate.total;
+      }).join(' | ') || 'Fără localități';
+
+      row.appendChild(main);
+      row.appendChild(sub);
+      row.addEventListener('click', function () {
+        selectRaion(item.raion, true);
+      });
+
+      listEl.appendChild(row);
+    });
+  }
+
+  function renderMap(payload, geoJson) {
+    initMap();
+    lastPayload = payload || {};
+    if (totalEl) totalEl.textContent = payload.total || 0;
+    if (updatedEl) updatedEl.textContent = 'Perioada: ' + (payload.period_label || '-') + ' | Actualizat: ' + (payload.generated_at || '');
+
+    const items = (payload.raioane || []);
+    const indexedItems = itemsByNormalizedRaion(items);
+    renderRaionSelect(items);
+    renderList(items);
+    layersByRaion = {};
+
+    if (!map || !geoJson) return;
+    if (regionLayer) {
+      map.removeLayer(regionLayer);
+      regionLayer = null;
+    }
+
+    regionLayer = L.geoJSON(geoJson, {
+      filter: function (feature) {
+        return !hiddenFeatureRaions[normalizeRaion(featureName(feature))];
+      },
+      style: function (feature) {
+        return regionStyle(itemForFeature(feature, indexedItems), false);
+      },
+      onEachFeature: function (feature, layer) {
+        const item = itemForFeature(feature, indexedItems);
+        layer._livrariItem = item;
+        layer._livrariRaion = item.raion;
+        layersByRaion[item.raion] = layer;
+
+        layer.bindPopup(popupHtml(item, payload.period_label));
+        layer.on({
+          click: function () {
+            selectRaion(item.raion, false);
+          },
+          mouseover: function () {
+            layer.setStyle({
+              weight: 3,
+              opacity: 1,
+              fillOpacity: item.total ? 0.86 : 0.32
+            });
+            if (layer.bringToFront) layer.bringToFront();
+          },
+          mouseout: function () {
+            refreshRegionStyles();
+          }
+        });
+      }
+    }).addTo(map);
+
+    regionLayer.eachLayer(function (layer) {
+      const element = layer.getElement && layer.getElement();
+      if (element) element.style.cursor = 'pointer';
+    });
+
+    const bounds = regionLayer.getBounds();
+    if (bounds.isValid && bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [24, 24], maxZoom: 8 });
+    } else {
+      map.setView([47.05, 28.55], 7);
+    }
+
+    window.setTimeout(function () {
+      map.invalidateSize();
+    }, 80);
+
+    if (selectedRaion && itemsByRaion()[selectedRaion]) {
+      selectRaion(selectedRaion, false);
+    } else {
+      renderDetail(null);
+      refreshRegionStyles();
+    }
+  }
+
+  function loadMapData() {
+    if (loading) return;
+    loading = true;
+    if (refreshBtn) refreshBtn.disabled = true;
+    if (updatedEl) updatedEl.textContent = 'Se încarcă datele live...';
+
+    const dataRequest = fetch(filteredMapUrl(), {
+      headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+    })
+      .then(function (response) {
+        if (!response.ok) throw new Error('Nu am putut citi datele pentru hartă.');
+        return response.json();
+      });
+
+    const geoJsonRequest = geoJsonData
+      ? Promise.resolve(geoJsonData)
+      : fetch(mapGeoJsonUrl, { headers: { 'Accept': 'application/geo+json, application/json' } })
+        .then(function (response) {
+          if (!response.ok) throw new Error('Nu am putut încărca hotarele raioanelor.');
+          return response.json();
+        })
+        .then(function (data) {
+          geoJsonData = data;
+          return data;
+        });
+
+    Promise.all([dataRequest, geoJsonRequest])
+      .then(function (results) {
+        renderMap(results[0], results[1]);
+      })
+      .catch(function (error) {
+        if (updatedEl) updatedEl.textContent = error.message;
+        if (listEl) {
+          listEl.innerHTML = '<div class="livrari-map-empty">Nu am putut încărca harta.</div>';
+        }
+      })
+      .finally(function () {
+        loading = false;
+        if (refreshBtn) refreshBtn.disabled = false;
+      });
+  }
+
+  function openModal() {
+    if (!modal) return;
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    initMap();
+    window.setTimeout(function () {
+      if (map) map.invalidateSize();
+      loadMapData();
+    }, 80);
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  if (openBtn) openBtn.addEventListener('click', openModal);
+  if (refreshBtn) refreshBtn.addEventListener('click', loadMapData);
+  if (raionSelect) {
+    raionSelect.addEventListener('change', function () {
+      selectRaion(raionSelect.value, true);
+    });
+  }
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (modal) {
+    modal.addEventListener('click', function (event) {
+      if (event.target === modal) closeModal();
+    });
+  }
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && modal && modal.classList.contains('is-open')) {
+      closeModal();
+    }
+  });
+});
+</script>
+@endpush
+--}}
 
 @push('scripts')
 <script>

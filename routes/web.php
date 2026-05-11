@@ -45,6 +45,8 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
     // Livrări: operator adaugă date, admin vede toate + KPI
     Route::get('/livrari', [LivrariController::class, 'index'])->name('livrari');
     Route::get('/livrari/export-data', [LivrariController::class, 'exportData'])->name('livrari.export-data');
+    Route::get('/livrari/harta', [LivrariController::class, 'map'])->name('livrari.map');
+    Route::get('/livrari/map-data', [LivrariController::class, 'mapData'])->name('livrari.map-data');
     Route::get('/livrari/check-comanda', [LivrariController::class, 'checkComanda'])->name('livrari.check-comanda');
     Route::post('/livrari', [LivrariController::class, 'store'])->name('livrari.store');
     Route::put('/livrari/{livrare}', [LivrariController::class, 'update'])->name('livrari.update');

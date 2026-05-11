@@ -388,9 +388,9 @@ function updateCharts() {
         datasets: [{
           label: 'Comenzi',
           data: comenzi,
-          backgroundColor: 'rgba(96, 165, 250, 0.45)',
-          hoverBackgroundColor: 'rgba(96, 165, 250, 0.65)',
-          borderColor: 'rgba(59, 130, 246, 0.4)',
+          backgroundColor: `rgba(${brandRgb}, 0.45)`,
+          hoverBackgroundColor: `rgba(${brandRgb}, 0.65)`,
+          borderColor: `rgba(${brandRgb}, 0.4)`,
           borderWidth: 1,
           borderRadius: 6,
           borderSkipped: false,

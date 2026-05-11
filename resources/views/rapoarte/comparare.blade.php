@@ -310,9 +310,9 @@ function updateCharts(data1, data2, label1, label2) {
         datasets: [{
           label: "Comenzi",
           data: [data1.comenzi || 0, data2.comenzi || 0],
-          backgroundColor: ["rgba(96, 165, 250, 0.5)", "rgba(96, 165, 250, 0.28)"],
-          hoverBackgroundColor: ["rgba(96, 165, 250, 0.68)", "rgba(96, 165, 250, 0.42)"],
-          borderColor: ["rgba(59, 130, 246, 0.45)", "rgba(59, 130, 246, 0.28)"],
+          backgroundColor: [`rgba(${brandRgb}, 0.5)`, `rgba(${brandRgb}, 0.28)`],
+          hoverBackgroundColor: [`rgba(${brandRgb}, 0.68)`, `rgba(${brandRgb}, 0.42)`],
+          borderColor: [`rgba(${brandRgb}, 0.45)`, `rgba(${brandRgb}, 0.28)`],
           borderWidth: 1,
           borderRadius: 8,
           borderSkipped: false,
