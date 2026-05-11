@@ -50,6 +50,44 @@
   .livrari-page-lead {
     margin: 0 0 var(--space-6, 24px);
   }
+  .livrari-section-switch {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 16px;
+  }
+  .livrari-section-btn {
+    appearance: none;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    background: rgba(15, 23, 42, 0.75);
+    color: #cbd5e1;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    border-radius: 999px;
+    padding: 9px 16px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  }
+  .livrari-section-btn:hover {
+    border-color: rgba(255, 238, 0, 0.42);
+    color: #f8fafc;
+  }
+  .livrari-section-btn.is-active {
+    border-color: rgba(255, 238, 0, 0.72);
+    color: #fff;
+    background: linear-gradient(180deg, rgba(36, 46, 67, 0.95) 0%, rgba(22, 31, 49, 0.98) 100%);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 238, 0, 0.15) inset;
+  }
+  .livrari-section-panel {
+    margin-bottom: 0;
+  }
+  .livrari-section-panel.is-collapsed {
+    display: none;
+  }
 
   /* ---------- Cards ---------- */
   .livrari-card {
@@ -1405,6 +1443,18 @@
     unset($allRaioaneQuery['fara_raion']);
   @endphp
 
+  @if($isAdmin)
+  <div class="livrari-section-switch" id="livrariSectionSwitch" data-default-section="operare">
+    <button type="button" class="livrari-section-btn is-active" data-section-target="operare" aria-pressed="true">
+      <i class="fas fa-list-check" aria-hidden="true"></i> Operare livrări
+    </button>
+    <button type="button" class="livrari-section-btn" data-section-target="analiza" aria-pressed="false">
+      <i class="fas fa-chart-line" aria-hidden="true"></i> KPI și analiză
+    </button>
+  </div>
+  @endif
+
+  <section class="livrari-section-panel" data-section-panel="operare">
   <form method="get" action="{{ route('livrari') }}" class="livrari-card livrari-filters-card">
     <h2><i class="fas fa-filter"></i> Filtre și căutare</h2>
     <input type="hidden" name="fara_raion" value="{{ $missingRaionOnly ? '1' : '' }}">
@@ -1481,6 +1531,7 @@
       </div>
     </div>
   </form>
+  </section>
 
   @if(session('success'))
   <div class="livrari-alert livrari-alert-success">
@@ -1494,6 +1545,7 @@
   </div>
   @endif
 
+  <section class="livrari-section-panel {{ $isAdmin ? 'is-collapsed' : '' }}" data-section-panel="analiza">
   @if($isAdmin && ($perOperator->isNotEmpty() || $totalLivrari > 0))
   <div class="livrari-card livrari-admin-kpi">
     <div class="livrari-kpi-header">
@@ -1538,7 +1590,9 @@
     </div>
   </div>
   @endif
+  </section>
 
+  <section class="livrari-section-panel" data-section-panel="operare">
   @if(!$isAdmin)
   <div class="livrari-operator-actions">
     <button type="button" class="livrari-btn-open-modal" id="livrariOpenModalBtn" aria-label="Adaugă livrare">
@@ -1671,6 +1725,7 @@
     </div>
     {{ $livrari->links('vendor.pagination.livrari') }}
   </div>
+  </section>
 
   @php
     $totalLivrariExportValue = number_format((int) $totalLivrari, 0, ',', '.');
@@ -3194,6 +3249,48 @@ document.addEventListener('DOMContentLoaded', function () {
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+  const sectionButtons = Array.from(document.querySelectorAll('.livrari-section-btn[data-section-target]'));
+  const sectionPanels = Array.from(document.querySelectorAll('.livrari-section-panel[data-section-panel]'));
+
+  function toggleLivrariSection(target) {
+    if (!target) return;
+    sectionButtons.forEach(function (button) {
+      const isActive = button.getAttribute('data-section-target') === target;
+      button.classList.toggle('is-active', isActive);
+      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+    sectionPanels.forEach(function (panel) {
+      const matches = panel.getAttribute('data-section-panel') === target;
+      panel.classList.toggle('is-collapsed', !matches);
+      panel.setAttribute('aria-hidden', matches ? 'false' : 'true');
+    });
+    try {
+      window.localStorage.setItem('livrari.active.section', target);
+    } catch (error) {
+      // localStorage poate fi indisponibil în unele contexte private.
+    }
+  }
+
+  if (sectionButtons.length && sectionPanels.length) {
+    let initialSection = 'operare';
+    try {
+      const storedSection = window.localStorage.getItem('livrari.active.section');
+      if (storedSection) initialSection = storedSection;
+    } catch (error) {}
+
+    if (!sectionButtons.some(function (button) { return button.getAttribute('data-section-target') === initialSection; })) {
+      initialSection = 'operare';
+    }
+
+    toggleLivrariSection(initialSection);
+
+    sectionButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        toggleLivrariSection(button.getAttribute('data-section-target'));
+      });
+    });
+  }
+
   const exportBtn = document.getElementById('livrariExportExcelBtn');
   const exportModal = document.getElementById('livrariExportModal');
   const exportForm = document.getElementById('livrariExportForm');
