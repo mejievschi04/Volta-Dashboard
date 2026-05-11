@@ -130,6 +130,11 @@ class LocalitatiMoldova
             return $fallbackRaion;
         }
 
+        $raionFromLocalitateName = self::canonicalRaionByNormalized(self::normalizeSearch($localitate));
+        if ($raionFromLocalitateName !== null) {
+            return $raionFromLocalitateName;
+        }
+
         $matches = self::localitateMatches($localitate, 12);
         $addressRaion = self::raionFromText($address, $matches->flatMap(fn (array $match) => $match['raioane'])->unique()->all());
 
@@ -189,6 +194,17 @@ class LocalitatiMoldova
     private static function normalizeRaion(string $value): string
     {
         return self::normalizeSearch($value);
+    }
+
+    private static function canonicalRaionByNormalized(string $normalized): ?string
+    {
+        if ($normalized === '') {
+            return null;
+        }
+
+        return self::raioane()->first(function (string $raion) use ($normalized) {
+            return self::normalizeSearch($raion) === $normalized;
+        });
     }
 
     private static function matchScore(string $query, string $candidate): ?int

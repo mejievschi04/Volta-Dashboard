@@ -37,7 +37,8 @@ class BackfillLivrariRaioane extends Command
 
         if ($onlyMissing) {
             $query->where(function ($q) {
-                $q->whereNull('raion')->orWhere('raion', '');
+                $q->whereNull('raion')
+                    ->orWhereRaw("TRIM(COALESCE(raion, '')) IN ('', '-', '—')");
             });
         }
 
@@ -65,7 +66,7 @@ class BackfillLivrariRaioane extends Command
                 $match = LocalitatiMoldova::bestLocalitateMatch($localitate);
                 $newRaion = LocalitatiMoldova::raionForLocalitateAndAddress($localitate, $address, $currentRaion);
 
-                if (! LocalitatiMoldova::isKnownRaion($newRaion) || $match === null) {
+                if (! LocalitatiMoldova::isKnownRaion($newRaion)) {
                     $ambiguous++;
                     $this->line(sprintf(
                         'SKIP #%d: "%s" / "%s" are %s',
@@ -83,7 +84,7 @@ class BackfillLivrariRaioane extends Command
                     DB::table('livrari')
                         ->where('id', $row->id)
                         ->update([
-                            'localitate' => $match['localitate'],
+                            'localitate' => $match['localitate'] ?? $localitate,
                             'raion' => $newRaion,
                             'in_chisinau' => LocalitatiMoldova::normalizeSearch($newRaion) === 'chisinau',
                             'updated_at' => now(),

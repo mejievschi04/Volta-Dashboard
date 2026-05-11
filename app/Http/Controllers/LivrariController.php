@@ -71,6 +71,7 @@ class LivrariController extends Controller
         $this->applyMissingRaionFilter($query, $faraRaion);
 
         $livrari = $query->orderByDesc('data')->orderByDesc('data_livrarii')->paginate(50)->withQueryString();
+        $this->applyInferredRaionForPresentation($livrari->getCollection());
 
         if ($isAdmin) {
             $baseCount = Livrare::query();
@@ -216,15 +217,16 @@ class LivrariController extends Controller
         }
 
         $rows = $query->orderByDesc('data')->orderByDesc('data_livrarii')->get()->map(function (Livrare $livrare) use ($isAdmin) {
+            $effectiveRaion = $this->effectiveRaionForLivrare($livrare);
             $row = [
                 $livrare->numar_comanda,
                 optional($livrare->data)->format('d.m.Y'),
                 $livrare->localitate ?? '—',
-                $livrare->raion ?? '—',
+                $effectiveRaion !== '' ? $effectiveRaion : '—',
                 $livrare->adresa_livrarii,
                 $livrare->nr_client,
                 optional($livrare->data_livrarii)->format('d.m.Y'),
-                isset($livrare->in_chisinau) ? ($livrare->in_chisinau ? 'În Chișinău' : 'În afara') : '—',
+                $effectiveRaion !== '' ? ($this->isChisinau($effectiveRaion) ? 'În Chișinău' : 'În afara') : (isset($livrare->in_chisinau) ? ($livrare->in_chisinau ? 'În Chișinău' : 'În afara') : '—'),
             ];
 
             if ($isAdmin) {
@@ -258,10 +260,12 @@ class LivrariController extends Controller
             ->get(['raion', 'localitate', 'adresa_livrarii', 'data_livrarii'])
             ->reject(fn (Livrare $livrare) => LocalitatiMoldova::isExcludedRaion((string) ($livrare->raion ?? '')));
         $groupedByRaion = $rows->groupBy(function (Livrare $livrare) {
+            $fallbackRaion = $this->sanitizeRaionValue((string) ($livrare->raion ?? ''));
+
             return LocalitatiMoldova::raionForLocalitateAndAddress(
                 (string) ($livrare->localitate ?? ''),
                 (string) ($livrare->adresa_livrarii ?? ''),
-                trim((string) ($livrare->raion ?? '')) ?: 'Fără raion'
+                $fallbackRaion !== '' ? $fallbackRaion : 'Fără raion'
             );
         });
 
@@ -271,12 +275,23 @@ class LivrariController extends Controller
             ->map(function (string $raion) use ($groupedByRaion) {
                 $items = $groupedByRaion->get($raion, collect());
                 $localitati = $items
-                    ->groupBy(fn (Livrare $livrare) => trim((string) ($livrare->localitate ?? '')) ?: 'Fără localitate')
-                    ->map(fn ($localitatiItems, string $localitate) => [
-                        'localitate' => $localitate,
-                        'total' => $localitatiItems->count(),
+                    ->groupBy(function (Livrare $livrare) {
+                        $rawLocalitate = trim((string) ($livrare->localitate ?? ''));
+
+                        return $this->normalizeLocalitateKey($rawLocalitate);
+                    })
+                    ->map(function ($localitatiItems, string $localitateKey) {
+                        $firstLocalitate = trim((string) (optional($localitatiItems->first())->localitate ?? ''));
+
+                        return [
+                            'localitate' => $this->canonicalLocalitateDisplayName($firstLocalitate, $localitateKey),
+                            'total' => $localitatiItems->count(),
+                        ];
+                    })
+                    ->sortBy([
+                        ['total', 'desc'],
+                        ['localitate', 'asc'],
                     ])
-                    ->sortByDesc('total')
                     ->values()
                     ->take(8)
                     ->values();
@@ -535,8 +550,40 @@ class LivrariController extends Controller
 
         $query->where(function ($q) {
             $q->whereNull('raion')
-                ->orWhere('raion', '');
+                ->orWhereRaw("TRIM(COALESCE(raion, '')) IN ('', '-', '—')");
         });
+    }
+
+    private function applyInferredRaionForPresentation(\Illuminate\Support\Collection $livrari): void
+    {
+        $livrari->transform(function (Livrare $livrare) {
+            $effectiveRaion = $this->effectiveRaionForLivrare($livrare);
+
+            if ($effectiveRaion !== '') {
+                $livrare->raion = $effectiveRaion;
+                $livrare->in_chisinau = $this->isChisinau($effectiveRaion);
+            }
+
+            return $livrare;
+        });
+    }
+
+    private function effectiveRaionForLivrare(Livrare $livrare): string
+    {
+        $fallbackRaion = $this->sanitizeRaionValue((string) ($livrare->raion ?? ''));
+
+        return trim((string) LocalitatiMoldova::raionForLocalitateAndAddress(
+            (string) ($livrare->localitate ?? ''),
+            (string) ($livrare->adresa_livrarii ?? ''),
+            $fallbackRaion
+        ));
+    }
+
+    private function sanitizeRaionValue(string $raion): string
+    {
+        $trimmed = trim($raion);
+
+        return in_array($trimmed, ['', '-', '—'], true) ? '' : $trimmed;
     }
 
     private function mapPeriodLabel(Request $request): string
@@ -628,5 +675,33 @@ class LivrariController extends Controller
             'ț' => 't',
             'ţ' => 't',
         ]);
+    }
+
+    private function normalizeLocalitateKey(string $localitate): string
+    {
+        $trimmed = trim($localitate);
+        if ($trimmed === '') {
+            return '__fara_localitate__';
+        }
+
+        return $this->normalizeLocation($trimmed);
+    }
+
+    private function canonicalLocalitateDisplayName(string $sourceName, string $normalizedKey): string
+    {
+        if ($normalizedKey === '__fara_localitate__') {
+            return 'Fără localitate';
+        }
+
+        if ($normalizedKey === 'chisinau') {
+            return 'Chișinău';
+        }
+
+        $trimmed = preg_replace('/\s+/u', ' ', trim($sourceName));
+        if (! is_string($trimmed) || $trimmed === '') {
+            return 'Fără localitate';
+        }
+
+        return mb_convert_case(mb_strtolower($trimmed, 'UTF-8'), MB_CASE_TITLE, 'UTF-8');
     }
 }

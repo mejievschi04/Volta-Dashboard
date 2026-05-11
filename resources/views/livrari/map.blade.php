@@ -63,13 +63,19 @@
     color: #111827;
     border-color: #FFEE00;
   }
+  .livrari-map-btn-primary:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 238, 0, 0.4);
+  }
 
   .livrari-map-select {
     min-width: 220px;
     padding: 0 12px;
   }
 
-  .livrari-map-select option { color: #111827; }
+  .livrari-map-select option {
+    color: #F8FAFC;
+    background: #1a1d26;
+  }
 
   .livrari-map-shell {
     display: grid;
@@ -194,6 +200,7 @@
     border-radius: 10px;
     background: rgba(20, 31, 55, 0.72);
     color: #E5E7EB;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .livrari-map-loc-name {
@@ -283,8 +290,9 @@
   }
 
   /* Keep map controls/panels on neutral dark palette */
-  .livrari-map-btn,
+  .livrari-map-btn { background: rgba(20, 22, 30, 0.88); color: #F8FAFC; }
   .livrari-map-select { background: rgba(20, 22, 30, 0.88); }
+  .livrari-map-btn-primary { background: #FFEE00 !important; color: #111827 !important; border-color: #FFEE00 !important; }
   .livrari-map-side { background: rgba(18, 20, 28, 0.84); }
   .livrari-map-loc-row,
   .livrari-map-row { background: rgba(30, 34, 44, 0.78); }
@@ -433,7 +441,10 @@ document.addEventListener('DOMContentLoaded', function () {
   function ratioForTotal(total, maxTotal) {
     const safeTotal = Math.max(0, Number(total) || 0);
     const safeMax = Math.max(1, Number(maxTotal) || 0);
-    return Math.min(1, safeTotal / safeMax);
+    if (safeTotal <= 0) return 0;
+    const logRatio = Math.log1p(safeTotal) / Math.log1p(safeMax);
+    const boosted = Math.pow(Math.min(1, logRatio), 0.72);
+    return Math.max(0.18, boosted);
   }
 
   function colorForTotal(total, maxTotal) {
@@ -473,8 +484,28 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function sortedLocalitati(localitati) {
-    return (localitati || []).slice().sort(function (a, b) {
-      return (Number(b.total) || 0) - (Number(a.total) || 0);
+    const grouped = {};
+    (localitati || []).forEach(function (row) {
+      const rawName = String(row && row.localitate ? row.localitate : '').trim() || 'Fără nume';
+      const key = String(rawName)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '');
+      const total = Number(row && row.total ? row.total : 0) || 0;
+      if (!grouped[key]) {
+        grouped[key] = { localitate: rawName, total: 0 };
+      }
+      grouped[key].total += total;
+      if (key === 'chisinau') {
+        grouped[key].localitate = 'Chișinău';
+      }
+    });
+
+    return Object.keys(grouped).map(function (key) { return grouped[key]; }).sort(function (a, b) {
+      const diff = (Number(b.total) || 0) - (Number(a.total) || 0);
+      if (diff !== 0) return diff;
+      return String(a.localitate || '').localeCompare(String(b.localitate || ''), 'ro');
     });
   }
 
