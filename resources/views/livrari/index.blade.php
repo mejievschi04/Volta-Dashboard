@@ -1605,9 +1605,11 @@
     <h2 style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
       <span><i class="fas fa-list"></i> {{ $isAdmin ? 'Toate livrările' : 'Livrările mele' }}</span>
       <span style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        @if($isAdmin)
         <a href="{{ route('livrari.map', request()->query()) }}" class="livrari-btn livrari-btn-primary">
           <i class="fas fa-map-location-dot" aria-hidden="true"></i> Hartă live
         </a>
+        @endif
         <button type="button" id="livrariExportExcelBtn" class="livrari-btn livrari-btn-primary">
           <i class="fas fa-file-excel" aria-hidden="true"></i> Export Excel
         </button>
@@ -1642,7 +1644,7 @@
             <td>{{ $l->numar_comanda }}</td>
             <td>{{ $l->data->format('d.m.Y') }}</td>
             <td>{{ $l->localitate ?? '—' }}</td>
-            <td>{{ $l->raion ?? '—' }}</td>
+            <td>{{ ($l->raion ?? '') !== '' ? \App\Support\LocalitatiMoldova::administrativeUnitLabel((string) $l->raion) : '—' }}</td>
             <td>{{ $l->adresa_livrarii }}</td>
             <td>{{ $l->nr_client }}</td>
             <td>{{ $l->data_livrarii->format('d.m.Y') }}</td>

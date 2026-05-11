@@ -151,6 +151,26 @@ class LocalitatiMoldova
         return $fallbackRaion;
     }
 
+    public static function administrativeUnitLabel(string $raion): string
+    {
+        $trimmed = trim($raion);
+        if ($trimmed === '') {
+            return '';
+        }
+
+        $normalized = self::normalizeSearch($trimmed);
+
+        if ($normalized === 'chisinau') {
+            return 'Municipiul Chișinău';
+        }
+
+        if ($normalized === 'balti') {
+            return 'Municipiul Bălți';
+        }
+
+        return $trimmed;
+    }
+
     public static function raionFromText(string $text, ?array $candidateRaioane = null): ?string
     {
         $normalizedText = self::normalizeSearch($text);

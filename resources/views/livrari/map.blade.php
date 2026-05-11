@@ -310,6 +310,11 @@
       <select id="livrariMapRaionSelect" class="livrari-map-select" aria-label="Selectează raion">
         <option value="">Selectează raion</option>
       </select>
+      @if(!empty($isAdmin))
+      <a href="{{ route('livrari.map-pdf', request()->query()) }}" class="livrari-map-btn" target="_blank" rel="noopener">
+        <i class="fas fa-file-pdf" aria-hidden="true"></i> Descarcă PDF hartă
+      </a>
+      @endif
       <button type="button" class="livrari-map-btn livrari-map-btn-primary" id="livrariMapRefreshBtn">
         <i class="fas fa-rotate" aria-hidden="true"></i> Actualizează
       </button>
@@ -519,11 +524,11 @@ document.addEventListener('DOMContentLoaded', function () {
     raionSelect.appendChild(placeholder);
 
     items.slice().sort(function (a, b) {
-      return a.raion.localeCompare(b.raion, 'ro');
+      return (a.raion_label || a.raion).localeCompare((b.raion_label || b.raion), 'ro');
     }).forEach(function (item) {
       const option = document.createElement('option');
       option.value = item.raion;
-      option.textContent = item.raion + ' (' + item.total + ')';
+      option.textContent = (item.raion_label || item.raion) + ' (' + item.total + ')';
       raionSelect.appendChild(option);
     });
 
@@ -551,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    title.textContent = item.raion;
+    title.textContent = item.raion_label || item.raion;
     count.textContent = item.total;
     const maxTotal = lastPayload ? lastPayload.max_total : 0;
     const ratio = ratioForTotal(item.total, maxTotal);

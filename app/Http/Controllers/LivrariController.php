@@ -6,6 +6,8 @@ use App\Models\Livrare;
 use App\Models\User;
 use App\Support\DbDate;
 use App\Support\LocalitatiMoldova;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -222,7 +224,7 @@ class LivrariController extends Controller
                 $livrare->numar_comanda,
                 optional($livrare->data)->format('d.m.Y'),
                 $livrare->localitate ?? '—',
-                $effectiveRaion !== '' ? $effectiveRaion : '—',
+                $effectiveRaion !== '' ? LocalitatiMoldova::administrativeUnitLabel($effectiveRaion) : '—',
                 $livrare->adresa_livrarii,
                 $livrare->nr_client,
                 optional($livrare->data_livrarii)->format('d.m.Y'),
@@ -244,8 +246,12 @@ class LivrariController extends Controller
 
     public function map(Request $request)
     {
+        $user = Auth::user();
+        $isAdmin = $user && in_array(strtolower((string) ($user->role ?? '')), ['admin', 'administrator'], true);
+
         return view('livrari.map', [
             'backUrl' => route('livrari', $request->query()),
+            'isAdmin' => $isAdmin,
         ]);
     }
 
@@ -298,6 +304,7 @@ class LivrariController extends Controller
 
                 return [
                     'raion' => $raion,
+                    'raion_label' => LocalitatiMoldova::administrativeUnitLabel($raion),
                     'total' => $items->count(),
                     'localitati' => $localitati,
                 ];
@@ -315,6 +322,49 @@ class LivrariController extends Controller
             'raioane' => $raioane,
             'generated_at' => now()->format('d.m.Y H:i'),
         ]);
+    }
+
+    public function mapPdf(Request $request)
+    {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        $user = Auth::user();
+        $isAdmin = $user && in_array(strtolower((string) ($user->role ?? '')), ['admin', 'administrator'], true);
+
+        if (! $isAdmin) {
+            abort(403, 'Exportul PDF pentru hartă este disponibil doar pentru admin.');
+        }
+
+        $payload = $this->mapDataPayload($request, $user);
+
+        $options = new Options();
+        $options->set([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => false,
+            'defaultFont' => 'DejaVu Sans',
+            'chroot' => [public_path(), base_path()],
+            'tempDir' => sys_get_temp_dir(),
+        ]);
+
+        $pdf = new Dompdf($options);
+        $html = view('livrari.pdf.map', [
+            'payload' => $payload,
+            'filters' => [
+                'locatie' => (string) $request->input('locatie', ''),
+                'operator_id' => (string) $request->input('operator_id', ''),
+                'cauta' => (string) $request->input('cauta', ''),
+            ],
+            'generatedAt' => now()->format('d.m.Y H:i'),
+            'logoPath' => public_path('images/volta-logo.png'),
+        ])->render();
+
+        $pdf->loadHtml($html);
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->render();
+
+        return $pdf->stream('harta_livrari_' . now()->format('Ymd_His') . '.pdf', ['Attachment' => true]);
     }
 
     /**
@@ -552,6 +602,73 @@ class LivrariController extends Controller
             $q->whereNull('raion')
                 ->orWhereRaw("TRIM(COALESCE(raion, '')) IN ('', '-', '—')");
         });
+    }
+
+    private function mapDataPayload(Request $request, $user): array
+    {
+        $isAdmin = $user && in_array(strtolower((string) ($user->role ?? '')), ['admin', 'administrator'], true);
+        $registryRaioane = LocalitatiMoldova::raioane();
+
+        $rows = $this->filteredLivrariQuery($request, $isAdmin, $user)
+            ->get(['raion', 'localitate', 'adresa_livrarii', 'data_livrarii'])
+            ->reject(fn (Livrare $livrare) => LocalitatiMoldova::isExcludedRaion((string) ($livrare->raion ?? '')));
+        $groupedByRaion = $rows->groupBy(function (Livrare $livrare) {
+            $fallbackRaion = $this->sanitizeRaionValue((string) ($livrare->raion ?? ''));
+
+            return LocalitatiMoldova::raionForLocalitateAndAddress(
+                (string) ($livrare->localitate ?? ''),
+                (string) ($livrare->adresa_livrarii ?? ''),
+                $fallbackRaion !== '' ? $fallbackRaion : 'Fără raion'
+            );
+        });
+
+        $raioane = $registryRaioane
+            ->merge($groupedByRaion->keys())
+            ->unique()
+            ->map(function (string $raion) use ($groupedByRaion) {
+                $items = $groupedByRaion->get($raion, collect());
+                $localitati = $items
+                    ->groupBy(function (Livrare $livrare) {
+                        $rawLocalitate = trim((string) ($livrare->localitate ?? ''));
+
+                        return $this->normalizeLocalitateKey($rawLocalitate);
+                    })
+                    ->map(function ($localitatiItems, string $localitateKey) {
+                        $firstLocalitate = trim((string) (optional($localitatiItems->first())->localitate ?? ''));
+
+                        return [
+                            'localitate' => $this->canonicalLocalitateDisplayName($firstLocalitate, $localitateKey),
+                            'total' => $localitatiItems->count(),
+                        ];
+                    })
+                    ->sortBy([
+                        ['total', 'desc'],
+                        ['localitate', 'asc'],
+                    ])
+                    ->values()
+                    ->take(8)
+                    ->values();
+
+                return [
+                    'raion' => $raion,
+                    'raion_label' => LocalitatiMoldova::administrativeUnitLabel($raion),
+                    'total' => $items->count(),
+                    'localitati' => $localitati,
+                ];
+            })
+            ->sortBy([
+                ['total', 'desc'],
+                ['raion', 'asc'],
+            ])
+            ->values();
+
+        return [
+            'total' => $rows->count(),
+            'max_total' => $raioane->max('total') ?? 0,
+            'period_label' => $this->mapPeriodLabel($request),
+            'raioane' => $raioane,
+            'generated_at' => now()->format('d.m.Y H:i'),
+        ];
     }
 
     private function applyInferredRaionForPresentation(\Illuminate\Support\Collection $livrari): void
