@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.mobile-analytics')
 
 @section('title', 'Mobile Analytics - VOLTA')
 @section('header-title', 'Mobile Analytics')
@@ -31,6 +31,24 @@
   margin: 0;
   color: var(--text-secondary);
   font-size: 14px;
+}
+
+.mobile-alert {
+  border: 1px solid rgba(255, 238, 0, 0.3);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: rgba(255, 238, 0, 0.08);
+  color: #fde68a;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.mobile-alert code {
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  color: #f8fafc;
+  padding: 2px 6px;
+  border-radius: 6px;
 }
 
 .mobile-filters {
@@ -234,6 +252,13 @@
 
 @section('content')
 <div class="mobile-page">
+  @if(isset($schemaReady) && !$schemaReady)
+    <div class="mobile-alert">
+      Tabela pentru evenimente mobile nu este încă creată în această bază locală. Rulează
+      <code>php artisan migrate</code> și reîncarcă pagina.
+    </div>
+  @endif
+
   <div class="mobile-head">
     <div class="mobile-title">
       <h1>Mobile Analytics</h1>

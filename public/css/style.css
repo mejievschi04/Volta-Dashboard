@@ -446,9 +446,29 @@ h1 {
   body.sidebar-collapsed .logout-container,
   html.sidebar-collapsed .logout-container {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    gap: 8px;
     padding-left: 8px;
     padding-right: 8px;
+  }
+
+  body.sidebar-collapsed .sidebar-mobile-entry,
+  html.sidebar-collapsed .sidebar-mobile-entry {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    padding: 0;
+    border-radius: 12px;
+    font-size: 0;
+    gap: 0;
+  }
+
+  body.sidebar-collapsed .sidebar-mobile-entry i,
+  html.sidebar-collapsed .sidebar-mobile-entry i {
+    margin: 0;
+    font-size: 16px;
   }
 
   body.sidebar-collapsed .logout-btn,
@@ -2074,6 +2094,54 @@ select option {
   background: var(--bg-sidebar-toggle);
   position: sticky;
   bottom: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.sidebar-mobile-entry {
+  width: 100%;
+  text-decoration: none;
+  padding: 11px 14px;
+  border-radius: var(--card-radius);
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  transition: transform var(--transition), background-color var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.sidebar-mobile-entry--mobile {
+  border: 1px solid rgba(255, 238, 0, 0.38);
+  background: linear-gradient(165deg, rgba(255, 238, 0, 0.16) 0%, rgba(255, 238, 0, 0.08) 100%);
+  color: #fde047;
+}
+
+.sidebar-mobile-entry--mobile:hover {
+  color: #fff8bf;
+  border-color: rgba(255, 238, 0, 0.62);
+  background: linear-gradient(165deg, rgba(255, 238, 0, 0.22) 0%, rgba(255, 238, 0, 0.11) 100%);
+}
+
+.sidebar-mobile-entry--back {
+  border: 1px solid rgba(59, 130, 246, 0.42);
+  background: linear-gradient(165deg, rgba(37, 99, 235, 0.25) 0%, rgba(29, 78, 216, 0.16) 100%);
+  color: #bfdbfe;
+}
+
+.sidebar-mobile-entry--back:hover {
+  border-color: rgba(96, 165, 250, 0.62);
+  background: linear-gradient(165deg, rgba(37, 99, 235, 0.33) 0%, rgba(29, 78, 216, 0.2) 100%);
+  color: #eff6ff;
+}
+
+.sidebar-mobile-entry:active {
+  transform: scale(0.99);
+}
+
+.sidebar-mobile-entry i {
+  font-size: 15px;
 }
 
 .logout-btn {

@@ -32,6 +32,14 @@
   <div class="app">
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
+      @php
+        $isMobileModule = request()->routeIs('mobile.analytics*');
+        $canAccessMobileModule = auth()->check()
+          && auth()->user()->isDev()
+          && !auth()->user()->isAdmin()
+          && !auth()->user()->isOperator();
+        $mobileQuery = request()->only(['start', 'end']);
+      @endphp
       <button type="button" class="logo" id="sidebarLogoToggle" aria-label="Restrange meniul lateral">
         <img src="{{ asset('images/volta-logo.png') }}" alt="VOLTA Logo" class="logo-mark">
         <h1>VOLTA STATS</h1>
@@ -46,6 +54,31 @@
         </a>
         <a href="{{ route('setari') }}" class="{{ request()->routeIs('setari*') ? 'active' : '' }}">
           <i class="fas fa-cog"></i><span class="txt">Setări</span>
+        </a>
+        @elseif($isMobileModule && $canAccessMobileModule)
+        <a href="{{ route('mobile.analytics', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics') ? 'active' : '' }}">
+          <i class="fas fa-chart-line"></i><span class="txt">Prezentare Volta App</span>
+        </a>
+        <a href="{{ route('mobile.analytics.events', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.events') ? 'active' : '' }}">
+          <i class="fas fa-bolt"></i><span class="txt">Evenimente</span>
+        </a>
+        <a href="{{ route('mobile.analytics.pages', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.pages') ? 'active' : '' }}">
+          <i class="fas fa-file-lines"></i><span class="txt">Pagini app</span>
+        </a>
+        <a href="{{ route('mobile.analytics.event-types', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.event-types') ? 'active' : '' }}">
+          <i class="fas fa-list-check"></i><span class="txt">Tipuri evenimente</span>
+        </a>
+        <a href="{{ route('mobile.analytics.banners', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.banners') ? 'active' : '' }}">
+          <i class="fas fa-rectangle-ad"></i><span class="txt">Bannere</span>
+        </a>
+        <a href="{{ route('mobile.analytics.recent-events', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.recent-events') ? 'active' : '' }}">
+          <i class="fas fa-clock-rotate-left"></i><span class="txt">Evenimente recente</span>
+        </a>
+        <a href="{{ route('mobile.analytics.funnels', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.funnels') ? 'active' : '' }}">
+          <i class="fas fa-filter-circle-dollar"></i><span class="txt">Pâlnie conversie</span>
+        </a>
+        <a href="{{ route('mobile.analytics.abandon', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.abandon') ? 'active' : '' }}">
+          <i class="fas fa-cart-arrow-down"></i><span class="txt">Abandon coș</span>
         </a>
         @else
         <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
@@ -65,9 +98,6 @@
         </a>
         <a href="{{ route('trafic') }}" class="{{ request()->routeIs('trafic*') ? 'active' : '' }}">
           <i class="fas fa-network-wired"></i><span class="txt">Trafic</span>
-        </a>
-        <a href="{{ route('mobile.analytics') }}" class="{{ request()->routeIs('mobile.analytics') ? 'active' : '' }}">
-          <i class="fas fa-mobile-screen-button"></i><span class="txt">Mobile</span>
         </a>
         <a href="{{ route('setari') }}" class="{{ request()->routeIs('setari*') ? 'active' : '' }}">
           <i class="fas fa-cog"></i><span class="txt">Setări</span>
@@ -89,6 +119,15 @@
       </nav>
 
       <div class="logout-container">
+        @if($canAccessMobileModule)
+        <a
+          href="{{ $isMobileModule ? route('dashboard') : route('mobile.analytics', $mobileQuery) }}"
+          class="sidebar-mobile-entry {{ $isMobileModule ? 'sidebar-mobile-entry--back' : 'sidebar-mobile-entry--mobile' }}"
+        >
+          <i class="fas {{ $isMobileModule ? 'fa-arrow-left' : 'fa-mobile-screen-button' }}"></i>
+          <span>{{ $isMobileModule ? 'Înapoi la Dashboard' : 'Volta App' }}</span>
+        </a>
+        @endif
         <form action="{{ route('logout') }}" method="post">
           @csrf
           <button type="submit" class="logout-btn">
@@ -117,9 +156,9 @@
       </div>
 
       <!-- TOPBAR - doar pe prima pagină -->
-      @if(request()->routeIs('dashboard') || request()->routeIs('datele-mele'))
+      @if(request()->routeIs('dashboard') || request()->routeIs('datele-mele') || request()->routeIs('mobile.analytics*'))
       <div class="header">
-        <h1>@yield('header-title', request()->routeIs('datele-mele') ? 'Datele mele' : 'Dashboard')</h1>
+        <h1>@yield('header-title', request()->routeIs('datele-mele') ? 'Datele mele' : (request()->routeIs('mobile.analytics*') ? 'Volta App' : 'Dashboard'))</h1>
         <div class="user-menu">
           <div class="user-info">
             <div class="name">{{ Auth::check() ? Auth::user()->username : 'User' }}</div>

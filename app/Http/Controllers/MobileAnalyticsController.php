@@ -8,87 +8,244 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 
 class MobileAnalyticsController extends Controller
 {
     public function index(Request $request)
     {
-        [$start, $end] = $this->resolvePeriod($request);
+        return view('mobile.overview', $this->buildDashboardData($request));
+    }
 
-        $base = MobileAnalyticsEvent::query()
-            ->whereBetween('occurred_at', [$start, $end]);
+    public function events(Request $request)
+    {
+        return view('mobile.events', $this->buildDashboardData($request));
+    }
+
+    public function funnels(Request $request)
+    {
+        return view('mobile.funnels', $this->buildDashboardData($request));
+    }
+
+    public function pagesList(Request $request)
+    {
+        [$start, $end] = $this->resolvePeriod($request);
+        $schemaReady = Schema::hasTable('mobile_analytics_events');
+        $pages = null;
+
+        if ($schemaReady) {
+            $pages = MobileAnalyticsEvent::query()
+                ->whereBetween('occurred_at', [$start, $end])
+                ->select(
+                    'page',
+                    DB::raw("SUM(CASE WHEN event_name = 'page_view' THEN 1 ELSE 0 END) as views"),
+                    DB::raw('COUNT(*) as events_count'),
+                    DB::raw('AVG(CASE WHEN duration_ms IS NOT NULL THEN duration_ms END) as avg_duration_ms')
+                )
+                ->whereNotNull('page')
+                ->groupBy('page')
+                ->orderByDesc('views')
+                ->orderByDesc('events_count')
+                ->paginate(50)
+                ->withQueryString();
+        }
+
+        return view('mobile.pages-list', compact('start', 'end', 'schemaReady', 'pages'));
+    }
+
+    public function eventTypesList(Request $request)
+    {
+        [$start, $end] = $this->resolvePeriod($request);
+        $schemaReady = Schema::hasTable('mobile_analytics_events');
+        $eventTypes = null;
+
+        if ($schemaReady) {
+            $eventTypes = MobileAnalyticsEvent::query()
+                ->whereBetween('occurred_at', [$start, $end])
+                ->select('event_name', DB::raw('COUNT(*) as total'))
+                ->groupBy('event_name')
+                ->orderByDesc('total')
+                ->paginate(50)
+                ->withQueryString();
+        }
+
+        return view('mobile.event-types-list', compact('start', 'end', 'schemaReady', 'eventTypes'));
+    }
+
+    public function bannersList(Request $request)
+    {
+        [$start, $end] = $this->resolvePeriod($request);
+        $schemaReady = Schema::hasTable('mobile_analytics_events');
+        $banners = null;
+
+        if ($schemaReady) {
+            $banners = MobileAnalyticsEvent::query()
+                ->whereBetween('occurred_at', [$start, $end])
+                ->where('event_name', 'banner_click')
+                ->select('banner_id', 'banner_title', DB::raw('COUNT(*) as clicks'), DB::raw('MAX(occurred_at) as last_click_at'))
+                ->groupBy('banner_id', 'banner_title')
+                ->orderByDesc('clicks')
+                ->paginate(50)
+                ->withQueryString();
+        }
+
+        return view('mobile.banners-list', compact('start', 'end', 'schemaReady', 'banners'));
+    }
+
+    public function recentEventsList(Request $request)
+    {
+        [$start, $end] = $this->resolvePeriod($request);
+        $schemaReady = Schema::hasTable('mobile_analytics_events');
+        $recentEvents = null;
+
+        if ($schemaReady) {
+            $recentEvents = MobileAnalyticsEvent::query()
+                ->whereBetween('occurred_at', [$start, $end])
+                ->latest('occurred_at')
+                ->paginate(100)
+                ->withQueryString();
+        }
+
+        return view('mobile.recent-events-list', compact('start', 'end', 'schemaReady', 'recentEvents'));
+    }
+
+    public function abandonList(Request $request)
+    {
+        [$start, $end] = $this->resolvePeriod($request);
+        $schemaReady = Schema::hasTable('mobile_analytics_events');
+        $abandonRows = null;
+
+        if ($schemaReady) {
+            $abandonRows = MobileAnalyticsEvent::query()
+                ->whereBetween('occurred_at', [$start, $end])
+                ->where('event_name', 'cart_abandoned')
+                ->select(
+                    'checkout_step',
+                    DB::raw('COUNT(*) as abandons'),
+                    DB::raw('AVG(cart_total) as avg_cart_total'),
+                    DB::raw('AVG(items_count) as avg_items_count')
+                )
+                ->groupBy('checkout_step')
+                ->orderBy('checkout_step')
+                ->paginate(50)
+                ->withQueryString();
+        }
+
+        return view('mobile.abandon-list', compact('start', 'end', 'schemaReady', 'abandonRows'));
+    }
+
+    private function buildDashboardData(Request $request): array
+    {
+        [$start, $end] = $this->resolvePeriod($request);
+        $schemaReady = Schema::hasTable('mobile_analytics_events');
 
         $summary = [
-            'events' => (clone $base)->count(),
-            'sessions' => (clone $base)->whereNotNull('session_id')->distinct('session_id')->count('session_id'),
-            'users' => (clone $base)->whereNotNull('mobile_user_id')->distinct('mobile_user_id')->count('mobile_user_id'),
-            'page_views' => (clone $base)->where('event_name', 'page_view')->count(),
-            'banner_clicks' => (clone $base)->where('event_name', 'banner_click')->count(),
-            'cart_abandons' => (clone $base)->where('event_name', 'cart_abandoned')->count(),
-            'orders' => (clone $base)->whereIn('event_name', ['order_completed', 'checkout_completed'])->count(),
-            'avg_page_seconds' => round(((clone $base)->whereNotNull('duration_ms')->avg('duration_ms') ?? 0) / 1000),
+            'events' => 0,
+            'sessions' => 0,
+            'users' => 0,
+            'page_views' => 0,
+            'banner_clicks' => 0,
+            'cart_abandons' => 0,
+            'orders' => 0,
+            'avg_page_seconds' => 0,
+        ];
+        $topPages = collect();
+        $bannerClicks = collect();
+        $cartAbandons = collect();
+        $eventBreakdown = collect();
+        $recentEvents = collect();
+        $dailyChart = ['labels' => [], 'datasets' => []];
+        $funnel = [
+            'visits' => 0,
+            'checkout_started' => 0,
+            'checkout_completed' => 0,
+            'orders_completed' => 0,
+            'cart_abandoned' => 0,
+            'visit_to_checkout_rate' => 0,
+            'checkout_to_order_rate' => 0,
+            'dropoff_after_checkout_rate' => 0,
+            'recovery_rate' => 0,
         ];
 
-        $topPages = (clone $base)
-            ->select(
-                'page',
-                DB::raw("SUM(CASE WHEN event_name = 'page_view' THEN 1 ELSE 0 END) as views"),
-                DB::raw('COUNT(*) as events_count'),
-                DB::raw('AVG(CASE WHEN duration_ms IS NOT NULL THEN duration_ms END) as avg_duration_ms')
-            )
-            ->whereNotNull('page')
-            ->groupBy('page')
-            ->orderByDesc('views')
-            ->orderByDesc('events_count')
-            ->limit(12)
-            ->get();
+        if ($schemaReady) {
+            $base = MobileAnalyticsEvent::query()
+                ->whereBetween('occurred_at', [$start, $end]);
 
-        $bannerClicks = (clone $base)
-            ->select('banner_id', 'banner_title', DB::raw('COUNT(*) as clicks'), DB::raw('MAX(occurred_at) as last_click_at'))
-            ->where('event_name', 'banner_click')
-            ->groupBy('banner_id', 'banner_title')
-            ->orderByDesc('clicks')
-            ->limit(12)
-            ->get();
+            $summary = [
+                'events' => (clone $base)->count(),
+                'sessions' => (clone $base)->whereNotNull('session_id')->distinct('session_id')->count('session_id'),
+                'users' => (clone $base)->whereNotNull('mobile_user_id')->distinct('mobile_user_id')->count('mobile_user_id'),
+                'page_views' => (clone $base)->where('event_name', 'page_view')->count(),
+                'banner_clicks' => (clone $base)->where('event_name', 'banner_click')->count(),
+                'cart_abandons' => (clone $base)->where('event_name', 'cart_abandoned')->count(),
+                'orders' => (clone $base)->where('event_name', 'order_completed')->count(),
+                'avg_page_seconds' => round(((clone $base)->whereNotNull('duration_ms')->avg('duration_ms') ?? 0) / 1000),
+            ];
 
-        $cartAbandons = (clone $base)
-            ->select(
-                'checkout_step',
-                DB::raw('COUNT(*) as abandons'),
-                DB::raw('AVG(cart_total) as avg_cart_total'),
-                DB::raw('AVG(items_count) as avg_items_count')
-            )
-            ->where('event_name', 'cart_abandoned')
-            ->groupBy('checkout_step')
-            ->orderBy('checkout_step')
-            ->get();
+            $topPages = (clone $base)
+                ->select(
+                    'page',
+                    DB::raw("SUM(CASE WHEN event_name = 'page_view' THEN 1 ELSE 0 END) as views"),
+                    DB::raw('COUNT(*) as events_count'),
+                    DB::raw('AVG(CASE WHEN duration_ms IS NOT NULL THEN duration_ms END) as avg_duration_ms')
+                )
+                ->whereNotNull('page')
+                ->groupBy('page')
+                ->orderByDesc('views')
+                ->orderByDesc('events_count')
+                ->limit(20)
+                ->get();
 
-        $eventBreakdown = (clone $base)
-            ->select('event_name', DB::raw('COUNT(*) as total'))
-            ->groupBy('event_name')
-            ->orderByDesc('total')
-            ->limit(16)
-            ->get();
+            $bannerClicks = (clone $base)
+                ->select('banner_id', 'banner_title', DB::raw('COUNT(*) as clicks'), DB::raw('MAX(occurred_at) as last_click_at'))
+                ->where('event_name', 'banner_click')
+                ->groupBy('banner_id', 'banner_title')
+                ->orderByDesc('clicks')
+                ->limit(20)
+                ->get();
 
-        $recentEvents = (clone $base)
-            ->latest('occurred_at')
-            ->limit(40)
-            ->get();
+            $cartAbandons = (clone $base)
+                ->select(
+                    'checkout_step',
+                    DB::raw('COUNT(*) as abandons'),
+                    DB::raw('AVG(cart_total) as avg_cart_total'),
+                    DB::raw('AVG(items_count) as avg_items_count')
+                )
+                ->where('event_name', 'cart_abandoned')
+                ->groupBy('checkout_step')
+                ->orderBy('checkout_step')
+                ->get();
 
-        $dailyChart = $this->dailyChart($start, $end);
+            $eventBreakdown = (clone $base)
+                ->select('event_name', DB::raw('COUNT(*) as total'))
+                ->groupBy('event_name')
+                ->orderByDesc('total')
+                ->limit(30)
+                ->get();
 
-        return view('mobile.index', compact(
+            $recentEvents = (clone $base)
+                ->latest('occurred_at')
+                ->limit(80)
+                ->get();
+
+            $dailyChart = $this->dailyChart($start, $end);
+            $funnel = $this->funnelMetrics(clone $base, $summary['page_views'], $summary['cart_abandons'], $summary['orders']);
+        }
+
+        return compact(
             'start',
             'end',
+            'schemaReady',
             'summary',
             'topPages',
             'bannerClicks',
             'cartAbandons',
             'eventBreakdown',
             'recentEvents',
-            'dailyChart'
-        ));
+            'dailyChart',
+            'funnel'
+        );
     }
 
     public function ingest(Request $request): JsonResponse
@@ -216,6 +373,44 @@ class MobileAnalyticsController extends Controller
         }
 
         return ['labels' => $labels, 'datasets' => $datasets];
+    }
+
+    private function funnelMetrics($base, int $pageViews, int $cartAbandoned, int $orders): array
+    {
+        $checkoutStarted = (clone $base)->where('event_name', 'checkout_started')->count();
+        if ($checkoutStarted === 0) {
+            $checkoutStarted = $cartAbandoned + $orders;
+        }
+
+        $checkoutCompleted = (clone $base)->where('event_name', 'checkout_completed')->count();
+        if ($checkoutCompleted === 0) {
+            $checkoutCompleted = $orders;
+        }
+
+        $visitToCheckoutRate = $pageViews > 0
+            ? round(($checkoutStarted / $pageViews) * 100, 1)
+            : 0.0;
+        $checkoutToOrderRate = $checkoutStarted > 0
+            ? round(($orders / $checkoutStarted) * 100, 1)
+            : 0.0;
+        $dropoffAfterCheckoutRate = $checkoutStarted > 0
+            ? round((max($checkoutStarted - $orders, 0) / $checkoutStarted) * 100, 1)
+            : 0.0;
+        $recoveryRate = ($cartAbandoned + $orders) > 0
+            ? round(($orders / ($cartAbandoned + $orders)) * 100, 1)
+            : 0.0;
+
+        return [
+            'visits' => $pageViews,
+            'checkout_started' => $checkoutStarted,
+            'checkout_completed' => $checkoutCompleted,
+            'orders_completed' => $orders,
+            'cart_abandoned' => $cartAbandoned,
+            'visit_to_checkout_rate' => $visitToCheckoutRate,
+            'checkout_to_order_rate' => $checkoutToOrderRate,
+            'dropoff_after_checkout_rate' => $dropoffAfterCheckoutRate,
+            'recovery_rate' => $recoveryRate,
+        ];
     }
 
     private function resolvePeriod(Request $request): array
