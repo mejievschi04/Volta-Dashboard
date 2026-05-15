@@ -66,6 +66,9 @@
         <a href="{{ route('trafic') }}" class="{{ request()->routeIs('trafic*') ? 'active' : '' }}">
           <i class="fas fa-network-wired"></i><span class="txt">Trafic</span>
         </a>
+        <a href="{{ route('mobile.analytics') }}" class="{{ request()->routeIs('mobile.analytics') ? 'active' : '' }}">
+          <i class="fas fa-mobile-screen-button"></i><span class="txt">Mobile</span>
+        </a>
         <a href="{{ route('setari') }}" class="{{ request()->routeIs('setari*') ? 'active' : '' }}">
           <i class="fas fa-cog"></i><span class="txt">Setări</span>
         </a>

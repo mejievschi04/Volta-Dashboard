@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\OneCController;
 use App\Http\Controllers\LivrariController;
 use App\Http\Controllers\RaportLunarController;
 use App\Http\Controllers\DevModeController;
+use App\Http\Controllers\MobileAnalyticsController;
 
 // Punct de intrare local: merge direct cu `php artisan serve`
 Route::get('/', function () {
@@ -29,6 +30,9 @@ Route::get('/', function () {
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/api/mobile-analytics/events', [MobileAnalyticsController::class, 'ingest'])
+    ->name('api.mobile-analytics.events')
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class]);
 
 Route::middleware(['auth', \App\Http\Middleware\CheckDev::class])->group(function () {
     Route::get('/dev-mode', [DevModeController::class, 'panel'])->name('dev-mode.panel');
@@ -89,6 +93,7 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
         Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
         Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+        Route::get('/mobile', [MobileAnalyticsController::class, 'index'])->name('mobile.analytics');
     });
     
     // Ruta show trebuie să fie după create pentru a evita conflictele

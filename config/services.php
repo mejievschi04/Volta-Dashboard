@@ -41,4 +41,8 @@ return [
         'password' => env('ONEC_PASSWORD', ''),
     ],
 
+    'mobile_analytics' => [
+        'key' => env('MOBILE_ANALYTICS_KEY', ''),
+    ],
+
 ];
