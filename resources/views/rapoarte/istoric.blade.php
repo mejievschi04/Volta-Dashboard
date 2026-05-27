@@ -7,7 +7,7 @@
 @section('content')
 <div class="istoric-page">
   <p class="rapoarte-lead">
-    Evoluție pe luni: filtrează după an sau lună, caută în etichete, apoi explorează KPI-urile agregate, graficele și tabelul detaliat.
+    Evoluție pe luni: filtrează după an, lună sau interval de luni, caută în etichete, apoi explorează KPI-urile agregate, graficele și tabelul detaliat.
   </p>
 
   <p class="kpi-source-badge istoric-source-hint">
@@ -43,6 +43,24 @@
           <option value="10">Octombrie</option>
           <option value="11">Noiembrie</option>
           <option value="12">Decembrie</option>
+        </select>
+      </div>
+    </div>
+    <div class="month-selector-modern">
+      <div class="month-selector-wrapper">
+        <i class="fas fa-calendar-plus" aria-hidden="true"></i>
+        <label for="filterLunaStart">Interval (de la)</label>
+        <select id="filterLunaStart" class="dashboard-month-select">
+          <option value="">Toate lunile</option>
+        </select>
+      </div>
+    </div>
+    <div class="month-selector-modern">
+      <div class="month-selector-wrapper">
+        <i class="fas fa-calendar-minus" aria-hidden="true"></i>
+        <label for="filterLunaEnd">Interval (până la)</label>
+        <select id="filterLunaEnd" class="dashboard-month-select">
+          <option value="">Toate lunile</option>
         </select>
       </div>
     </div>
@@ -200,7 +218,16 @@ async function loadIstoric() {
 
 function populateFilters() {
   const anSelect = document.getElementById('filterAn');
+  const startSelect = document.getElementById('filterLunaStart');
+  const endSelect = document.getElementById('filterLunaEnd');
   const ani = [...new Set(allData.map(d => d.an))].sort((a, b) => b - a);
+  const luniDisponibile = [...new Set(allData.map(d => d.luna))]
+    .sort()
+    .map(lunaKey => {
+      const row = allData.find(item => item.luna === lunaKey);
+      return { value: lunaKey, label: row ? row.luna_label : lunaKey };
+    })
+    .sort((a, b) => b.value.localeCompare(a.value));
 
   anSelect.innerHTML = '<option value="">Toți anii</option>';
   ani.forEach(an => {
@@ -209,18 +236,34 @@ function populateFilters() {
     opt.textContent = an;
     anSelect.appendChild(opt);
   });
+
+  [startSelect, endSelect].forEach(select => {
+    if (!select) return;
+    select.innerHTML = '<option value="">Toate lunile</option>';
+    luniDisponibile.forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item.value;
+      opt.textContent = item.label;
+      select.appendChild(opt);
+    });
+  });
 }
 
 function filterData() {
   const an = document.getElementById('filterAn').value;
   const luna = document.getElementById('filterLuna').value;
+  const lunaStartRaw = document.getElementById('filterLunaStart').value;
+  const lunaEndRaw = document.getElementById('filterLunaEnd').value;
   const search = document.getElementById('searchInput').value.toLowerCase();
+  const rangeStart = lunaStartRaw && lunaEndRaw ? (lunaStartRaw <= lunaEndRaw ? lunaStartRaw : lunaEndRaw) : (lunaStartRaw || '');
+  const rangeEnd = lunaStartRaw && lunaEndRaw ? (lunaStartRaw <= lunaEndRaw ? lunaEndRaw : lunaStartRaw) : (lunaEndRaw || '');
 
   filteredData = allData.filter(item => {
     const matchAn = !an || item.an == an;
     const matchLuna = !luna || item.luna_num == luna;
+    const matchRange = (!rangeStart || item.luna >= rangeStart) && (!rangeEnd || item.luna <= rangeEnd);
     const matchSearch = !search || item.luna_label.toLowerCase().includes(search);
-    return matchAn && matchLuna && matchSearch;
+    return matchAn && matchLuna && matchRange && matchSearch;
   });
 
   updateDisplay();
@@ -456,6 +499,8 @@ function updateCharts() {
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('filterAn').addEventListener('change', filterData);
   document.getElementById('filterLuna').addEventListener('change', filterData);
+  document.getElementById('filterLunaStart').addEventListener('change', filterData);
+  document.getElementById('filterLunaEnd').addEventListener('change', filterData);
   document.getElementById('searchInput').addEventListener('input', filterData);
   document.getElementById('istoricExportExcelBtn').addEventListener('click', function () {
     const table = document.getElementById('istoricTable');
@@ -473,8 +518,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('istoricExportPdfBtn').addEventListener('click', function () {
     const an = document.getElementById('filterAn').value || '';
     const luna = document.getElementById('filterLuna').value || '';
+    const lunaStart = document.getElementById('filterLunaStart').value || '';
+    const lunaEnd = document.getElementById('filterLunaEnd').value || '';
     const search = document.getElementById('searchInput').value || '';
-    const params = new URLSearchParams({ an: an, luna: luna, search: search });
+    const params = new URLSearchParams({ an: an, luna: luna, luna_start: lunaStart, luna_end: lunaEnd, search: search });
     window.location.href = @json(route('export.istoric.pdf')) + '?' + params.toString();
   });
   loadIstoric();
