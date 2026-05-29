@@ -2099,6 +2099,21 @@
     control.input.focus();
   }
 
+  function localitateMetaText(item) {
+    var sameSingleRaion = item.raioane.length === 1 && normalizeSearch(item.raioane[0]) === normalizeSearch(item.localitate);
+    var parts = [];
+
+    if (!sameSingleRaion) {
+      parts.push(item.raioane.join(', '));
+    }
+
+    if (item.score >= 50) {
+      parts.push('potrivire inteligentă');
+    }
+
+    return parts.join(' · ');
+  }
+
   function renderRaionMenu(control) {
     var input = control.input;
     var menu = input._raionMenu;
@@ -2122,10 +2137,13 @@
       option.className = 'livrari-raion-option';
       var name = document.createElement('span');
       name.textContent = item.localitate;
-      var meta = document.createElement('small');
-      meta.textContent = item.raioane.join(', ') + (item.score >= 50 ? ' · potrivire inteligentă' : '');
       option.appendChild(name);
-      option.appendChild(meta);
+      var metaText = localitateMetaText(item);
+      if (metaText) {
+        var meta = document.createElement('small');
+        meta.textContent = metaText;
+        option.appendChild(meta);
+      }
       option.addEventListener('mousedown', function(event) {
         event.preventDefault();
         selectLocalitate(control, item);
