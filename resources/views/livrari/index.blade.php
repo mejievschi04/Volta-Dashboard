@@ -1937,6 +1937,10 @@
     return normalizeText(value).replace(/[^a-z0-9]+/g, '');
   }
 
+  function isChisinauLocalitate(value) {
+    return normalizeSearch(value) === 'chisinau';
+  }
+
   function editDistance(a, b) {
     if (a === b) return 0;
     if (!a.length) return b.length;
@@ -2005,6 +2009,9 @@
     return Object.keys(grouped)
       .map(function(key) { return grouped[key]; })
       .sort(function(a, b) {
+        if (isChisinauLocalitate(a.localitate) !== isChisinauLocalitate(b.localitate)) {
+          return isChisinauLocalitate(a.localitate) ? -1 : 1;
+        }
         if (a.score !== b.score) return a.score - b.score;
         return a.localitate.localeCompare(b.localitate, 'ro');
       })
