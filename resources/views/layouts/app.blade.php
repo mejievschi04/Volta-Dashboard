@@ -24,7 +24,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url('css/style.css') }}"/>
+  @php $styleCssVersion = @filemtime(public_path('css/style.css')) ?: 0; @endphp
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ $styleCssVersion }}"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   @stack('styles')
 </head>

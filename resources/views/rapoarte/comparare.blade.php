@@ -4,8 +4,15 @@
 
 @section('header-title', 'Rapoarte')
 
+@push('styles')
+<style>
+  #rapoarteFilters[data-mode="months"] #rangeCompareControls { display: none !important; }
+  #rapoarteFilters[data-mode="period"] #monthsCompareControls { display: none !important; }
+</style>
+@endpush
+
 @section('content')
-<div class="rapoarte-page">
+<div class="rapoarte-page" data-rapoarte-ui="luni-perioada-v3">
   <p class="rapoarte-lead">
     Compară două luni. Bifează <strong>Perioadă</strong> doar dacă vrei intervale de luni (de la – până la).
   </p>
@@ -35,35 +42,35 @@
       </div>
     </div>
 
-    <div class="rapoarte-filters-panel rapoarte-periods-grid rapoarte-periods-grid--range" id="rangeCompareControls" aria-hidden="true">
-    <div class="month-selector-modern">
-      <div class="month-selector-wrapper">
-        <i class="fas fa-calendar-day" aria-hidden="true"></i>
-        <label for="selectLuna1Start">Perioada 1 (de la)</label>
-        <select id="selectLuna1Start" class="dashboard-month-select"></select>
+    <div class="rapoarte-filters-panel rapoarte-periods-grid rapoarte-periods-grid--range" id="rangeCompareControls" style="display: none;" aria-hidden="true" hidden>
+      <div class="month-selector-modern">
+        <div class="month-selector-wrapper">
+          <i class="fas fa-calendar-day" aria-hidden="true"></i>
+          <label for="selectLuna1Start">Perioada 1 (de la)</label>
+          <select id="selectLuna1Start" class="dashboard-month-select"></select>
+        </div>
       </div>
-    </div>
-    <div class="month-selector-modern">
-      <div class="month-selector-wrapper">
-        <i class="fas fa-calendar-check" aria-hidden="true"></i>
-        <label for="selectLuna1End">Perioada 1 (până la)</label>
-        <select id="selectLuna1End" class="dashboard-month-select"></select>
+      <div class="month-selector-modern">
+        <div class="month-selector-wrapper">
+          <i class="fas fa-calendar-check" aria-hidden="true"></i>
+          <label for="selectLuna1End">Perioada 1 (până la)</label>
+          <select id="selectLuna1End" class="dashboard-month-select"></select>
+        </div>
       </div>
-    </div>
-    <div class="month-selector-modern">
-      <div class="month-selector-wrapper">
-        <i class="fas fa-calendar-day" aria-hidden="true"></i>
-        <label for="selectLuna2Start">Perioada 2 (de la)</label>
-        <select id="selectLuna2Start" class="dashboard-month-select"></select>
+      <div class="month-selector-modern">
+        <div class="month-selector-wrapper">
+          <i class="fas fa-calendar-day" aria-hidden="true"></i>
+          <label for="selectLuna2Start">Perioada 2 (de la)</label>
+          <select id="selectLuna2Start" class="dashboard-month-select"></select>
+        </div>
       </div>
-    </div>
-    <div class="month-selector-modern">
-      <div class="month-selector-wrapper">
-        <i class="fas fa-calendar-check" aria-hidden="true"></i>
-        <label for="selectLuna2End">Perioada 2 (până la)</label>
-        <select id="selectLuna2End" class="dashboard-month-select"></select>
+      <div class="month-selector-modern">
+        <div class="month-selector-wrapper">
+          <i class="fas fa-calendar-check" aria-hidden="true"></i>
+          <label for="selectLuna2End">Perioada 2 (până la)</label>
+          <select id="selectLuna2End" class="dashboard-month-select"></select>
+        </div>
       </div>
-    </div>
     </div>
   </div>
 
@@ -299,10 +306,12 @@ function syncModeVisibility() {
     filtersRoot.dataset.mode = usePeriod ? 'period' : 'months';
   }
   if (monthControls) {
+    monthControls.style.display = usePeriod ? 'none' : 'grid';
     monthControls.hidden = usePeriod;
     monthControls.setAttribute('aria-hidden', usePeriod ? 'true' : 'false');
   }
   if (rangeControls) {
+    rangeControls.style.display = usePeriod ? 'grid' : 'none';
     rangeControls.hidden = !usePeriod;
     rangeControls.setAttribute('aria-hidden', usePeriod ? 'false' : 'true');
   }
@@ -590,13 +599,13 @@ function updateTable(data1, data2) {
 document.addEventListener("DOMContentLoaded", () => {
   const excelBtn = document.getElementById('comparareExportExcelBtn');
   const pdfBtn = document.getElementById('comparareExportPdfBtn');
+  syncModeVisibility();
   const periodCheckbox = document.getElementById('usePeriodMode');
   if (periodCheckbox) {
     periodCheckbox.addEventListener('change', function () {
       syncModeVisibility();
       updateComparare();
     });
-    syncModeVisibility();
   }
 
   if (excelBtn) {
