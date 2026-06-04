@@ -2679,6 +2679,10 @@ select option {
   margin-bottom: var(--space-6);
 }
 
+.rapoarte-periods-grid[hidden] {
+  display: none;
+}
+
 .rapoarte-period-toggle {
   display: inline-flex;
   align-items: center;
@@ -2716,17 +2720,9 @@ select option {
   outline-offset: 2px;
 }
 
-.rapoarte-period-card {
-  display: grid;
-  gap: 10px;
-}
-
-.rapoarte-range-end[hidden] {
-  display: none;
-}
-
 @media (max-width: 768px) {
-  .rapoarte-periods-grid {
+  .rapoarte-periods-grid,
+  .rapoarte-periods-grid--range {
     grid-template-columns: 1fr;
   }
 }

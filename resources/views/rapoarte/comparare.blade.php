@@ -7,39 +7,57 @@
 @section('content')
 <div class="rapoarte-page">
   <p class="rapoarte-lead">
-    Compară două luni (implicit luna curentă vs. luna anterioară). Bifează opțiunea de mai jos pentru a compara intervale de luni.
+    Compară două luni (implicit luna curentă vs. luna anterioară). Bifează „Perioadă” pentru a compara două intervale de luni (de la – până la).
   </p>
 
-  <label class="rapoarte-period-toggle" for="usePeriodRanges">
-    <input type="checkbox" id="usePeriodRanges" name="use_period_ranges" value="1">
-    <span>Compară perioadă (interval de luni)</span>
+  <label class="rapoarte-period-toggle" for="usePeriodMode">
+    <input type="checkbox" id="usePeriodMode" name="use_period_mode" value="1">
+    <span><i class="fas fa-calendar-week" aria-hidden="true"></i> Perioadă</span>
   </label>
 
-  <div class="rapoarte-periods-grid">
-    <div class="rapoarte-period-card">
+  <div class="rapoarte-periods-grid" id="monthsCompareControls">
+    <div class="month-selector-modern">
       <div class="month-selector-wrapper">
         <i class="fas fa-calendar-day" aria-hidden="true"></i>
         <label for="selectLuna1">Luna 1</label>
         <select id="selectLuna1" class="dashboard-month-select"></select>
       </div>
-
-      <div class="month-selector-wrapper rapoarte-range-end" id="range1EndControl" hidden>
-        <i class="fas fa-calendar-check" aria-hidden="true"></i>
-        <label for="selectLuna1End">Luna 1 până la</label>
-        <select id="selectLuna1End" class="dashboard-month-select"></select>
-      </div>
     </div>
-
-    <div class="rapoarte-period-card">
+    <div class="month-selector-modern">
       <div class="month-selector-wrapper">
-        <i class="fas fa-calendar-day" aria-hidden="true"></i>
+        <i class="fas fa-calendar-check" aria-hidden="true"></i>
         <label for="selectLuna2">Luna 2</label>
         <select id="selectLuna2" class="dashboard-month-select"></select>
       </div>
+    </div>
+  </div>
 
-      <div class="month-selector-wrapper rapoarte-range-end" id="range2EndControl" hidden>
+  <div class="rapoarte-periods-grid rapoarte-periods-grid--range" id="rangeCompareControls" hidden>
+    <div class="month-selector-modern">
+      <div class="month-selector-wrapper">
+        <i class="fas fa-calendar-day" aria-hidden="true"></i>
+        <label for="selectLuna1Start">Perioada 1 (de la)</label>
+        <select id="selectLuna1Start" class="dashboard-month-select"></select>
+      </div>
+    </div>
+    <div class="month-selector-modern">
+      <div class="month-selector-wrapper">
         <i class="fas fa-calendar-check" aria-hidden="true"></i>
-        <label for="selectLuna2End">Luna 2 până la</label>
+        <label for="selectLuna1End">Perioada 1 (până la)</label>
+        <select id="selectLuna1End" class="dashboard-month-select"></select>
+      </div>
+    </div>
+    <div class="month-selector-modern">
+      <div class="month-selector-wrapper">
+        <i class="fas fa-calendar-day" aria-hidden="true"></i>
+        <label for="selectLuna2Start">Perioada 2 (de la)</label>
+        <select id="selectLuna2Start" class="dashboard-month-select"></select>
+      </div>
+    </div>
+    <div class="month-selector-modern">
+      <div class="month-selector-wrapper">
+        <i class="fas fa-calendar-check" aria-hidden="true"></i>
+        <label for="selectLuna2End">Perioada 2 (până la)</label>
         <select id="selectLuna2End" class="dashboard-month-select"></select>
       </div>
     </div>
@@ -189,8 +207,10 @@ async function loadLuni() {
 
     const selects = [
       document.getElementById("selectLuna1"),
-      document.getElementById("selectLuna1End"),
       document.getElementById("selectLuna2"),
+      document.getElementById("selectLuna1Start"),
+      document.getElementById("selectLuna1End"),
+      document.getElementById("selectLuna2Start"),
       document.getElementById("selectLuna2End")
     ].filter(Boolean);
 
@@ -208,13 +228,17 @@ async function loadLuni() {
       const latest = monthsOrder[monthsOrder.length - 1];
       const previous = monthsOrder[monthsOrder.length - 2];
       document.getElementById("selectLuna1").value = latest;
-      document.getElementById("selectLuna1End").value = latest;
       document.getElementById("selectLuna2").value = previous;
+      document.getElementById("selectLuna1Start").value = latest;
+      document.getElementById("selectLuna1End").value = latest;
+      document.getElementById("selectLuna2Start").value = previous;
       document.getElementById("selectLuna2End").value = previous;
     } else if (monthsOrder.length === 1) {
       document.getElementById("selectLuna1").value = monthsOrder[0];
-      document.getElementById("selectLuna1End").value = monthsOrder[0];
       document.getElementById("selectLuna2").value = monthsOrder[0];
+      document.getElementById("selectLuna1Start").value = monthsOrder[0];
+      document.getElementById("selectLuna1End").value = monthsOrder[0];
+      document.getElementById("selectLuna2Start").value = monthsOrder[0];
       document.getElementById("selectLuna2End").value = monthsOrder[0];
     }
 
@@ -236,46 +260,37 @@ function parseRangeInputs(startId, endId) {
   return { start: end, end: start };
 }
 
-function isPeriodRangeMode() {
-  const checkbox = document.getElementById('usePeriodRanges');
+function isPeriodMode() {
+  const checkbox = document.getElementById('usePeriodMode');
   return !!(checkbox && checkbox.checked);
 }
 
-function parseOptionalRange(monthId, endId) {
+function parseMonthInput(monthId) {
   const month = document.getElementById(monthId).value;
   if (!month) return null;
-
-  if (isPeriodRangeMode()) {
-    return parseRangeInputs(monthId, endId);
-  }
-
   return { start: month, end: month };
 }
 
 function getComparisonRanges() {
+  if (isPeriodMode()) {
+    return {
+      range1: parseRangeInputs("selectLuna1Start", "selectLuna1End"),
+      range2: parseRangeInputs("selectLuna2Start", "selectLuna2End")
+    };
+  }
+
   return {
-    range1: parseOptionalRange("selectLuna1", "selectLuna1End"),
-    range2: parseOptionalRange("selectLuna2", "selectLuna2End")
+    range1: parseMonthInput("selectLuna1"),
+    range2: parseMonthInput("selectLuna2")
   };
 }
 
-function syncPeriodModeUi() {
-  const useRanges = isPeriodRangeMode();
-  ['range1EndControl', 'range2EndControl'].forEach(function (controlId) {
-    const control = document.getElementById(controlId);
-    if (control) control.hidden = !useRanges;
-  });
-
-  const labelPairs = [
-    { start: 'selectLuna1', end: 'selectLuna1End', month: 'Luna 1', periodStart: 'Perioada 1 (de la)', periodEnd: 'Perioada 1 (până la)' },
-    { start: 'selectLuna2', end: 'selectLuna2End', month: 'Luna 2', periodStart: 'Perioada 2 (de la)', periodEnd: 'Perioada 2 (până la)' }
-  ];
-  labelPairs.forEach(function (pair) {
-    const startLabel = document.querySelector('label[for="' + pair.start + '"]');
-    const endLabel = document.querySelector('label[for="' + pair.end + '"]');
-    if (startLabel) startLabel.textContent = useRanges ? pair.periodStart : pair.month;
-    if (endLabel && useRanges) endLabel.textContent = pair.periodEnd;
-  });
+function syncModeVisibility() {
+  const usePeriod = isPeriodMode();
+  const monthControls = document.getElementById('monthsCompareControls');
+  const rangeControls = document.getElementById('rangeCompareControls');
+  if (monthControls) monthControls.hidden = usePeriod;
+  if (rangeControls) rangeControls.hidden = !usePeriod;
 }
 
 function monthLabelFromYm(ym) {
@@ -560,13 +575,13 @@ function updateTable(data1, data2) {
 document.addEventListener("DOMContentLoaded", () => {
   const excelBtn = document.getElementById('comparareExportExcelBtn');
   const pdfBtn = document.getElementById('comparareExportPdfBtn');
-  const periodCheckbox = document.getElementById('usePeriodRanges');
+  const periodCheckbox = document.getElementById('usePeriodMode');
   if (periodCheckbox) {
     periodCheckbox.addEventListener('change', function () {
-      syncPeriodModeUi();
+      syncModeVisibility();
       updateComparare();
     });
-    syncPeriodModeUi();
+    syncModeVisibility();
   }
 
   if (excelBtn) {
