@@ -7,32 +7,35 @@
 @section('content')
 <div class="rapoarte-page">
   <p class="rapoarte-lead">
-    Compară două luni (implicit luna curentă vs. luna anterioară). Bifează „Perioadă” pentru a compara două intervale de luni (de la – până la).
+    Compară două luni. Bifează <strong>Perioadă</strong> doar dacă vrei intervale de luni (de la – până la).
   </p>
 
-  <label class="rapoarte-period-toggle" for="usePeriodMode">
-    <input type="checkbox" id="usePeriodMode" name="use_period_mode" value="1">
-    <span><i class="fas fa-calendar-week" aria-hidden="true"></i> Perioadă</span>
-  </label>
+  <div class="rapoarte-filters" id="rapoarteFilters" data-mode="months">
+    <div class="rapoarte-filters-toolbar">
+      <label class="rapoarte-period-toggle" for="usePeriodMode">
+        <input type="checkbox" id="usePeriodMode" name="use_period_mode" value="1">
+        <span><i class="fas fa-calendar-week" aria-hidden="true"></i> Perioadă</span>
+      </label>
+    </div>
 
-  <div class="rapoarte-periods-grid" id="monthsCompareControls">
-    <div class="month-selector-modern">
-      <div class="month-selector-wrapper">
-        <i class="fas fa-calendar-day" aria-hidden="true"></i>
-        <label for="selectLuna1">Luna 1</label>
-        <select id="selectLuna1" class="dashboard-month-select"></select>
+    <div class="rapoarte-filters-panel rapoarte-periods-grid" id="monthsCompareControls">
+      <div class="month-selector-modern">
+        <div class="month-selector-wrapper">
+          <i class="fas fa-calendar-day" aria-hidden="true"></i>
+          <label for="selectLuna1">Luna 1</label>
+          <select id="selectLuna1" class="dashboard-month-select"></select>
+        </div>
+      </div>
+      <div class="month-selector-modern">
+        <div class="month-selector-wrapper">
+          <i class="fas fa-calendar-check" aria-hidden="true"></i>
+          <label for="selectLuna2">Luna 2</label>
+          <select id="selectLuna2" class="dashboard-month-select"></select>
+        </div>
       </div>
     </div>
-    <div class="month-selector-modern">
-      <div class="month-selector-wrapper">
-        <i class="fas fa-calendar-check" aria-hidden="true"></i>
-        <label for="selectLuna2">Luna 2</label>
-        <select id="selectLuna2" class="dashboard-month-select"></select>
-      </div>
-    </div>
-  </div>
 
-  <div class="rapoarte-periods-grid rapoarte-periods-grid--range" id="rangeCompareControls" hidden>
+    <div class="rapoarte-filters-panel rapoarte-periods-grid rapoarte-periods-grid--range" id="rangeCompareControls" aria-hidden="true">
     <div class="month-selector-modern">
       <div class="month-selector-wrapper">
         <i class="fas fa-calendar-day" aria-hidden="true"></i>
@@ -60,6 +63,7 @@
         <label for="selectLuna2End">Perioada 2 (până la)</label>
         <select id="selectLuna2End" class="dashboard-month-select"></select>
       </div>
+    </div>
     </div>
   </div>
 
@@ -287,10 +291,21 @@ function getComparisonRanges() {
 
 function syncModeVisibility() {
   const usePeriod = isPeriodMode();
+  const filtersRoot = document.getElementById('rapoarteFilters');
   const monthControls = document.getElementById('monthsCompareControls');
   const rangeControls = document.getElementById('rangeCompareControls');
-  if (monthControls) monthControls.hidden = usePeriod;
-  if (rangeControls) rangeControls.hidden = !usePeriod;
+
+  if (filtersRoot) {
+    filtersRoot.dataset.mode = usePeriod ? 'period' : 'months';
+  }
+  if (monthControls) {
+    monthControls.hidden = usePeriod;
+    monthControls.setAttribute('aria-hidden', usePeriod ? 'true' : 'false');
+  }
+  if (rangeControls) {
+    rangeControls.hidden = !usePeriod;
+    rangeControls.setAttribute('aria-hidden', usePeriod ? 'false' : 'true');
+  }
 }
 
 function monthLabelFromYm(ym) {

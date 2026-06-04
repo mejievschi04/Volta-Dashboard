@@ -2672,22 +2672,41 @@ select option {
   margin: 0 0 var(--space-6);
 }
 
+.rapoarte-filters {
+  margin-bottom: var(--space-6);
+}
+
+.rapoarte-filters-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: var(--space-4);
+}
+
+.rapoarte-filters[data-mode="months"] #rangeCompareControls {
+  display: none !important;
+}
+
+.rapoarte-filters[data-mode="period"] #monthsCompareControls {
+  display: none !important;
+}
+
+.rapoarte-filters-panel[hidden] {
+  display: none !important;
+}
+
 .rapoarte-periods-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(14px, 2vw, 20px);
-  margin-bottom: var(--space-6);
-}
-
-.rapoarte-periods-grid[hidden] {
-  display: none;
 }
 
 .rapoarte-period-toggle {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin: 0 0 var(--space-4);
+  margin: 0;
   padding: 8px 12px;
   border: 1px solid var(--border-primary);
   border-radius: 8px;
