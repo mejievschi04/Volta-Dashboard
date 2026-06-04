@@ -2672,6 +2672,53 @@ select option {
   margin: 0 0 var(--space-6);
 }
 
+.rapoarte-mode-switch {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  margin: 0 0 var(--space-4);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+}
+
+.rapoarte-mode-option {
+  min-width: 128px;
+  cursor: pointer;
+}
+
+.rapoarte-mode-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.rapoarte-mode-option span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  transition: background var(--transition), color var(--transition), box-shadow var(--transition);
+}
+
+.rapoarte-mode-option input:checked + span {
+  background: var(--brand);
+  color: #000;
+  box-shadow: var(--shadow-sm);
+}
+
+.rapoarte-mode-option input:focus-visible + span {
+  outline: 2px solid rgba(var(--brand-rgb), 0.45);
+  outline-offset: 2px;
+}
+
 .rapoarte-periods-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2679,11 +2726,23 @@ select option {
   margin-bottom: var(--space-6);
 }
 
+.rapoarte-periods-grid[hidden] {
+  display: none;
+}
+
 .rapoarte-periods-grid .month-selector-modern {
   margin-bottom: 0;
 }
 
 @media (max-width: 768px) {
+  .rapoarte-mode-switch {
+    width: 100%;
+  }
+
+  .rapoarte-mode-option {
+    min-width: 0;
+  }
+
   .rapoarte-periods-grid {
     grid-template-columns: 1fr;
   }
@@ -3588,4 +3647,3 @@ select option {
   color: var(--text-tertiary);
   line-height: 1.5;
 }
-

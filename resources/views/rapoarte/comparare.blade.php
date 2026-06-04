@@ -7,10 +7,38 @@
 @section('content')
 <div class="rapoarte-page">
   <p class="rapoarte-lead">
-    Alege două intervale de luni pentru a compara KPI-uri, grafice și diferențe — același limbaj vizual ca în restul dashboardului.
+    Compară două luni direct, iar când ai nevoie poți trece pe intervale de luni pentru KPI-uri agregate, grafice și diferențe.
   </p>
 
-  <div class="rapoarte-periods-grid">
+  <div class="rapoarte-mode-switch" aria-label="Tip comparare">
+    <label class="rapoarte-mode-option">
+      <input type="radio" name="comparareMode" value="months" checked>
+      <span><i class="fas fa-calendar-day" aria-hidden="true"></i> Luni</span>
+    </label>
+    <label class="rapoarte-mode-option">
+      <input type="radio" name="comparareMode" value="range">
+      <span><i class="fas fa-calendar-week" aria-hidden="true"></i> Interval</span>
+    </label>
+  </div>
+
+  <div class="rapoarte-periods-grid rapoarte-periods-grid--months" id="monthsCompareControls">
+    <div class="month-selector-modern">
+      <div class="month-selector-wrapper">
+        <i class="fas fa-calendar-day" aria-hidden="true"></i>
+        <label for="selectLuna1">Luna 1</label>
+        <select id="selectLuna1" class="dashboard-month-select"></select>
+      </div>
+    </div>
+    <div class="month-selector-modern">
+      <div class="month-selector-wrapper">
+        <i class="fas fa-calendar-check" aria-hidden="true"></i>
+        <label for="selectLuna2">Luna 2</label>
+        <select id="selectLuna2" class="dashboard-month-select"></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="rapoarte-periods-grid rapoarte-periods-grid--range" id="rangeCompareControls" hidden>
     <div class="month-selector-modern">
       <div class="month-selector-wrapper">
         <i class="fas fa-calendar-day" aria-hidden="true"></i>
@@ -184,11 +212,13 @@ async function loadLuni() {
       : [];
 
     const selects = [
+      document.getElementById("selectLuna1"),
+      document.getElementById("selectLuna2"),
       document.getElementById("selectLuna1Start"),
       document.getElementById("selectLuna1End"),
       document.getElementById("selectLuna2Start"),
       document.getElementById("selectLuna2End")
-    ];
+    ].filter(Boolean);
 
     selects.forEach(function (select) { select.innerHTML = ''; });
     (luniPayload.luni || []).forEach(function (luna) {
@@ -203,11 +233,15 @@ async function loadLuni() {
     if (monthsOrder.length >= 2) {
       const latest = monthsOrder[monthsOrder.length - 1];
       const previous = monthsOrder[monthsOrder.length - 2];
+      document.getElementById("selectLuna1").value = latest;
+      document.getElementById("selectLuna2").value = previous;
       document.getElementById("selectLuna1Start").value = latest;
       document.getElementById("selectLuna1End").value = latest;
       document.getElementById("selectLuna2Start").value = previous;
       document.getElementById("selectLuna2End").value = previous;
     } else if (monthsOrder.length === 1) {
+      document.getElementById("selectLuna1").value = monthsOrder[0];
+      document.getElementById("selectLuna2").value = monthsOrder[0];
       document.getElementById("selectLuna1Start").value = monthsOrder[0];
       document.getElementById("selectLuna1End").value = monthsOrder[0];
       document.getElementById("selectLuna2Start").value = monthsOrder[0];
@@ -230,6 +264,39 @@ function parseRangeInputs(startId, endId) {
   if (!start || !end) return null;
   if (start <= end) return { start: start, end: end };
   return { start: end, end: start };
+}
+
+function parseMonthInput(monthId) {
+  const month = document.getElementById(monthId).value;
+  if (!month) return null;
+  return { start: month, end: month };
+}
+
+function getCompareMode() {
+  const checked = document.querySelector('input[name="comparareMode"]:checked');
+  return checked ? checked.value : 'months';
+}
+
+function getComparisonRanges() {
+  if (getCompareMode() === 'range') {
+    return {
+      range1: parseRangeInputs("selectLuna1Start", "selectLuna1End"),
+      range2: parseRangeInputs("selectLuna2Start", "selectLuna2End")
+    };
+  }
+
+  return {
+    range1: parseMonthInput("selectLuna1"),
+    range2: parseMonthInput("selectLuna2")
+  };
+}
+
+function syncModeVisibility() {
+  const useRange = getCompareMode() === 'range';
+  const monthControls = document.getElementById('monthsCompareControls');
+  const rangeControls = document.getElementById('rangeCompareControls');
+  if (monthControls) monthControls.hidden = useRange;
+  if (rangeControls) rangeControls.hidden = !useRange;
 }
 
 function monthLabelFromYm(ym) {
@@ -305,8 +372,7 @@ function aggregateRangeKpi(range) {
 
 // ---------------- UPDATE COMPARARE ---------------- 
 async function updateComparare() {
-  const range1 = parseRangeInputs("selectLuna1Start", "selectLuna1End");
-  const range2 = parseRangeInputs("selectLuna2Start", "selectLuna2End");
+  const { range1, range2 } = getComparisonRanges();
   if (!range1 || !range2) return;
 
   try {
@@ -515,6 +581,14 @@ function updateTable(data1, data2) {
 document.addEventListener("DOMContentLoaded", () => {
   const excelBtn = document.getElementById('comparareExportExcelBtn');
   const pdfBtn = document.getElementById('comparareExportPdfBtn');
+  document.querySelectorAll('input[name="comparareMode"]').forEach(function (input) {
+    input.addEventListener('change', function () {
+      syncModeVisibility();
+      updateComparare();
+    });
+  });
+  syncModeVisibility();
+
   if (excelBtn) {
     excelBtn.addEventListener('click', function () {
       const table = document.getElementById('comparareTable');
@@ -532,13 +606,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   if (pdfBtn) {
     pdfBtn.addEventListener('click', function () {
-      const range1 = parseRangeInputs("selectLuna1Start", "selectLuna1End");
-      const range2 = parseRangeInputs("selectLuna2Start", "selectLuna2End");
+      const { range1, range2 } = getComparisonRanges();
       if (!range1 || !range2) {
-        alert('Selectează ambele intervale.');
+        alert('Selectează ambele perioade.');
         return;
       }
       const params = new URLSearchParams({
+        mode: getCompareMode(),
         luna1: range1.start,
         luna2: range2.start,
         luna1_start: range1.start,
