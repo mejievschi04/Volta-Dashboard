@@ -2679,30 +2679,39 @@ select option {
   margin-bottom: var(--space-6);
 }
 
-.rapoarte-range-button {
+.rapoarte-period-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 36px;
-  padding: 8px 12px;
+  gap: 10px;
   margin: 0 0 var(--space-4);
+  padding: 8px 12px;
   border: 1px solid var(--border-primary);
   border-radius: 8px;
   background: var(--bg-elevated);
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
+  user-select: none;
   transition: border-color var(--transition), background var(--transition), color var(--transition);
 }
 
-.rapoarte-range-button.is-active {
+.rapoarte-period-toggle:has(input:checked) {
   border-color: rgba(var(--brand-rgb), 0.5);
   background: rgba(var(--brand-rgb), 0.12);
   color: var(--brand);
 }
 
-.rapoarte-range-button:focus-visible {
+.rapoarte-period-toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--brand);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.rapoarte-period-toggle:focus-within {
   outline: 2px solid rgba(var(--brand-rgb), 0.45);
   outline-offset: 2px;
 }

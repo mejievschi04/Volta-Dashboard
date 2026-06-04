@@ -7,13 +7,13 @@
 @section('content')
 <div class="rapoarte-page">
   <p class="rapoarte-lead">
-    Compară două luni direct. Pentru intervale, activează opțiunea Interval dintr-un singur click.
+    Compară două luni (implicit luna curentă vs. luna anterioară). Bifează opțiunea de mai jos pentru a compara intervale de luni.
   </p>
 
-  <button type="button" class="rapoarte-range-button" id="toggleRangesBtn" aria-pressed="false">
-    <i class="fas fa-calendar-week" aria-hidden="true"></i>
-    Interval
-  </button>
+  <label class="rapoarte-period-toggle" for="usePeriodRanges">
+    <input type="checkbox" id="usePeriodRanges" name="use_period_ranges" value="1">
+    <span>Compară perioadă (interval de luni)</span>
+  </label>
 
   <div class="rapoarte-periods-grid">
     <div class="rapoarte-period-card">
@@ -236,11 +236,16 @@ function parseRangeInputs(startId, endId) {
   return { start: end, end: start };
 }
 
-function parseOptionalRange(monthId, endId, toggleId) {
+function isPeriodRangeMode() {
+  const checkbox = document.getElementById('usePeriodRanges');
+  return !!(checkbox && checkbox.checked);
+}
+
+function parseOptionalRange(monthId, endId) {
   const month = document.getElementById(monthId).value;
   if (!month) return null;
 
-  if (document.getElementById(toggleId).getAttribute('aria-pressed') === 'true') {
+  if (isPeriodRangeMode()) {
     return parseRangeInputs(monthId, endId);
   }
 
@@ -249,19 +254,28 @@ function parseOptionalRange(monthId, endId, toggleId) {
 
 function getComparisonRanges() {
   return {
-    range1: parseOptionalRange("selectLuna1", "selectLuna1End", "toggleRangesBtn"),
-    range2: parseOptionalRange("selectLuna2", "selectLuna2End", "toggleRangesBtn")
+    range1: parseOptionalRange("selectLuna1", "selectLuna1End"),
+    range2: parseOptionalRange("selectLuna2", "selectLuna2End")
   };
 }
 
-function syncOptionalRanges() {
-  const toggle = document.getElementById('toggleRangesBtn');
-  const useRanges = toggle && toggle.getAttribute('aria-pressed') === 'true';
+function syncPeriodModeUi() {
+  const useRanges = isPeriodRangeMode();
   ['range1EndControl', 'range2EndControl'].forEach(function (controlId) {
     const control = document.getElementById(controlId);
     if (control) control.hidden = !useRanges;
   });
-  if (toggle) toggle.classList.toggle('is-active', useRanges);
+
+  const labelPairs = [
+    { start: 'selectLuna1', end: 'selectLuna1End', month: 'Luna 1', periodStart: 'Perioada 1 (de la)', periodEnd: 'Perioada 1 (până la)' },
+    { start: 'selectLuna2', end: 'selectLuna2End', month: 'Luna 2', periodStart: 'Perioada 2 (de la)', periodEnd: 'Perioada 2 (până la)' }
+  ];
+  labelPairs.forEach(function (pair) {
+    const startLabel = document.querySelector('label[for="' + pair.start + '"]');
+    const endLabel = document.querySelector('label[for="' + pair.end + '"]');
+    if (startLabel) startLabel.textContent = useRanges ? pair.periodStart : pair.month;
+    if (endLabel && useRanges) endLabel.textContent = pair.periodEnd;
+  });
 }
 
 function monthLabelFromYm(ym) {
@@ -546,15 +560,13 @@ function updateTable(data1, data2) {
 document.addEventListener("DOMContentLoaded", () => {
   const excelBtn = document.getElementById('comparareExportExcelBtn');
   const pdfBtn = document.getElementById('comparareExportPdfBtn');
-  const rangeToggleBtn = document.getElementById('toggleRangesBtn');
-  if (rangeToggleBtn) {
-    rangeToggleBtn.addEventListener('click', function () {
-      const nextValue = rangeToggleBtn.getAttribute('aria-pressed') !== 'true';
-      rangeToggleBtn.setAttribute('aria-pressed', nextValue ? 'true' : 'false');
-      syncOptionalRanges();
+  const periodCheckbox = document.getElementById('usePeriodRanges');
+  if (periodCheckbox) {
+    periodCheckbox.addEventListener('change', function () {
+      syncPeriodModeUi();
       updateComparare();
     });
-    syncOptionalRanges();
+    syncPeriodModeUi();
   }
 
   if (excelBtn) {
