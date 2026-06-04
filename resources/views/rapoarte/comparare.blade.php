@@ -7,8 +7,13 @@
 @section('content')
 <div class="rapoarte-page">
   <p class="rapoarte-lead">
-    Compară două luni direct. Dacă ai nevoie de o comparație pe interval, bifează opțiunea Interval lângă luna respectivă.
+    Compară două luni direct. Pentru intervale, activează opțiunea Interval dintr-un singur click.
   </p>
+
+  <button type="button" class="rapoarte-range-button" id="toggleRangesBtn" aria-pressed="false">
+    <i class="fas fa-calendar-week" aria-hidden="true"></i>
+    Interval
+  </button>
 
   <div class="rapoarte-periods-grid">
     <div class="rapoarte-period-card">
@@ -17,11 +22,6 @@
         <label for="selectLuna1">Luna 1</label>
         <select id="selectLuna1" class="dashboard-month-select"></select>
       </div>
-
-      <label class="rapoarte-range-toggle" for="useRange1">
-        <input type="checkbox" id="useRange1">
-        <span><i class="fas fa-calendar-week" aria-hidden="true"></i> Interval</span>
-      </label>
 
       <div class="month-selector-wrapper rapoarte-range-end" id="range1EndControl" hidden>
         <i class="fas fa-calendar-check" aria-hidden="true"></i>
@@ -36,11 +36,6 @@
         <label for="selectLuna2">Luna 2</label>
         <select id="selectLuna2" class="dashboard-month-select"></select>
       </div>
-
-      <label class="rapoarte-range-toggle" for="useRange2">
-        <input type="checkbox" id="useRange2">
-        <span><i class="fas fa-calendar-week" aria-hidden="true"></i> Interval</span>
-      </label>
 
       <div class="month-selector-wrapper rapoarte-range-end" id="range2EndControl" hidden>
         <i class="fas fa-calendar-check" aria-hidden="true"></i>
@@ -245,7 +240,7 @@ function parseOptionalRange(monthId, endId, toggleId) {
   const month = document.getElementById(monthId).value;
   if (!month) return null;
 
-  if (document.getElementById(toggleId).checked) {
+  if (document.getElementById(toggleId).getAttribute('aria-pressed') === 'true') {
     return parseRangeInputs(monthId, endId);
   }
 
@@ -254,16 +249,19 @@ function parseOptionalRange(monthId, endId, toggleId) {
 
 function getComparisonRanges() {
   return {
-    range1: parseOptionalRange("selectLuna1", "selectLuna1End", "useRange1"),
-    range2: parseOptionalRange("selectLuna2", "selectLuna2End", "useRange2")
+    range1: parseOptionalRange("selectLuna1", "selectLuna1End", "toggleRangesBtn"),
+    range2: parseOptionalRange("selectLuna2", "selectLuna2End", "toggleRangesBtn")
   };
 }
 
-function syncOptionalRange(toggleId, controlId) {
-  const toggle = document.getElementById(toggleId);
-  const control = document.getElementById(controlId);
-  if (!toggle || !control) return;
-  control.hidden = !toggle.checked;
+function syncOptionalRanges() {
+  const toggle = document.getElementById('toggleRangesBtn');
+  const useRanges = toggle && toggle.getAttribute('aria-pressed') === 'true';
+  ['range1EndControl', 'range2EndControl'].forEach(function (controlId) {
+    const control = document.getElementById(controlId);
+    if (control) control.hidden = !useRanges;
+  });
+  if (toggle) toggle.classList.toggle('is-active', useRanges);
 }
 
 function monthLabelFromYm(ym) {
@@ -548,18 +546,16 @@ function updateTable(data1, data2) {
 document.addEventListener("DOMContentLoaded", () => {
   const excelBtn = document.getElementById('comparareExportExcelBtn');
   const pdfBtn = document.getElementById('comparareExportPdfBtn');
-  [
-    { toggleId: 'useRange1', controlId: 'range1EndControl' },
-    { toggleId: 'useRange2', controlId: 'range2EndControl' }
-  ].forEach(function (item) {
-    const toggle = document.getElementById(item.toggleId);
-    if (!toggle) return;
-    toggle.addEventListener('change', function () {
-      syncOptionalRange(item.toggleId, item.controlId);
+  const rangeToggleBtn = document.getElementById('toggleRangesBtn');
+  if (rangeToggleBtn) {
+    rangeToggleBtn.addEventListener('click', function () {
+      const nextValue = rangeToggleBtn.getAttribute('aria-pressed') !== 'true';
+      rangeToggleBtn.setAttribute('aria-pressed', nextValue ? 'true' : 'false');
+      syncOptionalRanges();
       updateComparare();
     });
-    syncOptionalRange(item.toggleId, item.controlId);
-  });
+    syncOptionalRanges();
+  }
 
   if (excelBtn) {
     excelBtn.addEventListener('click', function () {

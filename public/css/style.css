@@ -2679,48 +2679,37 @@ select option {
   margin-bottom: var(--space-6);
 }
 
-.rapoarte-period-card {
-  display: grid;
-  gap: 10px;
-}
-
-.rapoarte-range-toggle {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  cursor: pointer;
-}
-
-.rapoarte-range-toggle input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.rapoarte-range-toggle span {
+.rapoarte-range-button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 34px;
-  padding: 7px 11px;
+  min-height: 36px;
+  padding: 8px 12px;
+  margin: 0 0 var(--space-4);
   border: 1px solid var(--border-primary);
   border-radius: 8px;
   background: var(--bg-elevated);
   color: var(--text-secondary);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   font-weight: 700;
+  cursor: pointer;
   transition: border-color var(--transition), background var(--transition), color var(--transition);
 }
 
-.rapoarte-range-toggle input:checked + span {
+.rapoarte-range-button.is-active {
   border-color: rgba(var(--brand-rgb), 0.5);
   background: rgba(var(--brand-rgb), 0.12);
   color: var(--brand);
 }
 
-.rapoarte-range-toggle input:focus-visible + span {
+.rapoarte-range-button:focus-visible {
   outline: 2px solid rgba(var(--brand-rgb), 0.45);
   outline-offset: 2px;
+}
+
+.rapoarte-period-card {
+  display: grid;
+  gap: 10px;
 }
 
 .rapoarte-range-end[hidden] {
