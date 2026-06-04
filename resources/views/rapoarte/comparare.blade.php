@@ -7,63 +7,44 @@
 @section('content')
 <div class="rapoarte-page">
   <p class="rapoarte-lead">
-    Compară două luni direct, iar când ai nevoie poți trece pe intervale de luni pentru KPI-uri agregate, grafice și diferențe.
+    Compară două luni direct. Dacă ai nevoie de o comparație pe interval, bifează opțiunea Interval lângă luna respectivă.
   </p>
 
-  <div class="rapoarte-mode-switch" aria-label="Tip comparare">
-    <label class="rapoarte-mode-option">
-      <input type="radio" name="comparareMode" value="months" checked>
-      <span><i class="fas fa-calendar-day" aria-hidden="true"></i> Luni</span>
-    </label>
-    <label class="rapoarte-mode-option">
-      <input type="radio" name="comparareMode" value="range">
-      <span><i class="fas fa-calendar-week" aria-hidden="true"></i> Interval</span>
-    </label>
-  </div>
-
-  <div class="rapoarte-periods-grid rapoarte-periods-grid--months" id="monthsCompareControls">
-    <div class="month-selector-modern">
+  <div class="rapoarte-periods-grid">
+    <div class="rapoarte-period-card">
       <div class="month-selector-wrapper">
         <i class="fas fa-calendar-day" aria-hidden="true"></i>
         <label for="selectLuna1">Luna 1</label>
         <select id="selectLuna1" class="dashboard-month-select"></select>
       </div>
-    </div>
-    <div class="month-selector-modern">
-      <div class="month-selector-wrapper">
-        <i class="fas fa-calendar-check" aria-hidden="true"></i>
-        <label for="selectLuna2">Luna 2</label>
-        <select id="selectLuna2" class="dashboard-month-select"></select>
-      </div>
-    </div>
-  </div>
 
-  <div class="rapoarte-periods-grid rapoarte-periods-grid--range" id="rangeCompareControls" hidden>
-    <div class="month-selector-modern">
-      <div class="month-selector-wrapper">
-        <i class="fas fa-calendar-day" aria-hidden="true"></i>
-        <label for="selectLuna1Start">Perioada 1 (de la)</label>
-        <select id="selectLuna1Start" class="dashboard-month-select"></select>
-      </div>
-    </div>
-    <div class="month-selector-modern">
-      <div class="month-selector-wrapper">
+      <label class="rapoarte-range-toggle" for="useRange1">
+        <input type="checkbox" id="useRange1">
+        <span><i class="fas fa-calendar-week" aria-hidden="true"></i> Interval</span>
+      </label>
+
+      <div class="month-selector-wrapper rapoarte-range-end" id="range1EndControl" hidden>
         <i class="fas fa-calendar-check" aria-hidden="true"></i>
-        <label for="selectLuna1End">Perioada 1 (până la)</label>
+        <label for="selectLuna1End">Luna 1 până la</label>
         <select id="selectLuna1End" class="dashboard-month-select"></select>
       </div>
     </div>
-    <div class="month-selector-modern">
+
+    <div class="rapoarte-period-card">
       <div class="month-selector-wrapper">
         <i class="fas fa-calendar-day" aria-hidden="true"></i>
-        <label for="selectLuna2Start">Perioada 2 (de la)</label>
-        <select id="selectLuna2Start" class="dashboard-month-select"></select>
+        <label for="selectLuna2">Luna 2</label>
+        <select id="selectLuna2" class="dashboard-month-select"></select>
       </div>
-    </div>
-    <div class="month-selector-modern">
-      <div class="month-selector-wrapper">
+
+      <label class="rapoarte-range-toggle" for="useRange2">
+        <input type="checkbox" id="useRange2">
+        <span><i class="fas fa-calendar-week" aria-hidden="true"></i> Interval</span>
+      </label>
+
+      <div class="month-selector-wrapper rapoarte-range-end" id="range2EndControl" hidden>
         <i class="fas fa-calendar-check" aria-hidden="true"></i>
-        <label for="selectLuna2End">Perioada 2 (până la)</label>
+        <label for="selectLuna2End">Luna 2 până la</label>
         <select id="selectLuna2End" class="dashboard-month-select"></select>
       </div>
     </div>
@@ -115,8 +96,8 @@
         <thead>
           <tr>
             <th>Indicator</th>
-            <th id="period1Header">Perioada 1</th>
-            <th id="period2Header">Perioada 2</th>
+            <th id="period1Header">Luna 1</th>
+            <th id="period2Header">Luna 2</th>
             <th>Diferență</th>
             <th>Diferență %</th>
           </tr>
@@ -213,10 +194,8 @@ async function loadLuni() {
 
     const selects = [
       document.getElementById("selectLuna1"),
-      document.getElementById("selectLuna2"),
-      document.getElementById("selectLuna1Start"),
       document.getElementById("selectLuna1End"),
-      document.getElementById("selectLuna2Start"),
+      document.getElementById("selectLuna2"),
       document.getElementById("selectLuna2End")
     ].filter(Boolean);
 
@@ -234,17 +213,13 @@ async function loadLuni() {
       const latest = monthsOrder[monthsOrder.length - 1];
       const previous = monthsOrder[monthsOrder.length - 2];
       document.getElementById("selectLuna1").value = latest;
-      document.getElementById("selectLuna2").value = previous;
-      document.getElementById("selectLuna1Start").value = latest;
       document.getElementById("selectLuna1End").value = latest;
-      document.getElementById("selectLuna2Start").value = previous;
+      document.getElementById("selectLuna2").value = previous;
       document.getElementById("selectLuna2End").value = previous;
     } else if (monthsOrder.length === 1) {
       document.getElementById("selectLuna1").value = monthsOrder[0];
-      document.getElementById("selectLuna2").value = monthsOrder[0];
-      document.getElementById("selectLuna1Start").value = monthsOrder[0];
       document.getElementById("selectLuna1End").value = monthsOrder[0];
-      document.getElementById("selectLuna2Start").value = monthsOrder[0];
+      document.getElementById("selectLuna2").value = monthsOrder[0];
       document.getElementById("selectLuna2End").value = monthsOrder[0];
     }
 
@@ -266,37 +241,29 @@ function parseRangeInputs(startId, endId) {
   return { start: end, end: start };
 }
 
-function parseMonthInput(monthId) {
+function parseOptionalRange(monthId, endId, toggleId) {
   const month = document.getElementById(monthId).value;
   if (!month) return null;
+
+  if (document.getElementById(toggleId).checked) {
+    return parseRangeInputs(monthId, endId);
+  }
+
   return { start: month, end: month };
 }
 
-function getCompareMode() {
-  const checked = document.querySelector('input[name="comparareMode"]:checked');
-  return checked ? checked.value : 'months';
-}
-
 function getComparisonRanges() {
-  if (getCompareMode() === 'range') {
-    return {
-      range1: parseRangeInputs("selectLuna1Start", "selectLuna1End"),
-      range2: parseRangeInputs("selectLuna2Start", "selectLuna2End")
-    };
-  }
-
   return {
-    range1: parseMonthInput("selectLuna1"),
-    range2: parseMonthInput("selectLuna2")
+    range1: parseOptionalRange("selectLuna1", "selectLuna1End", "useRange1"),
+    range2: parseOptionalRange("selectLuna2", "selectLuna2End", "useRange2")
   };
 }
 
-function syncModeVisibility() {
-  const useRange = getCompareMode() === 'range';
-  const monthControls = document.getElementById('monthsCompareControls');
-  const rangeControls = document.getElementById('rangeCompareControls');
-  if (monthControls) monthControls.hidden = useRange;
-  if (rangeControls) rangeControls.hidden = !useRange;
+function syncOptionalRange(toggleId, controlId) {
+  const toggle = document.getElementById(toggleId);
+  const control = document.getElementById(controlId);
+  if (!toggle || !control) return;
+  control.hidden = !toggle.checked;
 }
 
 function monthLabelFromYm(ym) {
@@ -581,13 +548,18 @@ function updateTable(data1, data2) {
 document.addEventListener("DOMContentLoaded", () => {
   const excelBtn = document.getElementById('comparareExportExcelBtn');
   const pdfBtn = document.getElementById('comparareExportPdfBtn');
-  document.querySelectorAll('input[name="comparareMode"]').forEach(function (input) {
-    input.addEventListener('change', function () {
-      syncModeVisibility();
+  [
+    { toggleId: 'useRange1', controlId: 'range1EndControl' },
+    { toggleId: 'useRange2', controlId: 'range2EndControl' }
+  ].forEach(function (item) {
+    const toggle = document.getElementById(item.toggleId);
+    if (!toggle) return;
+    toggle.addEventListener('change', function () {
+      syncOptionalRange(item.toggleId, item.controlId);
       updateComparare();
     });
+    syncOptionalRange(item.toggleId, item.controlId);
   });
-  syncModeVisibility();
 
   if (excelBtn) {
     excelBtn.addEventListener('click', function () {
@@ -608,11 +580,10 @@ document.addEventListener("DOMContentLoaded", () => {
     pdfBtn.addEventListener('click', function () {
       const { range1, range2 } = getComparisonRanges();
       if (!range1 || !range2) {
-        alert('Selectează ambele perioade.');
+        alert('Selectează ambele luni.');
         return;
       }
       const params = new URLSearchParams({
-        mode: getCompareMode(),
         luna1: range1.start,
         luna2: range2.start,
         luna1_start: range1.start,
