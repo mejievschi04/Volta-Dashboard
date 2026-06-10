@@ -137,24 +137,45 @@ class KpiController extends Controller
         }
     }
 
-    public function updatePlan(Request $request)
+    public function showPlan(Request $request)
     {
-        // Verifică dacă utilizatorul este admin
-        if (!Auth::check()) {
-            return response()->json([
-                'success' => false,
-                'error' => 'Nu sunteți autentificat.'
-            ], 401);
+        if ($response = $this->denyPlanEditUnlessAdmin()) {
+            return $response;
         }
 
-        $user = Auth::user();
-        $role = strtolower($user->role ?? '');
-        
-        if ($role !== 'admin' && $role !== 'administrator') {
+        $request->validate([
+            'month' => 'required|string|regex:/^\d{4}-\d{2}$/',
+        ], [
+            'month.required' => 'Luna este obligatorie.',
+            'month.regex' => 'Formatul lunii trebuie să fie YYYY-MM.',
+        ]);
+
+        try {
+            $luna = $request->get('month');
+            $planLuna = $this->planValueForMonthKey($luna);
+
+            return response()->json([
+                'success' => true,
+                'month' => $luna,
+                'plan_luna' => $planLuna,
+            ]);
+        } catch (\InvalidArgumentException $e) {
             return response()->json([
                 'success' => false,
-                'error' => 'Nu aveți permisiunea de a actualiza planul.'
-            ], 403);
+                'error' => $e->getMessage(),
+            ], 400);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function updatePlan(Request $request)
+    {
+        if ($response = $this->denyPlanEditUnlessAdmin()) {
+            return $response;
         }
 
         $request->validate([
@@ -171,32 +192,12 @@ class KpiController extends Controller
         try {
             $luna = $request->get('month');
             $valoare = floatval($request->get('valoare'));
-            
-            // Parsează luna
-            $parts = explode('-', $luna);
-            $an = intval($parts[0]);
-            $lunaNum = intval($parts[1]);
-            
-            // Convertim numărul lunii în numele lunii în română
-            $luniRomana = [
-                1 => 'Ianuarie', 2 => 'Februarie', 3 => 'Martie', 4 => 'Aprilie',
-                5 => 'Mai', 6 => 'Iunie', 7 => 'Iulie', 8 => 'August',
-                9 => 'Septembrie', 10 => 'Octombrie', 11 => 'Noiembrie', 12 => 'Decembrie'
-            ];
-            $lunaNume = $luniRomana[$lunaNum] ?? '';
-            
-            if (empty($lunaNume)) {
-                return response()->json([
-                    'success' => false,
-                    'error' => 'Lună invalidă.'
-                ], 400);
-            }
-            
-            // Caută sau creează planul pentru luna respectivă
+            [$an, $lunaNume] = $this->parseMonthKey($luna);
+
             $planData = PlanVanzari::where('an', $an)
                 ->where('luna', $lunaNume)
                 ->first();
-            
+
             if ($planData) {
                 $planData->valoare = $valoare;
                 $planData->save();
@@ -204,21 +205,82 @@ class KpiController extends Controller
                 PlanVanzari::create([
                     'an' => $an,
                     'luna' => $lunaNume,
-                    'valoare' => $valoare
+                    'valoare' => $valoare,
                 ]);
             }
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Planul a fost actualizat cu succes.',
-                'plan_luna' => $valoare
+                'plan_luna' => $valoare,
             ]);
-            
+        } catch (\InvalidArgumentException $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 400);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    private function denyPlanEditUnlessAdmin()
+    {
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Nu sunteți autentificat.',
+            ], 401);
+        }
+
+        $role = strtolower(Auth::user()->role ?? '');
+        if ($role !== 'admin' && $role !== 'administrator') {
+            return response()->json([
+                'success' => false,
+                'error' => 'Nu aveți permisiunea de a actualiza planul.',
+            ], 403);
+        }
+
+        return null;
+    }
+
+    private function parseMonthKey(string $luna): array
+    {
+        $parts = explode('-', $luna);
+        if (count($parts) !== 2) {
+            throw new \InvalidArgumentException('Formatul lunii trebuie să fie YYYY-MM.');
+        }
+
+        $an = intval($parts[0]);
+        $lunaNum = intval($parts[1]);
+        $lunaNume = $this->luniRomana()[$lunaNum] ?? '';
+
+        if ($an < 2000 || $an > 2100 || $lunaNume === '') {
+            throw new \InvalidArgumentException('Lună invalidă.');
+        }
+
+        return [$an, $lunaNume];
+    }
+
+    private function planValueForMonthKey(string $luna): float
+    {
+        [$an, $lunaNume] = $this->parseMonthKey($luna);
+        $planData = PlanVanzari::where('an', $an)
+            ->where('luna', $lunaNume)
+            ->first();
+
+        return $planData ? floatval($planData->valoare) : 0.0;
+    }
+
+    private function luniRomana(): array
+    {
+        return [
+            1 => 'Ianuarie', 2 => 'Februarie', 3 => 'Martie', 4 => 'Aprilie',
+            5 => 'Mai', 6 => 'Iunie', 7 => 'Iulie', 8 => 'August',
+            9 => 'Septembrie', 10 => 'Octombrie', 11 => 'Noiembrie', 12 => 'Decembrie',
+        ];
     }
 }
