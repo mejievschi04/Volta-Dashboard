@@ -28,27 +28,23 @@
     </div>
     <span class="operator-team-kpi-badge" id="operator-kpi-month-label">{{ $lunaCurentaLabel }}</span>
   </div>
-  <div class="operator-team-kpi-grid">
-    <article class="operator-team-kpi-card operator-team-kpi-card--sales">
-      <span class="operator-team-kpi-card__icon" aria-hidden="true"><i class="fas fa-shopping-cart"></i></span>
-      <h3 class="operator-team-kpi-card__label">Vânzări fără TVA</h3>
-      <div class="operator-team-kpi-card__value" id="operator-vanzari-luna">-</div>
-    </article>
-    <article class="operator-team-kpi-card operator-team-kpi-card--plan">
-      <span class="operator-team-kpi-card__icon" aria-hidden="true"><i class="fas fa-bullseye"></i></span>
-      <h3 class="operator-team-kpi-card__label">Plan luna curentă</h3>
-      <div class="operator-team-kpi-card__value" id="operator-plan-luna">-</div>
-    </article>
-    <article class="operator-team-kpi-card operator-team-kpi-card--progress">
-      <span class="operator-team-kpi-card__icon" aria-hidden="true"><i class="fas fa-chart-line"></i></span>
-      <h3 class="operator-team-kpi-card__label">Progres plan</h3>
-      <div class="operator-team-kpi-card__value" id="operator-progres-plan">-</div>
-    </article>
-    <article class="operator-team-kpi-card operator-team-kpi-card--forecast">
-      <span class="operator-team-kpi-card__icon" aria-hidden="true"><i class="fas fa-chart-area"></i></span>
-      <h3 class="operator-team-kpi-card__label">Prognoză plan</h3>
-      <div class="operator-team-kpi-card__value operator-team-kpi-card__value--percent" id="operator-prognoza-plan">-</div>
-    </article>
+  <div class="kpi-grid operator-team-kpi-grid">
+    <div class="card">
+      <h4>Vânzări fără TVA</h4>
+      <div class="value" id="operator-vanzari-luna">-</div>
+    </div>
+    <div class="card">
+      <h4>Plan luna curentă</h4>
+      <div class="value" id="operator-plan-luna">-</div>
+    </div>
+    <div class="card">
+      <h4>Progres plan</h4>
+      <div class="value" id="operator-progres-plan">-</div>
+    </div>
+    <div class="card">
+      <h4>Prognoză plan</h4>
+      <div class="value" id="operator-prognoza-plan">-</div>
+    </div>
   </div>
 </section>
 
@@ -260,12 +256,11 @@ document.addEventListener('DOMContentLoaded', function() {
     return new Intl.NumberFormat('ro-RO').format(val || 0);
   }
 
-  function formatMdl(value) {
-    return '<span class="operator-kpi-amount">' + formatNumber(value) + '<span class="operator-kpi-unit">MDL</span></span>';
-  }
-
-  function formatPercent(value) {
-    return '<span class="operator-kpi-amount">' + formatNumber(value) + '<span class="operator-kpi-unit">%</span></span>';
+  function formatValue(value, suffix) {
+    const suffixHtml = suffix
+      ? '<span style="font-size:18px;color:var(--muted);font-weight:600;margin-left:4px;">' + suffix + '</span>'
+      : '';
+    return '<span style="display:inline-flex;align-items:baseline;flex-wrap:wrap;">' + formatNumber(value) + suffixHtml + '</span>';
   }
 
   async function loadTeamKpi() {
@@ -275,10 +270,10 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!kpiData.success) return;
 
       const map = {
-        'operator-vanzari-luna': formatMdl(kpiData.vanzari_luna || 0),
-        'operator-plan-luna': formatMdl(kpiData.plan_luna || 0),
-        'operator-progres-plan': formatPercent(kpiData.progres_plan || 0),
-        'operator-prognoza-plan': formatPercent(kpiData.prognoza_plan_procent || 0),
+        'operator-vanzari-luna': formatValue(kpiData.vanzari_luna || 0, 'MDL'),
+        'operator-plan-luna': formatValue(kpiData.plan_luna || 0, 'MDL'),
+        'operator-progres-plan': formatValue(kpiData.progres_plan || 0, '%'),
+        'operator-prognoza-plan': formatValue(kpiData.prognoza_plan_procent || 0, '%'),
       };
 
       Object.keys(map).forEach(function(id) {
