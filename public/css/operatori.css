@@ -792,44 +792,176 @@ body.operator-portal {
 .operator-me-empty__hint { margin: 0; color: #94a3b8; font-size: 13px; }
 
 .operator-team-kpi {
-  margin-bottom: 24px;
+  margin-bottom: clamp(20px, 3vw, 28px);
 }
 
 .operator-team-kpi-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 16px;
+  margin-bottom: clamp(14px, 2.5vw, 18px);
+}
+
+.operator-team-kpi-heading {
+  min-width: 0;
+  flex: 1 1 220px;
 }
 
 .operator-team-kpi-header h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: clamp(1.05rem, 2.4vw, 1.25rem);
   font-weight: 700;
   color: #fff;
   display: flex;
   align-items: center;
   gap: 10px;
+  line-height: 1.25;
+}
+
+.operator-team-kpi-subtitle {
+  margin: 6px 0 0;
+  color: #94a3b8;
+  font-size: clamp(0.78rem, 1.8vw, 0.875rem);
+  line-height: 1.4;
 }
 
 .operator-team-kpi-header h2 i {
   color: var(--brand, #ffee00);
+  flex-shrink: 0;
 }
 
 .operator-team-kpi-badge {
+  flex-shrink: 0;
   background: rgba(255, 238, 0, 0.12);
   color: var(--brand, #ffee00);
   border: 1px solid rgba(255, 238, 0, 0.35);
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: clamp(0.75rem, 1.8vw, 0.8125rem);
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .operator-team-kpi-grid {
-  padding-bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(10px, 2vw, 16px);
+}
+
+.operator-team-kpi-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 132px;
+  padding: clamp(14px, 2.5vw, 18px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(160deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.88) 100%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.operator-team-kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
+.operator-team-kpi-card__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.operator-team-kpi-card--sales .operator-team-kpi-card__icon {
+  background: rgba(59, 130, 246, 0.18);
+  color: #60a5fa;
+}
+
+.operator-team-kpi-card--plan .operator-team-kpi-card__icon {
+  background: rgba(255, 238, 0, 0.16);
+  color: var(--brand, #ffee00);
+}
+
+.operator-team-kpi-card--progress .operator-team-kpi-card__icon {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+}
+
+.operator-team-kpi-card--forecast .operator-team-kpi-card__icon {
+  background: rgba(139, 92, 246, 0.18);
+  color: #a78bfa;
+}
+
+.operator-team-kpi-card__label {
+  margin: 0;
+  color: #94a3b8;
+  font-size: clamp(0.72rem, 1.7vw, 0.8125rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+}
+
+.operator-team-kpi-card__value {
+  margin-top: auto;
+  color: #f8fafc;
+  font-size: clamp(1.05rem, 2.8vw, 1.45rem);
+  font-weight: 800;
+  line-height: 1.15;
+  word-break: break-word;
+}
+
+.operator-team-kpi-card__value--percent {
+  color: #c4b5fd;
+}
+
+.operator-kpi-amount {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 100%;
+}
+
+.operator-kpi-unit {
+  font-size: 0.62em;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 1100px) {
+  .operator-team-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .operator-team-kpi-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .operator-team-kpi-badge {
+    align-self: flex-start;
+  }
+
+  .operator-team-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .operator-team-kpi-card {
+    min-height: 0;
+  }
 }
 
 html[data-theme="dark-red"] .operator-portal .operator-nav-wordmark-stats,
