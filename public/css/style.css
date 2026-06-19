@@ -1,12 +1,12 @@
 :root {
   /* Volta Academy dark (dark-theme.css + design-system) */
-  --bg-sidebar-toggle: rgb(17, 24, 39);
-  --bg-sidebar-toggle-hover: rgb(15, 23, 42);
-  --bg-primary: rgb(15, 23, 42);
-  --bg-secondary: rgb(30, 41, 59);
-  --bg-tertiary: rgb(51, 65, 85);
-  --bg-elevated: rgb(30, 41, 59);
-  --bg-surface: rgb(30, 41, 59);
+  --bg-sidebar-toggle: rgb(6, 12, 26);
+  --bg-sidebar-toggle-hover: rgb(8, 15, 32);
+  --bg-primary: rgb(8, 15, 32);
+  --bg-secondary: rgb(22, 24, 32);
+  --bg-tertiary: rgb(34, 38, 49);
+  --bg-elevated: rgb(26, 29, 38);
+  --bg-surface: rgb(26, 29, 38);
 
   --text-primary: rgb(248, 250, 252);
   --text-secondary: rgb(203, 213, 225);
@@ -14,8 +14,8 @@
   --text-disabled: rgb(100, 116, 139);
   --text-inverse: rgb(15, 23, 42);
 
-  --border-primary: rgb(51, 65, 85);
-  --border-secondary: rgb(71, 85, 105);
+  --border-primary: rgb(56, 62, 77);
+  --border-secondary: rgb(78, 87, 105);
 
   /* Alias folosiți în restul fișierului */
   --bg: var(--bg-primary);
@@ -92,6 +92,31 @@ html[data-theme="dark"] {
   color-scheme: dark;
 }
 
+html[data-theme="dark-red"] {
+  color-scheme: dark;
+  --bg-sidebar-toggle: #0f0b0c;
+  --bg-sidebar-toggle-hover: #120d0f;
+  --bg-primary: #0f0b0c;
+  --bg-secondary: #1a1215;
+  --bg-tertiary: #26191e;
+  --bg-elevated: #1a1215;
+  --bg-surface: #1a1215;
+
+  --text-primary: #f5f3f4;
+  --text-secondary: #d8cfd2;
+  --text-tertiary: #b8aab0;
+
+  --border-primary: #3a242b;
+  --border-secondary: #5a343f;
+
+  --brand: #c1121f;
+  --brand-dark: #a00f1a;
+  --brand-on-dark: #f5f3f4;
+  --brand-10: rgba(193, 18, 31, 0.12);
+  --brand-20: rgba(193, 18, 31, 0.2);
+  --brand-30: rgba(193, 18, 31, 0.3);
+}
+
 /* Fundal pagină — gradient ca Volta Academy (splash / dark) */
 html[data-theme="dark"]::before {
   content: "";
@@ -107,8 +132,27 @@ html[data-theme="dark"]::before {
   );
 }
 
+html[data-theme="dark-red"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    #0f0b0c 0%,
+    #140f11 55%,
+    #1a1215 100%
+  );
+}
+
 html[data-theme="dark"],
 html[data-theme="dark"] body {
+  background-color: transparent;
+}
+
+html[data-theme="dark-red"],
+html[data-theme="dark-red"] body {
   background-color: transparent;
 }
 
@@ -402,9 +446,29 @@ h1 {
   body.sidebar-collapsed .logout-container,
   html.sidebar-collapsed .logout-container {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    gap: 8px;
     padding-left: 8px;
     padding-right: 8px;
+  }
+
+  body.sidebar-collapsed .sidebar-mobile-entry,
+  html.sidebar-collapsed .sidebar-mobile-entry {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    padding: 0;
+    border-radius: 12px;
+    font-size: 0;
+    gap: 0;
+  }
+
+  body.sidebar-collapsed .sidebar-mobile-entry i,
+  html.sidebar-collapsed .sidebar-mobile-entry i {
+    margin: 0;
+    font-size: 16px;
   }
 
   body.sidebar-collapsed .logout-btn,
@@ -2030,6 +2094,54 @@ select option {
   background: var(--bg-sidebar-toggle);
   position: sticky;
   bottom: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.sidebar-mobile-entry {
+  width: 100%;
+  text-decoration: none;
+  padding: 11px 14px;
+  border-radius: var(--card-radius);
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  transition: transform var(--transition), background-color var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.sidebar-mobile-entry--mobile {
+  border: 1px solid rgba(255, 238, 0, 0.38);
+  background: linear-gradient(165deg, rgba(255, 238, 0, 0.16) 0%, rgba(255, 238, 0, 0.08) 100%);
+  color: #fde047;
+}
+
+.sidebar-mobile-entry--mobile:hover {
+  color: #fff8bf;
+  border-color: rgba(255, 238, 0, 0.62);
+  background: linear-gradient(165deg, rgba(255, 238, 0, 0.22) 0%, rgba(255, 238, 0, 0.11) 100%);
+}
+
+.sidebar-mobile-entry--back {
+  border: 1px solid rgba(59, 130, 246, 0.42);
+  background: linear-gradient(165deg, rgba(37, 99, 235, 0.25) 0%, rgba(29, 78, 216, 0.16) 100%);
+  color: #bfdbfe;
+}
+
+.sidebar-mobile-entry--back:hover {
+  border-color: rgba(96, 165, 250, 0.62);
+  background: linear-gradient(165deg, rgba(37, 99, 235, 0.33) 0%, rgba(29, 78, 216, 0.2) 100%);
+  color: #eff6ff;
+}
+
+.sidebar-mobile-entry:active {
+  transform: scale(0.99);
+}
+
+.sidebar-mobile-entry i {
+  font-size: 15px;
 }
 
 .logout-btn {
@@ -2168,8 +2280,8 @@ select option {
 .chart-container {
   background: linear-gradient(
     155deg,
-    rgba(30, 41, 59, 0.98) 0%,
-    rgba(15, 23, 42, 0.55) 100%
+    rgba(30, 34, 44, 0.98) 0%,
+    rgba(18, 20, 28, 0.65) 100%
   ) !important;
   border: 1px solid rgba(148, 163, 184, 0.14);
   border-radius: calc(var(--card-radius) + 4px);
@@ -2225,8 +2337,8 @@ select option {
 }
 
 .chart-panel__icon--sky {
-  background: linear-gradient(145deg, rgba(56, 189, 248, 0.22), rgba(59, 130, 246, 0.06));
-  color: #7dd3fc;
+  background: linear-gradient(145deg, rgba(180, 188, 204, 0.24), rgba(120, 130, 150, 0.08));
+  color: #d4dae4;
 }
 
 .chart-panel__titles {
@@ -2272,7 +2384,7 @@ select option {
   cursor: pointer;
   border-radius: 12px;
   padding: 6px 4px 2px;
-  background: rgba(15, 23, 42, 0.35);
+  background: rgba(24, 27, 36, 0.52);
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -2306,7 +2418,7 @@ select option {
 .dashboard-chart-modal__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(18, 20, 28, 0.62);
   backdrop-filter: blur(4px);
   cursor: pointer;
 }
@@ -2320,9 +2432,9 @@ select option {
   flex-direction: column;
   background: linear-gradient(
     165deg,
-    rgba(51, 65, 85, 0.97) 0%,
-    rgba(30, 41, 59, 0.98) 50%,
-    rgba(30, 41, 59, 0.99) 100%
+    rgba(44, 49, 61, 0.97) 0%,
+    rgba(30, 34, 44, 0.98) 50%,
+    rgba(26, 29, 38, 0.99) 100%
   );
   border: 1px solid rgba(255, 238, 0, 0.18);
   border-radius: calc(var(--card-radius, 12px) + 6px);
@@ -2381,13 +2493,88 @@ select option {
   height: min(72vh, 640px);
   min-height: 280px;
   border-radius: 12px;
-  background: rgba(15, 23, 42, 0.45);
+  background: rgba(24, 27, 36, 0.58);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .dashboard-chart-modal__chart-wrap canvas {
   width: 100% !important;
   height: 100% !important;
+}
+
+/* Modal plan lunar (dashboard, admin) */
+.dashboard-plan-modal__panel {
+  width: min(96vw, 480px);
+  max-height: none;
+}
+
+.dashboard-plan-modal__body {
+  padding: 16px 20px 22px;
+}
+
+.dashboard-plan-modal__lead {
+  margin: 0 0 var(--space-4);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+.dashboard-plan-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.dashboard-plan-form__field label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+.dashboard-plan-form__field--wide {
+  grid-column: 1 / -1;
+}
+
+.dashboard-plan-form__input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--card-radius);
+  padding: 12px 14px;
+  color: var(--text-primary);
+  font-size: 1.125rem;
+  font-weight: 700;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.dashboard-plan-form__input:focus {
+  border-color: rgba(var(--brand-rgb), 0.55);
+  box-shadow: 0 0 0 2px rgba(var(--brand-rgb), 0.15);
+}
+
+.dashboard-plan-form__hint {
+  min-height: 1.25rem;
+  margin: 12px 0 0;
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.dashboard-plan-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: var(--space-5);
+}
+
+@media (max-width: 480px) {
+  .dashboard-plan-form__grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* === Optimizări mobile pentru Dashboard === */
@@ -2560,19 +2747,76 @@ select option {
   margin: 0 0 var(--space-6);
 }
 
+.rapoarte-filters {
+  margin-bottom: var(--space-6);
+}
+
+.rapoarte-filters-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: var(--space-4);
+}
+
+.rapoarte-filters[data-mode="months"] #rangeCompareControls {
+  display: none !important;
+}
+
+.rapoarte-filters[data-mode="period"] #monthsCompareControls {
+  display: none !important;
+}
+
+.rapoarte-filters-panel[hidden] {
+  display: none !important;
+}
+
 .rapoarte-periods-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(14px, 2vw, 20px);
-  margin-bottom: var(--space-6);
 }
 
-.rapoarte-periods-grid .month-selector-modern {
-  margin-bottom: 0;
+.rapoarte-period-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color var(--transition), background var(--transition), color var(--transition);
+}
+
+.rapoarte-period-toggle:has(input:checked) {
+  border-color: rgba(var(--brand-rgb), 0.5);
+  background: rgba(var(--brand-rgb), 0.12);
+  color: var(--brand);
+}
+
+.rapoarte-period-toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--brand);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.rapoarte-period-toggle:focus-within {
+  outline: 2px solid rgba(var(--brand-rgb), 0.45);
+  outline-offset: 2px;
 }
 
 @media (max-width: 768px) {
-  .rapoarte-periods-grid {
+  .rapoarte-periods-grid,
+  .rapoarte-periods-grid--range {
     grid-template-columns: 1fr;
   }
 }
@@ -3207,8 +3451,8 @@ select option {
 }
 
 .raport-lunar-panel__icon--chat {
-  color: #7dd3fc;
-  background: linear-gradient(145deg, rgba(56, 189, 248, 0.2), rgba(59, 130, 246, 0.06));
+  color: #d4dae4;
+  background: linear-gradient(145deg, rgba(180, 188, 204, 0.24), rgba(120, 130, 150, 0.08));
 }
 
 .raport-lunar-panel__icon--phone {
@@ -3419,8 +3663,8 @@ select option {
 }
 
 .raport-lunar-empty--info .raport-lunar-empty__icon {
-  background: rgba(59, 130, 246, 0.18);
-  color: #93c5fd;
+  background: rgba(180, 188, 204, 0.2);
+  color: #d4dae4;
 }
 
 .raport-lunar-empty--info a {
@@ -3476,4 +3720,3 @@ select option {
   color: var(--text-tertiary);
   line-height: 1.5;
 }
-

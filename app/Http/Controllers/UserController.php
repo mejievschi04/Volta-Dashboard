@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -27,7 +28,7 @@ class UserController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'name' => 'nullable|string|max:255',
             'full_name' => 'nullable|string|max:255',
-            'role' => 'nullable|string|max:50',
+            'role' => ['nullable', 'string', Rule::in(['user', 'admin', 'administrator', 'operator', 'operatori', 'dev'])],
             'operator_nume' => 'nullable|string|max:255',
         ]);
 
@@ -60,7 +61,7 @@ class UserController extends Controller
             'password' => 'nullable|string|min:6|confirmed',
             'name' => 'nullable|string|max:255',
             'full_name' => 'nullable|string|max:255',
-            'role' => 'nullable|string|max:50',
+            'role' => ['nullable', 'string', Rule::in(['user', 'admin', 'administrator', 'operator', 'operatori', 'dev'])],
             'operator_nume' => 'nullable|string|max:255',
         ]);
 

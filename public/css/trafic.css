@@ -1,4 +1,5 @@
 :root {
+  --brand-rgb: 255, 238, 0;
     --sidebar-width: 280px;
 }
 .body{
@@ -79,7 +80,7 @@
   margin: 0 0 30px;
   font-size: 32px;
   font-weight: 800;
-  color: #FFEE00;
+  color: var(--brand);
   letter-spacing: -0.5px;
 }
 
@@ -102,9 +103,9 @@
   padding: 10px 15px;
   font-size: 14px;
   border-radius: 8px;
-  border: 2px solid rgba(255, 238, 0, 0.3);
+  border: 2px solid rgba(var(--brand-rgb), 0.3);
   background: rgba(31, 41, 55, 0.5);
-  color: #FFEE00;
+  color: var(--brand);
   font-weight: 600;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -165,7 +166,7 @@
   margin-bottom: 20px;
   font-size: 18px;
   font-weight: 700;
-  color: #FFEE00;
+  color: var(--brand);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -580,7 +581,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--source-color, #ffee00);
+  background: var(--source-color, var(--brand));
   opacity: .85;
 }
 
@@ -616,7 +617,7 @@
 }
 
 /* Culori discrete pe surse (fără stiluri hard pe onclick) */
-.trafic-source-total { --source-color: #ffee00; }
+.trafic-source-total { --source-color: var(--brand); }
 .trafic-source-google { --source-color: #34d399; }
 .trafic-source-google_cpc { --source-color: #a78bfa; }
 .trafic-source-direct { --source-color: #fbbf24; }
@@ -709,7 +710,7 @@
 }
 
 .modal h5 {
-  color: #FFEE00;
+  color: var(--brand);
   font-size: 24px;
   font-weight: 800;
   margin: 0 0 25px;
@@ -728,14 +729,14 @@
 
 .modal th,
 .modal td {
-  border: 1px solid rgba(255, 238, 0, 0.2);
+  border: 1px solid rgba(var(--brand-rgb), 0.2);
   padding: 12px;
   text-align: center;
 }
 
 .modal th {
   background: var(--bg-soft);
-  color: #FFEE00;
+  color: var(--brand);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -750,14 +751,14 @@
 
 .modal tr:hover td {
   background: var(--bg-soft);
-  color: #FFEE00;
+  color: var(--brand);
 }
 
 /* === Buton sincronizare === */
 .sync-btn {
-  background: #ffee00;
+  background: var(--brand);
   color: #000;
-  border: 2px solid #ffee00;
+  border: 2px solid var(--brand);
   padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
@@ -789,8 +790,8 @@
 .sync-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
-  background: #FFEE00;
-  border-color: #FFEE00;
+  background: var(--brand);
+  border-color: var(--brand);
 }
 .sync-btn:active {
   transform: translateY(0);
@@ -810,9 +811,9 @@
 
 /* === Buton grafic lunar === */
 .monthly-chart-btn {
-  background: #ffee00;
+  background: var(--brand);
   color: #000;
-  border: 2px solid #ffee00;
+  border: 2px solid var(--brand);
   padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
@@ -848,8 +849,8 @@
 .monthly-chart-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
-  background: #FFEE00;
-  border-color: #FFEE00;
+  background: var(--brand);
+  border-color: var(--brand);
 }
 
 .monthly-chart-btn:active {
@@ -863,7 +864,7 @@
   padding: 20px;
   border-radius: 12px;
   background: rgba(31, 41, 55, 0.4);
-  border: 1px solid rgba(255, 238, 0, 0.2);
+  border: 1px solid rgba(var(--brand-rgb), 0.2);
   color: #ffffff;
   font-size: 14px;
   line-height: 1.6;
@@ -881,7 +882,7 @@
 }
 
 #syncStatus strong {
-  color: #FFEE00;
+  color: var(--brand);
   font-weight: 700;
 }
 
@@ -908,14 +909,14 @@
 }
 
 #syncStatus.info {
-  background: linear-gradient(135deg, rgba(255, 238, 0, 0.1) 0%, rgba(255, 238, 0, 0.05) 100%);
-  color: #FFEE00;
+  background: linear-gradient(135deg, rgba(var(--brand-rgb), 0.1) 0%, rgba(var(--brand-rgb), 0.05) 100%);
+  color: var(--brand);
   border: 1px solid rgb(51, 65, 85);
   box-shadow: none;
 }
 
 #syncStatus.info h6 {
-  color: #FFEE00;
+  color: var(--brand);
 }
 
 #syncStatus small,
@@ -970,9 +971,9 @@
   min-height: 44px;
   padding: 10px 14px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 238, 0, 0.28);
-  background: rgba(255, 238, 0, 0.08);
-  color: var(--brand, #ffee00);
+  border: 1px solid rgba(var(--brand-rgb), 0.28);
+  background: rgba(var(--brand-rgb), 0.08);
+  color: var(--brand, var(--brand));
   font-size: 13px;
   font-weight: 700;
   display: inline-flex;
@@ -983,20 +984,20 @@
 }
 
 .trafic-action-btn:hover {
-  background: rgba(255, 238, 0, 0.16);
-  border-color: rgba(255, 238, 0, 0.46);
+  background: rgba(var(--brand-rgb), 0.16);
+  border-color: rgba(var(--brand-rgb), 0.46);
   color: #fff;
 }
 
 .trafic-action-btn--primary {
-  background: linear-gradient(135deg, #facc15 0%, #ffee00 55%, #e6d600 100%);
+  background: linear-gradient(135deg, #facc15 0%, var(--brand) 55%, #e6d600 100%);
   color: #0a0a0a;
-  border: 1px solid rgba(255, 238, 0, 0.3);
+  border: 1px solid rgba(var(--brand-rgb), 0.3);
 }
 
 .trafic-action-btn--primary:hover {
   color: #0a0a0a;
-  background: linear-gradient(135deg, #fdd835 0%, #ffee00 55%, #facc15 100%);
+  background: linear-gradient(135deg, #fdd835 0%, var(--brand) 55%, #facc15 100%);
 }
 
 .trafic-card {
@@ -1017,7 +1018,7 @@
 }
 
 .trafic-section-title i {
-  color: var(--brand, #ffee00);
+  color: var(--brand, var(--brand));
 }
 
 .trafic-back-link {
@@ -1028,14 +1029,14 @@
   margin-bottom: 14px;
   border-radius: 10px;
   text-decoration: none;
-  background: rgba(255, 238, 0, 0.08);
-  border: 1px solid rgba(255, 238, 0, 0.25);
-  color: var(--brand, #ffee00);
+  background: rgba(var(--brand-rgb), 0.08);
+  border: 1px solid rgba(var(--brand-rgb), 0.25);
+  color: var(--brand, var(--brand));
   font-weight: 600;
 }
 
 .trafic-back-link:hover {
-  background: rgba(255, 238, 0, 0.16);
+  background: rgba(var(--brand-rgb), 0.16);
   color: #fff;
 }
 
@@ -1052,7 +1053,7 @@
   margin: 0 0 20px !important;
   font-size: clamp(1.5rem, 2.8vw, 2rem) !important;
   letter-spacing: -0.03em !important;
-  color: var(--brand, #ffee00) !important;
+  color: var(--brand, var(--brand)) !important;
 }
 
 .trafic-subpage.analiza-page h1::after {
@@ -1078,7 +1079,7 @@
 .trafic-subpage .section h2 i,
 .trafic-subpage .stats-general-card h3 i,
 .trafic-subpage .menu-header h3 i {
-  color: var(--brand, #ffee00) !important;
+  color: var(--brand, var(--brand)) !important;
 }
 
 .trafic-subpage .data-table th,
@@ -1115,4 +1116,9 @@
     width: 100%;
     justify-content: center;
   }
+}
+
+
+html[data-theme=dark-red] {
+  --brand-rgb: 193, 18, 31;
 }

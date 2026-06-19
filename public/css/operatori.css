@@ -17,11 +17,11 @@ body.operator-portal {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.45;
+  opacity: 0.38;
   background:
     radial-gradient(ellipse 120% 80% at 50% -20%, rgba(255, 238, 0, 0.12), transparent 50%),
-    radial-gradient(ellipse 60% 50% at 100% 50%, rgba(59, 130, 246, 0.06), transparent 45%),
-    radial-gradient(ellipse 50% 40% at 0% 80%, rgba(139, 92, 246, 0.05), transparent 40%);
+    radial-gradient(ellipse 60% 50% at 100% 50%, rgba(12, 28, 54, 0.22), transparent 52%),
+    radial-gradient(ellipse 50% 40% at 0% 80%, rgba(12, 28, 54, 0.2), transparent 48%);
 }
 
 .operator-portal .operator-nav {
@@ -30,7 +30,7 @@ body.operator-portal {
   z-index: 200;
   padding: 0 clamp(16px, 3vw, 28px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(17, 24, 39, 0.78);
+  background: rgba(14, 16, 24, 0.9);
   backdrop-filter: blur(16px) saturate(1.25);
   -webkit-backdrop-filter: blur(16px) saturate(1.25);
   box-shadow:
@@ -63,7 +63,7 @@ body.operator-portal {
 }
 
 .operator-portal .operator-nav-brand:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.03);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
@@ -74,7 +74,7 @@ body.operator-portal {
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(22, 24, 32, 0.78);
   border: 1px solid rgba(255, 255, 255, 0.08);
   flex-shrink: 0;
 }
@@ -312,6 +312,675 @@ body.operator-portal {
   .operator-portal .operator-nav-links a i {
     margin: 0;
     font-size: 16px;
+  }
+}
+
+/* ========== PORTAL OPERATOR: LIVRARI + SETARI ========== */
+.operator-portal .livrari-page--operator {
+  max-width: 1520px;
+  padding: 8px 0 36px;
+}
+
+.operator-portal .livrari-page--operator .livrari-page-lead {
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.12), transparent 46%),
+    linear-gradient(165deg, rgba(31, 41, 55, 0.94), rgba(15, 23, 42, 0.98));
+}
+
+.operator-portal .livrari-page--operator h1 {
+  font-family: var(--font-wordmark, "Space Grotesk", "Noto Sans", system-ui, sans-serif);
+  font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+  letter-spacing: -0.03em;
+}
+
+.operator-portal .livrari-page--operator .subtitle {
+  margin-bottom: 0;
+  color: #94a3b8;
+}
+
+.operator-portal .livrari-page--operator .livrari-card {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+}
+
+.operator-portal .livrari-page--operator .livrari-card h2 {
+  margin-bottom: 16px;
+}
+
+.operator-portal .livrari-page--operator .livrari-table-wrap,
+.operator-portal .livrari-page--operator .livrari-filters-card {
+  border-color: rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.46);
+}
+
+.operator-portal .livrari-page--operator .livrari-btn,
+.operator-portal .livrari-page--operator .livrari-btn-primary {
+  border-radius: 12px;
+}
+
+.operator-portal .livrari-page--operator .livrari-pagination {
+  margin-top: 24px;
+}
+
+.operator-portal .setari-wrap--operator {
+  max-width: 1120px;
+  padding: 6px 0 36px;
+}
+
+.operator-portal .setari-wrap--operator .setari-operator-card {
+  max-width: 100%;
+  margin: 0 0 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(255, 238, 0, 0.1), transparent 42%),
+    linear-gradient(165deg, rgba(31, 41, 55, 0.94), rgba(15, 23, 42, 0.98));
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+}
+
+.operator-portal .setari-wrap--operator .setari-section-title {
+  color: #f8fafc;
+  font-family: var(--font-wordmark, "Space Grotesk", "Noto Sans", system-ui, sans-serif);
+  letter-spacing: -0.02em;
+}
+
+.operator-portal .setari-wrap--operator .setari-section-title i {
+  color: var(--brand, #ffee00);
+  background: rgba(255, 238, 0, 0.14);
+  border: 1px solid rgba(255, 238, 0, 0.26);
+}
+
+.operator-portal .setari-wrap--operator .setari-photos-hint {
+  color: #94a3b8;
+}
+
+.operator-portal .setari-wrap--operator .setari-photo-btn {
+  border-radius: 12px;
+  background: rgba(255, 238, 0, 0.12);
+}
+
+.operator-portal .setari-wrap--operator .setari-photo-btn:hover {
+  background: rgba(255, 238, 0, 0.22);
+  transform: translateY(-1px);
+}
+
+.operator-portal .setari-wrap--operator .setari-operator-card .form {
+  gap: 16px;
+}
+
+.operator-portal .setari-wrap--operator .field input[type="password"] {
+  border-radius: 12px;
+  border-color: rgba(148, 163, 184, 0.24);
+  color: #e2e8f0;
+}
+
+.operator-portal .setari-wrap--operator .field input[type="password"]:focus {
+  border-color: rgba(255, 238, 0, 0.42);
+  box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.14);
+}
+
+.operator-portal .setari-wrap--operator .btn {
+  border-radius: 12px;
+  font-family: "Noto Sans", system-ui, sans-serif;
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 900px) {
+  .operator-portal .livrari-page--operator {
+    padding-top: 0;
+  }
+
+  .operator-portal .setari-wrap--operator {
+    padding: 0 0 28px;
+  }
+}
+
+/* ========== PORTAL OPERATOR: POLISH FINAL ========== */
+.operator-portal .operator-main {
+  --operator-gap: clamp(14px, 2vw, 22px);
+}
+
+.operator-portal .operator-main :is(.livrari-card, .setari-operator-card, .operator-me-card) {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.operator-portal .operator-main :is(.livrari-card, .setari-operator-card, .operator-me-card):hover {
+  border-color: rgba(255, 238, 0, 0.2);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.30);
+}
+
+.operator-portal .operator-main :is(button, .btn, a, input, select, textarea) {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.operator-portal .operator-main :is(.btn, button):active {
+  transform: translateY(1px);
+}
+
+.operator-portal .operator-main :is(a, button, .btn, input, select, textarea):focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(15, 23, 42, 0.75),
+    0 0 0 4px rgba(255, 238, 0, 0.24);
+}
+
+.operator-portal .operator-main :is(.livrari-card h2, .setari-section-title, .operator-me-card__title) {
+  letter-spacing: -0.015em;
+}
+
+.operator-portal .operator-main :is(.livrari-card, .setari-operator-card, .operator-me-card) + :is(.livrari-card, .setari-operator-card, .operator-me-card) {
+  margin-top: var(--operator-gap);
+}
+
+.operator-portal .operator-main ::placeholder {
+  color: #94a3b8;
+  opacity: 0.9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .operator-portal .operator-main :is(*, *::before, *::after) {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ========== DATELE MELE (operatori/me) ========== */
+.operator-me-flash {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.operator-me-flash--success {
+  color: #ecfdf5;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.32), rgba(52, 211, 153, 0.18));
+  border-color: rgba(52, 211, 153, 0.35);
+}
+
+.operator-me-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.operator-me-hero {
+  position: relative;
+  min-height: 220px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(circle at 85% 25%, rgba(56, 189, 248, 0.16), transparent 45%),
+    radial-gradient(circle at 15% 80%, rgba(167, 139, 250, 0.14), transparent 45%),
+    linear-gradient(160deg, rgba(51, 65, 85, 0.95), rgba(17, 24, 39, 0.98));
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+}
+
+.operator-me-hero--with-cover {
+  background-size: cover;
+  background-position: center;
+}
+
+.operator-me-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.22), rgba(2, 6, 23, 0.72));
+}
+
+.operator-me-hero__identity {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 18px;
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  z-index: 1;
+}
+
+.operator-me-avatar {
+  width: 118px;
+  height: 118px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.22);
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+}
+
+.operator-me-avatar--initial {
+  background-image: linear-gradient(135deg, var(--brand, #ffee00), var(--brand-dark, #facc15));
+  color: #0f172a;
+  font-size: 42px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.operator-me-title {
+  margin: 0 0 8px;
+  color: #fff;
+  font-size: clamp(1.4rem, 2vw, 1.9rem);
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.operator-me-hero__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.operator-me-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 999px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 238, 0, 0.35);
+  background: rgba(2, 6, 23, 0.54);
+  color: var(--brand, #ffee00);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.operator-me-link {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.operator-me-link:hover { color: #fff; }
+
+.operator-me-grid {
+  display: grid;
+  grid-template-columns: minmax(250px, 320px) minmax(0, 1fr);
+  gap: 20px;
+}
+
+.operator-me-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.operator-me-card {
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(160deg, rgba(31, 41, 55, 0.95), rgba(15, 23, 42, 0.98));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.26);
+}
+
+.operator-me-card__title {
+  margin: 0 0 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #f8fafc;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.operator-me-card__title i { color: var(--brand, #ffee00); }
+
+.operator-me-stat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.operator-me-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.operator-me-stat__icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.operator-me-stat__label {
+  color: #94a3b8;
+  font-size: 12px;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.operator-me-stat__value {
+  color: #f8fafc;
+  font-size: 14px;
+}
+
+.operator-me-stat--blue .operator-me-stat__icon { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+.operator-me-stat--green .operator-me-stat__icon { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+.operator-me-stat--brand .operator-me-stat__icon { background: rgba(255, 238, 0, 0.2); color: var(--brand, #ffee00); }
+.operator-me-stat--orange .operator-me-stat__icon { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+.operator-me-stat--violet .operator-me-stat__icon { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+
+.operator-me-totals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.operator-me-total {
+  border-radius: 12px;
+  padding: 14px 12px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.48);
+}
+
+.operator-me-total__label {
+  display: block;
+  color: #94a3b8;
+  font-size: 11px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.operator-me-total__value {
+  color: #f8fafc;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.operator-me-total--green .operator-me-total__value { color: #34d399; }
+.operator-me-total--brand .operator-me-total__value { color: var(--brand, #ffee00); }
+.operator-me-total--orange .operator-me-total__value { color: #f59e0b; }
+.operator-me-total--violet .operator-me-total__value { color: #a78bfa; }
+
+.operator-me-chart-wrap {
+  position: relative;
+  height: 320px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(15, 23, 42, 0.35);
+  padding: 10px;
+}
+
+.operator-me-table-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.operator-me-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.operator-me-table th {
+  text-align: left;
+  padding: 12px 14px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #e2e8f0;
+  background: rgba(255, 238, 0, 0.14);
+  border-bottom: 1px solid rgba(255, 238, 0, 0.22);
+}
+
+.operator-me-table td {
+  padding: 12px 14px;
+  color: #e2e8f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 14px;
+}
+
+.operator-me-table tbody tr:hover { background: rgba(255, 238, 0, 0.08); }
+.operator-me-table__profit { color: #34d399; font-weight: 700; }
+
+.operator-me-empty {
+  margin-top: 12px;
+  border-radius: 16px;
+  border: 2px dashed rgba(148, 163, 184, 0.35);
+  padding: 44px 20px;
+  text-align: center;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.operator-me-empty i {
+  font-size: 48px;
+  color: #94a3b8;
+  margin-bottom: 14px;
+}
+
+.operator-me-empty__title {
+  margin: 0 0 10px;
+  color: #f1f5f9;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.operator-me-empty__text { margin: 0 0 8px; color: #cbd5e1; }
+.operator-me-empty__text strong { color: var(--brand, #ffee00); }
+.operator-me-empty__hint { margin: 0; color: #94a3b8; font-size: 13px; }
+
+.operator-team-kpi {
+  margin-bottom: 24px;
+}
+
+.operator-team-kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.operator-team-kpi-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.operator-team-kpi-header h2 i {
+  color: var(--brand, #ffee00);
+}
+
+.operator-team-kpi-badge {
+  background: rgba(255, 238, 0, 0.12);
+  color: var(--brand, #ffee00);
+  border: 1px solid rgba(255, 238, 0, 0.35);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.operator-team-kpi-grid {
+  padding-bottom: 0;
+}
+
+html[data-theme="dark-red"] .operator-portal .operator-nav-wordmark-stats,
+html[data-theme="dark-red"] .operator-portal .operator-me-card__title i,
+html[data-theme="dark-red"] .operator-portal .operator-me-total--brand .operator-me-total__value,
+html[data-theme="dark-red"] .operator-portal .operator-me-empty__text strong {
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .operator-me-avatar--initial,
+html[data-theme="dark-red"] .operator-portal .operator-nav-links a.active {
+  background: linear-gradient(135deg, #c1121f 0%, #a00f1a 100%);
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .operator-me-badge,
+html[data-theme="dark-red"] .operator-portal .setari-photo-btn,
+html[data-theme="dark-red"] .operator-portal .operator-nav-links a.active {
+  border-color: rgba(193, 18, 31, 0.45);
+}
+
+html[data-theme="dark-red"] .operator-portal .operator-me-badge,
+html[data-theme="dark-red"] .operator-portal .setari-photo-btn {
+  background: rgba(193, 18, 31, 0.14);
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .setari-photo-btn:hover {
+  background: rgba(193, 18, 31, 0.24);
+}
+
+/* Dark-red: tabele si butoane (operator portal) */
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-table th,
+html[data-theme="dark-red"] .operator-portal .operator-me-table th {
+  background: rgba(193, 18, 31, 0.18);
+  border-bottom-color: rgba(193, 18, 31, 0.35);
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-table td,
+html[data-theme="dark-red"] .operator-portal .operator-me-table td {
+  color: #f5f3f4;
+  border-bottom-color: rgba(245, 243, 244, 0.08);
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-table tbody tr:hover,
+html[data-theme="dark-red"] .operator-portal .operator-me-table tbody tr:hover {
+  background: rgba(193, 18, 31, 0.10);
+}
+
+html[data-theme="dark-red"] .operator-portal .operator-me-table__profit {
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-primary,
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .btn,
+html[data-theme="dark-red"] .operator-portal .operator-logout button {
+  background: linear-gradient(135deg, #c1121f 0%, #a00f1a 100%);
+  color: #f5f3f4;
+  border-color: rgba(245, 243, 244, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-primary:hover,
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .btn:hover,
+html[data-theme="dark-red"] .operator-portal .operator-logout button:hover {
+  background: linear-gradient(135deg, #d11a28 0%, #b11320 100%);
+  border-color: rgba(245, 243, 244, 0.35);
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-reset,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-edit,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-delete {
+  border-color: rgba(193, 18, 31, 0.35);
+  color: #f5f3f4;
+  background: rgba(193, 18, 31, 0.12);
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-reset:hover,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-edit:hover,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-btn-delete:hover {
+  background: rgba(193, 18, 31, 0.22);
+  border-color: rgba(193, 18, 31, 0.55);
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-pag__num--current {
+  background: linear-gradient(135deg, #c1121f 0%, #a00f1a 100%);
+  border-color: rgba(245, 243, 244, 0.3);
+  color: #f5f3f4;
+  box-shadow: 0 4px 14px rgba(193, 18, 31, 0.35);
+}
+
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-pag__num--link:hover,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-pag__edge--link:hover {
+  background: rgba(193, 18, 31, 0.16);
+  border-color: rgba(193, 18, 31, 0.42);
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .field input[type="password"],
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .field select,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-search-input,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-filters select,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-perioada-field {
+  border-color: rgba(193, 18, 31, 0.32);
+  background: rgba(26, 18, 21, 0.86);
+  color: #f5f3f4;
+}
+
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .field input[type="password"]:focus,
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .field select:focus,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-search-input:focus,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-filters select:focus,
+html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-perioada-field:focus-within {
+  border-color: rgba(193, 18, 31, 0.58);
+  box-shadow: 0 0 0 2px rgba(193, 18, 31, 0.2);
+}
+
+@media (max-width: 1024px) {
+  .operator-me-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .operator-me-hero {
+    min-height: 210px;
+  }
+
+  .operator-me-hero__identity {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    gap: 12px;
+  }
+
+  .operator-me-avatar {
+    width: 92px;
+    height: 92px;
+  }
+
+  .operator-me-title {
+    font-size: 1.4rem;
+  }
+
+  .operator-me-card {
+    padding: 16px;
+  }
+
+  .operator-me-chart-wrap {
+    height: 280px;
   }
 }
 
@@ -873,7 +1542,7 @@ body.operator-portal {
 
 .operatori-btn-photo:hover {
   background: rgba(0, 0, 0, 0.7);
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   border-color: rgba(255, 238, 0, 0.5);
 }
 
@@ -900,7 +1569,7 @@ body.operator-portal {
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.7);
   color: #fff;
-  border: 2px solid #FFEE00;
+  border: 2px solid var(--brand, #FFEE00);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -910,7 +1579,7 @@ body.operator-portal {
 
 .operatori-btn-avatar-upload:hover {
   background: rgba(255, 238, 0, 0.3);
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
 }
 
 .operatori-sidebar-card-photos {
@@ -945,7 +1614,7 @@ body.operator-portal {
   font-weight: 600;
   border-radius: 10px;
   background: rgba(255, 238, 0, 0.15);
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   border: 1px solid rgba(255, 238, 0, 0.4);
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
@@ -1023,7 +1692,7 @@ body.operator-portal {
 
 .operatori-badge {
   background: rgba(17, 24, 39, 0.9);
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 14px;
@@ -1031,7 +1700,7 @@ body.operator-portal {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #FFEE00;
+  border: 1px solid var(--brand, #FFEE00);
 }
 
 .operatori-detail-grid {
@@ -1133,7 +1802,7 @@ body.operator-portal {
 
 .operatori-stat-row--yellow .operatori-stat-icon {
   background: rgba(255, 238, 0, 0.2);
-  color: #ffee00;
+  color: var(--brand, #ffee00);
 }
 
 .operatori-stat-row--delivery {
@@ -1279,7 +1948,7 @@ body.operator-portal {
 }
 
 .operatori-stat-box--yellow .operatori-stat-value {
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
 }
 
 .operatori-chart-wrap {
@@ -1532,7 +2201,7 @@ body.operator-portal {
 
 .operatori-form-label {
   display: block;
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   margin-bottom: 8px;
   font-weight: 600;
   font-size: 14px;
@@ -1551,7 +2220,7 @@ body.operator-portal {
 }
 
 .operatori-form-input:focus {
-  border-color: #FFEE00;
+  border-color: var(--brand, #FFEE00);
   background: rgba(255, 255, 255, 0.1);
   outline: none;
 }
@@ -1587,7 +2256,7 @@ body.operator-portal {
 
 /* Observații card */
 .operatori-notes-card .operatori-sidebar-title i {
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
 }
 
 .operatori-notes-card p {
@@ -1743,7 +2412,7 @@ body.operator-portal {
 /* ---------- CARD STIL GENERAL ---------- */
 .operator-card {
   background: #1F2937;
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
   padding: 20px;
@@ -1821,16 +2490,16 @@ body.operator-portal {
 
 .back-button a {
   text-decoration: none;
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   font-weight: 600;
   padding: 8px 16px;
-  border: 1px solid #FFEE00;
+  border: 1px solid var(--brand, #FFEE00);
   border-radius: 8px;
   transition: all 0.2s ease;
 }
 
 .back-button a:hover {
-  background: #FFEE00;
+  background: var(--brand, #FFEE00);
   color: #000;
 }
 
@@ -1856,7 +2525,7 @@ body.operator-portal {
   flex: 1 1 calc(33.333% - 10px);
   box-sizing: border-box;
   text-decoration: none;
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   font-weight: 600;
   text-align: center;
 }
@@ -1889,7 +2558,7 @@ body.operator-portal {
   display: flex;
   align-items: center;
   background: #1F2937;
-  color: #FFEE00;
+  color: var(--brand, #FFEE00);
   border-radius: 12px;
   padding: 15px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -1900,7 +2569,7 @@ body.operator-portal {
   font-size: 24px;
   font-weight: 700;
   margin-right: 15px;
-  color: #FFEE00; /* aurie pentru locul 1 */
+  color: var(--brand, #FFEE00); /* aurie pentru locul 1 */
   background-color: #dc2626;
   padding: 5px 5px 5px 5px;
   border-radius: 100%;
@@ -2175,7 +2844,7 @@ body.operator-portal {
     width: 100% !important;
   }
   
-  div[style*="color: #FFEE00; font-weight: 700; font-size: 18px; margin-left: 16px"] {
+  div[style*="color: var(--brand, #FFEE00); font-weight: 700; font-size: 18px; margin-left: 16px"] {
     font-size: 10px !important;
     margin-left: 0 !important;
     margin-top: 2px !important;
@@ -2310,7 +2979,7 @@ body.operator-portal {
     width: 100% !important;
   }
   
-  div[style*="color: #FFEE00; font-weight: 700; font-size: 18px; margin-left: 16px"] {
+  div[style*="color: var(--brand, #FFEE00); font-weight: 700; font-size: 18px; margin-left: 16px"] {
     font-size: 11px !important;
     margin-left: 0 !important;
     margin-top: 2px !important;
@@ -2412,7 +3081,7 @@ body.operator-portal {
     width: 100% !important;
   }
   
-  div[style*="color: #FFEE00; font-weight: 700; font-size: 18px; margin-left: 16px"] {
+  div[style*="color: var(--brand, #FFEE00); font-weight: 700; font-size: 18px; margin-left: 16px"] {
     font-size: 9px !important;
     margin-left: 0 !important;
     margin-top: 2px !important;

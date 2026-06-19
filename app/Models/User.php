@@ -31,6 +31,7 @@ class User extends Authenticatable
         'currency',
         'language',
         'country',
+        'theme',
     ];
 
     /** Utilizatorul este operator (vede doar pagina „Datele mele”). */
@@ -38,6 +39,18 @@ class User extends Authenticatable
     {
         $role = strtolower((string) ($this->role ?? ''));
         return $role === 'operator' || $role === 'operatori';
+    }
+
+    public function isAdmin(): bool
+    {
+        $role = strtolower(trim((string) ($this->role ?? '')));
+        return $role === 'admin' || $role === 'administrator';
+    }
+
+    public function isDev(): bool
+    {
+        $role = strtolower(trim((string) ($this->role ?? '')));
+        return $role === 'dev' || $role === 'developer';
     }
 
     /**

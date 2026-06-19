@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\IstoricController;
-use App\Http\Controllers\Api\KpiController;
+use App\Support\LunaRomana;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -113,17 +113,26 @@ class ExportPdfController extends Controller
         try {
             $luna1 = (string) $request->get('luna1', date('Y-m'));
             $luna2 = (string) $request->get('luna2', date('Y-m', strtotime('-1 month')));
+            [$range1Start, $range1End] = $this->normalizeComparareRange(
+                (string) $request->get('luna1_start', $luna1),
+                (string) $request->get('luna1_end', $luna1)
+            );
+            [$range2Start, $range2End] = $this->normalizeComparareRange(
+                (string) $request->get('luna2_start', $luna2),
+                (string) $request->get('luna2_end', $luna2)
+            );
 
-            $kpiController = new KpiController();
-            $resp1 = $kpiController->index(new Request(['month' => $luna1]));
-            $resp2 = $kpiController->index(new Request(['month' => $luna2]));
+            $istoricController = new IstoricController();
+            $istoricResponse = $istoricController->index(new Request());
+            $istoricPayload = json_decode($istoricResponse->getContent(), true);
 
-            $data1 = json_decode($resp1->getContent(), true);
-            $data2 = json_decode($resp2->getContent(), true);
-
-            if (!$data1 || !$data2 || !($data1['success'] ?? false) || !($data2['success'] ?? false)) {
+            if (!$istoricPayload || !($istoricPayload['success'] ?? false)) {
                 return redirect()->back()->with('error', 'Nu am putut genera comparația PDF.');
             }
+
+            $istoricRows = $istoricPayload['data'] ?? [];
+            $data1 = $this->aggregateComparareRange($istoricRows, $range1Start, $range1End);
+            $data2 = $this->aggregateComparareRange($istoricRows, $range2Start, $range2End);
 
             $rows = [
                 ['key' => 'plan_luna', 'label' => 'Plan', 'suffix' => 'MDL'],
@@ -142,8 +151,8 @@ class ExportPdfController extends Controller
                 ['key' => 'conversie', 'label' => 'Conversie', 'suffix' => '%'],
             ];
 
-            $month1Label = \Carbon\Carbon::createFromFormat('Y-m', $luna1)->locale('ro')->translatedFormat('F Y');
-            $month2Label = \Carbon\Carbon::createFromFormat('Y-m', $luna2)->locale('ro')->translatedFormat('F Y');
+            $month1Label = $this->comparareRangeLabel($range1Start, $range1End);
+            $month2Label = $this->comparareRangeLabel($range2Start, $range2End);
 
             $options = new Options();
             $options->set([
@@ -168,11 +177,83 @@ class ExportPdfController extends Controller
             $pdf->setPaper('A4', 'landscape');
             $pdf->render();
 
-            return $pdf->stream('comparare_' . $luna1 . '_vs_' . $luna2 . '.pdf', ['Attachment' => true]);
+            $filename = 'comparare_' . $range1Start . '_' . $range1End . '_vs_' . $range2Start . '_' . $range2End . '.pdf';
+
+            return $pdf->stream($filename, ['Attachment' => true]);
         } catch (\Exception $e) {
             \Log::error('Eroare export comparare PDF: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Eroare la generarea PDF: ' . $e->getMessage());
         }
     }
-}
 
+    private function normalizeComparareRange(string $start, string $end): array
+    {
+        $start = preg_match('/^\d{4}-\d{2}$/', $start) ? $start : date('Y-m');
+        $end = preg_match('/^\d{4}-\d{2}$/', $end) ? $end : $start;
+
+        return $start <= $end ? [$start, $end] : [$end, $start];
+    }
+
+    private function comparareRangeLabel(string $start, string $end): string
+    {
+        if ($start === $end) {
+            return LunaRomana::labelFromYm($start);
+        }
+
+        return LunaRomana::labelFromYm($start) . ' - ' . LunaRomana::labelFromYm($end);
+    }
+
+    private function aggregateComparareRange(array $istoricRows, string $start, string $end): array
+    {
+        $selectedRows = array_values(array_filter($istoricRows, function ($row) use ($start, $end) {
+            $month = (string) ($row['luna'] ?? '');
+            return $month >= $start && $month <= $end;
+        }));
+
+        $sum = function (string $key) use ($selectedRows): float {
+            return array_reduce($selectedRows, function (float $carry, array $row) use ($key): float {
+                return $carry + (float) ($row[$key] ?? 0);
+            }, 0.0);
+        };
+
+        $plan = $sum('plan_luna');
+        $vanzari = $sum('vanzari_luna');
+        $prognozaPlan = $sum('prognoza_plan');
+        $comenzi = $sum('comenzi');
+        $sesiuni = $sum('sesiuni');
+        $zileInterval = max(1, $this->daysInMonthRange($start, $end));
+
+        return [
+            'success' => true,
+            'plan_luna' => $plan,
+            'vanzari_luna' => $vanzari,
+            'vanzari_cu_tva' => $sum('vanzari_cu_tva'),
+            'profit' => $sum('profit'),
+            'progres_plan' => $plan > 0 ? round(($vanzari / $plan) * 100, 2) : 0,
+            'diferenta_plan' => $vanzari - $plan,
+            'prognoza_plan' => $prognozaPlan,
+            'prognoza_plan_procent' => $plan > 0 ? round(($prognozaPlan / $plan) * 100, 2) : 0,
+            'comenzi' => $comenzi,
+            'comenzi_zi' => round($comenzi / $zileInterval, 1),
+            'cec_mediu' => $comenzi > 0 ? round($vanzari / $comenzi, 2) : 0,
+            'total_livrari_luna' => $sum('total_livrari_luna'),
+            'pickup' => $sum('pickup'),
+            'sesiuni' => $sesiuni,
+            'conversie' => $sesiuni > 0 ? round(($comenzi / $sesiuni) * 100, 2) : 0,
+        ];
+    }
+
+    private function daysInMonthRange(string $start, string $end): int
+    {
+        $days = 0;
+        $current = \DateTime::createFromFormat('Y-m-d', $start . '-01');
+        $last = \DateTime::createFromFormat('Y-m-d', $end . '-01');
+
+        while ($current && $last && $current <= $last) {
+            $days += (int) $current->format('t');
+            $current->modify('+1 month');
+        }
+
+        return $days;
+    }
+}

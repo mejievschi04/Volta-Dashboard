@@ -13,6 +13,7 @@ class Livrare extends Model
         'data',
         'adresa_livrarii',
         'localitate',
+        'raion',
         'nr_client',
         'data_livrarii',
         'in_chisinau',

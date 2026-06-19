@@ -17,7 +17,7 @@
     font: "'Noto Sans', system-ui, -apple-system, sans-serif",
     series: {
       amber: { line: "rgb(255, 238, 0)", area: "rgba(255, 238, 0, 0.14)" },
-      cyan: { line: "rgb(56, 189, 248)", area: "rgba(56, 189, 248, 0.16)" },
+      cyan: { line: "rgb(180, 188, 204)", area: "rgba(180, 188, 204, 0.16)" },
       violet: { line: "rgb(167, 139, 250)", area: "rgba(167, 139, 250, 0.16)" },
       emerald: { line: "rgb(52, 211, 153)", area: "rgba(52, 211, 153, 0.16)" },
       rose: { line: "rgb(251, 113, 133)", area: "rgba(251, 113, 133, 0.16)" },
@@ -207,8 +207,8 @@
       brandHover: "rgb(255, 247, 120)",
       coral: "rgb(251, 113, 133)",
       coralHover: "rgb(253, 164, 175)",
-      sky: "rgb(56, 189, 248)",
-      skyHover: "rgb(125, 211, 252)",
+      sky: "rgb(180, 188, 204)",
+      skyHover: "rgb(212, 218, 228)",
     },
   };
 })(typeof window !== "undefined" ? window : this);

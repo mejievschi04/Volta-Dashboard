@@ -14,6 +14,13 @@ function formatNumber(val) {
   return val.toLocaleString('ro-RO');
 }
 
+function getThemeTokens() {
+  const styles = getComputedStyle(document.documentElement);
+  const brand = (styles.getPropertyValue('--brand') || '').trim() || '#FFEE00';
+  const brandRgb = (styles.getPropertyValue('--brand-rgb') || '').trim() || '255, 238, 0';
+  return { brand, brandRgb };
+}
+
 function parseCSV(str) {
   const rows = [];
   let cur = '', row = [], insideQuotes = false;
@@ -46,7 +53,7 @@ function destroyChart(chartId) {
 }
 
 // ---------------- INIT CHART ----------------
-function initChart(chartId, label, color="#FFD700") {
+function initChart(chartId, label, color = getThemeTokens().brand) {
   const canvas = document.getElementById(chartId);
   if(!canvas) return;
   const ctx = canvas.getContext("2d");
@@ -162,6 +169,7 @@ async function loadVanzariTotale() {
     const salesCanvas = document.getElementById("salesChart");
     if (salesCanvas) {
     const ctx = salesCanvas.getContext("2d");
+    const { brand, brandRgb } = getThemeTokens();
     charts["salesChart"] = { instance: new Chart(ctx, {
       data: {
         labels,
@@ -185,8 +193,8 @@ async function loadVanzariTotale() {
             type: "bar",
             label: "Vânzări reale",
             data: vanzari,
-            backgroundColor: "rgba(255, 238, 0, 0.7)", // Galben transparent
-            borderColor: "#ffee00",
+            backgroundColor: `rgba(${brandRgb}, 0.7)`,
+            borderColor: brand,
             borderWidth: 2,
             borderRadius: 6,
             order: 2
@@ -217,7 +225,7 @@ async function loadVanzariTotale() {
             },
             display: true
           },
-          tooltip: { backgroundColor: "rgba(30,41,59,0.96)", titleColor: "#FFEE00", bodyColor: "#f8fafc", borderColor: "#334155", borderWidth: 1, cornerRadius: 10, padding: 12 },
+          tooltip: { backgroundColor: "rgba(30,41,59,0.96)", titleColor: getThemeTokens().brand, bodyColor: "#f8fafc", borderColor: "#334155", borderWidth: 1, cornerRadius: 10, padding: 12 },
         },
         scales: {
           x: {
@@ -605,10 +613,11 @@ async function openVanzariDetaliiModal(luna) {
     `;
     
     const monthName = new Date(luna + '-01').toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
+    const { brand } = getThemeTokens();
     
     modalContent.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2 style="margin: 0; color: #ffee00;">Detalii Vânzări - ${monthName}</h2>
+        <h2 style="margin: 0; color: ${brand};">Detalii Vânzări - ${monthName}</h2>
         <button id="closeModal" style="
           background: #EF4444;
           color: white;
@@ -624,15 +633,15 @@ async function openVanzariDetaliiModal(luna) {
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
         <div style="background: #1F2937; padding: 20px; border-radius: 8px; text-align: center;">
           <div style="color: #888; font-size: 14px; margin-bottom: 8px;">Total fără TVA</div>
-          <div style="color: #ffee00; font-size: 24px; font-weight: 700;">${formatNumber(data.total_fara_tva)} MDL</div>
+          <div style="color: ${brand}; font-size: 24px; font-weight: 700;">${formatNumber(data.total_fara_tva)} MDL</div>
         </div>
         <div style="background: #1F2937; padding: 20px; border-radius: 8px; text-align: center;">
           <div style="color: #888; font-size: 14px; margin-bottom: 8px;">Total cu TVA</div>
-          <div style="color: #ffee00; font-size: 24px; font-weight: 700;">${formatNumber(data.total_cu_tva)} MDL</div>
+          <div style="color: ${brand}; font-size: 24px; font-weight: 700;">${formatNumber(data.total_cu_tva)} MDL</div>
         </div>
         <div style="background: #1F2937; padding: 20px; border-radius: 8px; text-align: center;">
           <div style="color: #888; font-size: 14px; margin-bottom: 8px;">Total Profit</div>
-          <div style="color: #ffee00; font-size: 24px; font-weight: 700;">${formatNumber(data.total_profit)} MDL</div>
+          <div style="color: ${brand}; font-size: 24px; font-weight: 700;">${formatNumber(data.total_profit)} MDL</div>
         </div>
       </div>
       
@@ -640,10 +649,10 @@ async function openVanzariDetaliiModal(luna) {
         <table style="width: 100%; border-collapse: collapse;">
           <thead>
             <tr style="background: #1F2937;">
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ffee00;">Data</th>
-              <th style="padding: 12px; text-align: right; border-bottom: 2px solid #ffee00;">Fără TVA</th>
-              <th style="padding: 12px; text-align: right; border-bottom: 2px solid #ffee00;">Cu TVA</th>
-              <th style="padding: 12px; text-align: right; border-bottom: 2px solid #ffee00;">Profit</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid ${brand};">Data</th>
+              <th style="padding: 12px; text-align: right; border-bottom: 2px solid ${brand};">Fără TVA</th>
+              <th style="padding: 12px; text-align: right; border-bottom: 2px solid ${brand};">Cu TVA</th>
+              <th style="padding: 12px; text-align: right; border-bottom: 2px solid ${brand};">Profit</th>
             </tr>
           </thead>
           <tbody>
@@ -652,7 +661,7 @@ async function openVanzariDetaliiModal(luna) {
                 <td style="padding: 10px;">${row.data}</td>
                 <td style="padding: 10px; text-align: right;">${formatNumber(row.fara_tva)} MDL</td>
                 <td style="padding: 10px; text-align: right;">${formatNumber(row.cu_tva)} MDL</td>
-                <td style="padding: 10px; text-align: right; color: #ffee00;">${formatNumber(row.profit)} MDL</td>
+                <td style="padding: 10px; text-align: right; color: ${brand};">${formatNumber(row.profit)} MDL</td>
               </tr>
             `).join('')}
           </tbody>
@@ -692,10 +701,11 @@ async function openVanzariDetaliiModal(luna) {
 
 // ---------------- DOCUMENT READY ----------------
 document.addEventListener("DOMContentLoaded", () => {
-  initChart("salesChart", "Vânzări lunare", "#ffee00"); // lunar agregat
-  initChart("salesChart2", "Vânzări zilnice", "#ffee00");
-  initChart("sesiuniChart", "Sesiuni zilnice", "#ffee00");
-  initChart("comenziConversieChart", "Comenzi vs Conversie", "#ffee00");
+  const { brand } = getThemeTokens();
+  initChart("salesChart", "Vânzări lunare", brand); // lunar agregat
+  initChart("salesChart2", "Vânzări zilnice", brand);
+  initChart("sesiuniChart", "Sesiuni zilnice", brand);
+  initChart("comenziConversieChart", "Comenzi vs Conversie", brand);
 
   loadVanzariTotale(); // grafic lunar agregat
 

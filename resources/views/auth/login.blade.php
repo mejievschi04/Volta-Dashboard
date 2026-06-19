@@ -115,7 +115,7 @@
       btn.disabled = true;
 
       const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const effectMs = reduceMotion ? 80 : 400;
+      const effectMs = reduceMotion ? 80 : 220;
 
       // Trigger a quick star collapse while the next page loads.
       const transitionState = (window.__voltaLoginTransition = window.__voltaLoginTransition || {
@@ -138,23 +138,23 @@
       const greetingText = 'Bine ai revenit,';
       const rawNamePreview = (usernameInput && usernameInput.value) ? usernameInput.value.trim() : '';
       const nameTextPreview = rawNamePreview || 'prietene';
-      const totalCharsPreview = Array.from(greetingText).length + Array.from(nameTextPreview).length;
-      const staggerPreview = totalCharsPreview > 28 ? 48 : 62;
       const welcomeHoldMsPreview =
         reduceMotion || !overlay || !nameEl || !greetingEl
           ? 0
-          : Math.min(4800, Math.max(1500, (totalCharsPreview - 1) * staggerPreview + 520 + 420));
-      const failResetMs = Math.max(4000, effectMs + welcomeHoldMsPreview + 2200);
+          : 980;
+      const failResetMs = Math.max(3000, effectMs + welcomeHoldMsPreview + 1600);
 
       function hideWelcomeOverlay() {
         if (!overlay) return;
         overlay.classList.remove('is-visible');
         document.body.classList.remove('login-welcome-active');
         if (greetingEl) {
+          greetingEl.classList.remove('is-ready');
           greetingEl.textContent = '';
           greetingEl.setAttribute('aria-hidden', 'true');
         }
         if (nameEl) {
+          nameEl.classList.remove('is-ready');
           nameEl.textContent = '';
           nameEl.setAttribute('aria-hidden', 'true');
         }
@@ -170,28 +170,18 @@
         form.submit();
       }
 
-      /**
-       * Umple un rând cu litere animate (efect tipărire discret).
-       * @returns {number} numărul de caractere adăugate
-       */
-      function fillInkLine(container, text, startCharIndex, staggerMs, reduced) {
-        if (!container) return 0;
-        container.textContent = '';
+      // Afiseaza randul dintr-o bucata; animatia pe fiecare litera producea lag.
+      function setWelcomeLine(container, text, reduced) {
+        if (!container) return;
+        container.classList.remove('is-ready');
+        container.textContent = text;
         if (reduced) {
-          container.textContent = text;
-          return Array.from(text).length;
+          container.classList.add('is-ready');
+          return;
         }
-        var chars = Array.from(text);
-        for (var i = 0; i < chars.length; i++) {
-          var ch = chars[i];
-          var span = document.createElement('span');
-          span.className = 'login-type-char';
-          span.style.setProperty('--type-delay', (startCharIndex + i) * staggerMs + 'ms');
-          span.textContent = ch === ' ' ? '\u00a0' : ch;
-          if (ch === ' ') span.classList.add('login-type-space');
-          container.appendChild(span);
-        }
-        return chars.length;
+        requestAnimationFrame(function () {
+          container.classList.add('is-ready');
+        });
       }
 
       if (reduceMotion || !overlay || !nameEl || !greetingEl) {
@@ -199,16 +189,11 @@
       } else {
         var rawName = (usernameInput && usernameInput.value) ? usernameInput.value.trim() : '';
         var nameText = rawName || 'prietene';
-        var totalChars = Array.from(greetingText).length + Array.from(nameText).length;
-        var staggerMs = totalChars > 28 ? 48 : 62;
-        var strokeMs = 520;
-        var tailMs = 420;
-        var welcomeHoldMs = Math.min(4800, Math.max(1500, (totalChars - 1) * staggerMs + strokeMs + tailMs));
+        var welcomeHoldMs = 980;
 
         window.setTimeout(function () {
-          fillInkLine(greetingEl, greetingText, 0, staggerMs, false);
-          var nG = Array.from(greetingText).length;
-          fillInkLine(nameEl, nameText, nG, staggerMs, false);
+          setWelcomeLine(greetingEl, greetingText, false);
+          setWelcomeLine(nameEl, nameText, false);
           greetingEl.setAttribute('aria-hidden', 'false');
           nameEl.setAttribute('aria-hidden', 'false');
           overlay.removeAttribute('hidden');
@@ -579,4 +564,3 @@
   </script>
 </body>
 </html>
-

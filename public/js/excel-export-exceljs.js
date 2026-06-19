@@ -222,6 +222,7 @@
 
   function applyTheme(ws, options) {
     const startRow = 4;
+    const formatNumbers = !(options && options.coerceNumbers === false);
     const border = defaultBorder('334155');
     const altFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argb('F8FAFC') } };
     const whiteFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argb('FFFFFF') } };
@@ -282,7 +283,7 @@
             border: border,
             fill: totalFill,
           });
-          if (isNumericValue(cell.value)) {
+          if (formatNumbers && isNumericValue(cell.value)) {
             cell.alignment = { vertical: 'middle', horizontal: 'right', wrapText: true };
             cell.numFmt = cell.numFmt || '#,##0.00';
           }
@@ -299,14 +300,14 @@
           font: { name: 'Aptos', size: 11, color: { argb: argb('111827') } },
           alignment: {
             vertical: 'middle',
-            horizontal: c === 1 ? 'left' : (isNumericValue(cell.value) ? 'right' : 'center'),
+            horizontal: c === 1 ? 'left' : (formatNumbers && isNumericValue(cell.value) ? 'right' : 'center'),
             wrapText: true,
             indent: c === 1 ? 1 : 0,
           },
           border: border,
           fill: rowFill,
         });
-        if (isNumericValue(cell.value)) {
+        if (formatNumbers && isNumericValue(cell.value)) {
           cell.numFmt = cell.numFmt || '#,##0.00';
         }
       }
@@ -371,7 +372,7 @@
     await buildStyledWorksheet(wb, (options && options.sheetName) || 'Date', aoa, {
       title: (options && options.sheetName) || 'Date',
       subtitle: 'Exportat la ' + new Date().toLocaleString('ro-RO'),
-      coerceNumbers: true
+      coerceNumbers: !(options && options.coerceNumbers === false)
     });
     await downloadWorkbook(wb, (options && options.fileName) || ('date_' + nowStamp()));
   }
@@ -395,7 +396,7 @@
       await buildStyledWorksheet(wb, name, aoa, {
         title: rawName,
         subtitle: 'Exportat la ' + new Date().toLocaleString('ro-RO'),
-        coerceNumbers: true
+        coerceNumbers: !(s && s.coerceNumbers === false)
       });
     }
     await downloadWorkbook(wb, fileName || ('export_' + nowStamp()));

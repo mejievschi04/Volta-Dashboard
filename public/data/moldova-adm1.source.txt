@@ -1,0 +1,4 @@
+Source: geoBoundaries API, Moldova ADM1 gbOpen
+API: https://www.geoboundaries.org/api/current/gbOpen/MDA/ADM1/
+File: geoBoundaries-MDA-ADM1_simplified.geojson
+License noted by source metadata: Creative Commons Attribution 3.0 IGO

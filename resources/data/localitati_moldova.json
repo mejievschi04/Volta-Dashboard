@@ -1,0 +1,6690 @@
+[
+  {
+    "localitate": "Abaclia",
+    "raion": "Basarabeasca"
+  },
+  {
+    "localitate": "Acui",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Afanasievca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Agronomovca",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Alava",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Albina",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Albinețul Nou",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Albinețul Vechi",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Albinița",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Albota de Jos",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Albota de Sus",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Alcedar",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Alexanderfeld",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Alexandrovca",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Alexandrovca",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Alexandrovca",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Alexandrovca (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Alexandrovca Nouă",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Alexandru cel Bun",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Alexandru Ioan Cuza",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Alexeevca",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Alexeevca",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Alexeevca",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Alexeevca",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Alexeuca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Alexăndreni",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Alexăndreni",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Alexăndrești",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Aluatu",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Aluniș",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Andreevca",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Andreevca (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Andriașevca Nouă",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Andriașevca Veche",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Andrușul de Jos",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Andrușul de Sus",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Anenii Noi",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Anini",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Antoneuca",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Antonești",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Antonești",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Antonovca",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Antonovca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Arionești",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Armanca",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Artimonovca",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Avdarma",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Avrămeni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Baccealia",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Badicul Moldovenesc",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Bahmut",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Bahmut, loc. st. c. f.",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Bahu",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Baimaclia",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Baimaclia",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Balabanu",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Balanul Nou",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Balasinești",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Balatina",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Balinți",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Balinții Noi",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Balmaz",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Baraboi",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Bardar",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Baroncea",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Baroncea Nouă",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Basarabca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Basarabeasca",
+    "raion": "Basarabeasca"
+  },
+  {
+    "localitate": "Batîc",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Batîr",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Baurci",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Baurci",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Baurci-Moldoveni",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Bașcalia",
+    "raion": "Basarabeasca"
+  },
+  {
+    "localitate": "Beleavinți",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Beleuți",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Beloci",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Bender",
+    "raion": "Bender"
+  },
+  {
+    "localitate": "Berezlogi",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Berezovca",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Beriozchi",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Berlinți",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Bezeda",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Bezeni",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Beșalma",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Beșghioz",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Beștemac",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Biești",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Bilicenii Noi",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Bilicenii Vechi",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Biruința",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Bisericani",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Bleșteni",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Blijnii Hutor",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Blindești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Bobeica",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Bobletici",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Bobocica",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Bobulești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Bocancea-Schit",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Bocani",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Bocicăuți",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Bocșa",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Bodeni",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Bogdanovca",
+    "raion": "Basarabeasca"
+  },
+  {
+    "localitate": "Bogdanovca Nouă",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Bogdanovca Veche",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Bogdănești",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Boghenii Noi",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Boghenii Vechi",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Boghiceni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Bogzești",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Boldurești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Bolohan",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Bolțun",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Bondareuca",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Borceag",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Borogani",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Boroseni",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Borosenii Noi",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Bosca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Botnărești",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Botnăreștii Noi",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Bozieni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Boșcana",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Boșernița",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Braicău",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Braniște",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Bravicea",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Breanova",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Brejeni",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Brezoaia",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Briceni",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Briceni",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Briceva",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Broșteni",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Bruslachi",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Brînza",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Brînzeni",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Brînzeni",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Brînzenii Noi",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Brînzenii Vechi",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Brăila",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Brănești",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Brătianovca",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Brătuleni",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Brătușeni",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Brătușenii Noi",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Brăviceni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Bubuieci",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Buciumeni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Buciumeni, loc.st.c.f.",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Buciușca",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Bucovăț",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Bucuria",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Buda",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Budești",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Budăi",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Budăi",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Budăi",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Budăi",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Bugeac",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Bujor",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Bularda",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Bulboaca",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Bulboaca",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Bulboci",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Bulbocii Noi",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Bulgărica",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Bulhac",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Bulhac",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Bulăiești",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Bumbăta",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Buneți",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Burghelea",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Burlacu",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Burlăceni",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Burlănești",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Bursuc",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Bursuc (r- l Nisporeni)",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Bursuceni",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Buschi",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Butești",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Butor",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Butuceni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Butuceni (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Buzduganii de Jos",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Buzduganii de Sus",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Buzdugeni",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Bușila",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Bușăuca",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Buțeni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Bîc",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Bîcioc",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Bîrlădeni",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Bîrnova",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Băcioi",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Băcșeni",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Bădiceni",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Bădragii Noi",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Bădragii Vechi",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Băhrinești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Băiuș",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Bălceana",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Bălcăuți",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Bălăbănești",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Bălănești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Bălăurești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Bălășești",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Bălășești",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Bălțata",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Bălțata de Sus",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Bălțați",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Bălți",
+    "raion": "Bălți"
+  },
+  {
+    "localitate": "Bănești",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Băneștii Noi",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Bărboieni",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Băxani",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Cahul",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Cairaclia",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Cajba",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Calarașovca",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Calfa",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Calfa Nouă",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Calinovca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Camenca",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Camenca (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Camencea",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Camencuța",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Cania",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Cantemir",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Capaclia",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Carabetovca",
+    "raion": "Basarabeasca"
+  },
+  {
+    "localitate": "Carabiber",
+    "raion": "Basarabeasca"
+  },
+  {
+    "localitate": "Caracui",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Caracușenii Noi",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Caracușenii Vechi",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Caragaș",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Carahasani",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Caraiman",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Carbalia",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Carmanova",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Caterinovca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Catranîc",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Catranîc, loc.st.c.f.",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Cazaclia",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Cazangic",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Cașunca",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Ceadîr",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Ceadîr-Lunga",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Cealîc",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Ceapaevca",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Cenac",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Cenușa",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Cepeleuți",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Cepăria",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Cerlina",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Cernița",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Cernița (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Cernoleuca",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Ceroborta",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Cetireni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Cheltuitori",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Chersac",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Chetriș",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Chetrișul Nou",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Chetroasa",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Chetrosu",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Chetrosu",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Chetroșeni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Chetroșica Nouă",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Chetroșica Veche",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Chilișoaia",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Chioselia",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Chioselia Mare",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Chioselia Rusă",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Chiperceni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Chipeșca",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Chirca",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Chircani",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Chircăiești",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Chircăieștii Noi",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Chirianca",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Chiriet-Lunga",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Chirileni",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Chirileni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Chirilovca",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Chirilovca",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Chirilovca",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Chirov",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Chirsova",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Chiurt",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Chișcăreni",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Chișinău",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Chiștelnița",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Chițcani",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Chițcanii Noi",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Chițcanii Vechi",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Cigîrleni",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Cihoreni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Cimișeni",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Cimișlia",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Cinișeuți",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Cioara",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Ciobalaccia",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Ciobanca",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Ciobanovca",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Ciobanovca",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Cioburciu",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Cioburciu (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Cioc-Maidan",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Ciocîlteni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Ciofu",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Ciolacu Nou",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Ciolacu Vechi",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Ciopleni",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Ciorescu",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Ciorești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Ciorna",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Cioropcani",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Ciripcău",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Ciubara",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Ciuciuieni",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Ciuciulea",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Ciuciuleni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Ciucur-Mingir",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Ciuflești",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Ciuluc",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Ciulucani",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Ciumai",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Ciutești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Ciutulești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Cișmea",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Cișmichioi",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Climăuți",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Climăuții de Jos",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Clișcăuți",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Clișcăuți",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Clișova",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Clișova Nouă",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Clococenii Vechi",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Clocușna",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Cneazevca",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Coada Iazului",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Cobani",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Cobasna",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Cobasna, loc.st.c.f.",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Cobusca Nouă",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Cobusca Veche",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Cobîlea",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Cobîlea, loc.st.c.f.",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Cocieri",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Cociulia",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Cociulia Nouă",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Codreanca",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Codreni",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Codreni",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Codrenii Noi",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Codru",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Codru (mun. Chișinău)",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Codrul Nou",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Cogîlniceni",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Coicova",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Cojușna",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Colibabovca",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Colibași",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Colicăuți",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Colonița",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Colosova",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Comarovca",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Comisarovca Nouă",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Comrat",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Condrița",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Condrătești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Congaz",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Congazcicul de Jos",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Congazcicul de Sus",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Constantinești",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Constantinovca",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Constantinovca",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Constantinovca (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Copanca",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Copceac",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Copceac",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Copăceni",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Corbu",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Corestăuți",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Corjeuți",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Corjova",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Corjova",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Corlăteni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Cornești",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Cornești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Cornova",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Coroliovca",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Coropceni",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Corotna",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Corpaci",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Corten",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Cortenul Nou",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Costești",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Costești",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Costești",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Costuleni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Cosăuți",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Cot",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Cot",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Coteala",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Cotihana",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Cotiujeni",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Cotiujenii Mari",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Cotiujenii Mici",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Cotova",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Cotovca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Cotovca (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Cotovscoe",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Cotul Morii",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Covurlui",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Cozești",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Coșcalia",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Coșcodeni",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Coșeni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Coșernița",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Coșernița",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Coșnița",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Coșnița Nouă",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Coștangalia",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Coștangalia",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Crasnaia Besarabia",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Crasnaia Gorca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Crasnencoe",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Crasnoarmeiscoe",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Crasnoe (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Crasnogorca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Crasnîi Octeabri",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Crasnîi Vinogradari",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Cremenciug",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Cremenciug",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Crețoaia",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Cricova",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Crihana",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Crihana Veche",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Cristești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Criuleni",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Criva",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Crișcăuți",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Crocmaz",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Cruglic",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Cruzești",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Crăciun",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Crăsnășeni",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Cubolta",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Cucioaia",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Cucioaia Nouă",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Cucoara",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Cuconeștii Noi",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Cuconeștii Vechi",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Cucuieții Noi",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Cucuieții Vechi",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Cucuruzeni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Cucuruzenii de Sus",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Cuhnești",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Cuhureștii de Jos",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Cuhureștii de Sus",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Cuizăuca",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Cunicea",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Cupcini",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Cupcui",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Cuporani",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Curchi",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Cureșnița",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Cureșnița Nouă",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Curtoaia",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Curătura",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Cuzmenii Vechi",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Cuzmin",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Cușelăuca",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Cușmirca",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Cîietu",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Cîmpul Drept",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Cîrnești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Cîrnățeni",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Cîrnățenii Noi",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Cîrpești",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Cîzlar",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Cîșla",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Cîșla",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Cîșlița-Prut",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Căbăiești",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Căinari",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Căinari, loc.st.c.f.",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Căinarii Vechi",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Călimănești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Călinești",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Călmățui",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Călugăr",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Călărași",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Căplani",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Căprești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Căpriana",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Cărbuna",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Cărpineanca",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Cărpineni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Căușeni",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Căzănești",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Cățeleni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Dahnovici",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Dancu",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Danu",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Decebal",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Delacău",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Delacău (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Dereneu",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Dermengi",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Dezghingea",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Dimitrova",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Dimitrova (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Dimitrovca",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Dișcova",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Dnestrovsc",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Dobrogea",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Dobrogea Nouă",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Dobrogea Veche",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Dobrușa",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Dobrușa",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Doibani I",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Doibani II",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Doina",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Dolinnoe",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Dolna",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Doltu",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Dominteni",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Domulgeni",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Dondușeni",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Donici",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Doroțcaia",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Drepcăuți",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Drochia",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Drojdieni",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Drujba",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Drujineni",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Druța",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Drăgușeni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Drăgușeni",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Drăgușenii Noi",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Drăgănești",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Drăsliceni",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Dubna",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Dubovca",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Dubăsari",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Dubăsarii Vechi",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Dubău",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Dudulești",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Duma",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Dumbrava",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Dumbrăveni",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Dumbrăvița",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Dumeni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Dumitreni",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Durlești",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Duruitoarea",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Duruitoarea Nouă",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Dușmani",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Dzerjinscoe",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Dîngeni",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Dămășcani",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Dănceni",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Dărcăuți",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Dărcăuții Noi",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Ecaterinovca",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Echimăuți",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Edineț",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Egoreni",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Egorovca",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Elenovca",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Elizaveta",
+    "raion": "Bălți"
+  },
+  {
+    "localitate": "Elizavetovca",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Elizavetovca",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Enichioi",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Ermoclia",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Etulia",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Etulia Nouă",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Etulia, loc.st.c.f.",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Evghenievca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Fabrica de Zahăr",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Fedoreuca",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Fedoseevca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Ferapontievca",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Feteasca",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Fetești",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Fetița",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Feștelița",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Filipeni",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Flocoasa",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Floreni",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Floreni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Florești",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Florești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Florești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Florica",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Floriceni",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Floricica",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Florițoaia Nouă",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Florițoaia Veche",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Flutura",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Flămînzeni",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Frasin",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Frasin",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Frumoasa",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Frumușica",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Frumușica",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Frumușica",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Frumușica",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Frumușica (mun. Chișinău)",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Frumușica Nouă",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Frunzești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Frunză",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Frunză (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Frunzăuca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Frăsinești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Fundul Galbenei",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Fundurii Noi",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Fundurii Vechi",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Furceni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Fuzăuca",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Fîntîna Albă",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Fîntînița",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Fîrlădeni",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Fîrlădeni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Fîrlădenii Noi",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Făgureni",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Făgădău",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Făgădău",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Fălești",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Făleștii Noi",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Făurești",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Gaidar",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Gangura",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Gavrilovca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Gașpar",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Geamăna",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Ghelăuza",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Gherman",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Ghermănești",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Gherșunovca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Ghetlova",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Ghidighici",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Ghidirim",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Ghiduleni",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Ghiliceni",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Ghindești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Ghioltosu",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Ghizdita, loc.st.c.f.",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Giurgiulești",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Glinjeni",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Glinjeni",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Glodeni",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Goian (mun. Chișinău)",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Goian (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Goianul Nou (mun. Chișinău)",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Goianul Nou (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Goleni",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Gordinești",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Gordinești",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Gordineștii Noi",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Gornoe",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Gotești",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Gradiște",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Greblești",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Greceni",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Gribova",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Grigorești",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Grigorievca",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Grigoriopol",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Grigorăuca",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Grigorăuca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Grimești",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Grimăncăuți",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Grinăuți",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Grinăuți",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Grinăuți-Moldova",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Grinăuți-Raia",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Grozasca",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Grozești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Groznița",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Grădinița",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Grăseni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Grătiești",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Gura Bîcului",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Gura Camencii",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Gura Căinarului",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Gura Galbenei",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Gura-Oituz",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Gvozdova",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Gîrbova",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Gîsca",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Gălești",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Găleștii Noi",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Gălășeni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Găureni",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Găureni",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Găuzeni",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Găvănoasa",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Hagichioi",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Hagimus",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Halahora de Jos",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Halahora de Sus",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Hancăuți",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Hansca",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Haraba",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Haragîș",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Harmațca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Heciul Nou",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Heciul Vechi",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Heleșteni",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Hiliuți",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Hiliuți",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Hincăuți",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Hirișeni",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Hirova",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Hitrești",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Hlina",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Hlinaia",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Hlinaia (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Hlinaia Mică",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Hoginești",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Holercani",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Holoșnița",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Holoșnița Nouă",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Homuteanovca",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Horești",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Horești",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Horjești",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Horodca",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Horodca",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Horodiște",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Horodiște",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Horodiște",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Horodiște",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Hristici",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Hristoforovca",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Hristovaia",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Hrubna Nouă",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Hrușca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Hrușova",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Hulboaca",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Hulboaca (mun. Chișinău)",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Huluboaia",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Humulești",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Hutulu",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Huzun",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Hîjdieni",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Hîjdieni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Hîncești",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Hîncești",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Hîrbovăț",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Hîrbovăț",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Hîrbovățul Nou",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Hîrcești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Hîrjauca",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Hîrjău",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Hîrtop",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Hîrtop",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Hîrtop",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Hîrtop",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Hîrtop",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Hîrtop",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Hîrtop",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Hîrtop (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Hîrtopul Mare",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Hîrtopul Mic",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Hădărăuți",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Hănăseni",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Hănăsenii Noi",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Hăsnășenii Mari",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Hăsnășenii Noi",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Iabloana",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Iachimeni",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Iagorlîc",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Ialoveni",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Ialpug",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Ialpujeni",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Iantarnoe",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Iargara",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Iarova",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Iasnaia Poleana",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Iepureni",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Iezărenii Noi",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Iezărenii Vechi",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Ignăței",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Ilenuța",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Iliciovca",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Iliciovca",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Inculeț",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "India",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Inești",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Inundeni",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Ion Vodă",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Iordanovca",
+    "raion": "Basarabeasca"
+  },
+  {
+    "localitate": "Iorjnița",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Isacova",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Iserlia",
+    "raion": "Basarabeasca"
+  },
+  {
+    "localitate": "Isăicani",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Iujnoe",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Iurceni",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Iurievca",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Ivancea",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Ivanovca",
+    "raion": "Basarabeasca"
+  },
+  {
+    "localitate": "Ivanovca",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Ivanovca",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Ivanovca",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Ivanovca (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Ivanovca Nouă",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Ivănești",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Izbiște",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Izvoare",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Izvoare",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Izvoare",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Izvoare",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Izvoreni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Ișcălău",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Ișnovăț",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Japca",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Javgur",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Jeloboc",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Jevreni",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Joltai",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Jora de Jos",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Jora de Mijloc",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Jora de Sus",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Jura",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Lalova",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Larga",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Larga",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Larga Nouă",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Larga Veche",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Lazo",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Lazo",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Lebedenco",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Leca",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Lelina",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Lencăuți",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Lenin",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Leordoaia",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Leordoaia",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Leova",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Leuntea",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Leușeni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Leușeni",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Lidovca",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Limbenii Noi",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Limbenii Vechi",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Lingura",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Lipcani",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Lipceni",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Lipnic",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Lipovanca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Lipoveni",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Lipovăț",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Livezi",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Logofteni",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Logănești",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Logănești",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Lopatna",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Lopatnic",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Lopățica",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Lozova",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Lucești",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Lucăceni",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Lucășeuca",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Lugovoe",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Luminița",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Lunga",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Lunga (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Lunga Nouă",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Lupa-Recea",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Lupăria",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Lîsaia Gora",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Lăpușna",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Lărguța",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Mahala",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Maiac",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Maiovca",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Maiscoe",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Malcoci",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Malinovscoe",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Mana",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Manta",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Maramonovca",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Marchet",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Marcăuți",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Marian",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Marianca de Jos",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Marianca de Sus",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Marienfeld",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Marinici",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Mateuți",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Maximeni",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Maximovca",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Mașcăuți",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Medeleni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Medveja",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Meleșeni",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Merenești",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Mereni",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Mereni",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Merenii Noi",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Mereșeni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Mereșeuca",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Meșeni",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Meșeni",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Miciurin",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Micleușeni",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Miclești",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Micăuți",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Mihailovca",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Mihailovca",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Mihailovca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Mihailovca (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Mihailovca Nouă",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Mihuleni",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Mihăileni",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Mihăileni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Mihăilenii Noi",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Mihălașa",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Mihălașa Nouă",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Mihălășeni",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Milești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Mileștii Mici",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Mileștii Noi",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Mincenii de Jos",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Mincenii de Sus",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Mingir",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Mircești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Mirești",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Mirnoe",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Mirnoe",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Misovca",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Mitoc",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Moara de Piatră",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Moara Domnească",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Mocearovca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Mocra",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Mocreachi",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Moldoveanca",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Molești",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Molești",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Molochișul Mare",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Molochișul Mic",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Molovata",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Molovata Nouă",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Morenii Noi",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Morenii Vechi",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Morovaia",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Morozeni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Moscovei",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Movileni",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Moșana",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Moșeni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Munteni",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Musaitu",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Musteața",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Mîndra",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Mîndra",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Mîndrești",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Mîndreștii Noi",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Mîndîc",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Mînzătești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Mîrzaci",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Mîrzești",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Mîrzoaia",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Măcăreuca",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Măcărești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Măgdăcești",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Măgura",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Măgura Nouă",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Măgureanca",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Măgurele",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Mălcăuți",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Mălăiești",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Mălăiești",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Mălăiești",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Mălăiești (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Mălăieștii Noi",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Mănoilești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Mărculești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Mărcăuți",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Mărcăuții Noi",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Mărdăreuca",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Mărinești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Mărinești",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Mărtinești",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Mărăndeni",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Mărășești",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Naslavcea",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Natalievca",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Neculăieuca",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Negrea",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Negrești",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Negureni",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Negurenii Noi",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Negurenii Vechi",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Nemțeni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Nezavertailovca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Nicolaevca",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Nicolaevca",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Nicolaevca",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Nicolaevca",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Nicolaevca",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Nicolaevca",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Nicolaevca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Nicolscoe",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Nicoreni",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Nihoreni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Nimereuca",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Nimoreni",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Niorcani",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Nisporeni",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Nistreni",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Nișcani",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Noroceni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Novaci",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Novaia Jizni",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Novaia Nicolaevca",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Novocotovsc",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Novosavițcaia, loc.st.c.f.",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Novosiolovca",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Novovladimirovca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Nucăreni",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Năpadova",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Năpădeni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Năvîrneț",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Obileni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Obreja Nouă",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Obreja Veche",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Ochiul Alb",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Ochiul Roș",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Oclanda",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Ocnița",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Ocnița (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Ocnița-Răzeși",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Ocnița-Țărani",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Ocolina",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Octeabriscoe",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Octeabriscoe",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Octeabriscoe",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Odaia",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Odaia",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Odobești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Ofatinți",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Ohrincea",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Olișcani",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Olănești",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Onești",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Onești",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Onești",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Onișcani",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Onițcani",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Opaci",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Orac",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Ordășei",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Orehovca",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Orhei",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Oricova",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Otac",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Otaci",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Oxentea",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Paicu",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Paladea",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Palanca",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Palanca",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Palanca",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Parcani",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Parcani",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Parcani",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Parcani (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Parcova",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Paustova",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Pavlovca",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Pașcani",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Pașcani",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Pașcani",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Peciște",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Pelinei",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Pelivan",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Pepeni",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Pepenii Noi",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Pereni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Pereni",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Pererita",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Peresecina",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Pervomaisc",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Pervomaisc",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Pervomaisc (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Pervomaiscoe",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Pervomaiscoe",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Peticeni",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Petreni",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Petrești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Petrești, loc.st.c.f.",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Petropavlovca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Petrovca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Petrunea",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Petrușeni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Piatra",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Piatra Albă",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Picus",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Pietrosu",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Pietrosul Nou",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Piscărești",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Pistruieni",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Pistruienii Noi",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Pitești",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Pitușca",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Pivniceni",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Pleșeni",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Plop",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Plop",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Plop-Știubei",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Plopi",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Plopi (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Pobeda (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Pociumbeni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Pociumbăuți",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Pocrovca",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Pocrovca",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Pocșești",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Podgoreni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Podoima",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Podoimița",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Podul Lung",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Pogănești",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Pohoarna",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Pohorniceni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Pohrebea",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Pohrebea Nouă",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Pohrebeni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Poiana",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Poiana",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Poiana",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Pojarna",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Pojăreni",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Pompa",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Popeasca",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Popencu",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Popeștii de Jos",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Popeștii de Sus",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Popeștii Noi",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Popovca",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Popovca",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Porumbeni",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Porumbești",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Porumbrei",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Prajila",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Prepelița",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Prioziornoe",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Pripiceni-Curchi",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Pripiceni-Răzeși",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Prisaca",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Prodănești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Prodăneștii Vechi",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Proscureni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Proteagailovca",
+    "raion": "Bender"
+  },
+  {
+    "localitate": "Pruteni",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Puhoi",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Puhăceni",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Purcari",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Putinești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Puțintei",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Pîcalova",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Pînzăreni",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Pînzărenii Noi",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Pîrjolteni",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Pîrjota",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Pîrlița",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Pîrlița",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Pîrlița",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Pîrîta",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Pălăria",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Pănășești",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Păpăuți",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Păruceni",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Păscăuți",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Păulești",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Pеlinia",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Pеlinia, loc.st.c.f.",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Racovăț",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Rassvet",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Ratuș",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Ratuș",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Rașcov",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Recea",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Recea",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Recești",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Redi-Cereșnovăț",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Rediul de Jos",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Rediul de Sus",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Rediul Mare",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Rediul Mare",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Regina Maria",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Reteni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Reteni-Vasileuți",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Revaca",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Rezina",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Rezina",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Risipeni",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Roghi",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Rogojeni",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Rogojeni, loc.st.c.f.",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Romanovca",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Romanovca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Romanovca",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Romănești",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Rotari",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Rotunda",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Roșcani",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Roșcani",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Roșcani",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Roșcanii de Jos",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Roșcanii de Sus",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Roșietici",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Roșieticii Vechi",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Roșița",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Roșu",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Rublenița",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Rublenița Nouă",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Rudi",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Rujnița",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Rumeanțev",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Rusca",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Ruseni",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Ruseni",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Ruseștii Noi",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Ruseștii Vechi",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Ruslanovca",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Rîbnița",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Rîngaci",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Rîșcani",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Rîșcova",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Răciula",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Răculești",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Răcăria",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Rădeni",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Rădeni",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Rădenii Vechi",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Rădoaia",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Rădulenii Noi",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Rădulenii Vechi",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Rămăzan",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Răscăieți",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Răscăieții Noi",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Răspopeni",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Răuțel",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Răuțelul Nou",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Răzeni",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Răzălăi",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Saca",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Sacarovca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Sadaclia",
+    "raion": "Basarabeasca"
+  },
+  {
+    "localitate": "Sadchi",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Sadova",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Sadovoe",
+    "raion": "Bălți"
+  },
+  {
+    "localitate": "Sadîc",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Sagaidac",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Sagaidac",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Sagaidacul de Sus",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Sagaidacul Nou",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Saharna",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Saharna Nouă",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Salcia",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Salcia",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Salcia",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Samurza",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Satul Nou",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Sauca",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Schineni",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Schinenii Noi",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Schinoasa",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Schinoșica",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Scoreni",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Scorțeni",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Sculeni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Scumpia",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Scăieni",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Scăieni",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Sectorul Botanica",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Sectorul Buiucani",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Sectorul Centru",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Sectorul Ciocana",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Sectorul Rîșcani",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Secăreni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Secărenii Noi",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Selemet",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Seliște",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Seliște",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Seliște",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Seliștea Nouă",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Selișteni",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Semeni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Semionovca",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Semionovca",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Sergheuca",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Serghieni",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Severinovca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Sevirova",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Sinești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Singureni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Sipoteni",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Sireți",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Sirota",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Slobodca",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Slobozia",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Slobozia (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Slobozia Mare",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Slobozia Nouă",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Slobozia-Chișcăreni",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Slobozia-Cremene",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Slobozia-Dușca",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Slobozia-Hodorogea",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Slobozia-Horodiște",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Slobozia-Medveja",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Slobozia-Măgura",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Slobozia-Rașcov",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Slobozia-Recea",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Slobozia-Vărăncău",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Slobozia-Șirăuți",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Sloveanca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Sobari",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Socii Noi",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Socii Vechi",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Sociteni",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Socola",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Socoleni",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Socolovca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Sofia",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Sofia",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Sofievca",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Solnecinoe",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Solonceni",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Soloneț",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Soltănești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Soroca",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Soroca",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Sovietscoe",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Speia",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Speia (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Spicoasa",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Stanislavca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Stejăreni",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Step-Soci",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Stețcani",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Stohnaia",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Stoianovca",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Stoicani",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Stolniceni",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Stolniceni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Stolniceni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Stroiești",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Strîmbeni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Străisteni",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Strășeni",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Sturzeni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Sturzovca",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Stîrcea",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Stîrceni",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Stălinești",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Stăuceni",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Sucleia",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Sudarca",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Suhaia Rîbnița",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Suhat",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Suhuluceni",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Surchiceni",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Suric",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Suruceni",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Susleni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Suvorovca",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Sverdiac",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Sverida",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Svetlîi",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Sîngera",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Sîngerei",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Sîngereii Noi",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Sîrbești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Sîrcova",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Sîrma",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Săghieni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Săiți",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Sălcuța",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Sălcuța Nouă",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Sămănanca",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Sămășcani",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Sănătăuca",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Sărata Nouă",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Sărata Nouă",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Sărata Veche",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Sărata-Galbenă",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Sărata-Mereșeni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Sărata-Răzeși",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Sărăteni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Sărăteni",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Sărătenii Noi",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Sărătenii Vechi",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Sărăței",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Sărățica Nouă",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Sărățica Veche",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Săseni",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Sătuc",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Tabani",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Tabăra",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Talmaza",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Taraclia",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Taraclia",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Taraclia",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Taraclia de Salcie",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Tarasova",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Tartaul",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Tartaul de Salcie",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Taxobeni",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Tașlîc",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Teiu",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Telenești",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Teleșeu",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Teleșeuca",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Teleșeuca Nouă",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Telița",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Telița Nouă",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Temeleuți",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Temeleuți",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Terebna",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Teșcureni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Tețcani",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Tigheci",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Tiraspol",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Tiraspolul Nou",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Toceni",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Tochile-Răducani",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Tocmagiu",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Tocuz",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Todirești",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Todirești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Tohatin",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Tolocănești",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Tomai",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Tomai",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Tomaiul Nou",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Tomeștii Noi",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Tomeștii Vechi",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Topala",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Trebisăuți",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Trebujeni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Trestieni",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Tretești",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Tricolici",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Trifești",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Trifeștii Noi",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Trifănești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Trifănești",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Trifăuți",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Trinca",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Troian",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Troița",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Troița Nouă",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Troițcoe",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Trușeni",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Tudora",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Tudorești",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Tuzara",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Tvardița",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Tîrgul-Vertiujeni",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Tîrnauca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Tîrnova",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Tîrnova",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Tîrzieni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Tîrșiței",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Tălăiești",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Tănătari",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Tănătarii Noi",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Tătărești",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Tătărești",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Tătărăuca Nouă",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Tătărăuca Veche",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Tătărășeni",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Tăura Nouă",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Tăura Veche",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Ucrainca",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Uiutnoe",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Ulmu",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Ulmu (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Ulmul Mic",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Unchitești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Unchitești, loc.st.c.f.",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Ungheni",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Unguri",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Unteni",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Unțești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Ursari",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Ursoaia",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Ursoaia",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Ursoaia Nouă",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Ustia",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Ustia",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Ușurei",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Vadul lui Isac",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Vadul lui Vodă",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Vadul Turcului",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Vadul-Leca",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Vadul-Leca Nou",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Vadul-Rașcov",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Valea",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Valea Adîncă",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Valea Coloniței",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Valea Florii",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Valea lui Vlad",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Valea Mare",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Valea Norocului",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Valea Nîrnovei",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Valea Perjei",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Valea Perjei",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Valea Rusului",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Valea Rădoaiei",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Valea Satului",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Valea Verde",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Valea-Trestieni",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Vancicăuți",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Vanțina",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Vanțina Mică",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Varnița",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Vasilcău",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Vasileuți",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Vasilievca",
+    "raion": "Dubăsari"
+  },
+  {
+    "localitate": "Vasilievca (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Vatici",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Vatra",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Verejeni",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Verejeni",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Vertiujeni",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Vesioloe",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Veverița",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Victoria",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Victorovca",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Viișoara",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Viișoara",
+    "raion": "Glodeni"
+  },
+  {
+    "localitate": "Viișoara",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Vinogradnoe",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Vinogradovca",
+    "raion": "Taraclia"
+  },
+  {
+    "localitate": "Visoca",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Vișniovca",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Vladimireuca",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Vladimirovca",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Vladimirovca (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Voinescu",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Voinova",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Voitovca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Volintiri",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Voloave",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Volodeni",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Volovița",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Vorniceni",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Voroteț",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Vozneseni",
+    "raion": "Leova"
+  },
+  {
+    "localitate": "Vrănești",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Vrănești",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Vulcănești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Vulcănești",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Vulcănești, loc.st.c.f.",
+    "raion": "UTA Găgăuzia"
+  },
+  {
+    "localitate": "Vulpești",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Vîlcele",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Vînători",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Vîprova",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Vîșcăuți",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Vădeni",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Văduleni",
+    "raion": "Chișinău"
+  },
+  {
+    "localitate": "Vălcineț",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Vălcineț",
+    "raion": "Ocnița"
+  },
+  {
+    "localitate": "Văleni",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Văratic",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Văratic",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Vărvăreuca",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Vărzărești",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Vărzăreștii Noi",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Vărăncău",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Vărăncău (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Văscăuți",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Văsieni",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Văsieni",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Zagarancea",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Zahareuca",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Zahoreni",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Zahorna",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Zahorna",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Zaim",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Zaim, loc.st.c.f.",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Zamcioji",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Zaporojeț",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Zarojeni",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Zastînca",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Zberoaia",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Zgurița",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Zgărdești",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Zloți, loc.st.c.f.",
+    "raion": "Cimișlia"
+  },
+  {
+    "localitate": "Zolonceni",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Zolotievca",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Zorile",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Zubrești",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Zviozdocica",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Zîmbreni",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Zîrnești",
+    "raion": "Cahul"
+  },
+  {
+    "localitate": "Zăbriceni",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Zăicana",
+    "raion": "Criuleni"
+  },
+  {
+    "localitate": "Zăicani",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Zăicani",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Zăicanii Noi",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Zăluceni",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Zăzuleni",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Zăzulenii Noi",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Zăzulenii Vechi",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Șalvirii Noi",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Șalvirii Vechi",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Șamalia",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Șaptebani",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Șendreni",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Șeptelici",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Șercani",
+    "raion": "Orhei"
+  },
+  {
+    "localitate": "Șerpeni",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Șestaci",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Șestaci",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Șevcenco",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Șicovăț",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Șipca",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Șipca (UATSN)",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Șipoteni",
+    "raion": "Hîncești"
+  },
+  {
+    "localitate": "Șirăuți",
+    "raion": "Briceni"
+  },
+  {
+    "localitate": "Șișcani",
+    "raion": "Nisporeni"
+  },
+  {
+    "localitate": "Șmalena",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Șofranovca",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Șofrîncani",
+    "raion": "Edineț"
+  },
+  {
+    "localitate": "Șolcani",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Șoldănești",
+    "raion": "Șoldănești"
+  },
+  {
+    "localitate": "Șoltoaia",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Ștefan Vodă",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Ștefănești",
+    "raion": "Căușeni"
+  },
+  {
+    "localitate": "Ștefănești",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Ștefănești",
+    "raion": "Ștefan Vodă"
+  },
+  {
+    "localitate": "Știubeieni",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Șumna",
+    "raion": "Rîșcani"
+  },
+  {
+    "localitate": "Șuri",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Șurii Noi",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Țahnăuți",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Țambula",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Țapoc",
+    "raion": "Fălești"
+  },
+  {
+    "localitate": "Țareuca",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Țarigrad",
+    "raion": "Drochia"
+  },
+  {
+    "localitate": "Țaul",
+    "raion": "Dondușeni"
+  },
+  {
+    "localitate": "Țepilova",
+    "raion": "Soroca"
+  },
+  {
+    "localitate": "Țibirica",
+    "raion": "Călărași"
+  },
+  {
+    "localitate": "Țiganca",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Țiganca Nouă",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Țigănești",
+    "raion": "Strășeni"
+  },
+  {
+    "localitate": "Țipala",
+    "raion": "Ialoveni"
+  },
+  {
+    "localitate": "Țipletești",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Țiplești",
+    "raion": "Sîngerei"
+  },
+  {
+    "localitate": "Țipordei",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Țipova",
+    "raion": "Rezina"
+  },
+  {
+    "localitate": "Țolica",
+    "raion": "Cantemir"
+  },
+  {
+    "localitate": "Țîbuleuca",
+    "raion": "UATSN"
+  },
+  {
+    "localitate": "Țîghira",
+    "raion": "Ungheni"
+  },
+  {
+    "localitate": "Țînțăreni",
+    "raion": "Anenii Noi"
+  },
+  {
+    "localitate": "Țînțăreni",
+    "raion": "Telenești"
+  },
+  {
+    "localitate": "Țîra",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Țîra, loc.st.c.f.",
+    "raion": "Florești"
+  },
+  {
+    "localitate": "Țărăncuța",
+    "raion": "Cantemir"
+  }
+]

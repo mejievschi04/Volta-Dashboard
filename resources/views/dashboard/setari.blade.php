@@ -12,18 +12,19 @@
   .setari-photo-input { position: absolute; width: 0; height: 0; opacity: 0; }
   .setari-photo-btn {
     display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px;
-    background: rgba(255, 238, 0, 0.15); color: #FFEE00; border: 1px solid rgba(255, 238, 0, 0.4);
+    background: var(--brand-10, rgba(255, 238, 0, 0.15)); color: var(--brand, #FFEE00); border: 1px solid var(--brand-20, rgba(255, 238, 0, 0.4));
     border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s;
   }
-  .setari-photo-btn:hover { background: rgba(255, 238, 0, 0.25); }
+  .setari-photo-btn:hover { background: var(--brand-20, rgba(255, 238, 0, 0.25)); }
 </style>
 @endpush
 
 @section('content')
-@php $isAdmin = auth()->check() && in_array(strtolower(auth()->user()->role ?? ''), ['admin', 'administrator']); @endphp
+@php $isAdmin = auth()->check() && auth()->user()->isAdmin(); @endphp
+@php $isDev = auth()->check() && auth()->user()->isDev(); @endphp
 @php $isOperator = auth()->check() && auth()->user()->isOperator(); @endphp
 
-<div class="setari-wrap">
+<div class="setari-wrap {{ $isOperator ? 'setari-wrap--operator' : '' }}">
 @if($isOperator)
   {{-- Operator: Poze profil și copertă --}}
   @if(isset($operatorRecord) && $operatorRecord)
@@ -85,7 +86,7 @@
     <div class="tabs">
       <div class="tab active" data-tab="general"><i class="fas fa-sliders-h"></i> Generale</div>
       <div class="tab" data-tab="security"><i class="fas fa-lock"></i> Securitate</div>
-      @if($isAdmin)
+      @if($isDev)
       <div class="tab" data-tab="data-refresh"><i class="fas fa-database"></i> Actualizare date</div>
       @endif
     </div>
@@ -119,12 +120,15 @@
           </select>
         </div>
         <div class="field">
-          <label>Rol</label>
-          <select name="role">
-            <option value="Administrator" {{ (Auth::user()->role ?? 'Administrator') == 'Administrator' ? 'selected' : '' }}>Administrator</option>
-            <option value="Manager" {{ (Auth::user()->role ?? 'Administrator') == 'Manager' ? 'selected' : '' }}>Manager</option>
-            <option value="Vizualizare" {{ (Auth::user()->role ?? 'Administrator') == 'Vizualizare' ? 'selected' : '' }}>Vizualizare</option>
+          <label>Temă interfață</label>
+          <select name="theme">
+            <option value="dark" {{ (Auth::user()->theme ?? 'dark') === 'dark' ? 'selected' : '' }}>Dark (default)</option>
+            <option value="dark-red" {{ (Auth::user()->theme ?? 'dark') === 'dark-red' ? 'selected' : '' }}>Dark Red</option>
           </select>
+        </div>
+        <div class="field">
+          <label>Rol</label>
+          <input type="text" value="{{ Auth::user()->role ?? 'User' }}" disabled>
         </div>
         <div class="field">
           <label>Țară</label>
@@ -167,7 +171,7 @@
       </div>
     </form>
 
-    @if($isAdmin)
+    @if($isDev)
     <div class="tab-content" id="data-refresh">
       <div class="form" style="display: block;">
         <div class="setari-1c-block">
@@ -230,7 +234,7 @@ setTimeout(() => {
 @endif
 
 // Actualizare date (admin)
-@if(isset($isAdmin) && $isAdmin)
+@if(isset($isDev) && $isDev)
 (function() {
   const syncBtn = document.getElementById('sync1cBtn');
   const statusEl = document.getElementById('sync1cStatus');

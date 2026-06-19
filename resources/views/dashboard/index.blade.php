@@ -37,11 +37,11 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
     <h4>CEC mediu</h4>
     <div class="value" id="cec-mediu">-</div>
   </div>
-  <div class="card{{ $isAdmin ? ' editable-plan' : '' }}">
+  <div class="card{{ $isAdmin ? ' editable-plan' : '' }}"@if($isAdmin) title="Click pentru a seta planul lunar" role="button" tabindex="0" aria-label="Plan luna curentă — click pentru editare"@endif>
     <h4>
       Plan luna curentă
       @if($isAdmin)
-        <i class="fas fa-edit edit-icon" title="Click pentru a edita"></i>
+        <i class="fas fa-edit edit-icon" title="Setează planul pentru orice lună"></i>
       @endif
     </h4>
     <div class="value" id="plan-luna">-</div>
@@ -154,6 +154,44 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
     </div>
   </div>
 </div>
+
+@if($isAdmin)
+<div id="dashboard-plan-modal" class="dashboard-chart-modal dashboard-plan-modal" aria-hidden="true">
+  <div class="dashboard-chart-modal__backdrop" data-close-plan-modal tabindex="-1"></div>
+  <div class="dashboard-chart-modal__panel dashboard-plan-modal__panel" role="dialog" aria-modal="true" aria-labelledby="dashboard-plan-modal-title">
+    <div class="dashboard-chart-modal__head">
+      <h3 id="dashboard-plan-modal-title"><i class="fas fa-bullseye" aria-hidden="true"></i> Plan lunar</h3>
+      <button type="button" class="dashboard-chart-modal__close" data-close-plan-modal aria-label="Închide"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="dashboard-chart-modal__body dashboard-plan-modal__body">
+      <p class="dashboard-plan-modal__lead">Alege anul și luna, apoi introdu sau modifică planul de vânzări (MDL).</p>
+      <form id="dashboardPlanForm" class="dashboard-plan-form" novalidate>
+        <div class="dashboard-plan-form__grid">
+          <div class="dashboard-plan-form__field">
+            <label for="planEditYear">An</label>
+            <select id="planEditYear" class="dashboard-month-select" required></select>
+          </div>
+          <div class="dashboard-plan-form__field">
+            <label for="planEditMonth">Luna</label>
+            <select id="planEditMonth" class="dashboard-month-select" required></select>
+          </div>
+          <div class="dashboard-plan-form__field dashboard-plan-form__field--wide">
+            <label for="planEditValoare">Plan (MDL)</label>
+            <input type="number" id="planEditValoare" class="dashboard-plan-form__input" min="0" step="0.01" required placeholder="0">
+          </div>
+        </div>
+        <p class="dashboard-plan-form__hint" id="planEditHint" aria-live="polite"></p>
+        <div class="dashboard-plan-form__actions">
+          <button type="button" class="btn secondary" data-close-plan-modal>Anulează</button>
+          <button type="submit" class="btn primary" id="planEditSaveBtn">
+            <i class="fas fa-save" aria-hidden="true"></i> Salvează planul
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+@endif
 @endsection
 
 @push('scripts')
@@ -162,6 +200,15 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
 // ---------------- UTILITARE ---------------- 
 function formatNumber(val) {
   return new Intl.NumberFormat('ro-RO').format(val || 0);
+}
+
+function getThemeBrand() {
+  try {
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
+    return v || '#FFEE00';
+  } catch (e) {
+    return '#FFEE00';
+  }
 }
 
 // ---------------- CHARTS OBJECT ---------------- 
@@ -266,7 +313,7 @@ function initChart(chartId, label, color="#FFEE00") {
         responsive: true,
         plugins: {
           legend: { display: true, labels: { color: "#fff", font: { size: isM ? 10 : 12 } } },
-          tooltip: { backgroundColor: "rgba(31,41,55,0.95)", titleColor: "#FFEE00", bodyColor: "#fff", borderColor: "#475569", borderWidth: 1, padding: 12, cornerRadius: 10 },
+          tooltip: { backgroundColor: "rgba(31,41,55,0.95)", titleColor: getThemeBrand(), bodyColor: "#fff", borderColor: "#475569", borderWidth: 1, padding: 12, cornerRadius: 10 },
         },
         scales: {
           x: { ticks: { color: "#e2e8f0", font: { size: isM ? 9 : 11 } }, grid: { color: "rgba(148,163,184,0.12)", drawBorder: false } },
@@ -401,7 +448,7 @@ async function loadVanzariTotale() {
           },
           plugins: {
             legend: { display: true, position: "top", labels: { color: "#e2e8f0", font: { size: 13 }, usePointStyle: true } },
-            tooltip: { backgroundColor: "rgba(30,41,59,0.96)", titleColor: "#FFEE00", bodyColor: "#f8fafc", borderColor: "#334155", borderWidth: 1, padding: 12, cornerRadius: 10 },
+            tooltip: { backgroundColor: "rgba(30,41,59,0.96)", titleColor: getThemeBrand(), bodyColor: "#f8fafc", borderColor: "#334155", borderWidth: 1, padding: 12, cornerRadius: 10 },
           },
           scales: {
             x: { ticks: { color: "#cbd5e1", maxRotation: isDashMobile ? 45 : 0 }, grid: { color: "rgba(148,163,184,0.12)", drawBorder: false } },
@@ -417,12 +464,12 @@ async function loadVanzariTotale() {
     destroyChart("salesChart");
     const ctxSales = document.getElementById("salesChart");
     const SOL = (typeof VoltaChartTheme !== "undefined" && VoltaChartTheme.barSolid) ? VoltaChartTheme.barSolid : {};
-    const yellow = SOL.brand || "#FFEE00";
+    const yellow = SOL.brand || getThemeBrand();
     const yellowHi = SOL.brandHover || "#FFF59A";
     const rose = SOL.coral || "#FB7185";
     const roseHi = SOL.coralHover || "#FDA4AF";
-    const sky = SOL.sky || "#38BDF8";
-    const skyHi = SOL.skyHover || "#7DD3FC";
+    const sky = SOL.sky || "#B4BCCC";
+    const skyHi = SOL.skyHover || "#D4DAE4";
     const planFillStatic = "rgba(251, 113, 133, 0.12)";
     if (ctxSales) {
       charts["salesChart"] = { instance: new Chart(ctxSales.getContext("2d"), {
@@ -584,131 +631,180 @@ async function loadVanzariTotale() {
       @endif
     }
 
-    // Funcționalitate editare inline pentru plan (doar admini)
+    // Formular plan lunar (toate lunile anului) — doar admini
     @if(auth()->check() && (strtolower(auth()->user()->role ?? '') === 'admin' || strtolower(auth()->user()->role ?? '') === 'administrator'))
-    function initPlanEdit() {
-      const planCard = document.querySelector('.editable-plan');
-      const planValue = document.getElementById('plan-luna');
-      
-      if (!planCard || !planValue) return;
-      
-      // Evită adăugarea multiplă a event listener-ului
-      if (planCard.dataset.editInitialized === 'true') return;
-      planCard.dataset.editInitialized = 'true';
-      
-      let isEditing = false;
-      
-      planCard.addEventListener('click', function(e) {
-        // Nu permite editarea dacă se dă click pe icon sau pe header
-        if (e.target.classList.contains('edit-icon') || e.target.closest('h4')) return;
-        
-        // Permite editarea dacă se dă click pe elementul .value sau pe card
-        if (!isEditing) {
-          const clickedValue = e.target.closest('.value');
-          if (clickedValue === planValue || e.target === planValue) {
-            startEditing();
-          }
-        }
+    const PLAN_LUNI_RO = [
+      'Ianuarie', 'Februarie', 'Martie', 'Aprilie', 'Mai', 'Iunie',
+      'Iulie', 'August', 'Septembrie', 'Octombrie', 'Noiembrie', 'Decembrie'
+    ];
+    const PLAN_YEAR_MIN = 2023;
+
+    function buildPlanMonthKey(year, monthNum) {
+      return String(year) + '-' + String(monthNum).padStart(2, '0');
+    }
+
+    function parseYm(ym) {
+      if (!ym || !/^\d{4}-\d{2}$/.test(ym)) {
+        const now = new Date();
+        return { year: now.getFullYear(), month: now.getMonth() + 1 };
+      }
+      const parts = ym.split('-');
+      return { year: parseInt(parts[0], 10), month: parseInt(parts[1], 10) };
+    }
+
+    function populatePlanYearMonthSelects(defaultYear, defaultMonth) {
+      const yearSelect = document.getElementById('planEditYear');
+      const monthSelect = document.getElementById('planEditMonth');
+      if (!yearSelect || !monthSelect) return;
+
+      const currentYear = new Date().getFullYear();
+      yearSelect.innerHTML = '';
+      for (let y = currentYear + 1; y >= PLAN_YEAR_MIN; y--) {
+        const opt = document.createElement('option');
+        opt.value = String(y);
+        opt.textContent = String(y);
+        yearSelect.appendChild(opt);
+      }
+      yearSelect.value = String(defaultYear);
+
+      monthSelect.innerHTML = '';
+      PLAN_LUNI_RO.forEach(function (name, index) {
+        const opt = document.createElement('option');
+        opt.value = String(index + 1);
+        opt.textContent = name;
+        monthSelect.appendChild(opt);
       });
-      
-      function startEditing() {
-        if (isEditing) return;
-        isEditing = true;
-        
-        const currentValue = parseFloat(planValue.getAttribute('data-raw-value') || 0);
-        const currentMonth = planValue.getAttribute('data-current-month') || selectLuna.value;
-        
-        // Creează input field
-        const input = document.createElement('input');
-        input.type = 'number';
-        input.step = '0.01';
-        input.min = '0';
-        input.value = currentValue;
-        input.style.cssText = `
-          width: 100%;
-          background: rgba(31, 41, 55, 0.8);
-          border: 2px solid #FFEE00;
-          border-radius: 8px;
-          padding: 12px;
-          color: #FFFFFF;
-          font-size: 32px;
-          font-weight: 700;
-          text-align: center;
-          outline: none;
-          font-family: inherit;
-        `;
-        
-        const originalHTML = planValue.innerHTML;
-        planValue.innerHTML = '';
-        planValue.appendChild(input);
-        input.focus();
-        input.select();
-        
-        // Salvează la Enter sau blur
-        const save = async () => {
-          const newValue = parseFloat(input.value) || 0;
-          if (newValue < 0) {
-            alert('Valoarea trebuie să fie pozitivă!');
-            input.focus();
-            return;
-          }
-          
-          try {
-            const response = await fetch('{{ route("api.kpi.plan.update") }}', {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-              },
-              body: JSON.stringify({
-                month: currentMonth,
-                valoare: newValue
-              })
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-              // Reîncarcă KPI-urile pentru a actualiza toate valorile
-              await updateKPIandChart(currentMonth);
-              planCard.style.borderColor = '#10B981';
-              setTimeout(() => {
-                planCard.style.borderColor = '';
-              }, 2000);
-            } else {
-              alert('Eroare: ' + (result.error || 'Nu s-a putut actualiza planul.'));
-              planValue.innerHTML = originalHTML;
-            }
-          } catch (error) {
-            console.error('Eroare la salvare:', error);
-            alert('Eroare la salvare: ' + error.message);
-            planValue.innerHTML = originalHTML;
-          }
-          
-          isEditing = false;
-        };
-        
-        // Anulează la Escape
-        const cancel = () => {
-          planValue.innerHTML = originalHTML;
-          isEditing = false;
-        };
-        
-        input.addEventListener('blur', save);
-        input.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            save();
-          } else if (e.key === 'Escape') {
-            e.preventDefault();
-            cancel();
-          }
-        });
+      monthSelect.value = String(defaultMonth);
+    }
+
+    async function fetchPlanForForm() {
+      const yearSelect = document.getElementById('planEditYear');
+      const monthSelect = document.getElementById('planEditMonth');
+      const valoareInput = document.getElementById('planEditValoare');
+      const hint = document.getElementById('planEditHint');
+      if (!yearSelect || !monthSelect || !valoareInput) return;
+
+      const monthKey = buildPlanMonthKey(parseInt(yearSelect.value, 10), parseInt(monthSelect.value, 10));
+      if (hint) hint.textContent = 'Se încarcă planul pentru ' + PLAN_LUNI_RO[parseInt(monthSelect.value, 10) - 1] + ' ' + yearSelect.value + '…';
+
+      try {
+        const res = await fetch(@json(route('api.kpi.plan.show')) + '?month=' + encodeURIComponent(monthKey));
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || 'Nu s-a putut încărca planul.');
+        valoareInput.value = data.plan_luna != null ? data.plan_luna : 0;
+        if (hint) {
+          hint.textContent = data.plan_luna > 0
+            ? 'Plan existent: ' + formatNumber(data.plan_luna) + ' MDL'
+            : 'Nu există plan setat pentru această lună — poți introduce o valoare nouă.';
+        }
+      } catch (err) {
+        if (hint) hint.textContent = '';
+        console.error(err);
+        alert('Eroare la încărcarea planului: ' + err.message);
       }
     }
-    
-    // Inițializează editarea după încărcarea paginii
-    document.addEventListener('DOMContentLoaded', function() {
+
+    function openPlanModal() {
+      const modal = document.getElementById('dashboard-plan-modal');
+      const planValue = document.getElementById('plan-luna');
+      const selectLunaEl = document.getElementById('selectLuna');
+      if (!modal) return;
+
+      const refYm = (planValue && planValue.getAttribute('data-current-month')) || (selectLunaEl && selectLunaEl.value) || new Date().toISOString().slice(0, 7);
+      const parsed = parseYm(refYm);
+      const defaultYear = new Date().getFullYear();
+      populatePlanYearMonthSelects(defaultYear, parsed.month);
+
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      fetchPlanForForm();
+      const valoareInput = document.getElementById('planEditValoare');
+      if (valoareInput) valoareInput.focus();
+    }
+
+    function closePlanModal() {
+      const modal = document.getElementById('dashboard-plan-modal');
+      if (!modal) return;
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function initPlanEdit() {
+      const planCard = document.querySelector('.editable-plan');
+      const modal = document.getElementById('dashboard-plan-modal');
+      const form = document.getElementById('dashboardPlanForm');
+      const yearSelect = document.getElementById('planEditYear');
+      const monthSelect = document.getElementById('planEditMonth');
+      if (!planCard || !modal || !form) return;
+      if (planCard.dataset.editInitialized === 'true') return;
+      planCard.dataset.editInitialized = 'true';
+
+      planCard.addEventListener('click', function () { openPlanModal(); });
+      planCard.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openPlanModal();
+        }
+      });
+
+      modal.addEventListener('click', function (e) {
+        if (e.target.closest('[data-close-plan-modal]')) closePlanModal();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('is-open')) closePlanModal();
+      });
+
+      if (yearSelect) yearSelect.addEventListener('change', fetchPlanForForm);
+      if (monthSelect) monthSelect.addEventListener('change', fetchPlanForForm);
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const saveBtn = document.getElementById('planEditSaveBtn');
+        const valoareInput = document.getElementById('planEditValoare');
+        const monthKey = buildPlanMonthKey(parseInt(yearSelect.value, 10), parseInt(monthSelect.value, 10));
+        const valoare = parseFloat(valoareInput.value);
+        if (Number.isNaN(valoare) || valoare < 0) {
+          alert('Introdu o valoare validă (≥ 0).');
+          valoareInput.focus();
+          return;
+        }
+
+        if (saveBtn) saveBtn.disabled = true;
+        try {
+          const response = await fetch(@json(route('api.kpi.plan.update')), {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': @json(csrf_token())
+            },
+            body: JSON.stringify({ month: monthKey, valoare: valoare })
+          });
+          const result = await response.json();
+          if (!result.success) throw new Error(result.error || 'Nu s-a putut salva planul.');
+
+          const selectLunaEl = document.getElementById('selectLuna');
+          const dashboardMonth = selectLunaEl ? selectLunaEl.value : monthKey;
+          if (dashboardMonth === monthKey) {
+            await updateKPIandChart(dashboardMonth);
+          } else {
+            loadVanzariTotale();
+          }
+
+          planCard.style.borderColor = '#10B981';
+          setTimeout(function () { planCard.style.borderColor = ''; }, 2000);
+          closePlanModal();
+        } catch (error) {
+          alert('Eroare la salvare: ' + error.message);
+        } finally {
+          if (saveBtn) saveBtn.disabled = false;
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
       setTimeout(initPlanEdit, 500);
     });
     @endif
@@ -756,9 +852,9 @@ function loadComenziSiConversieLunare() {
   destroyChart("comenziLunarChart");
   destroyChart("conversieLunarChart");
   destroyChart("sesiuniChart");
-  initChart("comenziLunarChart", "Comenzi", "#FFEE00");
+  initChart("comenziLunarChart", "Comenzi", getThemeBrand());
   initChart("conversieLunarChart", "Conversie %", "#FB7185");
-  initChart("sesiuniChart", "Total sesiuni", "#38BDF8");
+  initChart("sesiuniChart", "Total sesiuni", "#B4BCCC");
 }
 
 // ---------------- DOCUMENT READY ---------------- 
@@ -776,10 +872,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dashboardModalChart) dashboardModalChart.resize();
   });
 
-  initChart("salesChart", "Vânzări lunare", "#FFEE00");
-  initChart("comenziLunarChart", "Comenzi", "#FFEE00");
+  initChart("salesChart", "Vânzări lunare", getThemeBrand());
+  initChart("comenziLunarChart", "Comenzi", getThemeBrand());
   initChart("conversieLunarChart", "Conversie %", "#FB7185");
-  initChart("sesiuniChart", "Total sesiuni", "#38BDF8");
+  initChart("sesiuniChart", "Total sesiuni", "#B4BCCC");
 
   loadVanzariTotale();
 });

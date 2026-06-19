@@ -6,12 +6,19 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Support\DevMode;
 
 class LoginController extends Controller
 {
     public function showLoginForm()
     {
         if (Auth::check()) {
+            if (DevMode::enabled()) {
+                return DevMode::isOwner(Auth::user())
+                    ? redirect()->route('dev-mode.panel')
+                    : response()->view('dev-mode.locked', ['state' => DevMode::state()], 503);
+            }
+
             return Auth::user()->isOperator()
                 ? redirect()->route('datele-mele')
                 : redirect()->route('dashboard');
@@ -77,7 +84,9 @@ class LoginController extends Controller
                     'session_data' => $request->session()->all()
                 ]);
 
-                $redirectUrl = $user->isOperator() ? route('datele-mele') : route('dashboard');
+                $redirectUrl = DevMode::enabled() && DevMode::isOwner($user)
+                    ? route('dev-mode.panel')
+                    : ($user->isOperator() ? route('datele-mele') : route('dashboard'));
                 \Log::info('Redirecting after login', [
                     'route' => $redirectUrl,
                     'session_persists' => $request->session()->has('_token'),
