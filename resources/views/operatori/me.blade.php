@@ -4,6 +4,41 @@
 
 @push('styles')
 <style>
+  .operator-team-kpi {
+    margin-bottom: 24px;
+  }
+  .operator-team-kpi-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .operator-team-kpi-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .operator-team-kpi-header h2 i {
+    color: #FFEE00;
+  }
+  .operator-team-kpi-badge {
+    background: rgba(255, 238, 0, 0.12);
+    color: #FFEE00;
+    border: 1px solid rgba(255, 238, 0, 0.35);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .operator-team-kpi-grid {
+    padding-bottom: 0;
+  }
   @media (max-width: 900px) {
     .operator-me-grid { grid-template-columns: 1fr !important; margin-top: 80px !important; }
     .operator-me-cover { height: 220px !important; }
@@ -20,6 +55,41 @@
   <span style="font-weight: 600;">{{ session('success') }}</span>
 </div>
 @endif
+
+@php
+  $luniNumeKpi = [
+    1 => 'Ianuarie', 2 => 'Februarie', 3 => 'Martie', 4 => 'Aprilie',
+    5 => 'Mai', 6 => 'Iunie', 7 => 'Iulie', 8 => 'August',
+    9 => 'Septembrie', 10 => 'Octombrie', 11 => 'Noiembrie', 12 => 'Decembrie',
+  ];
+  $lunaCurentaKpi = now()->format('Y-m');
+  $lunaCurentaLabel = ($luniNumeKpi[(int) now()->format('n')] ?? '') . ' ' . now()->format('Y');
+@endphp
+
+<section class="operator-team-kpi" aria-label="KPI echipă">
+  <div class="operator-team-kpi-header">
+    <h2><i class="fas fa-users" aria-hidden="true"></i> KPI echipă</h2>
+    <span class="operator-team-kpi-badge" id="operator-kpi-month-label">{{ $lunaCurentaLabel }}</span>
+  </div>
+  <div class="kpi-grid operator-team-kpi-grid">
+    <div class="card">
+      <h4>Vânzări fără TVA</h4>
+      <div class="value" id="operator-vanzari-luna">-</div>
+    </div>
+    <div class="card">
+      <h4>Plan luna curentă</h4>
+      <div class="value" id="operator-plan-luna">-</div>
+    </div>
+    <div class="card">
+      <h4>Progres plan</h4>
+      <div class="value" id="operator-progres-plan">-</div>
+    </div>
+    <div class="card">
+      <h4>Prognoză plan</h4>
+      <div class="value" id="operator-prognoza-plan">-</div>
+    </div>
+  </div>
+</section>
 
 @if($date)
   @php
@@ -270,4 +340,47 @@
     <p style="color: #6B7280; font-size: 13px; margin: 8px 0 0 0;">Contactează administratorul pentru a seta rolul „Operator” și numele asociat.</p>
   </div>
 @endif
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const lunaCurenta = @json($lunaCurentaKpi);
+
+  function formatNumber(val) {
+    return new Intl.NumberFormat('ro-RO').format(val || 0);
+  }
+
+  function formatValue(value, suffix) {
+    const suffixHtml = suffix
+      ? '<span style="font-size:18px;color:var(--muted);font-weight:600;margin-left:4px;">' + suffix + '</span>'
+      : '';
+    return '<span style="display:inline-flex;align-items:baseline;">' + formatNumber(value) + suffixHtml + '</span>';
+  }
+
+  async function loadTeamKpi() {
+    try {
+      const res = await fetch(@json(route('api.kpi')) + '?month=' + encodeURIComponent(lunaCurenta));
+      const kpiData = await res.json();
+      if (!kpiData.success) return;
+
+      const map = {
+        'operator-vanzari-luna': formatValue(kpiData.vanzari_luna || 0, 'MDL'),
+        'operator-plan-luna': formatValue(kpiData.plan_luna || 0, 'MDL'),
+        'operator-progres-plan': formatValue(kpiData.progres_plan || 0, '%'),
+        'operator-prognoza-plan': formatValue(kpiData.prognoza_plan || 0, 'MDL'),
+      };
+
+      Object.keys(map).forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = map[id];
+      });
+    } catch (e) {
+      console.error('Eroare la încărcarea KPI echipă:', e);
+    }
+  }
+
+  loadTeamKpi();
+});
+</script>
+@endpush
 @endsection
