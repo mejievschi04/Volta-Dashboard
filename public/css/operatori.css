@@ -846,11 +846,17 @@ body.operator-portal {
 
 .operator-portal .operator-team-kpi-grid {
   padding-bottom: 0;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .operator-portal .operator-team-kpi-grid .card {
   min-height: 112px;
+}
+
+@media (max-width: 1300px) {
+  .operator-portal .operator-team-kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 1100px) {

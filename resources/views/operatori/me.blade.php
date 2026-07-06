@@ -45,6 +45,10 @@
       <h4>Prognoză plan</h4>
       <div class="value" id="operator-prognoza-plan">-</div>
     </div>
+    <div class="card">
+      <h4>Vânzări/zi pentru plan</h4>
+      <div class="value" id="operator-vanzari-zi-plan">-</div>
+    </div>
   </div>
 </section>
 
@@ -274,6 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'operator-plan-luna': formatValue(kpiData.plan_luna || 0, 'MDL'),
         'operator-progres-plan': formatValue(kpiData.progres_plan || 0, '%'),
         'operator-prognoza-plan': formatValue(kpiData.prognoza_plan_procent || 0, '%'),
+        'operator-vanzari-zi-plan': formatValue(kpiData.vanzari_zi_pentru_plan || 0, 'MDL'),
       };
 
       Object.keys(map).forEach(function(id) {

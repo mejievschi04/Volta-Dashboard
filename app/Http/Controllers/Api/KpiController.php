@@ -92,6 +92,12 @@ class KpiController extends Controller
             
             // Prognoză plan %
             $prognozaPlanProcent = $planLuna > 0 ? round(($prognozaPlan / $planLuna) * 100, 2) : 0;
+
+            // Vânzări/zi necesare pentru a atinge planul (din zilele rămase)
+            $restPentruPlan = max(0, $planLuna - $vanzariLuna);
+            $vanzariZiPentruPlan = $zileRamase > 0
+                ? round($restPentruPlan / $zileRamase, 2)
+                : 0;
             
             // Valoare medie comandă (CEC mediu = suma fără TVA / nr comenzi)
             $cecMediu = $comenzi > 0 ? round($vanzariLuna / $comenzi, 2) : 0;
@@ -116,6 +122,7 @@ class KpiController extends Controller
                 'diferenta_plan' => $diferentaPlan,
                 'prognoza_plan' => $prognozaPlan,
                 'prognoza_plan_procent' => $prognozaPlanProcent,
+                'vanzari_zi_pentru_plan' => $vanzariZiPentruPlan,
                 'sesiuni' => $totalSesiuni,
                 'comenzi' => $comenzi,
                 'comenzi_zi' => $comenziZi,
