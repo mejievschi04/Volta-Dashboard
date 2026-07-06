@@ -9,6 +9,7 @@ use App\Models\TrafficSource;
 use App\Models\OnecKpiSync;
 use App\Models\Livrare;
 use App\Support\DbDate;
+use App\Support\ZileLucratoare;
 use Illuminate\Support\Facades\DB;
 
 class IstoricController extends Controller
@@ -94,22 +95,12 @@ class IstoricController extends Controller
                 $totalLivrariLuna = Livrare::whereRaw(DbDate::month('data_livrarii') . ' = ?', [$luna])->count();
                 $pickup = max(0, $comenzi - $totalLivrariLuna);
                 
-                // Calculează zilele trecute pentru prognoză
-                $lunaSelectata = strtotime($luna . '-01');
-                $lunaCurenta = strtotime(date('Y-m-01'));
-                $ziCurenta = intval(date('d'));
-                
-                if ($lunaSelectata < $lunaCurenta) {
-                    $zileTrecute = $zileLuna;
-                } elseif ($lunaSelectata == $lunaCurenta) {
-                    $zileTrecute = min($ziCurenta, $zileLuna);
-                } else {
-                    $zileTrecute = 0;
-                }
-                
-                $vanzariZilniceMedii = $zileTrecute > 0 ? ($vanzariLuna / $zileTrecute) : 0;
-                $zileRamase = max(0, $zileLuna - $zileTrecute);
-                $prognozaPlan = $vanzariLuna + ($vanzariZilniceMedii * $zileRamase);
+                // Prognoză plan (fără duminici)
+                $zileLucratoare = ZileLucratoare::pentruLuna($luna);
+                $vanzariZilniceMedii = $zileLucratoare['trecute'] > 0
+                    ? ($vanzariLuna / $zileLucratoare['trecute'])
+                    : 0;
+                $prognozaPlan = $vanzariLuna + ($vanzariZilniceMedii * $zileLucratoare['ramase']);
                 $prognozaPlanProcent = $planLuna > 0 ? round(($prognozaPlan / $planLuna) * 100, 2) : 0;
                 
                 $lunaNume = $luniRomana[$lunaNum] ?? 'Luna ' . $lunaNum;

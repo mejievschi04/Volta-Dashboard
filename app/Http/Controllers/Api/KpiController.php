@@ -9,6 +9,7 @@ use App\Models\TrafficSource;
 use App\Models\OnecKpiSync;
 use App\Models\Livrare;
 use App\Support\DbDate;
+use App\Support\ZileLucratoare;
 use Illuminate\Support\Facades\Auth;
 
 class KpiController extends Controller
@@ -84,19 +85,22 @@ class KpiController extends Controller
             
             // Diferență față de plan
             $diferentaPlan = $vanzariLuna - $planLuna;
+
+            $zileLucratoare = ZileLucratoare::pentruLuna($luna);
+            $zileLucratoareTrecute = $zileLucratoare['trecute'];
+            $zileLucratoareRamase = $zileLucratoare['ramase'];
             
-            // Prognoză plan
-            $vanzariZilniceMedii = $zileTrecute > 0 ? ($vanzariLuna / $zileTrecute) : 0;
-            $zileRamase = max(0, $zileLuna - $zileTrecute);
-            $prognozaPlan = $vanzariLuna + ($vanzariZilniceMedii * $zileRamase);
+            // Prognoză plan (media pe zile lucrătoare, fără duminici)
+            $vanzariZilniceMedii = $zileLucratoareTrecute > 0 ? ($vanzariLuna / $zileLucratoareTrecute) : 0;
+            $prognozaPlan = $vanzariLuna + ($vanzariZilniceMedii * $zileLucratoareRamase);
             
             // Prognoză plan %
             $prognozaPlanProcent = $planLuna > 0 ? round(($prognozaPlan / $planLuna) * 100, 2) : 0;
 
-            // Vânzări/zi necesare pentru a atinge planul (din zilele rămase)
+            // Vânzări/zi necesare pentru plan (doar zile lucrătoare rămase)
             $restPentruPlan = max(0, $planLuna - $vanzariLuna);
-            $vanzariZiPentruPlan = $zileRamase > 0
-                ? round($restPentruPlan / $zileRamase, 2)
+            $vanzariZiPentruPlan = $zileLucratoareRamase > 0
+                ? round($restPentruPlan / $zileLucratoareRamase, 2)
                 : 0;
             
             // Valoare medie comandă (CEC mediu = suma fără TVA / nr comenzi)
