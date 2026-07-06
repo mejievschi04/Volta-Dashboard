@@ -59,6 +59,10 @@ Bun venit, {{ Auth::check() ? Auth::user()->username : 'User' }}!
     <div class="value" id="prognoza-plan-procent">-</div>
   </div>
   <div class="card">
+    <h4>Vânzări/zi pentru plan</h4>
+    <div class="value" id="vanzari-zi-plan">-</div>
+  </div>
+  <div class="card">
     <h4>Diferență față de plan</h4>
     <div class="value" id="diferenta-plan">-</div>
   </div>
@@ -602,6 +606,7 @@ async function loadVanzariTotale() {
         { id: 'diferenta-plan', value: `<span style="color: ${diferentaColor}">${formatNumber(diferentaPlan)}</span> <span style="font-size:16px;color:var(--muted); font-weight:600;">MDL</span>` },
         { id: 'prognoza-plan', value: formatValue(kpiData.prognoza_plan || 0, 'MDL') },
         { id: 'prognoza-plan-procent', value: formatValue(kpiData.prognoza_plan_procent || 0, '%') },
+        { id: 'vanzari-zi-plan', value: formatValue(kpiData.vanzari_zi_pentru_plan || 0, 'MDL') },
         { id: 'comenzi', value: formatValue(kpiData.comenzi || 0) },
         { id: 'comenzi-zi', value: formatValue(kpiData.comenzi_zi || 0) },
         { id: 'sesiuni', value: formatValue(kpiData.sesiuni || 0) },
