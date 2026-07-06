@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TrafficSource;
+use App\Models\OnecKpiSync;
 use App\Support\DbDate;
+use App\Support\LunaRomana;
+use App\Services\GoogleAnalyticsService;
 use Illuminate\Support\Facades\DB;
 
 class TraficController extends Controller
@@ -277,5 +280,139 @@ class TraficController extends Controller
                 'line' => $e->getLine()
             ], 500);
         }
+    }
+
+    /**
+     * Raport trafic: vizitatori site, bounce rate, conversion rate pe lună/luni.
+     */
+    public function raport(Request $request, GoogleAnalyticsService $gaService)
+    {
+        $startMonth = $this->normalizeMonthKey($request->get('start_month', date('Y-m')));
+        $endMonth = $this->normalizeMonthKey($request->get('end_month', $startMonth));
+
+        if ($startMonth === null || $endMonth === null) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Perioadă invalidă. Folosește formatul YYYY-MM.',
+            ], 400);
+        }
+
+        if ($startMonth > $endMonth) {
+            [$startMonth, $endMonth] = [$endMonth, $startMonth];
+        }
+
+        $months = $this->monthKeysBetween($startMonth, $endMonth);
+        $gaByMonth = [];
+        $gaWarning = null;
+
+        try {
+            $rangeStart = $startMonth . '-01';
+            $rangeEnd = date('Y-m-t', strtotime($endMonth . '-01'));
+            $gaByMonth = $gaService->fetchMonthlyRaportMetrics($rangeStart, $rangeEnd);
+        } catch (\Throwable $e) {
+            $gaWarning = 'Date GA4 indisponibile: ' . $e->getMessage();
+        }
+
+        $rows = [];
+        $totals = [
+            'sessions' => 0,
+            'bounce_weighted' => 0.0,
+            'conversion_weighted' => 0.0,
+            'rate_months' => 0,
+        ];
+
+        foreach ($months as $ym) {
+            $ga = $gaByMonth[$ym] ?? null;
+
+            if ($ga) {
+                $vizite = (int) $ga['sessions'];
+                $bounceRate = $ga['bounce_rate'];
+                $conversie = $ga['conversion_rate'];
+            } else {
+                // Fallback: vizite din sync local, conversie din comenzi 1C
+                $vizite = (int) TrafficSource::query()
+                    ->where('source', 'total')
+                    ->whereRaw(DbDate::month('date') . ' = ?', [$ym])
+                    ->sum('visits');
+
+                $onecSync = OnecKpiSync::whereRaw(DbDate::month('period_start') . ' = ?', [$ym])
+                    ->orderByDesc('created_at')
+                    ->first();
+                $comenzi = $onecSync ? (int) $onecSync->nr_comenzi : 0;
+                $conversie = $vizite > 0 ? round(($comenzi / $vizite) * 100, 2) : 0;
+                $bounceRate = null;
+            }
+
+            $rows[] = [
+                'luna' => $ym,
+                'luna_label' => LunaRomana::labelFromYm($ym),
+                'vizite_site' => $vizite,
+                'bounce_rate' => $bounceRate,
+                'conversion_rate' => $conversie,
+                'sursa' => $ga ? 'ga4' : 'local',
+            ];
+
+            $totals['sessions'] += $vizite;
+            if ($bounceRate !== null && $conversie !== null) {
+                $totals['bounce_weighted'] += $bounceRate * $vizite;
+                $totals['conversion_weighted'] += $conversie * $vizite;
+                $totals['rate_months'] += $vizite;
+            }
+        }
+
+        $avgBounce = $totals['rate_months'] > 0
+            ? round($totals['bounce_weighted'] / $totals['rate_months'], 2)
+            : null;
+        $avgConversie = $totals['rate_months'] > 0
+            ? round($totals['conversion_weighted'] / $totals['rate_months'], 2)
+            : null;
+
+        return response()->json([
+            'success' => true,
+            'start_month' => $startMonth,
+            'end_month' => $endMonth,
+            'source' => ! empty($gaByMonth) ? 'ga4' : 'local',
+            'metric_definitions' => [
+                'vizite_site' => 'GA4 sessions — numărul de accesări (sesiuni) în e-shop',
+                'bounce_rate' => 'GA4 bounceRate — % sesiuni neangajate (fără interacțiune: sub 10s, fără conversie, sub 2 pagini)',
+                'conversion_rate' => 'GA4 sessionConversionRate — % sesiuni în care s-a declanșat un eveniment de conversie (ex. achiziție)',
+            ],
+            'rows' => $rows,
+            'totals' => [
+                'vizite_site' => $totals['sessions'],
+                'bounce_rate' => $avgBounce,
+                'conversion_rate' => $avgConversie,
+            ],
+            'ga_warning' => $gaWarning,
+        ]);
+    }
+
+    private function normalizeMonthKey(?string $value): ?string
+    {
+        $value = trim((string) $value);
+        if (! preg_match('/^\d{4}-\d{2}$/', $value)) {
+            return null;
+        }
+        [$year, $month] = array_map('intval', explode('-', $value));
+        if ($year < 2000 || $year > 2100 || $month < 1 || $month > 12) {
+            return null;
+        }
+
+        return sprintf('%04d-%02d', $year, $month);
+    }
+
+    /** @return list<string> */
+    private function monthKeysBetween(string $startYm, string $endYm): array
+    {
+        $months = [];
+        $cursor = strtotime($startYm . '-01');
+        $endTs = strtotime($endYm . '-01');
+
+        while ($cursor <= $endTs) {
+            $months[] = date('Y-m', $cursor);
+            $cursor = strtotime('+1 month', $cursor);
+        }
+
+        return $months;
     }
 }

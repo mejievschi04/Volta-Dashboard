@@ -316,8 +316,8 @@
     </form>
 
     <div class="trafic-actions-modern">
-      <a href="{{ route('trafic.stats') }}" class="trafic-action-btn" title="Vezi statistici generale">
-        <i class="fas fa-chart-pie" aria-hidden="true"></i><span>Statistici</span>
+      <a href="{{ route('trafic.raport') }}" class="trafic-action-btn" title="Raport trafic eCommerce">
+        <i class="fas fa-file-alt" aria-hidden="true"></i><span>Raport</span>
       </a>
       <a href="{{ route('trafic.analiza') }}" class="trafic-action-btn" title="Analiză detaliată">
         <i class="fas fa-chart-bar" aria-hidden="true"></i><span>Analiză</span>

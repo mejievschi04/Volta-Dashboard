@@ -54,7 +54,12 @@ class DashboardController extends Controller
 
     public function traficStats()
     {
-        return view('dashboard.trafic-stats');
+        return redirect()->route('trafic.raport');
+    }
+
+    public function traficRaport()
+    {
+        return view('dashboard.trafic-raport');
     }
 
     public function traficAnaliza()

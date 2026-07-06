@@ -520,6 +520,62 @@ class GoogleAnalyticsService
     }
 
     /**
+     * Metrici lunare pentru raport eCommerce (GA4).
+     *
+     * - sessions → vizitatori site (accesări e-shop)
+     * - bounceRate → % sesiuni neangajate (fără interacțiune semnificativă)
+     * - sessionConversionRate → % sesiuni cu eveniment de conversie (ex. achiziție)
+     *
+     * @return array<string, array{sessions: int, bounce_rate: float|null, conversion_rate: float|null}>
+     */
+    public function fetchMonthlyRaportMetrics(string $startDate, string $endDate): array
+    {
+        $accessToken = $this->getAccessToken();
+        $url = "https://analyticsdata.googleapis.com/v1beta/properties/{$this->propertyId}:runReport";
+
+        $requestBody = [
+            'dateRanges' => [['startDate' => $startDate, 'endDate' => $endDate]],
+            'dimensions' => [['name' => 'yearMonth']],
+            'metrics' => [
+                ['name' => 'sessions'],
+                ['name' => 'bounceRate'],
+                ['name' => 'sessionConversionRate'],
+            ],
+            'orderBys' => [
+                ['dimension' => ['dimensionName' => 'yearMonth']],
+            ],
+        ];
+
+        $response = $this->makeApiRequest($url, $accessToken, $requestBody);
+        $byMonth = [];
+
+        foreach ($response['rows'] ?? [] as $row) {
+            $ymRaw = $row['dimensionValues'][0]['value'] ?? '';
+            if (! preg_match('/^(\d{4})(\d{2})$/', $ymRaw, $m)) {
+                continue;
+            }
+            $ym = $m[1] . '-' . $m[2];
+            $sessions = (int) round((float) ($row['metricValues'][0]['value'] ?? 0));
+            $bounceRaw = (float) ($row['metricValues'][1]['value'] ?? 0);
+            $conversionRaw = (float) ($row['metricValues'][2]['value'] ?? 0);
+
+            $byMonth[$ym] = [
+                'sessions' => $sessions,
+                'bounce_rate' => round($bounceRaw <= 1 ? $bounceRaw * 100 : $bounceRaw, 2),
+                'conversion_rate' => round($conversionRaw <= 1 ? $conversionRaw * 100 : $conversionRaw, 2),
+            ];
+        }
+
+        return $byMonth;
+    }
+
+    /** @deprecated Folosește fetchMonthlyRaportMetrics */
+    public function fetchMonthlyEngagement(string $startDate, string $endDate): array
+    {
+        return $this->fetchMonthlyRaportMetrics($startDate, $endDate);
+    }
+
+    /**
      * Extrage date despre e-commerce
      * Notă: Metricile e-commerce necesită configurare în GA4
      */

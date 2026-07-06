@@ -113,6 +113,7 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
     Route::get('/rapoarte/comparare', [RapoarteController::class, 'comparare'])->name('rapoarte.comparare');
     Route::get('/istoric', [RapoarteController::class, 'istoric'])->name('istoric');
     Route::get('/trafic', [DashboardController::class, 'trafic'])->name('trafic');
+    Route::get('/trafic/raport', [DashboardController::class, 'traficRaport'])->name('trafic.raport');
     Route::get('/trafic/statistici', [DashboardController::class, 'traficStats'])->name('trafic.stats');
     Route::get('/trafic/analiza', [DashboardController::class, 'traficAnaliza'])->name('trafic.analiza');
     Route::get('/setari', [DashboardController::class, 'setari'])->name('setari');
@@ -124,6 +125,7 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
     Route::get('/api/kpi/plan', [KpiController::class, 'showPlan'])->name('api.kpi.plan.show');
     Route::put('/api/kpi/plan', [KpiController::class, 'updatePlan'])->name('api.kpi.plan.update');
     Route::get('/api/trafic', [\App\Http\Controllers\Api\TraficController::class, 'index'])->name('api.trafic');
+    Route::get('/api/trafic/raport', [\App\Http\Controllers\Api\TraficController::class, 'raport'])->name('api.trafic.raport');
     Route::get('/api/vanzari-lunare', [\App\Http\Controllers\Api\VanzariLunareController::class, 'index'])->name('api.vanzari.lunare');
     Route::get('/api/vanzari-zilnice', [\App\Http\Controllers\Api\VanzariZilniceController::class, 'index'])->name('api.vanzari.zilnice');
     Route::get('/api/comenzi-conversie', [\App\Http\Controllers\Api\ComenziConversieController::class, 'index'])->name('api.comenzi.conversie');
