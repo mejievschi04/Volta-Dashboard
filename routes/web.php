@@ -14,6 +14,7 @@ use App\Http\Controllers\LivrariController;
 use App\Http\Controllers\RaportLunarController;
 use App\Http\Controllers\DevModeController;
 use App\Http\Controllers\MobileAnalyticsController;
+use App\Http\Controllers\MobileCrashesController;
 
 // Punct de intrare local: merge direct cu `php artisan serve`
 Route::get('/', function () {
@@ -32,6 +33,9 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/api/mobile-analytics/events', [MobileAnalyticsController::class, 'ingest'])
     ->name('api.mobile-analytics.events')
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class]);
+Route::post('/api/mobile-crashes/events', [MobileCrashesController::class, 'ingest'])
+    ->name('api.mobile-crashes.events')
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class]);
 
 Route::middleware(['auth', \App\Http\Middleware\CheckDev::class])->group(function () {
@@ -101,6 +105,9 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
         Route::get('/mobile/bannere', [MobileAnalyticsController::class, 'bannersList'])->name('mobile.analytics.banners');
         Route::get('/mobile/evenimente-recente', [MobileAnalyticsController::class, 'recentEventsList'])->name('mobile.analytics.recent-events');
         Route::get('/mobile/abandon-cos', [MobileAnalyticsController::class, 'abandonList'])->name('mobile.analytics.abandon');
+        Route::get('/mobile/crashes', [MobileCrashesController::class, 'index'])->name('mobile.crashes');
+        Route::get('/mobile/crashes/lista', [MobileCrashesController::class, 'list'])->name('mobile.crashes.list');
+        Route::get('/mobile/crashes/{crash}', [MobileCrashesController::class, 'show'])->name('mobile.crashes.show');
     });
     
     // Ruta show trebuie să fie după create pentru a evita conflictele

@@ -45,4 +45,8 @@ return [
         'key' => env('MOBILE_ANALYTICS_KEY', ''),
     ],
 
+    'mobile_crashes' => [
+        'key' => env('MOBILE_CRASHES_KEY', ''),
+    ],
+
 ];

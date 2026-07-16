@@ -34,7 +34,7 @@
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
       @php
-        $isMobileModule = request()->routeIs('mobile.analytics*');
+        $isMobileModule = request()->routeIs('mobile.analytics*', 'mobile.crashes*');
         $canAccessMobileModule = auth()->check()
           && auth()->user()->isDev()
           && !auth()->user()->isAdmin()
@@ -80,6 +80,9 @@
         </a>
         <a href="{{ route('mobile.analytics.abandon', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.abandon') ? 'active' : '' }}">
           <i class="fas fa-cart-arrow-down"></i><span class="txt">Abandon coș</span>
+        </a>
+        <a href="{{ route('mobile.crashes', $mobileQuery) }}" class="{{ request()->routeIs('mobile.crashes*') ? 'active' : '' }}">
+          <i class="fas fa-bug"></i><span class="txt">Crash-uri</span>
         </a>
         @else
         <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
@@ -157,9 +160,9 @@
       </div>
 
       <!-- TOPBAR - doar pe prima pagină -->
-      @if(request()->routeIs('dashboard') || request()->routeIs('datele-mele') || request()->routeIs('mobile.analytics*'))
+      @if(request()->routeIs('dashboard') || request()->routeIs('datele-mele') || request()->routeIs('mobile.analytics*', 'mobile.crashes*'))
       <div class="header">
-        <h1>@yield('header-title', request()->routeIs('datele-mele') ? 'Datele mele' : (request()->routeIs('mobile.analytics*') ? 'Volta App' : 'Dashboard'))</h1>
+        <h1>@yield('header-title', request()->routeIs('datele-mele') ? 'Datele mele' : (request()->routeIs('mobile.analytics*', 'mobile.crashes*') ? 'Volta App' : 'Dashboard'))</h1>
         <div class="user-menu">
           <div class="user-info">
             <div class="name">{{ Auth::check() ? Auth::user()->username : 'User' }}</div>
