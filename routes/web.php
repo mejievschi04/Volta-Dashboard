@@ -15,6 +15,7 @@ use App\Http\Controllers\RaportLunarController;
 use App\Http\Controllers\DevModeController;
 use App\Http\Controllers\MobileAnalyticsController;
 use App\Http\Controllers\MobileCrashesController;
+use App\Http\Controllers\MobileFeedbackController;
 
 // Punct de intrare local: merge direct cu `php artisan serve`
 Route::get('/', function () {
@@ -36,6 +37,9 @@ Route::post('/api/mobile-analytics/events', [MobileAnalyticsController::class, '
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class]);
 Route::post('/api/mobile-crashes/events', [MobileCrashesController::class, 'ingest'])
     ->name('api.mobile-crashes.events')
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class]);
+Route::post('/api/mobile-feedback/events', [MobileFeedbackController::class, 'ingest'])
+    ->name('api.mobile-feedback.events')
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class]);
 
 Route::middleware(['auth', \App\Http\Middleware\CheckDev::class])->group(function () {
@@ -108,6 +112,8 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
         Route::get('/mobile/crashes', [MobileCrashesController::class, 'index'])->name('mobile.crashes');
         Route::get('/mobile/crashes/lista', [MobileCrashesController::class, 'list'])->name('mobile.crashes.list');
         Route::get('/mobile/crashes/{crash}', [MobileCrashesController::class, 'show'])->name('mobile.crashes.show');
+        Route::get('/mobile/feedback', [MobileFeedbackController::class, 'index'])->name('mobile.feedback');
+        Route::get('/mobile/feedback/{report}', [MobileFeedbackController::class, 'show'])->name('mobile.feedback.show');
     });
     
     // Ruta show trebuie să fie după create pentru a evita conflictele

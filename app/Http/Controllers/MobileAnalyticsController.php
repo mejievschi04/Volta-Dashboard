@@ -145,23 +145,38 @@ class MobileAnalyticsController extends Controller
             'sessions' => 0,
             'users' => 0,
             'page_views' => 0,
+            'product_views' => 0,
+            'searches' => 0,
+            'add_to_cart' => 0,
             'banner_clicks' => 0,
             'cart_abandons' => 0,
             'orders' => 0,
+            'logins' => 0,
+            'map_opens' => 0,
             'avg_page_seconds' => 0,
+            'conversion_rate' => 0,
+            'events_per_session' => 0,
+            'view_to_cart_rate' => 0,
         ];
         $topPages = collect();
         $bannerClicks = collect();
         $cartAbandons = collect();
         $eventBreakdown = collect();
         $recentEvents = collect();
+        $topSearches = collect();
+        $topProducts = collect();
         $dailyChart = ['labels' => [], 'datasets' => []];
         $funnel = [
             'visits' => 0,
+            'product_views' => 0,
+            'add_to_cart' => 0,
             'checkout_started' => 0,
             'checkout_completed' => 0,
             'orders_completed' => 0,
             'cart_abandoned' => 0,
+            'visit_to_product_rate' => 0,
+            'product_to_cart_rate' => 0,
+            'cart_to_checkout_rate' => 0,
             'visit_to_checkout_rate' => 0,
             'checkout_to_order_rate' => 0,
             'dropoff_after_checkout_rate' => 0,
@@ -172,15 +187,30 @@ class MobileAnalyticsController extends Controller
             $base = MobileAnalyticsEvent::query()
                 ->whereBetween('occurred_at', [$start, $end]);
 
+            $eventsCount = (clone $base)->count();
+            $sessionsCount = (clone $base)->whereNotNull('session_id')->distinct('session_id')->count('session_id');
+            $pageViews = (clone $base)->where('event_name', 'page_view')->count();
+            $ordersCount = (clone $base)->where('event_name', 'order_completed')->count();
+            $addToCart = (clone $base)->where('event_name', 'add_to_cart')->count();
+            $productViews = (clone $base)->where('event_name', 'product_view')->count();
+
             $summary = [
-                'events' => (clone $base)->count(),
-                'sessions' => (clone $base)->whereNotNull('session_id')->distinct('session_id')->count('session_id'),
+                'events' => $eventsCount,
+                'sessions' => $sessionsCount,
                 'users' => (clone $base)->whereNotNull('mobile_user_id')->distinct('mobile_user_id')->count('mobile_user_id'),
-                'page_views' => (clone $base)->where('event_name', 'page_view')->count(),
+                'page_views' => $pageViews,
+                'product_views' => $productViews,
+                'searches' => (clone $base)->where('event_name', 'search')->count(),
+                'add_to_cart' => $addToCart,
                 'banner_clicks' => (clone $base)->where('event_name', 'banner_click')->count(),
                 'cart_abandons' => (clone $base)->where('event_name', 'cart_abandoned')->count(),
-                'orders' => (clone $base)->where('event_name', 'order_completed')->count(),
+                'orders' => $ordersCount,
+                'logins' => (clone $base)->where('event_name', 'login_success')->count(),
+                'map_opens' => (clone $base)->where('event_name', 'map_open')->count(),
                 'avg_page_seconds' => round(((clone $base)->whereNotNull('duration_ms')->avg('duration_ms') ?? 0) / 1000),
+                'conversion_rate' => $sessionsCount > 0 ? round(($ordersCount / $sessionsCount) * 100, 2) : 0,
+                'events_per_session' => $sessionsCount > 0 ? round($eventsCount / $sessionsCount, 1) : 0,
+                'view_to_cart_rate' => $productViews > 0 ? round(($addToCart / $productViews) * 100, 1) : 0,
             ];
 
             $topPages = (clone $base)
@@ -229,8 +259,18 @@ class MobileAnalyticsController extends Controller
                 ->limit(80)
                 ->get();
 
+            $topSearches = $this->topMetadataValues(clone $base, 'search', '$.query', 12);
+            $topProducts = $this->topMetadataValues(clone $base, 'product_view', '$.product_name', 12);
+
             $dailyChart = $this->dailyChart($start, $end);
-            $funnel = $this->funnelMetrics(clone $base, $summary['page_views'], $summary['cart_abandons'], $summary['orders']);
+            $funnel = $this->funnelMetrics(
+                clone $base,
+                $summary['page_views'],
+                $summary['product_views'],
+                $summary['add_to_cart'],
+                $summary['cart_abandons'],
+                $summary['orders']
+            );
         }
 
         return compact(
@@ -243,6 +283,8 @@ class MobileAnalyticsController extends Controller
             'cartAbandons',
             'eventBreakdown',
             'recentEvents',
+            'topSearches',
+            'topProducts',
             'dailyChart',
             'funnel'
         );
@@ -353,7 +395,7 @@ class MobileAnalyticsController extends Controller
             $cursor->addDay();
         }
 
-        $eventNames = ['page_view', 'banner_click', 'cart_abandoned', 'order_completed'];
+        $eventNames = ['page_view', 'product_view', 'search', 'add_to_cart', 'banner_click', 'cart_abandoned', 'order_completed'];
         $datasets = array_fill_keys($eventNames, array_fill(0, count($labels), 0));
         $labelIndex = array_flip($labels);
 
@@ -375,9 +417,12 @@ class MobileAnalyticsController extends Controller
         return ['labels' => $labels, 'datasets' => $datasets];
     }
 
-    private function funnelMetrics($base, int $pageViews, int $cartAbandoned, int $orders): array
+    private function funnelMetrics($base, int $pageViews, int $productViews, int $addToCart, int $cartAbandoned, int $orders): array
     {
         $checkoutStarted = (clone $base)->where('event_name', 'checkout_started')->count();
+        if ($checkoutStarted === 0) {
+            $checkoutStarted = (clone $base)->where('event_name', 'checkout_step')->where('checkout_step', '>=', 2)->distinct('session_id')->count('session_id');
+        }
         if ($checkoutStarted === 0) {
             $checkoutStarted = $cartAbandoned + $orders;
         }
@@ -387,6 +432,15 @@ class MobileAnalyticsController extends Controller
             $checkoutCompleted = $orders;
         }
 
+        $visitToProductRate = $pageViews > 0
+            ? round(($productViews / $pageViews) * 100, 1)
+            : 0.0;
+        $productToCartRate = $productViews > 0
+            ? round(($addToCart / $productViews) * 100, 1)
+            : 0.0;
+        $cartToCheckoutRate = $addToCart > 0
+            ? round(($checkoutStarted / $addToCart) * 100, 1)
+            : 0.0;
         $visitToCheckoutRate = $pageViews > 0
             ? round(($checkoutStarted / $pageViews) * 100, 1)
             : 0.0;
@@ -402,15 +456,45 @@ class MobileAnalyticsController extends Controller
 
         return [
             'visits' => $pageViews,
+            'product_views' => $productViews,
+            'add_to_cart' => $addToCart,
             'checkout_started' => $checkoutStarted,
             'checkout_completed' => $checkoutCompleted,
             'orders_completed' => $orders,
             'cart_abandoned' => $cartAbandoned,
+            'visit_to_product_rate' => $visitToProductRate,
+            'product_to_cart_rate' => $productToCartRate,
+            'cart_to_checkout_rate' => $cartToCheckoutRate,
             'visit_to_checkout_rate' => $visitToCheckoutRate,
             'checkout_to_order_rate' => $checkoutToOrderRate,
             'dropoff_after_checkout_rate' => $dropoffAfterCheckoutRate,
             'recovery_rate' => $recoveryRate,
         ];
+    }
+
+    /**
+     * Top valori din metadata JSON (ex. query / product_name).
+     *
+     * @return \Illuminate\Support\Collection<int, object{label: string, total: int}>
+     */
+    private function topMetadataValues($base, string $eventName, string $jsonPath, int $limit = 12)
+    {
+        try {
+            return (clone $base)
+                ->where('event_name', $eventName)
+                ->whereNotNull('metadata')
+                ->select(
+                    DB::raw("JSON_UNQUOTE(JSON_EXTRACT(metadata, '{$jsonPath}')) as label"),
+                    DB::raw('COUNT(*) as total')
+                )
+                ->groupBy('label')
+                ->havingRaw("label IS NOT NULL AND label != '' AND label != 'null'")
+                ->orderByDesc('total')
+                ->limit($limit)
+                ->get();
+        } catch (\Throwable) {
+            return collect();
+        }
     }
 
     private function resolvePeriod(Request $request): array

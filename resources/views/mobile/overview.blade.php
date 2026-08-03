@@ -1,208 +1,205 @@
 @extends('layouts.app')
 
-@section('title', 'Volta App - Prezentare - VOLTA')
+@section('title', 'Volta App – Prezentare – VOLTA')
 @section('header-title', 'Volta App')
 
 @push('styles')
-<style>
-.mobile-page { display: flex; flex-direction: column; gap: 16px; }
-.mobile-card {
-  background: linear-gradient(160deg, rgba(26, 34, 48, 0.96) 0%, rgba(14, 19, 29, 0.98) 100%);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 16px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
-  position: relative;
-  overflow: hidden;
-}
-.mobile-card::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(255, 238, 0, 0), rgba(255, 238, 0, 0.75), rgba(255, 238, 0, 0));
-  pointer-events: none;
-}
-.mobile-card__head {
-  padding: 14px 16px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-.mobile-card__head h2 {
-  margin: 0;
-  font-size: 0.98rem;
-  color: #f8fafc;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.mobile-card__head i { color: var(--brand, #FFEE00); }
-.mobile-card__body { padding: 16px; }
-.mobile-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 14px;
-}
-.mobile-title h1 {
-  margin: 0 0 5px;
-  color: #fff;
-  font-size: clamp(1.35rem, 2.2vw, 1.9rem);
-  letter-spacing: -0.03em;
-}
-.mobile-title p { margin: 0; color: #94a3b8; font-size: 0.86rem; }
-.mobile-filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; }
-.mobile-field { display: flex; flex-direction: column; gap: 5px; }
-.mobile-field label {
-  color: #94a3b8; font-size: 0.64rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-}
-.mobile-field input {
-  min-height: 40px; border-radius: 10px; border: 1px solid rgba(148, 163, 184, 0.28);
-  background: rgba(15, 23, 42, 0.74); color: #e2e8f0; padding: 9px 11px; font: inherit;
-}
-.mobile-apply {
-  min-height: 40px; border: 0; border-radius: 10px; padding: 0 14px;
-  background: var(--brand, #FFEE00); color: #0f172a; font-weight: 800; cursor: pointer;
-}
-.mobile-alert {
-  border: 1px solid rgba(255, 238, 0, 0.34); border-radius: 12px; padding: 12px 14px;
-  background: rgba(255, 238, 0, 0.09); color: #fef08a; font-size: 0.84rem;
-}
-.mobile-alert code {
-  background: rgba(15, 23, 42, 0.55); border: 1px solid rgba(148, 163, 184, 0.24);
-  color: #f8fafc; padding: 2px 6px; border-radius: 6px;
-}
-.mobile-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-.mobile-kpi {
-  border: 1px solid rgba(148, 163, 184, 0.17);
-  border-radius: 14px;
-  background: rgba(15, 23, 42, 0.52);
-  padding: 12px;
-  transition: transform 0.18s ease, border-color 0.2s ease;
-}
-.mobile-kpi:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 238, 0, 0.42);
-}
-.mobile-kpi .kpi-label { color: #94a3b8; font-size: 0.73rem; font-weight: 700; margin-bottom: 7px; display: block; }
-.mobile-kpi .kpi-label i { color: rgba(255, 238, 0, 0.9); margin-right: 6px; }
-.mobile-kpi .kpi-value { color: #fff; font-size: clamp(1.2rem, 2.4vw, 1.55rem); font-weight: 800; letter-spacing: -0.02em; }
-.mobile-kpi .kpi-help { color: #94a3b8; font-size: 0.75rem; }
-.mobile-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.85fr); gap: 14px; }
-.mobile-chart-wrap { position: relative; min-height: 320px; }
-.mobile-table-wrap { overflow-x: auto; }
-.mobile-table { width: 100%; border-collapse: collapse; font-size: 0.81rem; }
-.mobile-table th {
-  text-align: left; color: #94a3b8; background: rgba(15, 23, 42, 0.62); font-size: 0.63rem;
-  text-transform: uppercase; letter-spacing: 0.08em; padding: 9px 10px;
-}
-.mobile-table td { color: #e2e8f0; padding: 10px; border-top: 1px solid rgba(148, 163, 184, 0.13); }
-.mobile-badge {
-  display: inline-flex; align-items: center; border-radius: 999px;
-  border: 1px solid rgba(255, 238, 0, 0.28); background: rgba(255, 238, 0, 0.09);
-  color: #fde047; padding: 3px 8px; font-size: 0.67rem; font-weight: 800;
-}
-.mobile-empty {
-  border: 1px dashed rgba(148, 163, 184, 0.26); border-radius: 12px; padding: 14px;
-  color: #94a3b8; background: rgba(15, 23, 42, 0.34); font-size: 0.82rem;
-}
-@media (max-width: 1100px) {
-  .mobile-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .mobile-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 640px) {
-  .mobile-header { align-items: stretch; }
-  .mobile-filters { width: 100%; }
-  .mobile-field, .mobile-field input, .mobile-apply { width: 100%; }
-  .mobile-kpis { grid-template-columns: 1fr; }
-}
-</style>
+<link rel="stylesheet" href="{{ url('css/mobile-analytics.css') }}">
 @endpush
 
 @section('content')
-<div class="mobile-page">
+@php
+  $q = request()->only(['start', 'end']);
+  $days = max(1, (int) $start->diffInDays($end) + 1);
+  $periodPresets = [
+    ['label' => '7 zile', 'start' => now()->subDays(6)->format('Y-m-d'), 'end' => now()->format('Y-m-d')],
+    ['label' => '30 zile', 'start' => now()->subDays(29)->format('Y-m-d'), 'end' => now()->format('Y-m-d')],
+    ['label' => 'Luna curentă', 'start' => now()->startOfMonth()->format('Y-m-d'), 'end' => now()->format('Y-m-d')],
+    ['label' => '90 zile', 'start' => now()->subDays(89)->format('Y-m-d'), 'end' => now()->format('Y-m-d')],
+  ];
+  $maxEvent = max(1, (int) ($eventBreakdown->max('total') ?? 1));
+@endphp
+
+<div class="ma-page">
   @if(isset($schemaReady) && !$schemaReady)
-    <div class="mobile-alert">
-      Tabela pentru evenimente mobile nu este încă creată în această bază locală. Rulează <code>php artisan migrate</code> și reîncarcă pagina.
+    <div class="ma-alert">
+      Tabela pentru evenimente mobile nu este încă creată. Rulează <code>php artisan migrate</code> și reîncarcă pagina.
     </div>
   @endif
 
-  <div class="mobile-card">
-    <div class="mobile-card__body">
-      <div class="mobile-header">
-        <div class="mobile-title">
-          <h1>Prezentare statistici mobile</h1>
-          <p>KPI principal, trend zilnic și distribuția tipurilor de evenimente.</p>
-        </div>
-        <form method="get" action="{{ route('mobile.analytics') }}" class="mobile-filters">
-          <div class="mobile-field">
-            <label for="mobileOverviewStart">De la</label>
-            <input id="mobileOverviewStart" type="date" name="start" value="{{ $start->format('Y-m-d') }}">
-          </div>
-          <div class="mobile-field">
-            <label for="mobileOverviewEnd">Până la</label>
-            <input id="mobileOverviewEnd" type="date" name="end" value="{{ $end->format('Y-m-d') }}">
-          </div>
-          <button class="mobile-apply" type="submit">Aplică</button>
-        </form>
+  <section class="ma-hero">
+    <div class="ma-hero__row">
+      <div>
+        <h1 class="ma-hero__title">Prezentare Volta App</h1>
+        <p class="ma-hero__lead">
+          Activitate în aplicația mobilă: sesiuni, conversie, produse și comenzi —
+          {{ $start->format('d.m.Y') }} – {{ $end->format('d.m.Y') }} ({{ $days }} zile).
+        </p>
       </div>
+      <form method="get" action="{{ route('mobile.analytics') }}" class="ma-filters">
+        <div class="ma-field">
+          <label for="maStart">De la</label>
+          <input id="maStart" type="date" name="start" value="{{ $start->format('Y-m-d') }}">
+        </div>
+        <div class="ma-field">
+          <label for="maEnd">Până la</label>
+          <input id="maEnd" type="date" name="end" value="{{ $end->format('Y-m-d') }}">
+        </div>
+        <button class="ma-btn" type="submit"><i class="fas fa-filter" aria-hidden="true"></i> Aplică</button>
+      </form>
+    </div>
+    <div class="ma-period">
+      @foreach($periodPresets as $preset)
+        @php
+          $isActive = $start->format('Y-m-d') === $preset['start'] && $end->format('Y-m-d') === $preset['end'];
+        @endphp
+        <a class="ma-period__chip {{ $isActive ? 'is-active' : '' }}"
+           href="{{ route('mobile.analytics', ['start' => $preset['start'], 'end' => $preset['end']]) }}">
+          {{ $preset['label'] }}
+        </a>
+      @endforeach
+    </div>
+  </section>
+
+  <div class="ma-kpis">
+    <div class="ma-kpi">
+      <span class="ma-kpi__label"><i class="fas fa-users" aria-hidden="true"></i> Sesiuni</span>
+      <div class="ma-kpi__value">{{ number_format($summary['sessions'], 0, ',', '.') }}</div>
+      <span class="ma-kpi__help">{{ number_format($summary['users'], 0, ',', '.') }} utilizatori · {{ number_format($summary['events_per_session'] ?? 0, 1, ',', '.') }} evenimente/sesiune</span>
+    </div>
+    <div class="ma-kpi ma-kpi--accent">
+      <span class="ma-kpi__label"><i class="fas fa-percent" aria-hidden="true"></i> Rată conversie</span>
+      <div class="ma-kpi__value">{{ number_format($summary['conversion_rate'] ?? 0, 2, ',', '.') }}%</div>
+      <span class="ma-kpi__help">Comenzi / sesiuni în interval</span>
+    </div>
+    <div class="ma-kpi ma-kpi--good">
+      <span class="ma-kpi__label"><i class="fas fa-bag-shopping" aria-hidden="true"></i> Comenzi</span>
+      <div class="ma-kpi__value">{{ number_format($summary['orders'], 0, ',', '.') }}</div>
+      <span class="ma-kpi__help">{{ number_format($summary['cart_abandons'], 0, ',', '.') }} abandonuri coș</span>
+    </div>
+    <div class="ma-kpi {{ ($summary['view_to_cart_rate'] ?? 0) < 5 ? 'ma-kpi--warn' : '' }}">
+      <span class="ma-kpi__label"><i class="fas fa-cart-plus" aria-hidden="true"></i> Produs → Coș</span>
+      <div class="ma-kpi__value">{{ number_format($summary['view_to_cart_rate'] ?? 0, 1, ',', '.') }}%</div>
+      <span class="ma-kpi__help">{{ number_format($summary['add_to_cart'], 0, ',', '.') }} add-to-cart din {{ number_format($summary['product_views'], 0, ',', '.') }} views</span>
     </div>
   </div>
 
-  <div class="mobile-kpis">
-    <div class="mobile-kpi">
-      <span class="kpi-label"><i class="fas fa-bolt"></i> Evenimente</span>
-      <div class="kpi-value">{{ number_format($summary['events'], 0, ',', '.') }}</div>
-      <span class="kpi-help">Total evenimente pe interval</span>
+  <div class="ma-kpis">
+    <div class="ma-kpi">
+      <span class="ma-kpi__label"><i class="fas fa-bolt" aria-hidden="true"></i> Evenimente</span>
+      <div class="ma-kpi__value">{{ number_format($summary['events'], 0, ',', '.') }}</div>
+      <span class="ma-kpi__help">{{ number_format($summary['page_views'], 0, ',', '.') }} page views</span>
     </div>
-    <div class="mobile-kpi">
-      <span class="kpi-label"><i class="fas fa-users"></i> Sesiuni active</span>
-      <div class="kpi-value">{{ number_format($summary['sessions'], 0, ',', '.') }}</div>
-      <span class="kpi-help">{{ number_format($summary['users'], 0, ',', '.') }} utilizatori identificați</span>
+    <div class="ma-kpi">
+      <span class="ma-kpi__label"><i class="fas fa-eye" aria-hidden="true"></i> Vizualizări produs</span>
+      <div class="ma-kpi__value">{{ number_format($summary['product_views'], 0, ',', '.') }}</div>
+      <span class="ma-kpi__help">{{ number_format($summary['searches'], 0, ',', '.') }} căutări</span>
     </div>
-    <div class="mobile-kpi">
-      <span class="kpi-label"><i class="fas fa-clock"></i> Timp mediu / pagină</span>
-      <div class="kpi-value">{{ number_format($summary['avg_page_seconds'], 0, ',', '.') }}s</div>
-      <span class="kpi-help">Pe baza evenimentelor cu durată</span>
+    <div class="ma-kpi">
+      <span class="ma-kpi__label"><i class="fas fa-image" aria-hidden="true"></i> Click bannere</span>
+      <div class="ma-kpi__value">{{ number_format($summary['banner_clicks'], 0, ',', '.') }}</div>
+      <span class="ma-kpi__help">{{ number_format($summary['logins'], 0, ',', '.') }} login-uri · {{ number_format($summary['map_opens'], 0, ',', '.') }} hartă</span>
     </div>
-    <div class="mobile-kpi">
-      <span class="kpi-label"><i class="fas fa-cart-shopping"></i> Comenzi completate</span>
-      <div class="kpi-value">{{ number_format($summary['orders'], 0, ',', '.') }}</div>
-      <span class="kpi-help">{{ number_format($summary['cart_abandons'], 0, ',', '.') }} abandonuri de coș</span>
+    <div class="ma-kpi">
+      <span class="ma-kpi__label"><i class="fas fa-clock" aria-hidden="true"></i> Timp mediu pagină</span>
+      <div class="ma-kpi__value">{{ number_format($summary['avg_page_seconds'], 0, ',', '.') }}s</div>
+      <span class="ma-kpi__help">Pe baza evenimentelor cu duration</span>
     </div>
   </div>
 
-  <div class="mobile-grid">
-    <section class="mobile-card">
-      <div class="mobile-card__head">
-        <h2><i class="fas fa-chart-line"></i> Evoluție evenimente pe zile</h2>
+  <div class="ma-shortcuts">
+    <a class="ma-shortcut" href="{{ route('mobile.analytics.funnels', $q) }}">
+      <i class="fas fa-filter-circle-dollar" aria-hidden="true"></i>
+      <span><strong>Pâlnie conversie</strong><span>Drop-off pe etape</span></span>
+    </a>
+    <a class="ma-shortcut" href="{{ route('mobile.analytics.events', $q) }}">
+      <i class="fas fa-bolt" aria-hidden="true"></i>
+      <span><strong>Evenimente</strong><span>Pagini, bannere, feed</span></span>
+    </a>
+    <a class="ma-shortcut" href="{{ route('mobile.analytics.abandon', $q) }}">
+      <i class="fas fa-cart-arrow-down" aria-hidden="true"></i>
+      <span><strong>Abandon coș</strong><span>Pași checkout</span></span>
+    </a>
+    <a class="ma-shortcut" href="{{ route('mobile.crashes', $q) }}">
+      <i class="fas fa-bug" aria-hidden="true"></i>
+      <span><strong>Crash-uri</strong><span>Stabilitate app</span></span>
+    </a>
+  </div>
+
+  <div class="ma-grid">
+    <section class="ma-card">
+      <div class="ma-card__head">
+        <h2><i class="fas fa-chart-line" aria-hidden="true"></i> Evoluție pe zile</h2>
       </div>
-      <div class="mobile-card__body">
-        <div class="mobile-chart-wrap">
-          <canvas id="mobileOverviewChart"></canvas>
-        </div>
+      <div class="ma-card__body">
+        <div class="ma-chart"><canvas id="mobileOverviewChart"></canvas></div>
       </div>
     </section>
 
-    <section class="mobile-card">
-      <div class="mobile-card__head">
-        <h2><i class="fas fa-list-check"></i> Top tipuri de evenimente</h2>
+    <section class="ma-card">
+      <div class="ma-card__head">
+        <h2><i class="fas fa-list-check" aria-hidden="true"></i> Top tipuri evenimente</h2>
+        <a class="ma-card__link" href="{{ route('mobile.analytics.event-types', $q) }}">Vezi toate →</a>
       </div>
-      <div class="mobile-card__body">
+      <div class="ma-card__body">
         @if($eventBreakdown->isEmpty())
-          <div class="mobile-empty">Nu există încă evenimente pentru perioada selectată.</div>
+          <div class="ma-empty"><i class="fas fa-inbox" aria-hidden="true"></i>Nu există evenimente în perioada selectată.</div>
         @else
-          <div class="mobile-table-wrap">
-            <table class="mobile-table">
-              <thead><tr><th>Eveniment</th><th>Total</th></tr></thead>
+          @foreach($eventBreakdown->take(10) as $row)
+            @php $pct = round(((int) $row->total / $maxEvent) * 100); @endphp
+            <div class="ma-bar-row">
+              <div class="ma-bar-row__label" title="{{ $row->event_name }}">{{ $row->event_name }}</div>
+              <div class="ma-bar-row__track"><div class="ma-bar-row__fill" style="width: {{ $pct }}%;"></div></div>
+              <div class="ma-bar-row__value">{{ number_format((int) $row->total, 0, ',', '.') }}</div>
+            </div>
+          @endforeach
+        @endif
+      </div>
+    </section>
+  </div>
+
+  <div class="ma-grid ma-grid--2">
+    <section class="ma-card">
+      <div class="ma-card__head">
+        <h2><i class="fas fa-magnifying-glass" aria-hidden="true"></i> Top căutări</h2>
+      </div>
+      <div class="ma-card__body">
+        @if(($topSearches ?? collect())->isEmpty())
+          <div class="ma-empty"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>Nu există căutări în interval.</div>
+        @else
+          <div class="ma-table-wrap">
+            <table class="ma-table">
+              <thead><tr><th>Query</th><th class="num">Total</th></tr></thead>
               <tbody>
-              @foreach($eventBreakdown->take(12) as $row)
+              @foreach($topSearches as $row)
                 <tr>
-                  <td><span class="mobile-badge">{{ $row->event_name }}</span></td>
-                  <td>{{ number_format($row->total, 0, ',', '.') }}</td>
+                  <td>{{ $row->label }}</td>
+                  <td class="num">{{ number_format((int) $row->total, 0, ',', '.') }}</td>
+                </tr>
+              @endforeach
+              </tbody>
+            </table>
+          </div>
+        @endif
+      </div>
+    </section>
+
+    <section class="ma-card">
+      <div class="ma-card__head">
+        <h2><i class="fas fa-box-open" aria-hidden="true"></i> Top produse vizualizate</h2>
+      </div>
+      <div class="ma-card__body">
+        @if(($topProducts ?? collect())->isEmpty())
+          <div class="ma-empty"><i class="fas fa-box-open" aria-hidden="true"></i>Nu există vizualizări de produs.</div>
+        @else
+          <div class="ma-table-wrap">
+            <table class="ma-table">
+              <thead><tr><th>Produs</th><th class="num">Total</th></tr></thead>
+              <tbody>
+              @foreach($topProducts as $row)
+                <tr>
+                  <td>{{ $row->label }}</td>
+                  <td class="num">{{ number_format((int) $row->total, 0, ',', '.') }}</td>
                 </tr>
               @endforeach
               </tbody>
@@ -228,14 +225,20 @@ document.addEventListener('DOMContentLoaded', function () {
     : null;
   var colors = {
     page_view: palette ? palette.amber : { line: 'rgb(250, 204, 21)', area: 'rgba(250, 204, 21, 0.14)' },
-    banner_click: palette ? palette.cyan : { line: 'rgb(203, 213, 225)', area: 'rgba(203, 213, 225, 0.12)' },
+    product_view: palette ? palette.violet : { line: 'rgb(167, 139, 250)', area: 'rgba(167, 139, 250, 0.12)' },
+    search: palette ? palette.cyan : { line: 'rgb(34, 211, 238)', area: 'rgba(34, 211, 238, 0.12)' },
+    add_to_cart: palette ? palette.sky : { line: 'rgb(56, 189, 248)', area: 'rgba(56, 189, 248, 0.12)' },
+    banner_click: palette ? palette.slate : { line: 'rgb(203, 213, 225)', area: 'rgba(203, 213, 225, 0.12)' },
     cart_abandoned: palette ? palette.rose : { line: 'rgb(244, 63, 94)', area: 'rgba(244, 63, 94, 0.12)' },
     order_completed: palette ? palette.emerald : { line: 'rgb(16, 185, 129)', area: 'rgba(16, 185, 129, 0.12)' }
   };
   var names = {
     page_view: 'Pagini',
-    banner_click: 'Click bannere',
-    cart_abandoned: 'Abandon coș',
+    product_view: 'Produse',
+    search: 'Căutări',
+    add_to_cart: 'În coș',
+    banner_click: 'Bannere',
+    cart_abandoned: 'Abandon',
     order_completed: 'Comenzi'
   };
 
@@ -243,12 +246,12 @@ document.addEventListener('DOMContentLoaded', function () {
     return {
       label: names[key] || key,
       data: chartData.datasets[key] || [],
-      borderColor: colors[key].line,
-      backgroundColor: colors[key].area,
-      borderWidth: 2.4,
-      tension: 0.35,
+      borderColor: (colors[key] || colors.page_view).line,
+      backgroundColor: (colors[key] || colors.page_view).area,
+      borderWidth: 2.2,
+      tension: 0.32,
       fill: key === 'page_view',
-      pointRadius: 2,
+      pointRadius: 0,
       pointHoverRadius: 4
     };
   });
@@ -256,12 +259,12 @@ document.addEventListener('DOMContentLoaded', function () {
   var options = (typeof VoltaChartTheme !== 'undefined')
     ? VoltaChartTheme.cartesianDefaults({
         plugins: {
-          legend: { position: 'bottom', labels: { color: VoltaChartTheme.colors.textSecondary } },
+          legend: { position: 'bottom', labels: { color: VoltaChartTheme.colors.textSecondary, boxWidth: 10, padding: 14 } },
           tooltip: VoltaChartTheme.tooltip()
         },
         scales: {
-          x: { ticks: VoltaChartTheme.ticks(9, 12), grid: VoltaChartTheme.gridLines() },
-          y: { beginAtZero: true, ticks: VoltaChartTheme.ticks(9, 12), grid: VoltaChartTheme.gridLines() }
+          x: { ticks: VoltaChartTheme.ticks(9, 11), grid: VoltaChartTheme.gridLines() },
+          y: { beginAtZero: true, ticks: VoltaChartTheme.ticks(9, 11), grid: VoltaChartTheme.gridLines() }
         }
       })
     : { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } };

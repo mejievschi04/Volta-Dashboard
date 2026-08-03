@@ -34,7 +34,7 @@
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
       @php
-        $isMobileModule = request()->routeIs('mobile.analytics*', 'mobile.crashes*');
+        $isMobileModule = request()->routeIs('mobile.analytics*', 'mobile.crashes*', 'mobile.feedback*');
         $canAccessMobileModule = auth()->check()
           && auth()->user()->isDev()
           && !auth()->user()->isAdmin()
@@ -58,31 +58,34 @@
         </a>
         @elseif($isMobileModule && $canAccessMobileModule)
         <a href="{{ route('mobile.analytics', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics') ? 'active' : '' }}">
-          <i class="fas fa-chart-line"></i><span class="txt">Prezentare Volta App</span>
+          <i class="fas fa-chart-line"></i><span class="txt">Prezentare</span>
         </a>
         <a href="{{ route('mobile.analytics.events', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.events') ? 'active' : '' }}">
           <i class="fas fa-bolt"></i><span class="txt">Evenimente</span>
         </a>
+        <a href="{{ route('mobile.analytics.funnels', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.funnels') ? 'active' : '' }}">
+          <i class="fas fa-filter-circle-dollar"></i><span class="txt">Pâlnie</span>
+        </a>
         <a href="{{ route('mobile.analytics.pages', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.pages') ? 'active' : '' }}">
-          <i class="fas fa-file-lines"></i><span class="txt">Pagini app</span>
+          <i class="fas fa-file-lines"></i><span class="txt">Pagini</span>
         </a>
         <a href="{{ route('mobile.analytics.event-types', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.event-types') ? 'active' : '' }}">
-          <i class="fas fa-list-check"></i><span class="txt">Tipuri evenimente</span>
+          <i class="fas fa-list-check"></i><span class="txt">Tipuri</span>
         </a>
         <a href="{{ route('mobile.analytics.banners', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.banners') ? 'active' : '' }}">
           <i class="fas fa-rectangle-ad"></i><span class="txt">Bannere</span>
         </a>
         <a href="{{ route('mobile.analytics.recent-events', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.recent-events') ? 'active' : '' }}">
-          <i class="fas fa-clock-rotate-left"></i><span class="txt">Evenimente recente</span>
-        </a>
-        <a href="{{ route('mobile.analytics.funnels', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.funnels') ? 'active' : '' }}">
-          <i class="fas fa-filter-circle-dollar"></i><span class="txt">Pâlnie conversie</span>
+          <i class="fas fa-clock-rotate-left"></i><span class="txt">Recente</span>
         </a>
         <a href="{{ route('mobile.analytics.abandon', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.abandon') ? 'active' : '' }}">
           <i class="fas fa-cart-arrow-down"></i><span class="txt">Abandon coș</span>
         </a>
         <a href="{{ route('mobile.crashes', $mobileQuery) }}" class="{{ request()->routeIs('mobile.crashes*') ? 'active' : '' }}">
           <i class="fas fa-bug"></i><span class="txt">Crash-uri</span>
+        </a>
+        <a href="{{ route('mobile.feedback', $mobileQuery) }}" class="{{ request()->routeIs('mobile.feedback*') ? 'active' : '' }}">
+          <i class="fas fa-comment-dots"></i><span class="txt">Feedback</span>
         </a>
         @else
         <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
@@ -160,9 +163,9 @@
       </div>
 
       <!-- TOPBAR - doar pe prima pagină -->
-      @if(request()->routeIs('dashboard') || request()->routeIs('datele-mele') || request()->routeIs('mobile.analytics*', 'mobile.crashes*'))
+      @if(request()->routeIs('dashboard') || request()->routeIs('datele-mele') || request()->routeIs('mobile.analytics*', 'mobile.crashes*', 'mobile.feedback*'))
       <div class="header">
-        <h1>@yield('header-title', request()->routeIs('datele-mele') ? 'Datele mele' : (request()->routeIs('mobile.analytics*', 'mobile.crashes*') ? 'Volta App' : 'Dashboard'))</h1>
+        <h1>@yield('header-title', request()->routeIs('datele-mele') ? 'Datele mele' : (request()->routeIs('mobile.analytics*', 'mobile.crashes*', 'mobile.feedback*') ? 'Volta App' : 'Dashboard'))</h1>
         <div class="user-menu">
           <div class="user-info">
             <div class="name">{{ Auth::check() ? Auth::user()->username : 'User' }}</div>
