@@ -173,6 +173,9 @@ class OperatoriController extends Controller
                     'profit' => (float) $r->profit,
                     'comenzi' => (int) $r->comenzi,
                     'nr_vanzari' => (int) $r->comenzi,
+                    'cec_mediu' => (int) $r->comenzi > 0
+                        ? round((float) $r->vanzari_luna / (int) $r->comenzi, 2)
+                        : 0,
                 ]);
             }
         } catch (\Throwable $e) {
@@ -290,6 +293,9 @@ class OperatoriController extends Controller
                         'profit' => (float) $r->profit,
                         'comenzi' => (int) $r->comenzi,
                         'nr_vanzari' => (int) $r->comenzi,
+                        'cec_mediu' => (int) $r->comenzi > 0
+                            ? round((float) $r->vanzari_luna / (int) $r->comenzi, 2)
+                            : 0,
                     ]);
                 }
             } catch (\Throwable $e) {
@@ -390,6 +396,9 @@ class OperatoriController extends Controller
                         'profit' => (float) $r->profit,
                         'comenzi' => (int) $r->comenzi,
                         'nr_vanzari' => (int) $r->comenzi,
+                        'cec_mediu' => (int) $r->comenzi > 0
+                            ? round((float) $r->vanzari_luna / (int) $r->comenzi, 2)
+                            : 0,
                     ]);
                 }
             } catch (\Throwable $e) {

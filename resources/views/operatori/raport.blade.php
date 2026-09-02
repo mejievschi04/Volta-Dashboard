@@ -106,6 +106,7 @@
                 <th>Lună</th>
                 <th class="tc">Comenzi</th>
                 <th class="tc">Vânzări (fără TVA)</th>
+                <th class="tc">Cec mediu</th>
                 <th class="tc">Profit</th>
               </tr>
             </thead>
@@ -115,6 +116,7 @@
                 <td><strong>{{ $luna->luna_label }}</strong></td>
                 <td class="tc">{{ $luna->comenzi }}</td>
                 <td class="tc">{{ number_format($luna->vanzari_luna, 2, ',', '.') }} MDL</td>
+                <td class="tc">{{ number_format($luna->cec_mediu ?? 0, 2, ',', '.') }} MDL</td>
                 <td class="tc td-profit">{{ number_format($luna->profit, 2, ',', '.') }} MDL</td>
               </tr>
               @endforeach

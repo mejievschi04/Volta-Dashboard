@@ -46,9 +46,6 @@
           </select>
         </div>
       </div>
-      <div class="operatori-filter-submit-wrap">
-        <button type="submit" class="operatori-btn operatori-btn-primary operatori-btn-filter-submit"><i class="fas fa-filter" aria-hidden="true"></i> Aplică filtre</button>
-      </div>
     </div>
   </form>
 
@@ -212,6 +209,17 @@ document.addEventListener('DOMContentLoaded', function() {
 @endif
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  const filtersForm = document.querySelector('.operatori-filter-form');
+  if (filtersForm) {
+    filtersForm.querySelectorAll('select').forEach(function (select) {
+      select.addEventListener('change', function () {
+        if (filtersForm.dataset.submitting === 'true') return;
+        filtersForm.dataset.submitting = 'true';
+        filtersForm.requestSubmit ? filtersForm.requestSubmit() : filtersForm.submit();
+      });
+    });
+  }
+
   const exportBtn = document.getElementById('operatoriExportExcelBtn');
   if (exportBtn) {
     exportBtn.addEventListener('click', function () {
