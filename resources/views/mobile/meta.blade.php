@@ -317,7 +317,7 @@
         {
           label: 'Sesiuni',
           data: data.sessions || [],
-          borderColor: '#38bdf8',
+          borderColor: '#ffee00',
           backgroundColor: 'transparent',
           tension: 0.35,
           pointRadius: 0,

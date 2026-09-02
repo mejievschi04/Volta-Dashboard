@@ -577,13 +577,13 @@
 
 /* Meta page */
 .ma-alert--soft {
-  border-color: rgba(56, 189, 248, 0.28);
-  background: rgba(56, 189, 248, 0.08);
-  color: #bae6fd;
+  border-color: var(--brand-30, rgba(255, 238, 0, 0.3));
+  background: var(--brand-10, rgba(255, 238, 0, 0.12));
+  color: var(--text-primary, #f8fafc);
 }
 
 .ma-alert--soft strong {
-  color: #e0f2fe;
+  color: var(--brand, #ffee00);
   font-weight: 800;
 }
 
@@ -629,7 +629,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, rgba(255, 238, 0, 0.85), rgba(56, 189, 248, 0.8));
+  background: var(--brand, #ffee00);
 }
 
 .ma-meta-funnel__row strong {
@@ -665,7 +665,7 @@
   width: 100%;
   max-width: 18px;
   border-radius: 6px 6px 3px 3px;
-  background: linear-gradient(180deg, rgba(255, 238, 0, 0.95), rgba(56, 189, 248, 0.55));
+  background: var(--brand, #ffee00);
   min-height: 6px;
 }
 

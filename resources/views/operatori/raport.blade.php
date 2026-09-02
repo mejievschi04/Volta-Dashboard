@@ -4,20 +4,8 @@
 
 @section('header-title', ($date ?? [])['nume'] ?? ($operatorNume ?? 'Raport operator'))
 
-@push('styles')
-<style>
-  @media (max-width: 900px) {
-    .operatori-detail-grid { grid-template-columns: 1fr !important; margin-top: 80px !important; }
-    .operatori-cover { height: 220px !important; }
-    .operatori-cover-inner { bottom: -50px !important; left: 20px !important; }
-    .operatori-avatar { width: 100px !important; height: 100px !important; font-size: 40px !important; }
-    .operatori-detail-title { font-size: 24px !important; }
-  }
-</style>
-@endpush
-
 @section('content')
-<div class="operatori-detail-page">
+<div class="operatori-detail-page operatori-show-page">
   <a href="{{ route('operatori') }}" class="operatori-back">
     <i class="fas fa-arrow-left"></i> Înapoi la Operatori
   </a>
@@ -28,7 +16,7 @@
     $lunaCurentaData = $vanzariLunare1c->firstWhere('luna', $lunaCurenta);
   @endphp
 
-  <div class="operatori-cover" @if(isset($operatorRecord) && $operatorRecord && $operatorRecord->photo_coperta_url) style="background-image: url('{{ $operatorRecord->photo_coperta_url }}'); background-size: cover; background-position: center;" @endif>
+  <div class="operatori-cover operatori-cover--show operatori-profile-hero" @if(isset($operatorRecord) && $operatorRecord && $operatorRecord->photo_coperta_url) style="background-image: url('{{ $operatorRecord->photo_coperta_url }}'); background-size: cover; background-position: center;" @endif>
     <div class="operatori-cover-inner">
       @if(isset($operatorRecord) && $operatorRecord && $operatorRecord->photo_profil_url)
       <div class="operatori-avatar operatori-avatar--img" style="background-image: url('{{ $operatorRecord->photo_profil_url }}');"></div>
@@ -37,9 +25,7 @@
       @endif
       <div class="operatori-detail-name-wrap">
         <h1 class="operatori-detail-title">{{ $date['nume'] }}</h1>
-        <span class="kpi-source-badge">
-          <i class="fas fa-database" aria-hidden="true"></i> Raport pentru perioada selectată
-        </span>
+        <span class="operatori-profile-subtitle"><i class="fas fa-database" aria-hidden="true"></i> Date sincronizate din 1C · raport pentru perioada selectată</span>
       </div>
     </div>
   </div>
@@ -50,19 +36,22 @@
         <h3 class="operatori-sidebar-title"><i class="fas fa-calendar-check"></i> Luna curentă</h3>
         <div class="operatori-stat-list">
           <div class="operatori-stat-row">
-            <div style="flex: 1;">
+            <div class="operatori-stat-icon"><i class="fas fa-shopping-cart" aria-hidden="true"></i></div>
+            <div class="operatori-stat-row-body">
               <div class="operatori-stat-label">Vânzări (fără TVA)</div>
               <div class="operatori-stat-value">{{ $lunaCurentaData ? number_format($lunaCurentaData->vanzari_luna, 2, ',', '.') : '0,00' }} MDL</div>
             </div>
           </div>
           <div class="operatori-stat-row operatori-stat-row--profit">
-            <div style="flex: 1;">
+            <div class="operatori-stat-icon"><i class="fas fa-trophy" aria-hidden="true"></i></div>
+            <div class="operatori-stat-row-body">
               <div class="operatori-stat-label">Profit</div>
               <div class="operatori-stat-value">{{ $lunaCurentaData ? number_format($lunaCurentaData->profit, 2, ',', '.') : '0,00' }} MDL</div>
             </div>
           </div>
           <div class="operatori-stat-row operatori-stat-row--neutral">
-            <div style="flex: 1;">
+            <div class="operatori-stat-icon"><i class="fas fa-list" aria-hidden="true"></i></div>
+            <div class="operatori-stat-row-body">
               <div class="operatori-stat-label">Comenzi</div>
               <div class="operatori-stat-value">{{ $lunaCurentaData ? (int) $lunaCurentaData->comenzi : 0 }}</div>
             </div>
@@ -94,13 +83,13 @@
       </div>
       @if($vanzariLunare1c->count() > 0)
       <div class="operatori-content-card">
-        <h2 class="operatori-section-title">Vânzări pe luni (fără TVA)</h2>
+        <h2 class="operatori-section-title">Evoluția vânzărilor</h2>
         <div class="operatori-chart-wrap"><canvas id="vanzariChartRaport"></canvas></div>
       </div>
       <div class="operatori-content-card">
-        <h2 class="operatori-section-title">Tabel pe luni</h2>
+        <h2 class="operatori-section-title">Vânzări pe luni</h2>
         <div class="operatori-detail-table-wrap">
-          <table class="operatori-detail-table">
+          <table class="operatori-detail-table operatori-monthly-sales-table">
             <thead>
               <tr>
                 <th>Lună</th>
@@ -113,11 +102,11 @@
             <tbody>
               @foreach($vanzariLunare1c as $luna)
               <tr>
-                <td><strong>{{ $luna->luna_label }}</strong></td>
+                <td class="operatori-monthly-sales-table__month">{{ $luna->luna_label }}</td>
                 <td class="tc">{{ $luna->comenzi }}</td>
-                <td class="tc">{{ number_format($luna->vanzari_luna, 2, ',', '.') }} MDL</td>
-                <td class="tc">{{ number_format($luna->cec_mediu ?? 0, 2, ',', '.') }} MDL</td>
-                <td class="tc td-profit">{{ number_format($luna->profit, 2, ',', '.') }} MDL</td>
+                <td class="tc operatori-monthly-sales-table__amount">{{ number_format($luna->vanzari_luna, 2, ',', '.') }} MDL</td>
+                <td class="tc operatori-monthly-sales-table__amount">{{ number_format($luna->cec_mediu ?? 0, 2, ',', '.') }} MDL</td>
+                <td class="tc td-profit operatori-monthly-sales-table__amount">{{ number_format($luna->profit, 2, ',', '.') }} MDL</td>
               </tr>
               @endforeach
             </tbody>
@@ -217,5 +206,5 @@
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="{{ url('css/operatori.css') }}">
+<link rel="stylesheet" href="{{ url('css/operatori.css') }}?v={{ @filemtime(public_path('css/operatori.css')) ?: 0 }}">
 @endpush

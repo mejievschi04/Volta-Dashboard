@@ -39,8 +39,8 @@
   --error: rgb(239, 68, 68);
   --error-light: rgb(248, 113, 113);
   --warning: rgb(245, 158, 11);
-  --info: rgb(59, 130, 246);
-  --info-light: rgb(96, 165, 250);
+  --info: var(--brand);
+  --info-light: var(--brand);
 
   --primary: var(--bg-sidebar-toggle);
   --primary-dark: var(--bg-secondary);
@@ -2125,15 +2125,15 @@ select option {
 }
 
 .sidebar-mobile-entry--back {
-  border: 1px solid rgba(59, 130, 246, 0.42);
-  background: linear-gradient(165deg, rgba(37, 99, 235, 0.25) 0%, rgba(29, 78, 216, 0.16) 100%);
-  color: #bfdbfe;
+  border: 1px solid var(--brand-30);
+  background: var(--brand-10);
+  color: var(--brand);
 }
 
 .sidebar-mobile-entry--back:hover {
-  border-color: rgba(96, 165, 250, 0.62);
-  background: linear-gradient(165deg, rgba(37, 99, 235, 0.33) 0%, rgba(29, 78, 216, 0.2) 100%);
-  color: #eff6ff;
+  border-color: var(--brand);
+  background: var(--brand-20);
+  color: var(--text-primary);
 }
 
 .sidebar-mobile-entry:active {
@@ -3658,7 +3658,7 @@ select option {
 }
 
 .raport-lunar-empty--info {
-  border-color: rgba(96, 165, 250, 0.4);
+  border-color: var(--brand-30);
   background: rgba(30, 41, 59, 0.55);
 }
 
@@ -3719,4 +3719,64 @@ select option {
   font-size: var(--font-size-xs, 12px);
   color: var(--text-tertiary);
   line-height: 1.5;
+}
+
+/* Acțiune de export unificată pentru toate modulele. */
+.volta-export-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 12px !important;
+  border: 1px solid var(--border-secondary) !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--text-primary) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.volta-export-btn i { color: var(--brand) !important; }
+
+.volta-export-btn:hover {
+  transform: none !important;
+  border-color: var(--brand) !important;
+  background: var(--brand-10) !important;
+  box-shadow: none !important;
+  color: var(--text-primary) !important;
+}
+
+.volta-export-btn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* Suprafețe neutre Volta pentru Trafic, Setări și Rapoarte — fără tonuri albastre. */
+:is(.trafic-page-shell, .trafic-subpage, .rapoarte-page, .istoric-page, .setari-wrap) :is(.card, .panel, .trafic-card, .trafic-source-card, .trafic-raport-card, .trafic-toolbar, .rapoarte-filters, .rapoarte-filters-panel, .comparare-table-section, .setari-1c-block) {
+  background: var(--bg-elevated) !important;
+  border-color: var(--border-primary) !important;
+  box-shadow: none !important;
+}
+
+:is(.trafic-page-shell, .trafic-subpage, .rapoarte-page, .istoric-page, .setari-wrap) :is(input, select, textarea) {
+  background: var(--bg-primary) !important;
+  border-color: var(--border-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+:is(.trafic-page-shell, .trafic-subpage, .rapoarte-page, .istoric-page, .setari-wrap) :is(.trafic-action-btn, .trafic-raport-generate, .setari-photo-btn) {
+  background: var(--brand-10) !important;
+  border-color: var(--brand-30) !important;
+  box-shadow: none !important;
+  color: var(--brand) !important;
+}
+
+:is(.trafic-page-shell, .trafic-subpage, .rapoarte-page, .istoric-page, .setari-wrap) :is(.trafic-action-btn, .trafic-raport-generate, .setari-photo-btn):hover {
+  background: var(--brand-20) !important;
+  border-color: var(--brand) !important;
+  color: var(--brand) !important;
 }

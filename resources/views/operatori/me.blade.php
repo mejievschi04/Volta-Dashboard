@@ -58,6 +58,9 @@
     $heroAvatar = (isset($operatorRecord) && $operatorRecord && $operatorRecord->photo_profil_url)
       ? $operatorRecord->photo_profil_url
       : null;
+    $cecMediuTotal = (int) $date['nr_comenzi'] > 0 ? $date['vanzari_fara_tva'] / (int) $date['nr_comenzi'] : 0;
+    $stagiu = $operatorRecord?->data_angajare ? $operatorRecord->data_angajare->diff(now()) : null;
+    $stagiuLabel = $stagiu ? ($stagiu->y > 0 ? $stagiu->y . ' ani ' : '') . $stagiu->m . ' luni' : '—';
 
     $monthStats = [
       ['icon' => 'fa-shopping-cart', 'accent' => 'blue', 'label' => 'Vânzări (fără TVA)', 'value' => ($lunaCurentaData ? number_format($lunaCurentaData->vanzari_luna, 2, ',', '.') : '0,00') . ' MDL'],
@@ -74,6 +77,9 @@
       ['accent' => 'brand', 'label' => 'Comenzi', 'value' => number_format($date['nr_comenzi'], 0, ',', '.')],
       ['accent' => 'orange', 'label' => 'Livrări (total)', 'value' => number_format($nrLivrariTotal ?? 0, 0, ',', '.')],
       ['accent' => 'violet', 'label' => 'Pick-up (total)', 'value' => number_format($pickupTotal ?? 0, 0, ',', '.')],
+      ['accent' => 'slate', 'label' => 'CEC mediu', 'value' => number_format($cecMediuTotal, 2, ',', '.') . ' MDL'],
+      ['accent' => 'slate', 'label' => 'Stagiu', 'value' => $stagiuLabel],
+      ['accent' => 'slate', 'label' => 'Poziție în top vânzări', 'value' => $pozitieTopVanzari ? '#' . $pozitieTopVanzari : '—'],
     ];
   @endphp
 

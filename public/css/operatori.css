@@ -2030,7 +2030,9 @@ html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-pe
 .operatori-detail-table-wrap {
   overflow-x: auto;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-primary, #334155);
+  background: var(--bg-primary, #0f172a);
+  scrollbar-color: rgba(148, 163, 184, 0.55) transparent;
 }
 
 .operatori-detail-table {
@@ -2041,17 +2043,21 @@ html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-pe
 
 .operatori-detail-page .operatori-detail-table thead tr,
 .operatori-detail-table thead tr {
-  background: rgba(255, 238, 0, 0.12) !important;
-  color: #FFEE00 !important;
+  background: var(--bg-secondary, #1e293b) !important;
+  color: var(--text-secondary, #cbd5e1) !important;
 }
 
 .operatori-detail-page .operatori-detail-table th,
 .operatori-detail-table th {
   padding: 14px 16px;
   text-align: left;
-  border-bottom: 2px solid rgba(255, 238, 0, 0.25);
-  font-weight: 700;
-  color: #FFEE00 !important;
+  border-bottom: 1px solid var(--border-primary, #334155);
+  font-weight: 600;
+  color: var(--text-secondary, #cbd5e1) !important;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .operatori-detail-table th.tc {
@@ -2075,9 +2081,174 @@ html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-pe
   text-align: center;
 }
 
+/* Vânzări lunare: sumele rămân pe un singur rând și accentul este rezervat profitului. */
+.operatori-monthly-sales-table {
+  min-width: 700px;
+}
+
+.operatori-monthly-sales-table__month {
+  color: var(--text-primary, #f8fafc) !important;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.operatori-monthly-sales-table__amount {
+  color: var(--text-primary, #f8fafc) !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.operatori-monthly-sales-table__amount.td-profit,
+.operatori-monthly-sales-table__amount.operatori-profit {
+  color: #34D399 !important;
+  font-weight: 600;
+}
+
+/* ========== REDESIGN: DIRECTOR OPERATORI + PROFIL ========== */
+.operatori-page {
+  max-width: 1320px;
+  padding: 32px 28px 48px;
+}
+
+.operatori-directory-hero {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 30px 32px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 20px;
+  background: radial-gradient(circle at 88% 0%, rgba(255, 238, 0, 0.16), transparent 29%), linear-gradient(120deg, #172033, #0f172a 68%);
+}
+
+.operatori-directory-hero::after {
+  content: '';
+  position: absolute;
+  inset: auto -36px -72px auto;
+  width: 220px;
+  height: 220px;
+  border: 1px solid rgba(255, 238, 0, 0.22);
+  border-radius: 50%;
+}
+
+.operatori-eyebrow, .operatori-hero-period, .operatori-profile-hero__context span, .operatori-profile-subtitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.operatori-eyebrow { color: #ffee00; }
+.operatori-directory-hero h1 { margin: 10px 0 8px; color: #f8fafc; font-size: clamp(28px, 3vw, 40px); line-height: 1; letter-spacing: -.035em; }
+.operatori-directory-hero p { max-width: 620px; margin: 0; color: #aab7ca; font-size: 15px; line-height: 1.55; }
+.operatori-directory-hero p strong { color: #e2e8f0; font-weight: 600; }
+.operatori-hero-period { position: relative; z-index: 1; flex: 0 0 auto; padding: 10px 13px; border: 1px solid rgba(255, 255, 255, .12); border-radius: 10px; background: rgba(15, 23, 42, .58); color: #e2e8f0; letter-spacing: .02em; text-transform: none; }
+
+.operatori-overview-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
+.operatori-overview-stat { min-width: 0; padding: 17px 18px; border: 1px solid rgba(148, 163, 184, .14); border-radius: 14px; background: rgba(30, 41, 59, .48); }
+.operatori-overview-stat span { display: block; margin-bottom: 8px; color: #94a3b8; font-size: 12px; font-weight: 600; }
+.operatori-overview-stat strong { display: block; overflow: hidden; color: #f8fafc; font-size: 20px; font-variant-numeric: tabular-nums; text-overflow: ellipsis; white-space: nowrap; }
+.operatori-overview-stat strong small { color: #94a3b8; font-size: 12px; font-weight: 600; }
+.operatori-overview-stat .is-profit { color: #4ade80; }
+.operatori-overview-stat .is-name { color: #f8fafc; font-size: 17px; }
+
+.operatori-filter-panel { display: flex; align-items: center; gap: 18px; padding: 13px 16px; margin: 0 0 18px; border: 1px solid rgba(148, 163, 184, .16); border-radius: 14px; background: rgba(15, 23, 42, .5); }
+.operatori-filter-panel__heading { display: inline-flex; align-items: center; gap: 9px; flex: 0 0 auto; color: #e2e8f0; font-size: 13px; font-weight: 700; }
+.operatori-filter-panel__heading i { color: #ffee00; }
+.operatori-filter-panel .operatori-filter-periods { flex: 1; margin: 0; }
+.operatori-filter-panel .month-selector-modern { background: transparent; border: 0; }
+
+.operatori-directory-card { padding: 0; overflow: hidden; border-color: rgba(148, 163, 184, .16); background: #111a2b; box-shadow: 0 18px 44px rgba(2, 6, 23, .24); }
+.operatori-distribution-section { padding: 24px 28px; margin: 0; border-bottom: 1px solid rgba(148, 163, 184, .13); }
+.operatori-chart-kicker { margin: 0 0 8px; color: #94a3b8; font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+.operatori-directory-card .operatori-table-section { padding: 24px 28px 28px; }
+.operatori-table-title--directory { margin-bottom: 18px; font-size: 18px; }
+.operatori-table-title--directory > span { display: inline-flex; align-items: center; gap: 10px; }
+.operatori-table-title--directory > span > i { display: inline-grid; width: 34px; height: 34px; place-items: center; border-radius: 10px; color: #111827; background: #ffee00; }
+.operatori-table-title--directory small { display: block; margin-top: 2px; color: #94a3b8; font-size: 12px; font-weight: 500; }
+.operatori-directory-table { min-width: 950px; }
+.operatori-directory-table td { padding-top: 15px; padding-bottom: 15px; font-variant-numeric: tabular-nums; }
+.operatori-directory-table tbody tr { transition: background .18s ease, transform .18s ease; }
+.operatori-directory-table tbody tr:hover { background: rgba(255, 255, 255, .045); }
+.operatori-person-link { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; align-items: center; gap: 10px; color: #f8fafc; }
+.operatori-person-link:hover { color: #fff; text-decoration: none; }
+.operatori-person-link > span:nth-child(2) { min-width: 0; }
+.operatori-person-link small { display: block; margin-top: 3px; color: #94a3b8; font-size: 11px; font-weight: 500; }
+.operatori-person-link > i { color: #64748b; font-size: 11px; }
+.operatori-person-link:hover > i { color: #ffee00; }
+.operatori-person-avatar { display: inline-grid; width: 36px; height: 36px; place-items: center; border: 1px solid rgba(255, 238, 0, .32); border-radius: 10px; color: #ffee00; background: rgba(255, 238, 0, .08); font-size: 13px; font-weight: 800; }
+
+.operatori-detail-page { max-width: 1320px; padding: 28px; }
+.operatori-detail-page .operatori-back { margin-bottom: 14px; border-color: rgba(148, 163, 184, .24); background: transparent; color: #cbd5e1; }
+.operatori-detail-page .operatori-back:hover { border-color: rgba(255, 238, 0, .45); background: rgba(255, 238, 0, .07); color: #f8fafc; }
+.operatori-profile-hero { height: 246px; overflow: hidden; border: 1px solid rgba(148, 163, 184, .17); border-radius: 20px; box-shadow: none; background-image: radial-gradient(circle at 83% 10%, rgba(255, 238, 0, .19), transparent 24%), linear-gradient(130deg, #26334a, #121b2c 53%, #0b1220); }
+.operatori-profile-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15, 23, 42, .25), rgba(15, 23, 42, .82)); }
+.operatori-profile-hero__context { position: absolute; z-index: 1; top: 18px; right: 20px; display: flex; gap: 8px; }
+.operatori-profile-hero__context span { padding: 7px 10px; border: 1px solid rgba(255,255,255,.16); border-radius: 8px; background: rgba(15,23,42,.6); color: #cbd5e1; font-size: 10px; letter-spacing: .04em; }
+.operatori-profile-hero__context span:first-child i { color: #4ade80; font-size: 8px; }
+.operatori-cover--show .operatori-cover-inner { z-index: 1; bottom: -70px; left: 34px; gap: 18px; }
+.operatori-cover--show .operatori-avatar { width: 140px; height: 140px; border: 5px solid #111a2b; font-size: 54px; }
+.operatori-cover--show .operatori-detail-title { margin-bottom: 8px; font-size: 34px; letter-spacing: -.035em; }
+.operatori-profile-subtitle { color: #cbd5e1; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.operatori-cover--show + .operatori-detail-grid { margin-top: 88px; }
+.operatori-detail-grid { grid-template-columns: 290px minmax(0, 1fr); gap: 18px; }
+.operatori-detail-page .operatori-sidebar-card, .operatori-detail-page .operatori-content-card { border-color: rgba(148, 163, 184, .15); border-radius: 16px; background: rgba(22, 31, 49, .94) !important; box-shadow: none; }
+.operatori-detail-page .operatori-sidebar-card { position: sticky; top: 20px; padding: 20px; }
+.operatori-sidebar-title { margin-bottom: 16px; font-size: 16px; }
+.operatori-stat-list { gap: 8px; }
+.operatori-stat-row { padding: 10px; border-color: rgba(59, 130, 246, .16); }
+.operatori-stat-icon { width: 34px; height: 34px; font-size: 13px; }
+.operatori-stat-value { font-size: 15px; font-variant-numeric: tabular-nums; }
+.operatori-detail-page .operatori-content-card { padding: 24px; }
+.operatori-section-title { margin-bottom: 20px; color: #f8fafc; font-size: 19px; }
+.operatori-section-icon { width: 34px; height: 34px; border-radius: 10px; background: rgba(255, 238, 0, .12); color: #ffee00; font-size: 14px; }
+.operatori-stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.operatori-stat-box { padding: 15px; text-align: left; border-color: rgba(59, 130, 246, .16); }
+.operatori-stat-box .operatori-stat-value { font-size: 18px; }
+.operatori-chart-wrap, .operatori-content-card .operatori-chart-wrap { height: 330px; }
+
+@media (max-width: 900px) {
+  .operatori-page, .operatori-detail-page { padding: 20px 16px 36px; }
+  .operatori-overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .operatori-filter-panel { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .operatori-filter-panel .operatori-filter-periods { width: 100%; }
+  .operatori-detail-page .operatori-sidebar-card { position: static; }
+  .operatori-stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .operatori-directory-hero { align-items: flex-start; flex-direction: column; padding: 24px 20px; }
+  .operatori-directory-hero h1 { font-size: 30px; }
+  .operatori-hero-period { font-size: 11px; }
+  .operatori-overview-stat { padding: 14px; }
+  .operatori-overview-stat strong { font-size: 16px; }
+  .operatori-distribution-section, .operatori-directory-card .operatori-table-section { padding: 18px; }
+  .operatori-profile-hero { height: 210px; }
+  .operatori-cover--show .operatori-cover-inner { bottom: -57px; left: 20px; gap: 12px; }
+  .operatori-cover--show .operatori-avatar { width: 112px; height: 112px; font-size: 43px; }
+  .operatori-cover--show .operatori-detail-title { font-size: 25px; }
+  .operatori-profile-subtitle { max-width: 180px; font-size: 10px; line-height: 1.4; }
+  .operatori-profile-hero__context { top: 10px; right: 10px; }
+  .operatori-profile-hero__context span:last-child { display: none; }
+  .operatori-cover--show + .operatori-detail-grid { margin-top: 72px; }
+  .operatori-detail-page .operatori-content-card { padding: 18px; }
+  .operatori-stats-grid { grid-template-columns: 1fr 1fr; }
+  .operatori-stat-box { padding: 13px; }
+  .operatori-stat-box .operatori-stat-value { font-size: 16px; }
+  .operatori-chart-wrap, .operatori-content-card .operatori-chart-wrap { height: 270px; }
+}
+
 .operatori-detail-table .td-profit {
   color: #10B981;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .operatori-detail-empty {
@@ -3788,4 +3959,344 @@ html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-pe
     font-size: 10px !important;
     margin-top: 2px !important;
   }
+}
+
+/* Păstrează proporțiile noului profil după regulile responsive istorice. */
+@media (max-width: 900px) {
+  .operatori-detail-page .operatori-detail-grid { grid-template-columns: 1fr; margin-top: 80px; }
+  .operatori-detail-page .operatori-cover--show + .operatori-detail-grid { margin-top: 80px; }
+  .operatori-detail-page .operatori-sidebar-card { position: static; }
+}
+
+@media (max-width: 640px) {
+  .operatori-detail-page .operatori-profile-hero { height: 210px; border-radius: 16px; }
+  .operatori-detail-page .operatori-cover--show .operatori-cover-inner { bottom: -57px; left: 20px; }
+  .operatori-detail-page .operatori-cover--show .operatori-avatar { width: 112px; height: 112px; font-size: 43px; border-width: 4px; }
+  .operatori-detail-page .operatori-cover--show .operatori-detail-title { font-size: 25px; }
+  .operatori-detail-page .operatori-cover--show + .operatori-detail-grid { margin-top: 72px; }
+}
+
+/* Rafinare finală: suprafețe din tema Volta, fără decorațiuni sau accente străine. */
+.operatori-page,
+.operatori-detail-page {
+  max-width: 1240px;
+}
+
+.operatori-directory-hero {
+  display: block;
+  padding: 24px;
+  margin-bottom: 16px;
+  overflow: visible;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--card-radius);
+  background: var(--bg-elevated);
+}
+
+.operatori-directory-hero::after,
+.operatori-profile-hero::before {
+  content: none;
+}
+
+.operatori-directory-hero h1 {
+  margin: 0 0 8px;
+  color: var(--text-primary);
+  font-size: 28px;
+  letter-spacing: 0;
+}
+
+.operatori-directory-hero p {
+  max-width: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.operatori-directory-hero p strong { color: var(--text-primary); }
+
+.operatori-overview-grid { gap: 12px; margin-bottom: 16px; }
+.operatori-overview-stat {
+  padding: 16px;
+  border-color: var(--border-primary);
+  border-radius: var(--card-radius);
+  background: var(--bg-elevated);
+}
+.operatori-overview-stat span { color: var(--text-tertiary); }
+.operatori-overview-stat strong,
+.operatori-overview-stat .is-name { color: var(--text-primary); }
+.operatori-overview-stat .is-profit { color: var(--success-light); }
+.operatori-overview-stat strong small { color: var(--text-tertiary); }
+
+.operatori-filter-panel {
+  gap: 16px;
+  padding: 14px 16px;
+  border-color: var(--border-primary);
+  border-radius: var(--card-radius);
+  background: var(--bg-elevated);
+}
+.operatori-filter-panel__heading { color: var(--text-primary); }
+
+.operatori-directory-card {
+  border-color: var(--border-primary);
+  border-radius: var(--card-radius);
+  background: var(--bg-elevated);
+  box-shadow: none;
+}
+.operatori-distribution-section { padding: 24px; border-bottom-color: var(--border-primary); }
+.operatori-directory-card .operatori-table-section { padding: 24px; }
+.operatori-ranking-section { padding: 24px; border-bottom: 1px solid var(--border-primary); }
+.operatori-ranking-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.operatori-ranking-heading h2 { margin: 0 0 5px; color: var(--text-primary); font-size: 18px; }
+.operatori-ranking-heading p { margin: 0; color: var(--text-tertiary); font-size: 13px; }
+.operatori-ranking-heading > span { padding: 6px 8px; border: 1px solid var(--border-primary); border-radius: 6px; color: var(--text-secondary); font-size: 12px; white-space: nowrap; }
+.operatori-ranking-list { display: grid; gap: 12px; padding: 0; margin: 0; list-style: none; }
+.operatori-ranking-item { display: grid; grid-template-columns: 28px minmax(0, 1fr) minmax(108px, auto); align-items: center; gap: 12px; }
+.operatori-ranking-position { color: var(--text-tertiary); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.operatori-ranking-main { min-width: 0; }
+.operatori-ranking-label { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 7px; }
+.operatori-ranking-label strong { overflow: hidden; color: var(--text-primary); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.operatori-ranking-label span { color: var(--text-tertiary); font-size: 12px; white-space: nowrap; }
+.operatori-ranking-track { height: 7px; overflow: hidden; border-radius: 99px; background: var(--bg-primary); }
+.operatori-ranking-track span { display: block; height: 100%; border-radius: inherit; background: var(--brand); }
+.operatori-ranking-value { color: var(--text-primary); font-size: 14px; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.operatori-ranking-value small { color: var(--text-tertiary); font-size: 11px; font-weight: 600; }
+.operatori-table-title--directory { display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 18px; }
+.operatori-table-title--directory > span { display: block; }
+.operatori-table-title--directory small { color: var(--text-tertiary); }
+.operatori-table-title--directory .operatori-btn-export { margin-left: auto; }
+.operatori-btn-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  padding: 9px 12px;
+  border: 1px solid var(--border-secondary);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-primary);
+  box-shadow: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+.operatori-btn-export i { color: var(--brand); }
+.operatori-btn-export:hover {
+  transform: none;
+  border-color: var(--brand);
+  background: var(--brand-10);
+  box-shadow: none;
+  color: var(--text-primary);
+}
+.operatori-btn-export:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.operatori-directory-table td { padding-top: 14px; padding-bottom: 14px; }
+.operatori-directory-table tbody tr:hover { background: var(--bg-tertiary); }
+.operatori-person-link { display: inline; color: var(--text-primary); }
+.operatori-person-link:hover { color: var(--brand); text-decoration: none; }
+
+.operatori-profile-hero {
+  height: 210px;
+  overflow: visible;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--card-radius);
+  background: var(--bg-elevated);
+  box-shadow: none;
+}
+.operatori-profile-hero__context { display: none; }
+.operatori-cover--show .operatori-cover-inner { bottom: -64px; left: 28px; }
+.operatori-cover--show .operatori-avatar {
+  width: 128px;
+  height: 128px;
+  border-color: var(--bg-primary);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 48px;
+}
+.operatori-cover--show .operatori-detail-title { color: var(--text-primary) !important; font-size: 30px; letter-spacing: 0; }
+.operatori-profile-subtitle { color: var(--text-secondary); font-size: 12px; }
+.operatori-cover--show + .operatori-detail-grid { margin-top: 80px; }
+.operatori-detail-grid { gap: 16px; }
+
+.operatori-detail-page .operatori-sidebar-card,
+.operatori-detail-page .operatori-content-card {
+  border-color: var(--border-primary);
+  border-radius: var(--card-radius);
+  background: var(--bg-elevated) !important;
+}
+.operatori-detail-page .operatori-sidebar-card,
+.operatori-detail-page .operatori-content-card { padding: 20px; }
+.operatori-main-feed { gap: 16px; }
+.operatori-sidebar-title,
+.operatori-section-title { margin-bottom: 16px; color: var(--text-primary); font-size: 18px; }
+.operatori-stat-list { gap: 8px; }
+.operatori-stat-row,
+.operatori-stat-row--profit,
+.operatori-stat-row--neutral,
+.operatori-stat-row--delivery,
+.operatori-stat-row--pickup {
+  padding: 12px;
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+.operatori-stat-icon { display: none; }
+.operatori-stat-label { color: var(--text-tertiary); }
+.operatori-stat-value,
+.operatori-stat-row--profit .operatori-stat-value { color: var(--text-primary); }
+.operatori-stats-grid { gap: 10px; }
+.operatori-stat-box,
+.operatori-stat-box--neutral,
+.operatori-stat-box--profit,
+.operatori-stat-box--amber,
+.operatori-stat-box--violet {
+  padding: 16px;
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+.operatori-stat-box--profit .operatori-stat-value,
+.operatori-monthly-sales-table__amount.td-profit,
+.operatori-monthly-sales-table__amount.operatori-profit { color: var(--success-light) !important; }
+.operatori-stat-value--delivery,
+.operatori-stat-value--pickup { color: var(--text-primary) !important; }
+.operatori-section-icon { display: none; }
+.operatori-chart-wrap,
+.operatori-content-card .operatori-chart-wrap { height: 320px; }
+
+@media (max-width: 640px) {
+  .operatori-page,
+  .operatori-detail-page { padding: 16px 12px 32px; }
+  .operatori-directory-hero,
+  .operatori-distribution-section,
+  .operatori-ranking-section,
+  .operatori-directory-card .operatori-table-section,
+  .operatori-detail-page .operatori-sidebar-card,
+  .operatori-detail-page .operatori-content-card { padding: 16px; }
+  .operatori-profile-hero { height: 180px; }
+  .operatori-cover--show .operatori-cover-inner { bottom: -52px; left: 18px; }
+  .operatori-cover--show .operatori-avatar { width: 104px; height: 104px; font-size: 38px; }
+  .operatori-cover--show .operatori-detail-title { font-size: 24px; }
+  .operatori-profile-subtitle { max-width: 190px; font-size: 11px; }
+  .operatori-cover--show + .operatori-detail-grid { margin-top: 68px; }
+  .operatori-chart-wrap,
+  .operatori-content-card .operatori-chart-wrap { height: 260px; }
+  .operatori-ranking-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .operatori-ranking-item { grid-template-columns: 22px minmax(0, 1fr); gap: 9px; }
+  .operatori-ranking-value { grid-column: 2; text-align: left; }
+  .operatori-ranking-label { align-items: flex-start; flex-direction: column; gap: 2px; }
+}
+
+/* Pagina „Datele mele” urmează aceeași structură vizuală ca profilul de operator. */
+.operator-portal .operator-me-page { gap: 16px; }
+.operator-portal .operator-me-hero {
+  min-height: 210px;
+  overflow: visible;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--card-radius);
+  background: var(--bg-elevated);
+  box-shadow: none;
+}
+.operator-portal .operator-me-hero__overlay { display: none; }
+.operator-portal .operator-me-hero__identity { bottom: -64px; left: 28px; right: 28px; gap: 16px; }
+.operator-portal .operator-me-avatar { width: 128px; height: 128px; border-color: var(--bg-primary); border-radius: 50%; box-shadow: none; }
+.operator-portal .operator-me-avatar--initial { background: var(--bg-tertiary); color: var(--text-primary); }
+.operator-portal .operator-me-title { color: var(--text-primary); font-size: 30px; letter-spacing: 0; }
+.operator-portal .operator-me-badge { padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--text-secondary); font-size: 12px; }
+.operator-portal .operator-me-link { color: var(--text-secondary); font-size: 12px; }
+.operator-portal .operator-me-grid { grid-template-columns: 290px minmax(0, 1fr); gap: 16px; margin-top: 80px; }
+.operator-portal .operator-me-main { gap: 16px; }
+.operator-portal .operator-me-sidebar { position: sticky; top: 20px; align-self: start; }
+.operator-portal .operator-me-card {
+  padding: 20px;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--card-radius);
+  background: var(--bg-elevated);
+  box-shadow: none;
+}
+.operator-portal .operator-me-card__title { margin-bottom: 16px; color: var(--text-primary); font-size: 18px; }
+.operator-portal .operator-me-card__title i,
+.operator-portal .operator-me-stat__icon { display: none; }
+.operator-portal .operator-me-stat-list { gap: 8px; }
+.operator-portal .operator-me-stat {
+  padding: 12px;
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+.operator-portal .operator-me-stat__label,
+.operator-portal .operator-me-total__label { color: var(--text-tertiary); }
+.operator-portal .operator-me-stat__value,
+.operator-portal .operator-me-total__value { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.operator-portal .operator-me-totals-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.operator-portal .operator-me-total {
+  padding: 16px;
+  text-align: left;
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+.operator-portal .operator-me-total--green .operator-me-total__value { color: var(--success-light); }
+.operator-portal .operator-me-total--brand .operator-me-total__value,
+.operator-portal .operator-me-total--orange .operator-me-total__value,
+.operator-portal .operator-me-total--violet .operator-me-total__value { color: var(--text-primary); }
+.operator-portal .operator-me-chart-wrap,
+.operator-portal .operator-me-table-wrap { border-color: var(--border-primary); border-radius: 8px; background: var(--bg-primary); }
+.operator-portal .operator-me-table th { color: var(--text-secondary); background: var(--bg-tertiary); border-bottom-color: var(--border-primary); }
+.operator-portal .operator-me-table td { color: var(--text-primary); border-bottom-color: var(--border-primary); }
+.operator-portal .operator-me-table tbody tr:hover { background: var(--bg-tertiary); }
+
+/* Pagina generală „Operatori” folosește aceleași suprafețe ca portalul operatorului. */
+.operatori-page .operatori-directory-hero,
+.operatori-page .operatori-overview-stat,
+.operatori-page .operatori-filter-panel,
+.operatori-page .operatori-directory-card {
+  border-color: var(--border-primary);
+  background: var(--bg-elevated) !important;
+  box-shadow: none;
+}
+.operatori-page .operatori-directory-hero { border-radius: var(--card-radius); }
+.operatori-page .operatori-overview-stat { border-radius: 8px; }
+.operatori-page .operatori-filter-panel,
+.operatori-page .operatori-directory-card { border-radius: var(--card-radius); }
+.operatori-page .operatori-ranking-section { border-bottom-color: var(--border-primary); }
+.operatori-page .operatori-ranking-heading h2,
+.operatori-page .operatori-table-title { color: var(--text-primary); }
+.operatori-page .operatori-ranking-heading p,
+.operatori-page .operatori-ranking-label span,
+.operatori-page .operatori-overview-stat span { color: var(--text-tertiary); }
+.operatori-page .operatori-ranking-track,
+.operatori-page .operatori-table-wrap { background: var(--bg-primary); }
+.operatori-page .operatori-table-wrap { border-color: var(--border-primary); border-radius: 8px; }
+.operatori-page .operatori-table thead tr { background: var(--bg-tertiary) !important; }
+.operatori-page .operatori-table th { border-bottom-color: var(--border-primary); }
+.operatori-page .operatori-table td { border-bottom-color: var(--border-primary); }
+.operatori-page .operatori-table tbody tr:hover { background: var(--bg-tertiary); }
+
+/* Acțiuni auxiliare în paleta VOLTA, fără albastru. */
+.operatori-btn-report,
+.operatori-btn-secondary,
+.operatori-btn-icon {
+  background: var(--brand-10);
+  border-color: var(--brand-30);
+  box-shadow: none;
+  color: var(--brand);
+}
+.operatori-btn-report:hover,
+.operatori-btn-secondary:hover,
+.operatori-btn-icon:hover { background: var(--brand-20); color: var(--brand); box-shadow: none; }
+
+@media (max-width: 900px) {
+  .operator-portal .operator-me-grid { grid-template-columns: 1fr; }
+  .operator-portal .operator-me-sidebar { position: static; }
+}
+
+@media (max-width: 640px) {
+  .operator-portal .operator-me-hero { min-height: 180px; }
+  .operator-portal .operator-me-hero__identity { bottom: -52px; left: 18px; right: 18px; gap: 12px; }
+  .operator-portal .operator-me-avatar { width: 104px; height: 104px; }
+  .operator-portal .operator-me-title { font-size: 24px; }
+  .operator-portal .operator-me-hero__badges { gap: 5px; }
+  .operator-portal .operator-me-badge { max-width: 170px; line-height: 1.35; }
+  .operator-portal .operator-me-grid { margin-top: 68px; }
+  .operator-portal .operator-me-card { padding: 16px; }
+  .operator-portal .operator-me-totals-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

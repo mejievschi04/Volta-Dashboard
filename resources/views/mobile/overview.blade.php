@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
     page_view: palette ? palette.amber : { line: 'rgb(250, 204, 21)', area: 'rgba(250, 204, 21, 0.14)' },
     product_view: palette ? palette.violet : { line: 'rgb(167, 139, 250)', area: 'rgba(167, 139, 250, 0.12)' },
     search: palette ? palette.cyan : { line: 'rgb(34, 211, 238)', area: 'rgba(34, 211, 238, 0.12)' },
-    add_to_cart: palette ? palette.sky : { line: 'rgb(56, 189, 248)', area: 'rgba(56, 189, 248, 0.12)' },
+    add_to_cart: palette ? palette.amber : { line: 'rgb(255, 238, 0)', area: 'rgba(255, 238, 0, 0.12)' },
     banner_click: palette ? palette.slate : { line: 'rgb(203, 213, 225)', area: 'rgba(203, 213, 225, 0.12)' },
     cart_abandoned: palette ? palette.rose : { line: 'rgb(244, 63, 94)', area: 'rgba(244, 63, 94, 0.12)' },
     order_completed: palette ? palette.emerald : { line: 'rgb(16, 185, 129)', area: 'rgba(16, 185, 129, 0.12)' }

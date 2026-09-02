@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
         backgroundColor: [
           'rgba(255, 238, 0, 0.85)',
           'rgba(167, 139, 250, 0.7)',
-          'rgba(56, 189, 248, 0.7)',
+          'rgba(255, 238, 0, 0.7)',
           'rgba(250, 204, 21, 0.7)',
           'rgba(16, 185, 129, 0.72)'
         ]

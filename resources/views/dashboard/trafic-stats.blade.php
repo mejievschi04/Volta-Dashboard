@@ -4,7 +4,7 @@
 @section('header-title', '')
 
 @push('styles')
-<link rel="stylesheet" href="{{ url('css/trafic.css') }}">
+<link rel="stylesheet" href="{{ url('css/trafic.css') }}?v={{ @filemtime(public_path('css/trafic.css')) ?: 0 }}">
 <style>
 .stats-page {
   padding: 30px;
@@ -906,4 +906,3 @@ function formatNumber(val) {
 
 </script>
 @endpush
-

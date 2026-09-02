@@ -6,9 +6,18 @@
 
 @section('content')
 <div class="operatori-page">
-  <p class="rapoarte-lead operatori-page-lead">
-    Listă și pondere vânzări pentru perioada selectată. {{ $perioadaLabel ?? 'Toată perioada afișată.' }}
-  </p>
+  @php
+    $totalVanzari = array_sum(array_column($operatori1c ?? [], 'vanzari_fara_tva'));
+    $totalProfit = array_sum(array_column($operatori1c ?? [], 'profit'));
+    $totalComenzi = array_sum(array_column($operatori1c ?? [], 'nr_comenzi'));
+    $topOperator = $operatori1c[0] ?? null;
+  @endphp
+  <section class="operatori-directory-hero">
+    <div>
+      <h1>Operatori</h1>
+      <p>Urmărește rezultatele echipei pentru <strong>{{ $perioadaLabel ?? 'perioada selectată' }}</strong> și deschide rapid profilul fiecărui operator.</p>
+    </div>
+  </section>
 
   @if(session('success'))
   <div class="operatori-alert operatori-alert-success">
@@ -21,7 +30,15 @@
   </div>
   @endif
 
-  <form method="get" action="{{ route('operatori') }}" class="operatori-filter-form">
+  <section class="operatori-overview-grid" aria-label="Rezumat performanță">
+    <div class="operatori-overview-stat"><span>Vânzări fără TVA</span><strong>{{ number_format($totalVanzari, 0, ',', '.') }} <small>MDL</small></strong></div>
+    <div class="operatori-overview-stat"><span>Profit total</span><strong class="is-profit">{{ number_format($totalProfit, 0, ',', '.') }} <small>MDL</small></strong></div>
+    <div class="operatori-overview-stat"><span>Comenzi procesate</span><strong>{{ number_format($totalComenzi, 0, ',', '.') }}</strong></div>
+    <div class="operatori-overview-stat"><span>Cel mai bun rezultat</span><strong class="is-name">{{ $topOperator['nume'] ?? '—' }}</strong></div>
+  </section>
+
+  <form method="get" action="{{ route('operatori') }}" class="operatori-filter-form operatori-filter-panel">
+    <div class="operatori-filter-panel__heading">Filtrează perioada</div>
     <div class="rapoarte-periods-grid operatori-filter-periods">
       <div class="month-selector-modern">
         <div class="month-selector-wrapper">
@@ -50,33 +67,42 @@
   </form>
 
   @if(isset($operatori1c) && count($operatori1c) > 0)
-  <div class="operatori-card operatori-card-main">
+  <div class="operatori-card operatori-card-main operatori-directory-card">
     @if(isset($chartData1c) && count($chartData1c) > 0)
-    <section class="operatori-chart-section">
-      <div class="operatori-pie-wrap">
-        <div class="operatori-pie-canvas"><canvas id="vanzariPieChart1c"></canvas></div>
-      </div>
-      <div class="operatori-legend">
-        @foreach($chartData1c as $d)
-        <div class="operatori-legend-item">
-          <span class="operatori-legend-name">{{ $d['nume'] }}</span>
-          <span class="operatori-legend-value">{{ number_format($d['vanzari_fara_tva'], 2, ',', '.') }} MDL</span>
-          <span class="operatori-legend-pct">{{ $d['procent'] }}%</span>
+    @php $maxVanzari = max(array_column($chartData1c, 'vanzari_fara_tva')) ?: 1; @endphp
+    <section class="operatori-ranking-section" aria-labelledby="operatori-ranking-title">
+      <div class="operatori-ranking-heading">
+        <div>
+          <h2 id="operatori-ranking-title">Clasament după vânzări</h2>
+          <p>Compară direct contribuția fiecărui operator la rezultatul echipei.</p>
         </div>
-        @endforeach
+        <span>{{ $perioadaLabel }}</span>
       </div>
+      <ol class="operatori-ranking-list">
+        @foreach($chartData1c as $index => $d)
+        @php $width = max(4, round(($d['vanzari_fara_tva'] / $maxVanzari) * 100, 1)); @endphp
+        <li class="operatori-ranking-item">
+          <span class="operatori-ranking-position">{{ $index + 1 }}</span>
+          <div class="operatori-ranking-main">
+            <div class="operatori-ranking-label"><strong>{{ $d['nume'] }}</strong><span>{{ $d['procent'] }}% din vânzările echipei</span></div>
+            <div class="operatori-ranking-track" aria-hidden="true"><span style="width: {{ $width }}%"></span></div>
+          </div>
+          <strong class="operatori-ranking-value">{{ number_format($d['vanzari_fara_tva'], 0, ',', '.') }} <small>MDL</small></strong>
+        </li>
+        @endforeach
+      </ol>
     </section>
     @endif
 
     <section class="operatori-table-section">
-      <h2 class="operatori-table-title" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-        <span><i class="fas fa-list"></i> Lista operatori</span>
-        <button type="button" id="operatoriExportExcelBtn" class="operatori-btn operatori-btn-primary">
+      <h2 class="operatori-table-title operatori-table-title--directory">
+        <span>Rezultate individuale <small>{{ count($operatori1c) }} operatori activi</small></span>
+        <button type="button" id="operatoriExportExcelBtn" class="operatori-btn operatori-btn-export volta-export-btn">
           <i class="fas fa-file-excel" aria-hidden="true"></i> Export Excel
         </button>
       </h2>
       <div class="operatori-table-wrap">
-        <table class="operatori-table">
+        <table class="operatori-table operatori-directory-table">
           <thead>
             <tr>
               <th>Operator</th>
@@ -99,7 +125,7 @@
             @endphp
             <tr class="operatori-row-click" data-href="{{ $detailUrl }}" tabindex="0" role="link" aria-label="Detalii operator {{ $op['nume'] }}">
               <td>
-                <a href="{{ $detailUrl }}" class="operatori-name-link">{{ $op['nume'] }}</a>
+                <a href="{{ $detailUrl }}" class="operatori-name-link operatori-person-link">{{ $op['nume'] }}</a>
               </td>
               <td class="tc">{{ number_format($op['vanzari_fara_tva'], 2, ',', '.') }} MDL</td>
               <td class="tc">{{ number_format($op['vanzari_cu_tva'], 2, ',', '.') }} MDL</td>
@@ -150,63 +176,10 @@
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="{{ url('css/operatori.css') }}">
+<link rel="stylesheet" href="{{ url('css/operatori.css') }}?v={{ @filemtime(public_path('css/operatori.css')) ?: 0 }}">
 @endpush
 
 @push('scripts')
-@if(isset($chartData1c) && count($chartData1c) > 0)
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const canvas1c = document.getElementById('vanzariPieChart1c');
-  if (!canvas1c) return;
-  const chartData1c = @json($chartData1c);
-  const colors = ['rgba(255, 238, 0, 0.8)', 'rgba(180, 188, 204, 0.8)', 'rgba(74, 222, 128, 0.8)', 'rgba(168, 85, 247, 0.8)', 'rgba(239, 68, 68, 0.8)', 'rgba(251, 146, 60, 0.8)', 'rgba(34, 197, 94, 0.8)', 'rgba(217, 119, 6, 0.8)', 'rgba(236, 72, 153, 0.8)', 'rgba(161, 161, 170, 0.8)'];
-  new Chart(canvas1c.getContext('2d'), {
-    type: 'pie',
-    data: {
-      labels: chartData1c.map(i => i.nume),
-      datasets: [{
-        data: chartData1c.map(i => i.vanzari_fara_tva),
-        backgroundColor: colors.slice(0, chartData1c.length),
-        borderColor: colors.slice(0, chartData1c.length).map(c => c.replace('0.8', '1')),
-        borderWidth: 2,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: (function () {
-          const callbacks = {
-            label: function (ctx) {
-              const v = ctx.parsed || 0;
-              const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-              const pct = total > 0 ? ((v / total) * 100).toFixed(2) : 0;
-              return ctx.label + ': ' + new Intl.NumberFormat('ro-RO', { minimumFractionDigits: 2 }).format(v) + ' MDL (' + pct + '%)';
-            },
-          };
-          if (typeof VoltaChartTheme !== 'undefined') {
-            return Object.assign({}, VoltaChartTheme.tooltip(), { callbacks: callbacks });
-          }
-          return {
-            backgroundColor: 'rgba(30, 41, 59, 0.96)',
-            titleColor: '#FFEE00',
-            bodyColor: '#f8fafc',
-            borderColor: '#334155',
-            borderWidth: 1,
-            padding: 12,
-            cornerRadius: 10,
-            callbacks: callbacks,
-          };
-        })(),
-      },
-    },
-  });
-});
-</script>
-@endif
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const filtersForm = document.querySelector('.operatori-filter-form');

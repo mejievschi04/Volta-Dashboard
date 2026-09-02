@@ -32,7 +32,7 @@
         <button type="submit" class="btn secondary raport-lunar-btn-icon">
           <i class="fas fa-sync" aria-hidden="true"></i><span>Actualizează</span>
         </button>
-        <button type="button" id="raportLunarExportBtn" class="btn raport-lunar-btn-icon">
+        <button type="button" id="raportLunarExportBtn" class="btn raport-lunar-btn-icon volta-export-btn">
           <i class="fas fa-file-excel" aria-hidden="true"></i><span>Descarcă Excel</span>
         </button>
       </div>

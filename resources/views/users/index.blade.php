@@ -82,7 +82,7 @@
                   <i class="fas fa-crown"></i>Admin
                 </span>
               @else
-                <span style="color: #FFFFFF; background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3); display: inline-flex; align-items: center; gap: 6px;">
+                <span style="color: var(--text-inverse); background: var(--brand); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; box-shadow: none; display: inline-flex; align-items: center; gap: 6px;">
                   <i class="fas fa-user"></i>{{ ucfirst($user->role ?? 'User') }}
                 </span>
               @endif

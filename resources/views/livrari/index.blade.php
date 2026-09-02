@@ -1668,7 +1668,7 @@
         <h2 class="livrari-kpi-title">KPI Livrări</h2>
         <p class="livrari-kpi-subtitle">Rezumat livrări și distribuție per operator</p>
       </div>
-      <button type="button" id="livrariExportTotalsExcelBtn" class="livrari-btn livrari-btn-primary livrari-kpi-export">
+      <button type="button" id="livrariExportTotalsExcelBtn" class="livrari-btn livrari-btn-primary livrari-kpi-export volta-export-btn">
         <i class="fas fa-file-excel" aria-hidden="true"></i> Export totaluri
       </button>
     </div>
@@ -1778,7 +1778,7 @@
           <i class="fas fa-map-location-dot" aria-hidden="true"></i> Hartă live
         </a>
         @endif
-        <button type="button" id="livrariExportExcelBtn" class="livrari-btn livrari-btn-primary">
+        <button type="button" id="livrariExportExcelBtn" class="livrari-btn livrari-btn-primary volta-export-btn">
           <i class="fas fa-file-excel" aria-hidden="true"></i> Export Excel
         </button>
       </span>

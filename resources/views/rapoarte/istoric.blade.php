@@ -111,7 +111,7 @@
     <h3 id="istoric-table-heading" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
       <span><i class="fas fa-table" aria-hidden="true"></i> Istoric complet</span>
       <span style="display:inline-flex;gap:8px;align-items:center;">
-        <button type="button" id="istoricExportExcelBtn" class="btn secondary">
+        <button type="button" id="istoricExportExcelBtn" class="btn secondary volta-export-btn">
           <i class="fas fa-file-excel" aria-hidden="true"></i> Excel
         </button>
         <button type="button" id="istoricExportPdfBtn" class="btn secondary">

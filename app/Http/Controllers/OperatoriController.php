@@ -326,6 +326,24 @@ class OperatoriController extends Controller
         }
         $pickupTotal = max(0, $comenziTotal - $nrLivrariTotal);
         $pickupLunaCurenta = max(0, $comenziLunaCurenta - $nrLivrariLunaCurenta);
+        $pozitieTopVanzari = null;
+        if ($date && $operatorNume !== '') {
+            try {
+                $clasament = OnecKpiOperator::query()
+                    ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
+                    ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
+                    ->selectRaw('onec_kpi_operatori.operator_nume, SUM(onec_kpi_operatori.vanzari_fara_tva) as total_vanzari')
+                    ->groupBy('onec_kpi_operatori.operator_nume')
+                    ->orderByDesc('total_vanzari')
+                    ->pluck('operator_nume')
+                    ->map(fn ($nume) => mb_strtolower(trim((string) $nume)))
+                    ->values();
+                $index = $clasament->search(mb_strtolower($operatorNume));
+                $pozitieTopVanzari = $index === false ? null : $index + 1;
+            } catch (\Throwable $e) {
+                // Profilul rămâne disponibil și fără poziția din clasament.
+            }
+        }
 
         return view('operatori.me', [
             'operatorNume' => $operatorNume ?: $fullName ?: $user->username,
@@ -337,6 +355,7 @@ class OperatoriController extends Controller
             'nrLivrariLunaCurenta' => $nrLivrariLunaCurenta,
             'pickupTotal' => $pickupTotal,
             'pickupLunaCurenta' => $pickupLunaCurenta,
+            'pozitieTopVanzari' => $pozitieTopVanzari,
         ]);
     }
 
@@ -408,6 +427,7 @@ class OperatoriController extends Controller
 
         // Pentru pagina identică cu „Datele mele”: $date (ca la me), livrări și pick-up
         $date = null;
+        $pozitieTopVanzari = null;
         if ($date1c !== null) {
             $date = [
                 'nume' => trim((string) ($operator->nume ?? '')),
@@ -416,6 +436,22 @@ class OperatoriController extends Controller
                 'profit' => $date1c['profit'],
                 'nr_comenzi' => $date1c['nr_comenzi'],
             ];
+
+            try {
+                $clasament = OnecKpiOperator::query()
+                    ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
+                    ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
+                    ->selectRaw('onec_kpi_operatori.operator_nume, SUM(onec_kpi_operatori.vanzari_fara_tva) as total_vanzari')
+                    ->groupBy('onec_kpi_operatori.operator_nume')
+                    ->orderByDesc('total_vanzari')
+                    ->pluck('operator_nume')
+                    ->map(fn ($nume) => mb_strtolower(trim((string) $nume)))
+                    ->values();
+                $index = $clasament->search(mb_strtolower($operatorNume));
+                $pozitieTopVanzari = $index === false ? null : $index + 1;
+            } catch (\Throwable $e) {
+                // Poziția nu este esențială pentru afișarea profilului.
+            }
         }
         $operatorUser = User::whereRaw('LOWER(TRIM(full_name)) = ?', [mb_strtolower($operatorNume)])->first();
         $lunaCurenta = now()->format('Y-m');
@@ -440,6 +476,7 @@ class OperatoriController extends Controller
             'nrLivrariLunaCurenta' => $nrLivrariLunaCurenta,
             'pickupTotal' => $pickupTotal,
             'pickupLunaCurenta' => $pickupLunaCurenta,
+            'pozitieTopVanzari' => $pozitieTopVanzari,
         ]);
     }
 

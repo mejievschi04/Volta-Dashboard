@@ -20,8 +20,8 @@
     </p>
 
     <!-- Instructions -->
-    <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-      <h3 style="color: #3b82f6; margin: 0 0 12px 0; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+    <div style="background: var(--brand-10); border: 1px solid var(--brand-30); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="color: var(--brand); margin: 0 0 12px 0; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
         <i class="fas fa-info-circle"></i>Instrucțiuni
       </h3>
       <ul style="color: #9CA3AF; margin: 0; padding-left: 20px; font-size: 13px;">
@@ -97,7 +97,7 @@
       <h3 style="color: #fff; margin: 0 0 12px 0; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
         <i class="fas fa-download"></i>Fișier Model
       </h3>
-      <a href="{{ route('operatori.download-template') }}" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px; transition: all 0.2s; border: 1px solid rgba(59, 130, 246, 0.3);" onmouseover="this.style.background='rgba(59, 130, 246, 0.3)'" onmouseout="this.style.background='rgba(59, 130, 246, 0.2)'">
+      <a href="{{ route('operatori.download-template') }}" style="display: inline-flex; align-items: center; gap: 8px; background: var(--brand-10); color: var(--brand); padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px; transition: all 0.2s; border: 1px solid var(--brand-30);" onmouseover="this.style.background='var(--brand-20)'" onmouseout="this.style.background='var(--brand-10)'">
         <i class="fas fa-file-download"></i>Descarcă template Excel
       </a>
     </div>
