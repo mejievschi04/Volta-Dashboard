@@ -50,6 +50,99 @@
   .livrari-page-lead {
     margin: 0 0 var(--space-6, 24px);
   }
+  /* ---------- Overview ---------- */
+  .livrari-overview {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.55fr);
+    gap: 14px;
+    margin: 0 0 18px;
+  }
+  .livrari-overview-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .livrari-overview-card {
+    min-height: 132px;
+    padding: 18px 20px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    position: relative;
+  }
+  .livrari-overview-label,
+  .livrari-overview-period {
+    color: #94a3b8;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .livrari-overview-label i { color: var(--brand, #ffee00); margin-right: 7px; }
+  .livrari-overview-value {
+    color: #fff;
+    font-family: 'Space Grotesk', 'Noto Sans', sans-serif;
+    font-size: clamp(1.6rem, 2.5vw, 2.05rem);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+  }
+  .livrari-overview-localitate {
+    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .livrari-overview-subvalue {
+    position: relative;
+    z-index: 1;
+    color: #cbd5e1;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+  .livrari-overview-chart {
+    min-height: 132px;
+    padding: 16px 20px 12px;
+    margin: 0;
+  }
+  .livrari-overview-chart-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 4px;
+  }
+  .livrari-overview-chart-title {
+    margin: 0;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .livrari-overview-chart-title i { color: var(--brand, #ffee00); margin-right: 8px; }
+  .livrari-overview-chart-body { height: 104px; position: relative; }
+  .livrari-overview-empty {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    color: #94a3b8;
+    font-size: 0.875rem;
+    text-align: center;
+  }
+  @media (max-width: 1060px) {
+    .livrari-overview { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .livrari-overview-stats { grid-template-columns: 1fr; gap: 10px; }
+    .livrari-overview-card { min-height: 112px; padding: 16px; }
+    .livrari-overview-chart { min-height: 150px; padding: 16px; }
+    .livrari-overview-chart-body { height: 100px; }
+    .livrari-overview-chart-head { display: block; }
+    .livrari-overview-period { display: block; margin-top: 5px; font-size: 0.6875rem; }
+  }
   .livrari-section-switch {
     display: flex;
     flex-wrap: wrap;
@@ -1436,11 +1529,9 @@
     $operatorsForFilter = $operatorsForFilter ?? collect();
     $livrariLocalitati = collect($livrariLocalitati ?? []);
     $livrariRaioane = collect($livrariRaioane ?? []);
-    $missingRaionOnly = (string) ($filters['fara_raion'] ?? '') === '1';
-    $queryWithoutPage = request()->except('page');
-    $missingRaionQuery = array_merge($queryWithoutPage, ['fara_raion' => '1']);
-    $allRaioaneQuery = $queryWithoutPage;
-    unset($allRaioaneQuery['fara_raion']);
+    $overview = $overview ?? ['total' => (int) ($totalLivrari ?? 0), 'top_localitate' => null, 'chart' => ['labels' => [], 'values' => [], 'granularity' => 'day', 'period_label' => '']];
+    $overviewTopLocalitate = $overview['top_localitate'] ?? null;
+    $overviewChart = $overview['chart'] ?? ['labels' => [], 'values' => [], 'period_label' => ''];
   @endphp
 
   @if($isAdmin)
@@ -1457,7 +1548,6 @@
   <section class="livrari-section-panel" data-section-panel="operare">
   <form method="get" action="{{ route('livrari') }}" class="livrari-card livrari-filters-card">
     <h2><i class="fas fa-filter"></i> Filtre și căutare</h2>
-    <input type="hidden" name="fara_raion" value="{{ $missingRaionOnly ? '1' : '' }}">
 
     <div class="livrari-filters-block">
       <span class="livrari-filters-block-title">Perioadă</span>
@@ -1518,19 +1608,43 @@
             <option value="afara" {{ ($filters['locatie'] ?? '') === 'afara' ? 'selected' : '' }}>În afara</option>
           </select>
         </div>
-        <button type="submit" class="livrari-btn livrari-btn-primary"><i class="fas fa-search"></i> Filtrează</button>
-        @if(!$missingRaionOnly)
-        <a href="{{ route('livrari', $missingRaionQuery) }}" class="livrari-btn livrari-btn-muted">
-          <i class="fas fa-triangle-exclamation"></i> Fără raion
-        </a>
-        @else
-        <a href="{{ route('livrari', $allRaioaneQuery) }}" class="livrari-btn livrari-btn-muted is-active">
-          <i class="fas fa-filter-circle-xmark"></i> Arată toate raioanele
-        </a>
-        @endif
       </div>
     </div>
   </form>
+  </section>
+
+  <section class="livrari-overview" aria-label="Rezumat livrări">
+    <div class="livrari-overview-stats">
+      <article class="livrari-card livrari-overview-card">
+        <span class="livrari-overview-label"><i class="fas fa-truck" aria-hidden="true"></i> Nr. livrări</span>
+        <strong class="livrari-overview-value">{{ number_format((int) ($overview['total'] ?? 0), 0, ',', '.') }}</strong>
+        <span class="livrari-overview-subvalue">în selecția curentă</span>
+      </article>
+      <article class="livrari-card livrari-overview-card">
+        <span class="livrari-overview-label"><i class="fas fa-location-dot" aria-hidden="true"></i> Top localitate</span>
+        <strong class="livrari-overview-value livrari-overview-localitate" title="{{ $overviewTopLocalitate['nume'] ?? '' }}">{{ $overviewTopLocalitate['nume'] ?? '—' }}</strong>
+        <span class="livrari-overview-subvalue">
+          @if($overviewTopLocalitate)
+            {{ number_format((int) $overviewTopLocalitate['total'], 0, ',', '.') }} livrări · {{ number_format((float) $overviewTopLocalitate['share'], 1, ',', '.') }}% din total
+          @else
+            Nu există localități în selecția curentă
+          @endif
+        </span>
+      </article>
+    </div>
+    <article class="livrari-card livrari-overview-chart">
+      <div class="livrari-overview-chart-head">
+        <h2 class="livrari-overview-chart-title"><i class="fas fa-chart-line" aria-hidden="true"></i> Evoluție livrări</h2>
+        <span class="livrari-overview-period">{{ $overviewChart['period_label'] ?? '' }}</span>
+      </div>
+      <div class="livrari-overview-chart-body">
+        @if(!empty($overviewChart['labels']))
+          <canvas id="livrariOverviewChart" role="img" aria-label="Evoluția numărului de livrări în perioada selectată"></canvas>
+        @else
+          <div class="livrari-overview-empty">Nu există date pentru perioada selectată.</div>
+        @endif
+      </div>
+    </article>
   </section>
 
   @if(session('success'))
@@ -1885,6 +1999,71 @@
   </div>
 </div>
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+  var canvas = document.getElementById('livrariOverviewChart');
+  if (!canvas || !window.Chart) return;
+
+  var chartData = @json($overviewChart);
+  var labels = Array.isArray(chartData.labels) ? chartData.labels : [];
+  var values = Array.isArray(chartData.values) ? chartData.values : [];
+  if (!labels.length || !values.length) return;
+
+  var theme = window.VoltaChartTheme;
+  var options = theme ? theme.cartesianDefaults({
+    plugins: {
+      legend: { display: false },
+      tooltip: Object.assign({}, theme.tooltip(), {
+        callbacks: {
+          label: function (context) {
+            return context.parsed.y + (context.parsed.y === 1 ? ' livrare' : ' livrări');
+          }
+        }
+      })
+    },
+    scales: {
+      x: {
+        ticks: Object.assign({}, theme.ticks(9, 11), { maxTicksLimit: 8 }),
+        grid: { display: false },
+        border: { display: false }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: Object.assign({}, theme.ticks(9, 11), { precision: 0, maxTicksLimit: 5 }),
+        grid: theme.gridLines(),
+        border: { display: false }
+      }
+    }
+  }) : {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+  };
+
+  new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Livrări',
+        data: values,
+        borderColor: '#FFEE00',
+        backgroundColor: 'rgba(255, 238, 0, 0.14)',
+        fill: true,
+        tension: 0.35,
+        pointRadius: labels.length > 20 ? 0 : 3,
+        pointHoverRadius: 5,
+        pointBackgroundColor: '#FFEE00',
+        pointBorderColor: '#16181f',
+        pointBorderWidth: 2
+      }]
+    },
+    options: options
+  });
+})();
+</script>
 <script>
 (function() {
   var localitati = @json($livrariLocalitati);
@@ -2681,7 +2860,14 @@
   var displayInput = document.getElementById('livrari_perioada_input');
   var hiddenDeLa = document.getElementById('data_de_la');
   var hiddenPana = document.getElementById('data_pana');
+  var filtersForm = document.querySelector('.livrari-filters-card');
   if (!trigger || !displayInput || !hiddenDeLa || !hiddenPana) return;
+
+  function submitFilters() {
+    if (!filtersForm || filtersForm.dataset.submitting === 'true') return;
+    filtersForm.dataset.submitting = 'true';
+    filtersForm.requestSubmit ? filtersForm.requestSubmit() : filtersForm.submit();
+  }
 
   function formatRO(d) {
     var day = ('0' + d.getDate()).slice(-2);
@@ -2721,6 +2907,7 @@
     onChange: function(selectedDates, dateStr, instance) {
       if (selectedDates.length === 2) {
         setHidden(selectedDates[0], selectedDates[1]);
+        submitFilters();
       } else if (selectedDates.length === 1) {
         hiddenDeLa.value = dateStr;
         hiddenPana.value = '';
@@ -2731,6 +2918,7 @@
       if (selectedDates.length === 1) {
         setHidden(selectedDates[0], selectedDates[0]);
         displayInput.value = formatRO(selectedDates[0]);
+        submitFilters();
       }
     }
   });
@@ -2805,6 +2993,20 @@
       setHidden(start, end);
     });
   });
+
+  ['luna', 'operator_id', 'locatie'].forEach(function(id) {
+    var select = document.getElementById(id);
+    if (select) select.addEventListener('change', submitFilters);
+  });
+
+  var searchInput = document.getElementById('cauta');
+  var searchTimer;
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      window.clearTimeout(searchTimer);
+      searchTimer = window.setTimeout(submitFilters, 450);
+    });
+  }
 })();
 </script>
 @endpush

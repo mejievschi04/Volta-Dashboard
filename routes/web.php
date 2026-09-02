@@ -102,6 +102,7 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
         Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
         Route::get('/mobile', [MobileAnalyticsController::class, 'index'])->name('mobile.analytics');
+        Route::get('/mobile/meta', [MobileAnalyticsController::class, 'meta'])->name('mobile.analytics.meta');
         Route::get('/mobile/evenimente', [MobileAnalyticsController::class, 'events'])->name('mobile.analytics.events');
         Route::get('/mobile/palnie-conversie', [MobileAnalyticsController::class, 'funnels'])->name('mobile.analytics.funnels');
         Route::get('/mobile/pagini', [MobileAnalyticsController::class, 'pagesList'])->name('mobile.analytics.pages');

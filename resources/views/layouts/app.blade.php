@@ -60,6 +60,9 @@
         <a href="{{ route('mobile.analytics', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics') ? 'active' : '' }}">
           <i class="fas fa-chart-line"></i><span class="txt">Prezentare</span>
         </a>
+        <a href="{{ route('mobile.analytics.meta', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.meta') ? 'active' : '' }}">
+          <i class="fas fa-layer-group"></i><span class="txt">Meta</span>
+        </a>
         <a href="{{ route('mobile.analytics.events', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.events') ? 'active' : '' }}">
           <i class="fas fa-bolt"></i><span class="txt">Evenimente</span>
         </a>

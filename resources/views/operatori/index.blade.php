@@ -87,32 +87,38 @@
               <th class="tc">Vânzări cu TVA</th>
               <th class="tc">Profit</th>
               <th class="tc">Comenzi</th>
+              <th class="tc">CEC mediu</th>
+              @if(auth()->check() && in_array(strtolower(trim(auth()->user()->role ?? '')), ['admin', 'administrator']))
               <th class="tc">Acțiuni</th>
+              @endif
             </tr>
           </thead>
           <tbody>
             @foreach($operatori1c as $op)
-            <tr>
-              <td><strong>{{ $op['nume'] }}</strong></td>
+            @php
+              $detailUrl = !empty($op['operator_id'])
+                ? route('operatori.show', $op['operator_id'])
+                : route('operatori.raport', ['nume' => $op['nume']]);
+            @endphp
+            <tr class="operatori-row-click" data-href="{{ $detailUrl }}" tabindex="0" role="link" aria-label="Detalii operator {{ $op['nume'] }}">
+              <td>
+                <a href="{{ $detailUrl }}" class="operatori-name-link">{{ $op['nume'] }}</a>
+              </td>
               <td class="tc">{{ number_format($op['vanzari_fara_tva'], 2, ',', '.') }} MDL</td>
               <td class="tc">{{ number_format($op['vanzari_cu_tva'], 2, ',', '.') }} MDL</td>
               <td class="tc operatori-profit">{{ number_format($op['profit'], 2, ',', '.') }} MDL</td>
               <td class="tc">{{ number_format($op['nr_comenzi'], 0, ',', '.') }}</td>
+              <td class="tc">{{ number_format($op['cec_mediu'] ?? 0, 2, ',', '.') }} MDL</td>
+              @if(auth()->check() && in_array(strtolower(trim(auth()->user()->role ?? '')), ['admin', 'administrator']))
               <td class="tc operatori-actions">
-                @if(!empty($op['operator_id']))
-                <a href="{{ route('operatori.show', $op['operator_id']) }}" class="operatori-btn operatori-btn-report"><i class="fas fa-chart-line"></i> Raport detaliat</a>
-                @else
-                <a href="{{ route('operatori.raport', ['nume' => $op['nume']]) }}" class="operatori-btn operatori-btn-report"><i class="fas fa-chart-line"></i> Raport detaliat</a>
-                @endif
-                @if(auth()->check() && in_array(strtolower(trim(auth()->user()->role ?? '')), ['admin', 'administrator']))
                 <form action="{{ route('operatori.toggle-activ') }}" method="post" class="operatori-form-inline" onsubmit="return confirm('Dezactivezi acest operator? Nu va mai apărea în listă.');">
                   @csrf
                   <input type="hidden" name="operator_id" value="{{ $op['operator_id'] ?? '' }}">
                   <input type="hidden" name="nume" value="{{ $op['nume'] }}">
                   <button type="submit" class="operatori-btn operatori-btn-deactivate"><i class="fas fa-user-slash"></i> Dezactivează</button>
                 </form>
-                @endif
               </td>
+              @endif
             </tr>
             @endforeach
           </tbody>
@@ -156,53 +162,56 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const canvas1c = document.getElementById('vanzariPieChart1c');
-  if (canvas1c) {
-    const chartData1c = @json($chartData1c);
-    const colors = ['rgba(255, 238, 0, 0.8)', 'rgba(180, 188, 204, 0.8)', 'rgba(74, 222, 128, 0.8)', 'rgba(168, 85, 247, 0.8)', 'rgba(239, 68, 68, 0.8)', 'rgba(251, 146, 60, 0.8)', 'rgba(34, 197, 94, 0.8)', 'rgba(217, 119, 6, 0.8)', 'rgba(236, 72, 153, 0.8)', 'rgba(161, 161, 170, 0.8)'];
-    new Chart(canvas1c.getContext('2d'), {
-      type: 'pie',
-      data: {
-        labels: chartData1c.map(i => i.nume),
-        datasets: [{
-          data: chartData1c.map(i => i.vanzari_fara_tva),
-          backgroundColor: colors.slice(0, chartData1c.length),
-          borderColor: colors.slice(0, chartData1c.length).map(c => c.replace('0.8', '1')),
-          borderWidth: 2,
-        }]
+  if (!canvas1c) return;
+  const chartData1c = @json($chartData1c);
+  const colors = ['rgba(255, 238, 0, 0.8)', 'rgba(180, 188, 204, 0.8)', 'rgba(74, 222, 128, 0.8)', 'rgba(168, 85, 247, 0.8)', 'rgba(239, 68, 68, 0.8)', 'rgba(251, 146, 60, 0.8)', 'rgba(34, 197, 94, 0.8)', 'rgba(217, 119, 6, 0.8)', 'rgba(236, 72, 153, 0.8)', 'rgba(161, 161, 170, 0.8)'];
+  new Chart(canvas1c.getContext('2d'), {
+    type: 'pie',
+    data: {
+      labels: chartData1c.map(i => i.nume),
+      datasets: [{
+        data: chartData1c.map(i => i.vanzari_fara_tva),
+        backgroundColor: colors.slice(0, chartData1c.length),
+        borderColor: colors.slice(0, chartData1c.length).map(c => c.replace('0.8', '1')),
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: (function () {
+          const callbacks = {
+            label: function (ctx) {
+              const v = ctx.parsed || 0;
+              const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+              const pct = total > 0 ? ((v / total) * 100).toFixed(2) : 0;
+              return ctx.label + ': ' + new Intl.NumberFormat('ro-RO', { minimumFractionDigits: 2 }).format(v) + ' MDL (' + pct + '%)';
+            },
+          };
+          if (typeof VoltaChartTheme !== 'undefined') {
+            return Object.assign({}, VoltaChartTheme.tooltip(), { callbacks: callbacks });
+          }
+          return {
+            backgroundColor: 'rgba(30, 41, 59, 0.96)',
+            titleColor: '#FFEE00',
+            bodyColor: '#f8fafc',
+            borderColor: '#334155',
+            borderWidth: 1,
+            padding: 12,
+            cornerRadius: 10,
+            callbacks: callbacks,
+          };
+        })(),
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: (function () {
-            const callbacks = {
-              label: function (ctx) {
-                const v = ctx.parsed || 0;
-                const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                const pct = total > 0 ? ((v / total) * 100).toFixed(2) : 0;
-                return ctx.label + ': ' + new Intl.NumberFormat('ro-RO', { minimumFractionDigits: 2 }).format(v) + ' MDL (' + pct + '%)';
-              },
-            };
-            if (typeof VoltaChartTheme !== 'undefined') {
-              return Object.assign({}, VoltaChartTheme.tooltip(), { callbacks: callbacks });
-            }
-            return {
-              backgroundColor: 'rgba(30, 41, 59, 0.96)',
-              titleColor: '#FFEE00',
-              bodyColor: '#f8fafc',
-              borderColor: '#334155',
-              borderWidth: 1,
-              padding: 12,
-              cornerRadius: 10,
-              callbacks: callbacks,
-            };
-          })(),
-        },
-      },
-    });
-  }
-
+    },
+  });
+});
+</script>
+@endif
+<script>
+document.addEventListener('DOMContentLoaded', function() {
   const exportBtn = document.getElementById('operatoriExportExcelBtn');
   if (exportBtn) {
     exportBtn.addEventListener('click', function () {
@@ -219,7 +228,31 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   }
+
+  document.querySelectorAll('.operatori-row-click').forEach(function (row) {
+    row.addEventListener('click', function (event) {
+      if (event.target.closest('a, button, form, input, select, textarea, label')) {
+        return;
+      }
+      const href = row.getAttribute('data-href');
+      if (href) {
+        window.location.href = href;
+      }
+    });
+    row.addEventListener('keydown', function (event) {
+      if (event.key !== 'Enter' && event.key !== ' ') {
+        return;
+      }
+      if (event.target.closest('a, button, form, input, select, textarea, label')) {
+        return;
+      }
+      event.preventDefault();
+      const href = row.getAttribute('data-href');
+      if (href) {
+        window.location.href = href;
+      }
+    });
+  });
 });
 </script>
-@endif
 @endpush

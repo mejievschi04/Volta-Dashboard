@@ -108,6 +108,10 @@
   </div>
 
   <div class="ma-shortcuts">
+    <a class="ma-shortcut" href="{{ route('mobile.analytics.meta', $q) }}">
+      <i class="fas fa-layer-group" aria-hidden="true"></i>
+      <span><strong>Meta</strong><span>KPI executive + sănătate</span></span>
+    </a>
     <a class="ma-shortcut" href="{{ route('mobile.analytics.funnels', $q) }}">
       <i class="fas fa-filter-circle-dollar" aria-hidden="true"></i>
       <span><strong>Pâlnie conversie</strong><span>Drop-off pe etape</span></span>
@@ -115,10 +119,6 @@
     <a class="ma-shortcut" href="{{ route('mobile.analytics.events', $q) }}">
       <i class="fas fa-bolt" aria-hidden="true"></i>
       <span><strong>Evenimente</strong><span>Pagini, bannere, feed</span></span>
-    </a>
-    <a class="ma-shortcut" href="{{ route('mobile.analytics.abandon', $q) }}">
-      <i class="fas fa-cart-arrow-down" aria-hidden="true"></i>
-      <span><strong>Abandon coș</strong><span>Pași checkout</span></span>
     </a>
     <a class="ma-shortcut" href="{{ route('mobile.crashes', $q) }}">
       <i class="fas fa-bug" aria-hidden="true"></i>

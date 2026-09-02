@@ -69,13 +69,15 @@ class OperatoriController extends Controller
                     continue;
                 }
                 $vanzari = (float) $row->total_vanzari_fara_tva;
+                $nrComenzi = (int) $row->total_comenzi;
                 $operatorRecord = Operator::whereRaw('LOWER(TRIM(nume)) = ?', [mb_strtolower($nume)])->first();
                 $operatori1c[] = [
                     'nume' => $nume,
                     'vanzari_fara_tva' => $vanzari,
                     'vanzari_cu_tva' => (float) $row->total_vanzari_cu_tva,
                     'profit' => (float) $row->total_profit,
-                    'nr_comenzi' => (int) $row->total_comenzi,
+                    'nr_comenzi' => $nrComenzi,
+                    'cec_mediu' => $nrComenzi > 0 ? round($vanzari / $nrComenzi, 2) : 0,
                     'operator_id' => $operatorRecord?->id,
                 ];
                 if ($vanzari > 0) {

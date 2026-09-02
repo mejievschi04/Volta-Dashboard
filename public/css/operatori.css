@@ -1350,6 +1350,30 @@ html[data-theme="dark-red"] .operator-portal .livrari-page--operator .livrari-pe
   background: rgba(255, 255, 255, 0.03);
 }
 
+.operatori-table tbody tr.operatori-row-click {
+  cursor: pointer;
+}
+
+.operatori-table tbody tr.operatori-row-click:hover {
+  background: rgba(255, 238, 0, 0.07);
+}
+
+.operatori-table tbody tr.operatori-row-click:focus-visible {
+  outline: 2px solid rgba(255, 238, 0, 0.55);
+  outline-offset: -2px;
+}
+
+.operatori-name-link {
+  color: #f8fafc;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.operatori-name-link:hover {
+  color: #ffee00;
+  text-decoration: underline;
+}
+
 .operatori-table td {
   padding: 14px 16px;
   color: #E5E7EB;

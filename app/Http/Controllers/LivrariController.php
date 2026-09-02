@@ -6,10 +6,13 @@ use App\Models\Livrare;
 use App\Models\User;
 use App\Support\DbDate;
 use App\Support\LocalitatiMoldova;
+use App\Support\LunaRomana;
+use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LivrariController extends Controller
 {
@@ -74,6 +77,10 @@ class LivrariController extends Controller
 
         $livrari = $query->orderByDesc('data')->orderByDesc('data_livrarii')->paginate(50)->withQueryString();
         $this->applyInferredRaionForPresentation($livrari->getCollection());
+        $overview = $this->buildLivrariOverview(
+            $this->filteredLivrariQuery($request, $isAdmin, $user),
+            $request
+        );
 
         if ($isAdmin) {
             $baseCount = Livrare::query();
@@ -148,6 +155,7 @@ class LivrariController extends Controller
             return view('livrari.index', [
                 'livrari' => $livrari,
                 'totalLivrari' => $totalLivrari,
+                'overview' => $overview,
                 'perOperator' => $perOperator,
                 'isAdmin' => true,
                 'filters' => ['luna' => $luna, 'operator_id' => $operatorId, 'locatie' => $locatie, 'cauta' => $cauta, 'fara_raion' => $faraRaion ? '1' : '', 'data' => $dataLivrarii ?? '', 'data_de_la' => $dataDeLa ?? '', 'data_pana' => $dataPana ?? ''],
@@ -160,6 +168,7 @@ class LivrariController extends Controller
         return view('livrari.index', [
             'livrari' => $livrari,
             'totalLivrari' => $livrari->total(),
+            'overview' => $overview,
             'perOperator' => collect(),
             'isAdmin' => false,
             'filters' => ['luna' => $luna, 'operator_id' => null, 'locatie' => $locatie, 'cauta' => $cauta, 'fara_raion' => $faraRaion ? '1' : '', 'data' => $dataLivrarii ?? '', 'data_de_la' => $dataDeLa ?? '', 'data_pana' => $dataPana ?? ''],
@@ -544,6 +553,129 @@ class LivrariController extends Controller
         }
 
         return redirect()->route('livrari')->with('success', 'Livrarea a fost ștearsă.');
+    }
+
+    /**
+     * KPI-uri de sus: total, localitate top și evoluție pe perioada filtrată.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $baseQuery
+     * @return array{total:int, top_localitate:?array{nume:string,total:int,share:float}, chart:array{labels:array<int,string>,values:array<int,int>,granularity:string,period_label:string}}
+     */
+    private function buildLivrariOverview($baseQuery, Request $request): array
+    {
+        $total = (clone $baseQuery)->count();
+
+        $topRow = (clone $baseQuery)
+            ->selectRaw("TRIM(COALESCE(localitate, '')) as localitate_nume, COUNT(*) as total")
+            ->whereRaw("TRIM(COALESCE(localitate, '')) != ''")
+            ->groupBy(DB::raw("TRIM(COALESCE(localitate, ''))"))
+            ->orderByDesc('total')
+            ->first();
+
+        $topLocalitate = null;
+        if ($topRow && trim((string) $topRow->localitate_nume) !== '') {
+            $topCount = (int) $topRow->total;
+            $topLocalitate = [
+                'nume' => (string) $topRow->localitate_nume,
+                'total' => $topCount,
+                'share' => $total > 0 ? round(($topCount / $total) * 100, 1) : 0.0,
+            ];
+        }
+
+        [$start, $end] = $this->resolveOverviewPeriod($baseQuery, $request);
+        $days = max(1, (int) $start->copy()->startOfDay()->diffInDays($end->copy()->startOfDay()) + 1);
+        $byMonth = $days > 62;
+        $groupExpr = $byMonth ? DbDate::month('data_livrarii') : DbDate::format('data_livrarii', '%Y-%m-%d');
+
+        $rows = (clone $baseQuery)
+            ->whereNotNull('data_livrarii')
+            ->selectRaw($groupExpr . ' as bucket, COUNT(*) as total')
+            ->groupBy(DB::raw($groupExpr))
+            ->orderBy('bucket')
+            ->get()
+            ->keyBy('bucket');
+
+        $labels = [];
+        $values = [];
+        if ($byMonth) {
+            $cursor = $start->copy()->startOfMonth();
+            $endMonth = $end->copy()->startOfMonth();
+            while ($cursor->lte($endMonth)) {
+                $key = $cursor->format('Y-m');
+                $labels[] = LunaRomana::labelFromYm($key);
+                $values[] = (int) ($rows->get($key)->total ?? 0);
+                $cursor->addMonth();
+            }
+        } else {
+            $cursor = $start->copy()->startOfDay();
+            $endDay = $end->copy()->startOfDay();
+            while ($cursor->lte($endDay)) {
+                $key = $cursor->format('Y-m-d');
+                $labels[] = $cursor->format('d.m');
+                $values[] = (int) ($rows->get($key)->total ?? 0);
+                $cursor->addDay();
+            }
+        }
+
+        $periodLabel = $start->format('d.m.Y') . ' – ' . $end->format('d.m.Y');
+
+        return [
+            'total' => $total,
+            'top_localitate' => $topLocalitate,
+            'chart' => [
+                'labels' => $labels,
+                'values' => $values,
+                'granularity' => $byMonth ? 'month' : 'day',
+                'period_label' => $periodLabel,
+            ],
+        ];
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $baseQuery
+     * @return array{0:\Carbon\Carbon,1:\Carbon\Carbon}
+     */
+    private function resolveOverviewPeriod($baseQuery, Request $request): array
+    {
+        $dataDeLa = $request->input('data_de_la');
+        $dataPana = $request->input('data_pana');
+        $dataLivrarii = $request->input('data');
+        $luna = $request->input('luna');
+
+        try {
+            if ($dataDeLa && $dataPana) {
+                $start = Carbon::parse((string) $dataDeLa)->startOfDay();
+                $end = Carbon::parse((string) $dataPana)->endOfDay();
+                if ($end->lt($start)) {
+                    $end = $start->copy()->endOfDay();
+                }
+
+                return [$start, $end];
+            }
+            if ($dataLivrarii) {
+                $start = Carbon::parse((string) $dataLivrarii)->startOfDay();
+
+                return [$start, $start->copy()->endOfDay()];
+            }
+            if ($luna) {
+                $start = Carbon::createFromFormat('Y-m', (string) $luna)->startOfMonth();
+
+                return [$start, $start->copy()->endOfMonth()->endOfDay()];
+            }
+        } catch (\Throwable) {
+        }
+
+        $bounds = (clone $baseQuery)
+            ->selectRaw('MIN(data_livrarii) as min_d, MAX(data_livrarii) as max_d')
+            ->first();
+        if ($bounds && $bounds->min_d && $bounds->max_d) {
+            return [
+                Carbon::parse($bounds->min_d)->startOfDay(),
+                Carbon::parse($bounds->max_d)->endOfDay(),
+            ];
+        }
+
+        return [now()->startOfMonth(), now()->endOfDay()];
     }
 
     private function filteredLivrariQuery(Request $request, bool $isAdmin, $user)

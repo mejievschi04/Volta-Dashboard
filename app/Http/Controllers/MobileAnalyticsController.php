@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\MobileAnalyticsEvent;
+use App\Models\MobileCrash;
+use App\Models\MobileFeedbackReport;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -133,6 +135,11 @@ class MobileAnalyticsController extends Controller
         }
 
         return view('mobile.abandon-list', compact('start', 'end', 'schemaReady', 'abandonRows'));
+    }
+
+    public function meta(Request $request)
+    {
+        return view('mobile.meta', $this->buildMetaData($request));
     }
 
     private function buildDashboardData(Request $request): array
@@ -495,6 +502,429 @@ class MobileAnalyticsController extends Controller
         } catch (\Throwable) {
             return collect();
         }
+    }
+
+    /**
+     * Meta-level executive metrics across events, crashes and feedback.
+     */
+    private function buildMetaData(Request $request): array
+    {
+        [$start, $end] = $this->resolvePeriod($request);
+        $schemaReady = Schema::hasTable('mobile_analytics_events');
+        $days = max(1, (int) $start->diffInDays($end) + 1);
+
+        $meta = [
+            'sessions' => 0,
+            'users' => 0,
+            'devices' => 0,
+            'events' => 0,
+            'dau_avg' => 0,
+            'new_users' => 0,
+            'returning_users' => 0,
+            'returning_rate' => 0,
+            'multi_day_users' => 0,
+            'retention_proxy' => 0,
+            'bounce_rate' => 0,
+            'events_per_session' => 0,
+            'pages_per_session' => 0,
+            'avg_session_seconds' => 0,
+            'avg_page_seconds' => 0,
+            'logged_in_session_rate' => 0,
+            'orders' => 0,
+            'conversion_rate' => 0,
+            'revenue' => 0,
+            'aov' => 0,
+            'product_views' => 0,
+            'add_to_cart' => 0,
+            'view_to_cart_rate' => 0,
+            'cart_abandons' => 0,
+            'abandon_rate' => 0,
+            'checkout_to_order_rate' => 0,
+            'searches' => 0,
+            'search_to_product_rate' => 0,
+            'banner_clicks' => 0,
+            'logins' => 0,
+            'map_opens' => 0,
+            'crashes' => 0,
+            'fatal_crashes' => 0,
+            'crash_rate' => 0,
+            'fatal_rate' => 0,
+            'feedback' => 0,
+            'feedback_with_screenshot' => 0,
+        ];
+
+        $platforms = collect();
+        $versions = collect();
+        $hourly = array_fill(0, 24, 0);
+        $weekday = array_fill(0, 7, 0);
+        $dailyActive = ['labels' => [], 'users' => [], 'sessions' => [], 'orders' => []];
+        $funnel = [
+            'visits' => 0,
+            'product_views' => 0,
+            'add_to_cart' => 0,
+            'checkout_started' => 0,
+            'orders_completed' => 0,
+            'visit_to_product_rate' => 0,
+            'product_to_cart_rate' => 0,
+            'cart_to_checkout_rate' => 0,
+            'checkout_to_order_rate' => 0,
+        ];
+        $topEntryPages = collect();
+        $qualityNotes = [];
+
+        if ($schemaReady) {
+            $base = MobileAnalyticsEvent::query()->whereBetween('occurred_at', [$start, $end]);
+
+            $events = (clone $base)->count();
+            $sessions = (int) (clone $base)->whereNotNull('session_id')->distinct('session_id')->count('session_id');
+            $users = (int) (clone $base)->whereNotNull('mobile_user_id')->distinct('mobile_user_id')->count('mobile_user_id');
+            $devices = (int) (clone $base)->whereNotNull('device_id')->distinct('device_id')->count('device_id');
+            $pageViews = (clone $base)->where('event_name', 'page_view')->count();
+            $productViews = (clone $base)->where('event_name', 'product_view')->count();
+            $addToCart = (clone $base)->where('event_name', 'add_to_cart')->count();
+            $orders = (clone $base)->where('event_name', 'order_completed')->count();
+            $cartAbandons = (clone $base)->where('event_name', 'cart_abandoned')->count();
+            $searches = (clone $base)->where('event_name', 'search')->count();
+            $bannerClicks = (clone $base)->where('event_name', 'banner_click')->count();
+            $logins = (clone $base)->where('event_name', 'login_success')->count();
+            $mapOpens = (clone $base)->where('event_name', 'map_open')->count();
+
+            $orderAgg = (clone $base)
+                ->where('event_name', 'order_completed')
+                ->selectRaw('COALESCE(SUM(cart_total), 0) as revenue, COALESCE(AVG(cart_total), 0) as aov')
+                ->first();
+            $revenue = (float) ($orderAgg->revenue ?? 0);
+            $aov = (float) ($orderAgg->aov ?? 0);
+
+            $avgPageMs = (float) ((clone $base)->whereNotNull('duration_ms')->avg('duration_ms') ?? 0);
+
+            $avgSessionSeconds = 0.0;
+            try {
+                $avgMs = DB::query()
+                    ->fromSub(function ($q) use ($start, $end) {
+                        $q->from('mobile_analytics_events')
+                            ->select('session_id', DB::raw('SUM(COALESCE(duration_ms, 0)) as total_ms'))
+                            ->whereBetween('occurred_at', [$start, $end])
+                            ->whereNotNull('session_id')
+                            ->groupBy('session_id');
+                    }, 'session_durations')
+                    ->avg('total_ms');
+                $avgSessionSeconds = ((float) ($avgMs ?? 0)) / 1000;
+            } catch (\Throwable) {
+                $avgSessionSeconds = $sessions > 0 ? ($avgPageMs / 1000) : 0;
+            }
+
+            $bounceRate = 0.0;
+            if ($sessions > 0) {
+                try {
+                    $bounced = (int) DB::query()
+                        ->fromSub(function ($q) use ($start, $end) {
+                            $q->from('mobile_analytics_events')
+                                ->select('session_id', DB::raw('COUNT(*) as cnt'))
+                                ->whereBetween('occurred_at', [$start, $end])
+                                ->whereNotNull('session_id')
+                                ->groupBy('session_id')
+                                ->havingRaw('COUNT(*) <= 1');
+                        }, 'bounced_sessions')
+                        ->count();
+                    $bounceRate = round(($bounced / $sessions) * 100, 1);
+                } catch (\Throwable) {
+                    $bounceRate = 0.0;
+                }
+            }
+
+            $loggedInSessions = 0;
+            if ($sessions > 0) {
+                $loggedInSessions = (int) (clone $base)
+                    ->whereNotNull('session_id')
+                    ->whereNotNull('mobile_user_id')
+                    ->distinct('session_id')
+                    ->count('session_id');
+            }
+
+            // New users: first-ever event falls inside period
+            $newUsers = 0;
+            $returningUsers = 0;
+            if ($users > 0) {
+                try {
+                    $newUsers = (int) DB::query()
+                        ->fromSub(function ($q) use ($start, $end) {
+                            $q->from('mobile_analytics_events')
+                                ->select('mobile_user_id', DB::raw('MIN(occurred_at) as first_seen'))
+                                ->whereNotNull('mobile_user_id')
+                                ->groupBy('mobile_user_id')
+                                ->havingRaw('MIN(occurred_at) BETWEEN ? AND ?', [$start, $end]);
+                        }, 'first_touch')
+                        ->count();
+                    $returningUsers = max(0, $users - $newUsers);
+                } catch (\Throwable) {
+                    $newUsers = 0;
+                    $returningUsers = 0;
+                }
+            }
+
+            $multiDayUsers = 0;
+            if ($users > 0) {
+                try {
+                    $multiDayUsers = (int) DB::query()
+                        ->fromSub(function ($q) use ($start, $end) {
+                            $q->from('mobile_analytics_events')
+                                ->select('mobile_user_id')
+                                ->whereBetween('occurred_at', [$start, $end])
+                                ->whereNotNull('mobile_user_id')
+                                ->groupBy('mobile_user_id')
+                                ->havingRaw('COUNT(DISTINCT DATE(occurred_at)) >= 2');
+                        }, 'sticky')
+                        ->count();
+                } catch (\Throwable) {
+                    $multiDayUsers = 0;
+                }
+            }
+
+            $dauRows = (clone $base)
+                ->whereNotNull('mobile_user_id')
+                ->select(DB::raw('DATE(occurred_at) as day'), DB::raw('COUNT(DISTINCT mobile_user_id) as users'))
+                ->groupBy(DB::raw('DATE(occurred_at)'))
+                ->get();
+            $dauAvg = $dauRows->count() > 0
+                ? round($dauRows->avg('users'), 1)
+                : 0.0;
+
+            $checkoutStarted = (clone $base)->where('event_name', 'checkout_started')->count();
+            if ($checkoutStarted === 0) {
+                $checkoutStarted = (clone $base)->where('event_name', 'checkout_step')->where('checkout_step', '>=', 2)->distinct('session_id')->count('session_id');
+            }
+            if ($checkoutStarted === 0) {
+                $checkoutStarted = $cartAbandons + $orders;
+            }
+
+            $meta = [
+                'sessions' => $sessions,
+                'users' => $users,
+                'devices' => $devices,
+                'events' => $events,
+                'dau_avg' => $dauAvg,
+                'new_users' => $newUsers,
+                'returning_users' => $returningUsers,
+                'returning_rate' => $users > 0 ? round(($returningUsers / $users) * 100, 1) : 0,
+                'multi_day_users' => $multiDayUsers,
+                'retention_proxy' => $users > 0 ? round(($multiDayUsers / $users) * 100, 1) : 0,
+                'bounce_rate' => $bounceRate,
+                'events_per_session' => $sessions > 0 ? round($events / $sessions, 1) : 0,
+                'pages_per_session' => $sessions > 0 ? round($pageViews / $sessions, 1) : 0,
+                'avg_session_seconds' => round($avgSessionSeconds),
+                'avg_page_seconds' => round($avgPageMs / 1000),
+                'logged_in_session_rate' => $sessions > 0 ? round(($loggedInSessions / $sessions) * 100, 1) : 0,
+                'orders' => $orders,
+                'conversion_rate' => $sessions > 0 ? round(($orders / $sessions) * 100, 2) : 0,
+                'revenue' => round($revenue, 2),
+                'aov' => round($aov, 2),
+                'product_views' => $productViews,
+                'add_to_cart' => $addToCart,
+                'view_to_cart_rate' => $productViews > 0 ? round(($addToCart / $productViews) * 100, 1) : 0,
+                'cart_abandons' => $cartAbandons,
+                'abandon_rate' => ($cartAbandons + $orders) > 0
+                    ? round(($cartAbandons / ($cartAbandons + $orders)) * 100, 1)
+                    : 0,
+                'checkout_to_order_rate' => $checkoutStarted > 0
+                    ? round(($orders / $checkoutStarted) * 100, 1)
+                    : 0,
+                'searches' => $searches,
+                'search_to_product_rate' => $searches > 0 ? round(($productViews / $searches) * 100, 1) : 0,
+                'banner_clicks' => $bannerClicks,
+                'logins' => $logins,
+                'map_opens' => $mapOpens,
+                'crashes' => 0,
+                'fatal_crashes' => 0,
+                'crash_rate' => 0,
+                'fatal_rate' => 0,
+                'feedback' => 0,
+                'feedback_with_screenshot' => 0,
+            ];
+
+            $funnel = [
+                'visits' => $pageViews,
+                'product_views' => $productViews,
+                'add_to_cart' => $addToCart,
+                'checkout_started' => $checkoutStarted,
+                'orders_completed' => $orders,
+                'visit_to_product_rate' => $pageViews > 0 ? round(($productViews / $pageViews) * 100, 1) : 0,
+                'product_to_cart_rate' => $productViews > 0 ? round(($addToCart / $productViews) * 100, 1) : 0,
+                'cart_to_checkout_rate' => $addToCart > 0 ? round(($checkoutStarted / $addToCart) * 100, 1) : 0,
+                'checkout_to_order_rate' => $checkoutStarted > 0 ? round(($orders / $checkoutStarted) * 100, 1) : 0,
+            ];
+
+            $platforms = (clone $base)
+                ->select(
+                    DB::raw("COALESCE(NULLIF(platform, ''), 'necunoscut') as label"),
+                    DB::raw('COUNT(*) as events'),
+                    DB::raw('COUNT(DISTINCT session_id) as sessions'),
+                    DB::raw("SUM(CASE WHEN event_name = 'order_completed' THEN 1 ELSE 0 END) as orders")
+                )
+                ->groupBy(DB::raw("COALESCE(NULLIF(platform, ''), 'necunoscut')"))
+                ->orderByDesc('sessions')
+                ->limit(8)
+                ->get();
+
+            $versions = (clone $base)
+                ->select(
+                    DB::raw("COALESCE(NULLIF(app_version, ''), 'necunoscut') as label"),
+                    DB::raw('COUNT(DISTINCT session_id) as sessions'),
+                    DB::raw('COUNT(DISTINCT mobile_user_id) as users'),
+                    DB::raw("SUM(CASE WHEN event_name = 'order_completed' THEN 1 ELSE 0 END) as orders")
+                )
+                ->groupBy(DB::raw("COALESCE(NULLIF(app_version, ''), 'necunoscut')"))
+                ->orderByDesc('sessions')
+                ->limit(10)
+                ->get();
+
+            $hourRows = (clone $base)
+                ->select(DB::raw('HOUR(occurred_at) as hour'), DB::raw('COUNT(*) as total'))
+                ->groupBy(DB::raw('HOUR(occurred_at)'))
+                ->get();
+            foreach ($hourRows as $row) {
+                $h = (int) $row->hour;
+                if ($h >= 0 && $h <= 23) {
+                    $hourly[$h] = (int) $row->total;
+                }
+            }
+
+            // MySQL DAYOFWEEK: 1=Sunday … 7=Saturday → map to Mon=0 … Sun=6
+            $weekdayRows = (clone $base)
+                ->select(DB::raw('DAYOFWEEK(occurred_at) as dow'), DB::raw('COUNT(*) as total'))
+                ->groupBy(DB::raw('DAYOFWEEK(occurred_at)'))
+                ->get();
+            foreach ($weekdayRows as $row) {
+                $mysqlDow = (int) $row->dow; // 1 Sun … 7 Sat
+                $idx = $mysqlDow === 1 ? 6 : $mysqlDow - 2;
+                if ($idx >= 0 && $idx <= 6) {
+                    $weekday[$idx] = (int) $row->total;
+                }
+            }
+
+            $labels = [];
+            $cursor = $start->copy()->startOfDay();
+            while ($cursor->lte($end)) {
+                $labels[] = $cursor->format('Y-m-d');
+                $cursor->addDay();
+            }
+            $labelIndex = array_flip($labels);
+            $usersSeries = array_fill(0, count($labels), 0);
+            $sessionsSeries = array_fill(0, count($labels), 0);
+            $ordersSeries = array_fill(0, count($labels), 0);
+
+            $dailyUserRows = (clone $base)
+                ->whereNotNull('mobile_user_id')
+                ->select(DB::raw('DATE(occurred_at) as day'), DB::raw('COUNT(DISTINCT mobile_user_id) as total'))
+                ->groupBy(DB::raw('DATE(occurred_at)'))
+                ->get();
+            foreach ($dailyUserRows as $row) {
+                $day = (string) $row->day;
+                if (isset($labelIndex[$day])) {
+                    $usersSeries[$labelIndex[$day]] = (int) $row->total;
+                }
+            }
+
+            $dailySessionRows = (clone $base)
+                ->whereNotNull('session_id')
+                ->select(DB::raw('DATE(occurred_at) as day'), DB::raw('COUNT(DISTINCT session_id) as total'))
+                ->groupBy(DB::raw('DATE(occurred_at)'))
+                ->get();
+            foreach ($dailySessionRows as $row) {
+                $day = (string) $row->day;
+                if (isset($labelIndex[$day])) {
+                    $sessionsSeries[$labelIndex[$day]] = (int) $row->total;
+                }
+            }
+
+            $dailyOrderRows = (clone $base)
+                ->where('event_name', 'order_completed')
+                ->select(DB::raw('DATE(occurred_at) as day'), DB::raw('COUNT(*) as total'))
+                ->groupBy(DB::raw('DATE(occurred_at)'))
+                ->get();
+            foreach ($dailyOrderRows as $row) {
+                $day = (string) $row->day;
+                if (isset($labelIndex[$day])) {
+                    $ordersSeries[$labelIndex[$day]] = (int) $row->total;
+                }
+            }
+
+            $dailyActive = [
+                'labels' => $labels,
+                'users' => $usersSeries,
+                'sessions' => $sessionsSeries,
+                'orders' => $ordersSeries,
+            ];
+
+            $topEntryPages = (clone $base)
+                ->where('event_name', 'page_view')
+                ->where(function ($q) {
+                    $q->whereNull('previous_page')->orWhere('previous_page', '');
+                })
+                ->whereNotNull('page')
+                ->select('page', DB::raw('COUNT(*) as total'))
+                ->groupBy('page')
+                ->orderByDesc('total')
+                ->limit(8)
+                ->get();
+
+            if ($meta['bounce_rate'] >= 55) {
+                $qualityNotes[] = 'Bounce rate ridicat — mulți utilizatori pleacă după un singur eveniment.';
+            }
+            if ($meta['conversion_rate'] < 1 && $sessions > 50) {
+                $qualityNotes[] = 'Conversie sub 1% pe sesiuni — verifică pâlnie și checkout.';
+            }
+            if ($meta['view_to_cart_rate'] < 5 && $productViews > 50) {
+                $qualityNotes[] = 'Rata produs → coș e scăzută; merită revizuită pagina de produs.';
+            }
+            if ($meta['retention_proxy'] < 15 && $users > 30) {
+                $qualityNotes[] = 'Puțini utilizatori revin în aceeași perioadă (retenție proxy mică).';
+            }
+        }
+
+        if (Schema::hasTable('mobile_crashes')) {
+            $crashBase = MobileCrash::query()->whereBetween('occurred_at', [$start, $end]);
+            $crashes = (clone $crashBase)->count();
+            $fatal = (clone $crashBase)->where('is_fatal', true)->count();
+            $meta['crashes'] = $crashes;
+            $meta['fatal_crashes'] = $fatal;
+            $meta['crash_rate'] = $meta['sessions'] > 0
+                ? round(($crashes / $meta['sessions']) * 100, 2)
+                : 0;
+            $meta['fatal_rate'] = $crashes > 0 ? round(($fatal / $crashes) * 100, 1) : 0;
+            if ($meta['crash_rate'] >= 2) {
+                $qualityNotes[] = 'Rata de crash pe sesiune e ridicată — prioritizează stabilitatea.';
+            }
+        }
+
+        if (Schema::hasTable('mobile_feedback_reports')) {
+            $fbBase = MobileFeedbackReport::query()->whereBetween('occurred_at', [$start, $end]);
+            $meta['feedback'] = (clone $fbBase)->count();
+            $meta['feedback_with_screenshot'] = (clone $fbBase)->where('has_screenshot', true)->count();
+        }
+
+        $peakHour = array_keys($hourly, max($hourly) ?: 0)[0] ?? 0;
+        $weekdayLabels = ['Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm', 'Dum'];
+        $peakWeekdayIdx = array_keys($weekday, max($weekday) ?: 0)[0] ?? 0;
+
+        return compact(
+            'start',
+            'end',
+            'days',
+            'schemaReady',
+            'meta',
+            'platforms',
+            'versions',
+            'hourly',
+            'weekday',
+            'weekdayLabels',
+            'peakHour',
+            'peakWeekdayIdx',
+            'dailyActive',
+            'funnel',
+            'topEntryPages',
+            'qualityNotes'
+        );
     }
 
     private function resolvePeriod(Request $request): array
