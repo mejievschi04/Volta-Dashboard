@@ -32,7 +32,10 @@
     $cecMediuTotal = (int) $date['nr_comenzi'] > 0
       ? $date['vanzari_fara_tva'] / (int) $date['nr_comenzi']
       : 0;
-    $stagiu = $operator->data_angajare ? $operator->data_angajare->diff(now()) : null;
+    $primaLunaCuVanzari = $vanzariLunare1c->min('luna');
+    $stagiu = $primaLunaCuVanzari
+      ? \Carbon\Carbon::createFromFormat('Y-m', $primaLunaCuVanzari)->startOfMonth()->diff(now())
+      : null;
     $stagiuLabel = $stagiu
       ? ($stagiu->y > 0 ? $stagiu->y . ' ani ' : '') . $stagiu->m . ' luni'
       : '—';

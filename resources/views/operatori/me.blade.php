@@ -59,7 +59,10 @@
       ? $operatorRecord->photo_profil_url
       : null;
     $cecMediuTotal = (int) $date['nr_comenzi'] > 0 ? $date['vanzari_fara_tva'] / (int) $date['nr_comenzi'] : 0;
-    $stagiu = $operatorRecord?->data_angajare ? $operatorRecord->data_angajare->diff(now()) : null;
+    $primaLunaCuVanzari = $vanzariLunare1c->min('luna');
+    $stagiu = $primaLunaCuVanzari
+      ? \Carbon\Carbon::createFromFormat('Y-m', $primaLunaCuVanzari)->startOfMonth()->diff(now())
+      : null;
     $stagiuLabel = $stagiu ? ($stagiu->y > 0 ? $stagiu->y . ' ani ' : '') . $stagiu->m . ' luni' : '—';
 
     $monthStats = [

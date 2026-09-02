@@ -337,6 +337,9 @@ class OperatoriController extends Controller
                     ->orderByDesc('total_vanzari')
                     ->pluck('operator_nume')
                     ->map(fn ($nume) => mb_strtolower(trim((string) $nume)))
+                    ->filter(fn (string $nume) => Operator::where('activ', true)
+                        ->whereRaw('LOWER(TRIM(nume)) = ?', [$nume])
+                        ->exists())
                     ->values();
                 $index = $clasament->search(mb_strtolower($operatorNume));
                 $pozitieTopVanzari = $index === false ? null : $index + 1;
@@ -446,6 +449,9 @@ class OperatoriController extends Controller
                     ->orderByDesc('total_vanzari')
                     ->pluck('operator_nume')
                     ->map(fn ($nume) => mb_strtolower(trim((string) $nume)))
+                    ->filter(fn (string $nume) => Operator::where('activ', true)
+                        ->whereRaw('LOWER(TRIM(nume)) = ?', [$nume])
+                        ->exists())
                     ->values();
                 $index = $clasament->search(mb_strtolower($operatorNume));
                 $pozitieTopVanzari = $index === false ? null : $index + 1;
