@@ -15,16 +15,7 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-        \Log::info('Dashboard accessed', [
-            'user_id' => auth()->id(),
-            'username' => auth()->user()?->username ?? 'not authenticated',
-            'auth_check' => auth()->check(),
-            'session_id' => $request->session()->getId(),
-            'has_session' => $request->hasSession()
-        ]);
-        
         if (!auth()->check()) {
-            \Log::warning('User not authenticated when accessing dashboard');
             return redirect()->route('login');
         }
         

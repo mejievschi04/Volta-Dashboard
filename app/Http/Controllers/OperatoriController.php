@@ -37,8 +37,12 @@ class OperatoriController extends Controller
 
         $operatori1c = [];
         $chartData1c = [];
-        $dezactivatedNume = Operator::where('activ', false)
-            ->get()
+        $operatorRecords = Operator::query()->orderBy('nume')->get();
+        $operatorsByName = $operatorRecords->keyBy(
+            fn (Operator $operator) => mb_strtolower(trim((string) ($operator->nume ?? '')))
+        );
+        $dezactivatedNume = $operatorRecords
+            ->where('activ', false)
             ->map(fn ($o) => mb_strtolower(trim((string) ($o->nume ?? ''))))
             ->filter()
             ->values()
@@ -70,7 +74,7 @@ class OperatoriController extends Controller
                 }
                 $vanzari = (float) $row->total_vanzari_fara_tva;
                 $nrComenzi = (int) $row->total_comenzi;
-                $operatorRecord = Operator::whereRaw('LOWER(TRIM(nume)) = ?', [mb_strtolower($nume)])->first();
+                $operatorRecord = $operatorsByName->get(mb_strtolower($nume));
                 $operatori1c[] = [
                     'nume' => $nume,
                     'vanzari_fara_tva' => $vanzari,
@@ -95,7 +99,7 @@ class OperatoriController extends Controller
             // Tabel onec_kpi_operatori poate să nu existe
         }
 
-        $operatoriDezactivati = Operator::where('activ', false)->orderBy('nume')->get();
+        $operatoriDezactivati = $operatorRecords->where('activ', false)->values();
 
         $luniNume = [
             1 => 'Ianuarie', 2 => 'Februarie', 3 => 'Martie', 4 => 'Aprilie',
@@ -329,6 +333,7 @@ class OperatoriController extends Controller
         $pozitieTopVanzari = null;
         if ($date && $operatorNume !== '') {
             try {
+                $activeOperatorNames = $this->activeOperatorNameSet();
                 $clasament = OnecKpiOperator::query()
                     ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
                     ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
@@ -337,9 +342,7 @@ class OperatoriController extends Controller
                     ->orderByDesc('total_vanzari')
                     ->pluck('operator_nume')
                     ->map(fn ($nume) => mb_strtolower(trim((string) $nume)))
-                    ->filter(fn (string $nume) => Operator::where('activ', true)
-                        ->whereRaw('LOWER(TRIM(nume)) = ?', [$nume])
-                        ->exists())
+                    ->filter(fn (string $nume) => isset($activeOperatorNames[$nume]))
                     ->values();
                 $index = $clasament->search(mb_strtolower($operatorNume));
                 $pozitieTopVanzari = $index === false ? null : $index + 1;
@@ -441,6 +444,7 @@ class OperatoriController extends Controller
             ];
 
             try {
+                $activeOperatorNames = $this->activeOperatorNameSet();
                 $clasament = OnecKpiOperator::query()
                     ->join('onec_kpi_syncs', 'onec_kpi_operatori.onec_kpi_sync_id', '=', 'onec_kpi_syncs.id')
                     ->where('onec_kpi_syncs.period_start', '>=', '2023-01-01')
@@ -449,9 +453,7 @@ class OperatoriController extends Controller
                     ->orderByDesc('total_vanzari')
                     ->pluck('operator_nume')
                     ->map(fn ($nume) => mb_strtolower(trim((string) $nume)))
-                    ->filter(fn (string $nume) => Operator::where('activ', true)
-                        ->whereRaw('LOWER(TRIM(nume)) = ?', [$nume])
-                        ->exists())
+                    ->filter(fn (string $nume) => isset($activeOperatorNames[$nume]))
                     ->values();
                 $index = $clasament->search(mb_strtolower($operatorNume));
                 $pozitieTopVanzari = $index === false ? null : $index + 1;
@@ -618,6 +620,17 @@ class OperatoriController extends Controller
         $operator->delete();
 
         return redirect()->route('operatori')->with('success', 'Operatorul a fost șters cu succes!');
+    }
+
+    private function activeOperatorNameSet(): array
+    {
+        return Operator::query()
+            ->where('activ', true)
+            ->pluck('nume')
+            ->map(fn ($nume) => mb_strtolower(trim((string) $nume)))
+            ->filter()
+            ->flip()
+            ->all();
     }
 
     private function calculateAverageSalesPerMonth($vanzari)

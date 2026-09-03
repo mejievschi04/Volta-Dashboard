@@ -186,8 +186,10 @@
     </section>
   </div>
 
+  @if(request()->routeIs('operatori', 'livrari', 'istoric', 'rapoarte.comparare'))
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
   <script src="{{ asset('js/excel-export-exceljs.js') }}"></script>
+  @endif
   <script src="{{ asset('js/volta-chart-theme.js') }}"></script>
   @stack('scripts')
   <script>

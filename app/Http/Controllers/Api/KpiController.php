@@ -8,7 +8,6 @@ use App\Models\PlanVanzari;
 use App\Models\TrafficSource;
 use App\Models\OnecKpiSync;
 use App\Models\Livrare;
-use App\Support\DbDate;
 use App\Support\ZileLucratoare;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,8 +30,10 @@ class KpiController extends Controller
                 9 => 'Septembrie', 10 => 'Octombrie', 11 => 'Noiembrie', 12 => 'Decembrie'
             ];
             $lunaNume = $luniRomana[$lunaNum] ?? '';
+            $monthStart = $luna . '-01';
+            $monthEnd = date('Y-m-t', strtotime($monthStart));
             
-            $onecSync = OnecKpiSync::whereRaw(DbDate::month('period_start') . ' = ?', [$luna])
+            $onecSync = OnecKpiSync::whereBetween('period_start', [$monthStart, $monthEnd])
                 ->orderByDesc('created_at')
                 ->first();
 
@@ -59,7 +60,7 @@ class KpiController extends Controller
             // Total sesiuni pentru luna selectată
             $sesiuniData = TrafficSource::selectRaw('SUM(visits) as total_sesiuni')
                 ->where('source', 'total')
-                ->whereRaw(DbDate::month('date') . ' = ?', [$luna])
+                ->whereBetween('date', [$monthStart, $monthEnd])
                 ->first();
             
             // Calculează KPI-urile
@@ -107,7 +108,7 @@ class KpiController extends Controller
             $cecMediu = $comenzi > 0 ? round($vanzariLuna / $comenzi, 2) : 0;
             
             // Total livrări în luna selectată (din tabelul livrari)
-            $totalLivrariLuna = Livrare::whereRaw(DbDate::month('data_livrarii') . ' = ?', [$luna])->count();
+            $totalLivrariLuna = Livrare::whereBetween('data_livrarii', [$monthStart, $monthEnd])->count();
             
             // Pickup = total comenzi - livrări
             $pickup = max(0, $comenzi - $totalLivrariLuna);

@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
@@ -17,17 +18,17 @@ class MobileAnalyticsController extends Controller
 {
     public function index(Request $request)
     {
-        return view('mobile.overview', $this->buildDashboardData($request));
+        return view('mobile.overview', $this->buildDashboardData($request, 'overview'));
     }
 
     public function events(Request $request)
     {
-        return view('mobile.events', $this->buildDashboardData($request));
+        return view('mobile.events', $this->buildDashboardData($request, 'events'));
     }
 
     public function funnels(Request $request)
     {
-        return view('mobile.funnels', $this->buildDashboardData($request));
+        return view('mobile.funnels', $this->buildDashboardData($request, 'funnels'));
     }
 
     public function pagesList(Request $request)
@@ -142,7 +143,7 @@ class MobileAnalyticsController extends Controller
         return view('mobile.meta', $this->buildMetaData($request));
     }
 
-    private function buildDashboardData(Request $request): array
+    private function buildDashboardData(Request $request, string $section): array
     {
         [$start, $end] = $this->resolvePeriod($request);
         $schemaReady = Schema::hasTable('mobile_analytics_events');
@@ -194,90 +195,99 @@ class MobileAnalyticsController extends Controller
             $base = MobileAnalyticsEvent::query()
                 ->whereBetween('occurred_at', [$start, $end]);
 
-            $eventsCount = (clone $base)->count();
-            $sessionsCount = (clone $base)->whereNotNull('session_id')->distinct('session_id')->count('session_id');
-            $pageViews = (clone $base)->where('event_name', 'page_view')->count();
-            $ordersCount = (clone $base)->where('event_name', 'order_completed')->count();
-            $addToCart = (clone $base)->where('event_name', 'add_to_cart')->count();
-            $productViews = (clone $base)->where('event_name', 'product_view')->count();
+            // Calculate the headline metrics with one range scan instead of one
+            // query per card. This is the hot path for every Volta App page.
+            $counts = $this->aggregateCounts(clone $base);
+            $eventsCount = (int) $counts->events;
+            $sessionsCount = (int) $counts->sessions;
+            $pageViews = (int) $counts->page_views;
+            $ordersCount = (int) $counts->orders;
+            $addToCart = (int) $counts->add_to_cart;
+            $productViews = (int) $counts->product_views;
 
             $summary = [
                 'events' => $eventsCount,
                 'sessions' => $sessionsCount,
-                'users' => (clone $base)->whereNotNull('mobile_user_id')->distinct('mobile_user_id')->count('mobile_user_id'),
+                'users' => (int) $counts->users,
                 'page_views' => $pageViews,
                 'product_views' => $productViews,
-                'searches' => (clone $base)->where('event_name', 'search')->count(),
+                'searches' => (int) $counts->searches,
                 'add_to_cart' => $addToCart,
-                'banner_clicks' => (clone $base)->where('event_name', 'banner_click')->count(),
-                'cart_abandons' => (clone $base)->where('event_name', 'cart_abandoned')->count(),
+                'banner_clicks' => (int) $counts->banner_clicks,
+                'cart_abandons' => (int) $counts->cart_abandons,
                 'orders' => $ordersCount,
-                'logins' => (clone $base)->where('event_name', 'login_success')->count(),
-                'map_opens' => (clone $base)->where('event_name', 'map_open')->count(),
-                'avg_page_seconds' => round(((clone $base)->whereNotNull('duration_ms')->avg('duration_ms') ?? 0) / 1000),
+                'logins' => (int) $counts->logins,
+                'map_opens' => (int) $counts->map_opens,
+                'avg_page_seconds' => round(((float) $counts->avg_duration_ms) / 1000),
                 'conversion_rate' => $sessionsCount > 0 ? round(($ordersCount / $sessionsCount) * 100, 2) : 0,
                 'events_per_session' => $sessionsCount > 0 ? round($eventsCount / $sessionsCount, 1) : 0,
                 'view_to_cart_rate' => $productViews > 0 ? round(($addToCart / $productViews) * 100, 1) : 0,
             ];
 
-            $topPages = (clone $base)
-                ->select(
-                    'page',
-                    DB::raw("SUM(CASE WHEN event_name = 'page_view' THEN 1 ELSE 0 END) as views"),
-                    DB::raw('COUNT(*) as events_count'),
-                    DB::raw('AVG(CASE WHEN duration_ms IS NOT NULL THEN duration_ms END) as avg_duration_ms')
-                )
-                ->whereNotNull('page')
-                ->groupBy('page')
-                ->orderByDesc('views')
-                ->orderByDesc('events_count')
-                ->limit(20)
-                ->get();
+            if ($section === 'events') {
+                $topPages = (clone $base)
+                    ->select(
+                        'page',
+                        DB::raw("SUM(CASE WHEN event_name = 'page_view' THEN 1 ELSE 0 END) as views"),
+                        DB::raw('COUNT(*) as events_count'),
+                        DB::raw('AVG(CASE WHEN duration_ms IS NOT NULL THEN duration_ms END) as avg_duration_ms')
+                    )
+                    ->whereNotNull('page')
+                    ->groupBy('page')
+                    ->orderByDesc('views')
+                    ->orderByDesc('events_count')
+                    ->limit(20)
+                    ->get();
 
-            $bannerClicks = (clone $base)
-                ->select('banner_id', 'banner_title', DB::raw('COUNT(*) as clicks'), DB::raw('MAX(occurred_at) as last_click_at'))
-                ->where('event_name', 'banner_click')
-                ->groupBy('banner_id', 'banner_title')
-                ->orderByDesc('clicks')
-                ->limit(20)
-                ->get();
+                $bannerClicks = (clone $base)
+                    ->select('banner_id', 'banner_title', DB::raw('COUNT(*) as clicks'), DB::raw('MAX(occurred_at) as last_click_at'))
+                    ->where('event_name', 'banner_click')
+                    ->groupBy('banner_id', 'banner_title')
+                    ->orderByDesc('clicks')
+                    ->limit(20)
+                    ->get();
 
-            $cartAbandons = (clone $base)
-                ->select(
-                    'checkout_step',
-                    DB::raw('COUNT(*) as abandons'),
-                    DB::raw('AVG(cart_total) as avg_cart_total'),
-                    DB::raw('AVG(items_count) as avg_items_count')
-                )
-                ->where('event_name', 'cart_abandoned')
-                ->groupBy('checkout_step')
-                ->orderBy('checkout_step')
-                ->get();
+                $recentEvents = (clone $base)
+                    ->latest('occurred_at')
+                    ->limit(80)
+                    ->get();
+            }
 
-            $eventBreakdown = (clone $base)
-                ->select('event_name', DB::raw('COUNT(*) as total'))
-                ->groupBy('event_name')
-                ->orderByDesc('total')
-                ->limit(30)
-                ->get();
+            if ($section === 'funnels') {
+                $cartAbandons = (clone $base)
+                    ->select(
+                        'checkout_step',
+                        DB::raw('COUNT(*) as abandons'),
+                        DB::raw('AVG(cart_total) as avg_cart_total'),
+                        DB::raw('AVG(items_count) as avg_items_count')
+                    )
+                    ->where('event_name', 'cart_abandoned')
+                    ->groupBy('checkout_step')
+                    ->orderBy('checkout_step')
+                    ->get();
 
-            $recentEvents = (clone $base)
-                ->latest('occurred_at')
-                ->limit(80)
-                ->get();
+                $funnel = $this->funnelMetrics(
+                    clone $base,
+                    $summary['page_views'],
+                    $summary['product_views'],
+                    $summary['add_to_cart'],
+                    $summary['cart_abandons'],
+                    $summary['orders']
+                );
+            }
 
-            $topSearches = $this->topMetadataValues(clone $base, 'search', '$.query', 12);
-            $topProducts = $this->topMetadataValues(clone $base, 'product_view', '$.product_name', 12);
+            if ($section === 'overview') {
+                $eventBreakdown = (clone $base)
+                    ->select('event_name', DB::raw('COUNT(*) as total'))
+                    ->groupBy('event_name')
+                    ->orderByDesc('total')
+                    ->limit(30)
+                    ->get();
 
-            $dailyChart = $this->dailyChart($start, $end);
-            $funnel = $this->funnelMetrics(
-                clone $base,
-                $summary['page_views'],
-                $summary['product_views'],
-                $summary['add_to_cart'],
-                $summary['cart_abandons'],
-                $summary['orders']
-            );
+                $topSearches = $this->topMetadataValues(clone $base, 'search', '$.query', 12);
+                $topProducts = $this->topMetadataValues(clone $base, 'product_view', '$.product_name', 12);
+                $dailyChart = $this->dailyChart($start, $end);
+            }
         }
 
         return compact(
@@ -319,6 +329,7 @@ class MobileAnalyticsController extends Controller
         foreach ($events as $index => $rawEvent) {
             if (! is_array($rawEvent)) {
                 $errors[$index] = ['event' => ['Invalid event payload.']];
+
                 continue;
             }
 
@@ -347,6 +358,7 @@ class MobileAnalyticsController extends Controller
 
             if ($validator->fails()) {
                 $errors[$index] = $validator->errors()->toArray();
+
                 continue;
             }
 
@@ -482,7 +494,7 @@ class MobileAnalyticsController extends Controller
     /**
      * Top valori din metadata JSON (ex. query / product_name).
      *
-     * @return \Illuminate\Support\Collection<int, object{label: string, total: int}>
+     * @return Collection<int, object{label: string, total: int}>
      */
     private function topMetadataValues($base, string $eventName, string $jsonPath, int $limit = 12)
     {
@@ -502,6 +514,28 @@ class MobileAnalyticsController extends Controller
         } catch (\Throwable) {
             return collect();
         }
+    }
+
+    /** Calculate frequently used counters with a single scan of the period. */
+    private function aggregateCounts($base): object
+    {
+        return $base->selectRaw(<<<'SQL'
+            COUNT(*) as events,
+            COUNT(DISTINCT session_id) as sessions,
+            COUNT(DISTINCT mobile_user_id) as users,
+            COUNT(DISTINCT device_id) as devices,
+            COUNT(DISTINCT CASE WHEN mobile_user_id IS NOT NULL THEN session_id END) as logged_in_sessions,
+            SUM(CASE WHEN event_name = 'page_view' THEN 1 ELSE 0 END) as page_views,
+            SUM(CASE WHEN event_name = 'product_view' THEN 1 ELSE 0 END) as product_views,
+            SUM(CASE WHEN event_name = 'search' THEN 1 ELSE 0 END) as searches,
+            SUM(CASE WHEN event_name = 'add_to_cart' THEN 1 ELSE 0 END) as add_to_cart,
+            SUM(CASE WHEN event_name = 'banner_click' THEN 1 ELSE 0 END) as banner_clicks,
+            SUM(CASE WHEN event_name = 'cart_abandoned' THEN 1 ELSE 0 END) as cart_abandons,
+            SUM(CASE WHEN event_name = 'order_completed' THEN 1 ELSE 0 END) as orders,
+            SUM(CASE WHEN event_name = 'login_success' THEN 1 ELSE 0 END) as logins,
+            SUM(CASE WHEN event_name = 'map_open' THEN 1 ELSE 0 END) as map_opens,
+            AVG(CASE WHEN duration_ms IS NOT NULL THEN duration_ms END) as avg_duration_ms
+        SQL)->first();
     }
 
     /**
@@ -575,19 +609,20 @@ class MobileAnalyticsController extends Controller
         if ($schemaReady) {
             $base = MobileAnalyticsEvent::query()->whereBetween('occurred_at', [$start, $end]);
 
-            $events = (clone $base)->count();
-            $sessions = (int) (clone $base)->whereNotNull('session_id')->distinct('session_id')->count('session_id');
-            $users = (int) (clone $base)->whereNotNull('mobile_user_id')->distinct('mobile_user_id')->count('mobile_user_id');
-            $devices = (int) (clone $base)->whereNotNull('device_id')->distinct('device_id')->count('device_id');
-            $pageViews = (clone $base)->where('event_name', 'page_view')->count();
-            $productViews = (clone $base)->where('event_name', 'product_view')->count();
-            $addToCart = (clone $base)->where('event_name', 'add_to_cart')->count();
-            $orders = (clone $base)->where('event_name', 'order_completed')->count();
-            $cartAbandons = (clone $base)->where('event_name', 'cart_abandoned')->count();
-            $searches = (clone $base)->where('event_name', 'search')->count();
-            $bannerClicks = (clone $base)->where('event_name', 'banner_click')->count();
-            $logins = (clone $base)->where('event_name', 'login_success')->count();
-            $mapOpens = (clone $base)->where('event_name', 'map_open')->count();
+            $counts = $this->aggregateCounts(clone $base);
+            $events = (int) $counts->events;
+            $sessions = (int) $counts->sessions;
+            $users = (int) $counts->users;
+            $devices = (int) $counts->devices;
+            $pageViews = (int) $counts->page_views;
+            $productViews = (int) $counts->product_views;
+            $addToCart = (int) $counts->add_to_cart;
+            $orders = (int) $counts->orders;
+            $cartAbandons = (int) $counts->cart_abandons;
+            $searches = (int) $counts->searches;
+            $bannerClicks = (int) $counts->banner_clicks;
+            $logins = (int) $counts->logins;
+            $mapOpens = (int) $counts->map_opens;
 
             $orderAgg = (clone $base)
                 ->where('event_name', 'order_completed')
@@ -596,7 +631,7 @@ class MobileAnalyticsController extends Controller
             $revenue = (float) ($orderAgg->revenue ?? 0);
             $aov = (float) ($orderAgg->aov ?? 0);
 
-            $avgPageMs = (float) ((clone $base)->whereNotNull('duration_ms')->avg('duration_ms') ?? 0);
+            $avgPageMs = (float) ($counts->avg_duration_ms ?? 0);
 
             $avgSessionSeconds = 0.0;
             try {
@@ -633,14 +668,7 @@ class MobileAnalyticsController extends Controller
                 }
             }
 
-            $loggedInSessions = 0;
-            if ($sessions > 0) {
-                $loggedInSessions = (int) (clone $base)
-                    ->whereNotNull('session_id')
-                    ->whereNotNull('mobile_user_id')
-                    ->distinct('session_id')
-                    ->count('session_id');
-            }
+            $loggedInSessions = $sessions > 0 ? (int) $counts->logged_in_sessions : 0;
 
             // New users: first-ever event falls inside period
             $newUsers = 0;
@@ -971,6 +999,7 @@ class MobileAnalyticsController extends Controller
             return null;
         }
         $value = trim((string) $value);
+
         return $value === '' ? null : $value;
     }
 
@@ -979,6 +1008,7 @@ class MobileAnalyticsController extends Controller
         if ($value === null || $value === '') {
             return null;
         }
+
         return is_numeric($value) ? (int) $value : null;
     }
 
@@ -987,6 +1017,7 @@ class MobileAnalyticsController extends Controller
         if ($value === null || $value === '') {
             return null;
         }
+
         return is_numeric($value) ? (float) $value : null;
     }
 }

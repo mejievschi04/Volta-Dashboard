@@ -17,14 +17,12 @@ echo "==> Director: $APP_DIR"
 echo "==> git pull..."
 git pull origin main
 
-echo "==> Curățare cache Laravel..."
-php artisan view:clear
-php artisan cache:clear
-php artisan config:clear
-php artisan route:clear
+echo "==> Aplicare migrări..."
+php artisan migrate --force
 
-# Dacă ai rulat view:cache în producție, recompilează (opțional):
-# php artisan view:cache
+echo "==> Optimizare Laravel pentru producție..."
+php artisan optimize:clear
+php artisan optimize
 
 if command -v systemctl >/dev/null 2>&1; then
   for svc in php8.3-fpm php8.2-fpm php-fpm; do

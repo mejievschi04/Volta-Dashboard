@@ -146,11 +146,20 @@ class MobileCrashesController extends Controller
         if ($schemaReady) {
             $base = MobileCrash::query()->whereBetween('occurred_at', [$start, $end]);
 
-            $summary['crashes'] = (clone $base)->count();
-            $summary['devices'] = (int) (clone $base)->whereNotNull('device_id')->selectRaw('COUNT(DISTINCT device_id) as aggregate')->value('aggregate');
-            $summary['users'] = (int) (clone $base)->whereNotNull('mobile_user_id')->selectRaw('COUNT(DISTINCT mobile_user_id) as aggregate')->value('aggregate');
-            $summary['fatal'] = (clone $base)->where('is_fatal', true)->count();
-            $summary['fingerprints'] = (int) (clone $base)->whereNotNull('fingerprint')->selectRaw('COUNT(DISTINCT fingerprint) as aggregate')->value('aggregate');
+            $counts = (clone $base)->selectRaw(<<<'SQL'
+                COUNT(*) as crashes,
+                COUNT(DISTINCT device_id) as devices,
+                COUNT(DISTINCT mobile_user_id) as users,
+                SUM(CASE WHEN is_fatal = 1 THEN 1 ELSE 0 END) as fatal,
+                COUNT(DISTINCT fingerprint) as fingerprints
+            SQL)->first();
+            $summary = [
+                'crashes' => (int) $counts->crashes,
+                'devices' => (int) $counts->devices,
+                'users' => (int) $counts->users,
+                'fatal' => (int) $counts->fatal,
+                'fingerprints' => (int) $counts->fingerprints,
+            ];
 
             $topFingerprints = (clone $base)
                 ->select(

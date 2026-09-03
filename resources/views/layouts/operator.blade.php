@@ -62,8 +62,10 @@
       @yield('content')
     </main>
   </div>
+  @if(request()->routeIs('livrari'))
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
   <script src="{{ asset('js/excel-export-exceljs.js') }}"></script>
+  @endif
   <script src="{{ asset('js/volta-chart-theme.js') }}"></script>
   @stack('scripts')
 </body>

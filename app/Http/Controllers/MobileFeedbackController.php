@@ -27,10 +27,18 @@ class MobileFeedbackController extends Controller
 
         if ($schemaReady) {
             $base = MobileFeedbackReport::query()->whereBetween('occurred_at', [$start, $end]);
-            $summary['total'] = (clone $base)->count();
-            $summary['with_screenshot'] = (clone $base)->where('has_screenshot', true)->count();
-            $summary['devices'] = (int) (clone $base)->whereNotNull('device_id')->selectRaw('COUNT(DISTINCT device_id) as aggregate')->value('aggregate');
-            $summary['users'] = (int) (clone $base)->whereNotNull('mobile_user_id')->selectRaw('COUNT(DISTINCT mobile_user_id) as aggregate')->value('aggregate');
+            $counts = (clone $base)->selectRaw(<<<'SQL'
+                COUNT(*) as total,
+                SUM(CASE WHEN has_screenshot = 1 THEN 1 ELSE 0 END) as with_screenshot,
+                COUNT(DISTINCT device_id) as devices,
+                COUNT(DISTINCT mobile_user_id) as users
+            SQL)->first();
+            $summary = [
+                'total' => (int) $counts->total,
+                'with_screenshot' => (int) $counts->with_screenshot,
+                'devices' => (int) $counts->devices,
+                'users' => (int) $counts->users,
+            ];
 
             $reports = MobileFeedbackReport::query()
                 ->whereBetween('occurred_at', [$start, $end])
