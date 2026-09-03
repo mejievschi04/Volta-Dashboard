@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\Api\OneCController;
+use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -27,6 +28,9 @@ class FetchOneCKpi extends Command
 
         $dateStart = $this->option('date-start') ?: date('Y-m-01');
         $dateEnd = $this->option('date-end') ?: date('Y-m-d');
+        $oneCDateEnd = CarbonImmutable::createFromFormat('!Y-m-d', $dateEnd)
+            ->addDay()
+            ->format('Y-m-d');
         $save = $this->option('save');
 
         $config = config('services.onec', []);
@@ -38,7 +42,7 @@ class FetchOneCKpi extends Command
 
         $this->info('Apel 1C GetKPIData');
         $this->line("URL: {$url}");
-        $this->line("Perioadă: {$dateStart} → {$dateEnd}");
+        $this->line("Perioadă inclusivă: {$dateStart} → {$dateEnd}");
         $this->newLine();
 
         try {
@@ -47,7 +51,8 @@ class FetchOneCKpi extends Command
                 ->timeout(30)
                 ->get($url, [
                     'date_start' => $dateStart,
-                    'date_end' => $dateEnd,
+                    // 1C tratează date_end ca limită exclusivă.
+                    'date_end' => $oneCDateEnd,
                 ]);
 
             if (! $response->successful()) {

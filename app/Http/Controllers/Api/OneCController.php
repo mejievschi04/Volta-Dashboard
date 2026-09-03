@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\OnecKpiSync;
 use App\Models\OnecKpiOperator;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -223,10 +224,17 @@ class OneCController extends Controller
         $password = $config['password'] ?? '';
         $url = rtrim($baseUrl, '/') . '/GetKPIData/';
 
+        // În API-ul 1C, date_end este limita exclusivă. Local, period_end rămâne
+        // inclusiv, deci trimitem ziua următoare pentru a prelua și ultima zi cerută.
+        $oneCDateEnd = CarbonImmutable::createFromFormat('!Y-m-d', $dateEnd)
+            ->addDay()
+            ->format('Y-m-d');
+
         Log::info('OneC KPI sync started', [
             'url' => $url,
             'date_start' => $dateStart,
             'date_end' => $dateEnd,
+            'onec_date_end_exclusive' => $oneCDateEnd,
         ]);
 
         $response = Http::withBasicAuth($username, $password)
@@ -234,7 +242,7 @@ class OneCController extends Controller
             ->timeout(30)
             ->get($url, [
                 'date_start' => $dateStart,
-                'date_end' => $dateEnd,
+                'date_end' => $oneCDateEnd,
             ]);
 
         if (! $response->successful()) {
