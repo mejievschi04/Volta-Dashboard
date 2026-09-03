@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,14 @@ class MobileCrashesController extends Controller
 {
     public function index(Request $request)
     {
-        return view('mobile.crashes-overview', $this->buildDashboardData($request));
+        [$start, $end] = $this->resolvePeriod($request);
+        $key = 'mobile:crashes:v2:'.$start->timestamp.':'.$end->timestamp;
+
+        return view('mobile.crashes-overview', Cache::remember(
+            $key,
+            now()->addMinutes(2),
+            fn () => $this->buildDashboardData($request)
+        ));
     }
 
     public function list(Request $request)

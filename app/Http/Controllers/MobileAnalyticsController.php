@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
@@ -18,17 +19,17 @@ class MobileAnalyticsController extends Controller
 {
     public function index(Request $request)
     {
-        return view('mobile.overview', $this->buildDashboardData($request, 'overview'));
+        return view('mobile.overview', $this->cachedDashboardData($request, 'overview'));
     }
 
     public function events(Request $request)
     {
-        return view('mobile.events', $this->buildDashboardData($request, 'events'));
+        return view('mobile.events', $this->cachedDashboardData($request, 'events'));
     }
 
     public function funnels(Request $request)
     {
-        return view('mobile.funnels', $this->buildDashboardData($request, 'funnels'));
+        return view('mobile.funnels', $this->cachedDashboardData($request, 'funnels'));
     }
 
     public function pagesList(Request $request)
@@ -140,7 +141,26 @@ class MobileAnalyticsController extends Controller
 
     public function meta(Request $request)
     {
-        return view('mobile.meta', $this->buildMetaData($request));
+        [$start, $end] = $this->resolvePeriod($request);
+        $key = 'mobile:meta:v2:'.$start->timestamp.':'.$end->timestamp;
+
+        return view('mobile.meta', Cache::remember(
+            $key,
+            now()->addMinutes(2),
+            fn () => $this->buildMetaData($request)
+        ));
+    }
+
+    private function cachedDashboardData(Request $request, string $section): array
+    {
+        [$start, $end] = $this->resolvePeriod($request);
+        $key = 'mobile:dashboard:v3:'.$section.':'.$start->timestamp.':'.$end->timestamp;
+
+        return Cache::remember(
+            $key,
+            now()->addMinute(),
+            fn () => $this->buildDashboardData($request, $section)
+        );
     }
 
     private function buildDashboardData(Request $request, string $section): array
@@ -841,15 +861,11 @@ class MobileAnalyticsController extends Controller
             $sessionsSeries = array_fill(0, count($labels), 0);
             $ordersSeries = array_fill(0, count($labels), 0);
 
-            $dailyUserRows = (clone $base)
-                ->whereNotNull('mobile_user_id')
-                ->select(DB::raw('DATE(occurred_at) as day'), DB::raw('COUNT(DISTINCT mobile_user_id) as total'))
-                ->groupBy(DB::raw('DATE(occurred_at)'))
-                ->get();
-            foreach ($dailyUserRows as $row) {
+            // Reuse the DAU query above; it contains the same daily distinct-user data.
+            foreach ($dauRows as $row) {
                 $day = (string) $row->day;
                 if (isset($labelIndex[$day])) {
-                    $usersSeries[$labelIndex[$day]] = (int) $row->total;
+                    $usersSeries[$labelIndex[$day]] = (int) $row->users;
                 }
             }
 
