@@ -1,38 +1,35 @@
 @extends('layouts.app')
 
-@section('title', 'Volta App – Listă crash-uri – VOLTA')
+@section('title', 'Volta App – Listă erori – VOLTA')
 @section('header-title', 'Volta App')
-
-@push('styles')
-<link rel="stylesheet" href="{{ url('css/mobile-analytics.css') }}">
-@endpush
 
 @section('content')
 @php $q = request()->only(['start', 'end']); @endphp
 
 <div class="ma-page">
   @if(!$schemaReady)
-    <div class="ma-alert">Tabela pentru crash-uri mobile nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
+    <div class="ma-alert">Tabela pentru erorile din aplicație nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
   @endif
 
   <section class="ma-hero">
     <div class="ma-hero__row">
       <div>
-        <h1 class="ma-hero__title">Listă crash-uri</h1>
-        <p class="ma-hero__lead">Toate crash-urile din perioada selectată, cu link rapid la detaliu.</p>
+        <p class="ma-kicker">Aplicația Volta</p>
+        <h1 class="ma-hero__title">Listă erori</h1>
+        <p class="ma-hero__lead">Toate erorile din perioada selectată, cu detaliu rapid.</p>
       </div>
       <form method="get" action="{{ route('mobile.crashes.list') }}" class="ma-filters">
         <div class="ma-field"><label for="listStart">De la</label><input id="listStart" type="date" name="start" value="{{ $start->format('Y-m-d') }}"></div>
         <div class="ma-field"><label for="listEnd">Până la</label><input id="listEnd" type="date" name="end" value="{{ $end->format('Y-m-d') }}"></div>
         <button class="ma-btn" type="submit"><i class="fas fa-filter" aria-hidden="true"></i> Aplică</button>
-        <a class="ma-btn ma-btn--ghost" href="{{ route('mobile.crashes', $q) }}">Overview</a>
+        <a class="ma-btn ma-btn--ghost" href="{{ route('mobile.crashes', $q) }}">Înapoi la erori</a>
       </form>
     </div>
   </section>
 
   <section class="ma-card ma-card--danger">
     <div class="ma-card__head">
-      <h2><i class="fas fa-bug" aria-hidden="true"></i> Crash-uri</h2>
+      <h2><i class="fas fa-bug" aria-hidden="true"></i> Erori</h2>
       @if($schemaReady && $crashes)
         <span class="ma-muted">{{ number_format($crashes->total(), 0, ',', '.') }} rezultate</span>
       @endif
@@ -47,8 +44,8 @@
             <th>Platformă</th>
             <th>Versiune</th>
             <th>Ecran</th>
-            <th>User</th>
-            <th>Device</th>
+            <th>Utilizator</th>
+            <th>Dispozitiv</th>
             <th></th>
           </tr>
         </thead>
@@ -68,7 +65,7 @@
             </tr>
           @endforeach
         @else
-          <tr><td colspan="9" class="ma-muted">Nu există crash-uri în perioada selectată.</td></tr>
+          <tr><td colspan="9" class="ma-muted">Nu există erori în perioada selectată.</td></tr>
         @endif
         </tbody>
       </table>

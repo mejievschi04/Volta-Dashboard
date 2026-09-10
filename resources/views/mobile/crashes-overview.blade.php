@@ -1,22 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Volta App – Crash-uri – VOLTA')
+@section('title', 'Volta App – Erori aplicație – VOLTA')
 @section('header-title', 'Volta App')
-
-@push('styles')
-<link rel="stylesheet" href="{{ url('css/mobile-analytics.css') }}">
-@endpush
 
 @section('content')
 @php
   $q = request()->only(['start', 'end']);
   $days = max(1, (int) $start->diffInDays($end) + 1);
-  $periodPresets = [
-    ['label' => '7 zile', 'start' => now()->subDays(6)->format('Y-m-d'), 'end' => now()->format('Y-m-d')],
-    ['label' => '30 zile', 'start' => now()->subDays(29)->format('Y-m-d'), 'end' => now()->format('Y-m-d')],
-    ['label' => 'Luna curentă', 'start' => now()->startOfMonth()->format('Y-m-d'), 'end' => now()->format('Y-m-d')],
-    ['label' => '90 zile', 'start' => now()->subDays(89)->format('Y-m-d'), 'end' => now()->format('Y-m-d')],
-  ];
+  $periodPresets = \App\Support\MobileRetention::presets();
   $fatalRate = ($summary['crashes'] ?? 0) > 0
     ? round((($summary['fatal'] ?? 0) / $summary['crashes']) * 100, 1)
     : 0;
@@ -24,13 +15,14 @@
 
 <div class="ma-page">
   @if(isset($schemaReady) && !$schemaReady)
-    <div class="ma-alert">Tabela pentru crash-uri mobile nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
+    <div class="ma-alert">Tabela pentru erorile din aplicație nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
   @endif
 
   <section class="ma-hero">
     <div class="ma-hero__row">
       <div>
-        <h1 class="ma-hero__title">Crash-uri</h1>
+        <p class="ma-kicker">Aplicația Volta</p>
+        <h1 class="ma-hero__title">Erori în aplicație</h1>
         <p class="ma-hero__lead">
           Erori raportate din iOS / Android —
           {{ $start->format('d.m.Y') }} – {{ $end->format('d.m.Y') }} ({{ $days }} zile).
@@ -62,9 +54,9 @@
 
   <div class="ma-kpis">
     <div class="ma-kpi ma-kpi--warn">
-      <span class="ma-kpi__label"><i class="fas fa-bug" aria-hidden="true"></i> Crash-uri</span>
+      <span class="ma-kpi__label"><i class="fas fa-bug" aria-hidden="true"></i> Erori</span>
       <div class="ma-kpi__value">{{ number_format($summary['crashes'], 0, ',', '.') }}</div>
-      <span class="ma-kpi__help">{{ number_format($summary['fatal'], 0, ',', '.') }} fatale ({{ number_format($fatalRate, 1, ',', '.') }}%)</span>
+      <span class="ma-kpi__help">{{ number_format($summary['fatal'], 0, ',', '.') }} grave ({{ number_format($fatalRate, 1, ',', '.') }}%)</span>
     </div>
     <div class="ma-kpi">
       <span class="ma-kpi__label"><i class="fas fa-mobile-screen" aria-hidden="true"></i> Dispozitive</span>
@@ -74,14 +66,14 @@
     <div class="ma-kpi">
       <span class="ma-kpi__label"><i class="fas fa-fingerprint" aria-hidden="true"></i> Grupuri unice</span>
       <div class="ma-kpi__value">{{ number_format($summary['fingerprints'], 0, ',', '.') }}</div>
-      <span class="ma-kpi__help">Fingerprint-uri distincte</span>
+      <span class="ma-kpi__help">Tipuri de eroare distincte</span>
     </div>
     <div class="ma-kpi">
       <span class="ma-kpi__label"><i class="fas fa-layer-group" aria-hidden="true"></i> Platforme</span>
       <div class="ma-kpi__value">{{ number_format($platformBreakdown->count(), 0, ',', '.') }}</div>
       <span class="ma-kpi__help">
         @forelse($platformBreakdown->take(2) as $row)
-          {{ $row->platform ?: 'n/a' }}: {{ number_format($row->total, 0, ',', '.') }}@if(!$loop->last) · @endif
+          {{ $row->platform ?: '—' }}: {{ number_format($row->total, 0, ',', '.') }}@if(!$loop->last) · @endif
         @empty
           —
         @endforelse
@@ -92,7 +84,7 @@
   <div class="ma-grid">
     <section class="ma-card ma-card--danger">
       <div class="ma-card__head">
-        <h2><i class="fas fa-chart-line" aria-hidden="true"></i> Crash-uri pe zile</h2>
+        <h2><i class="fas fa-chart-line" aria-hidden="true"></i> Erori pe zile</h2>
       </div>
       <div class="ma-card__body">
         <div class="ma-chart"><canvas id="mobileCrashesChart"></canvas></div>
@@ -106,7 +98,7 @@
       </div>
       <div class="ma-card__body">
         @if($topFingerprints->isEmpty())
-          <div class="ma-empty"><i class="fas fa-check-circle" aria-hidden="true"></i>Nu există crash-uri în perioada selectată.</div>
+          <div class="ma-empty"><i class="fas fa-check-circle" aria-hidden="true"></i>Nu există erori în perioada selectată.</div>
         @else
           @php $maxFp = max(1, (int) $topFingerprints->max('total')); @endphp
           @foreach($topFingerprints->take(8) as $row)
@@ -126,12 +118,12 @@
 
   <section class="ma-card ma-card--danger">
     <div class="ma-card__head">
-      <h2><i class="fas fa-clock-rotate-left" aria-hidden="true"></i> Crash-uri recente</h2>
+      <h2><i class="fas fa-clock-rotate-left" aria-hidden="true"></i> Ultimele erori</h2>
       <a class="ma-card__link" href="{{ route('mobile.crashes.list', $q) }}">Listă completă →</a>
     </div>
     <div class="ma-card__body ma-table-wrap">
       @if($recentCrashes->isEmpty())
-        <div class="ma-empty"><i class="fas fa-inbox" aria-hidden="true"></i>Niciun crash recent.</div>
+        <div class="ma-empty"><i class="fas fa-inbox" aria-hidden="true"></i>Nicio eroare recentă.</div>
       @else
         <table class="ma-table">
           <thead>
@@ -198,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
     data: {
       labels: chartData.labels || [],
       datasets: [{
-        label: 'Crash-uri',
+        label: 'Erori',
         data: chartData.totals || [],
         borderColor: lineColor,
         backgroundColor: areaColor,

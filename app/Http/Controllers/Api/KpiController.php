@@ -9,6 +9,7 @@ use App\Models\TrafficSource;
 use App\Models\OnecKpiSync;
 use App\Models\Livrare;
 use App\Support\ZileLucratoare;
+use App\Support\DashboardCache;
 use Illuminate\Support\Facades\Auth;
 
 class KpiController extends Controller
@@ -16,14 +17,29 @@ class KpiController extends Controller
     public function index(Request $request)
     {
         $luna = $request->get('month', date('Y-m'));
-        
+
         try {
-            // Parsează luna
+            $payload = DashboardCache::flexible(
+                'kpi:'.$luna,
+                DashboardCache::ttlForMonth($luna),
+                fn () => $this->buildIndexPayload($luna)
+            );
+
+            return response()->json($payload);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    private function buildIndexPayload(string $luna): array
+    {
             $parts = explode('-', $luna);
             $an = intval($parts[0]);
             $lunaNum = intval($parts[1]);
             
-            // Convertim numărul lunii în numele lunii în română
             $luniRomana = [
                 1 => 'Ianuarie', 2 => 'Februarie', 3 => 'Martie', 4 => 'Aprilie',
                 5 => 'Mai', 6 => 'Iunie', 7 => 'Iulie', 8 => 'August',
@@ -51,19 +67,16 @@ class KpiController extends Controller
                 $totalZilePentruComenziZi = max(1, (int) (($tsEnd - $tsStart) / 86400) + 1);
             }
             
-            // Plan vânzări pentru luna selectată
             $planData = PlanVanzari::where('an', $an)
                 ->where('luna', $lunaNume)
                 ->first();
             $planLuna = $planData ? floatval($planData->valoare) : 0;
             
-            // Total sesiuni pentru luna selectată
             $sesiuniData = TrafficSource::selectRaw('SUM(visits) as total_sesiuni')
                 ->where('source', 'total')
                 ->whereBetween('date', [$monthStart, $monthEnd])
                 ->first();
             
-            // Calculează KPI-urile
             $zileLuna = intval(date('t', strtotime($luna . '-01')));
             $lunaSelectata = strtotime($luna . '-01');
             $lunaCurenta = strtotime(date('Y-m-01'));
@@ -81,42 +94,28 @@ class KpiController extends Controller
             $totalSesiuni = intval($sesiuniData->total_sesiuni ?? 0);
             $conversie = $totalSesiuni > 0 ? round(($comenzi / $totalSesiuni) * 100, 2) : 0;
             
-            // Progres plan (%)
             $progresPlan = $planLuna > 0 ? round(($vanzariLuna / $planLuna) * 100, 2) : 0;
-            
-            // Diferență față de plan
             $diferentaPlan = $vanzariLuna - $planLuna;
 
             $zileLucratoare = ZileLucratoare::pentruLuna($luna);
             $zileLucratoareTrecute = $zileLucratoare['trecute'];
             $zileLucratoareRamase = $zileLucratoare['ramase'];
             
-            // Prognoză plan (media pe zile lucrătoare, fără duminici)
             $vanzariZilniceMedii = $zileLucratoareTrecute > 0 ? ($vanzariLuna / $zileLucratoareTrecute) : 0;
             $prognozaPlan = $vanzariLuna + ($vanzariZilniceMedii * $zileLucratoareRamase);
-            
-            // Prognoză plan %
             $prognozaPlanProcent = $planLuna > 0 ? round(($prognozaPlan / $planLuna) * 100, 2) : 0;
 
-            // Vânzări/zi necesare pentru plan (doar zile lucrătoare rămase)
             $restPentruPlan = max(0, $planLuna - $vanzariLuna);
             $vanzariZiPentruPlan = $zileLucratoareRamase > 0
                 ? round($restPentruPlan / $zileLucratoareRamase, 2)
                 : 0;
             
-            // Valoare medie comandă (CEC mediu = suma fără TVA / nr comenzi)
             $cecMediu = $comenzi > 0 ? round($vanzariLuna / $comenzi, 2) : 0;
-            
-            // Total livrări în luna selectată (din tabelul livrari)
             $totalLivrariLuna = Livrare::whereBetween('data_livrarii', [$monthStart, $monthEnd])->count();
-            
-            // Pickup = total comenzi - livrări
             $pickup = max(0, $comenzi - $totalLivrariLuna);
-            
-            // Progres zilnic
             $progresZilnic = $zileLuna > 0 ? round(($zileTrecute / $zileLuna) * 100, 2) : 0;
             
-            return response()->json([
+            return [
                 'success' => true,
                 'month' => $luna,
                 'plan_luna' => $planLuna,
@@ -139,14 +138,7 @@ class KpiController extends Controller
                 'zile_activitate' => 0,
                 'progres_zilnic' => $progresZilnic,
                 'kpi_source' => $onecSync ? 'sync' : 'sync',
-            ]);
-            
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
-        }
+            ];
     }
 
     public function showPlan(Request $request)
@@ -220,6 +212,8 @@ class KpiController extends Controller
                     'valoare' => $valoare,
                 ]);
             }
+
+            DashboardCache::bump();
 
             return response()->json([
                 'success' => true,

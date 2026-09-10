@@ -7,9 +7,9 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
+use App\Support\DashboardCache;
+use App\Support\MobileRetention;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -18,11 +18,10 @@ class MobileCrashesController extends Controller
     public function index(Request $request)
     {
         [$start, $end] = $this->resolvePeriod($request);
-        $key = 'mobile:crashes:v2:'.$start->timestamp.':'.$end->timestamp;
 
-        return view('mobile.crashes-overview', Cache::remember(
-            $key,
-            now()->addMinutes(2),
+        return view('mobile.crashes-overview', DashboardCache::flexible(
+            'mobile:crashes:v3:'.$start->timestamp.':'.$end->timestamp,
+            DashboardCache::ttlMobile(),
             fn () => $this->buildDashboardData($request)
         ));
     }
@@ -30,11 +29,12 @@ class MobileCrashesController extends Controller
     public function list(Request $request)
     {
         [$start, $end] = $this->resolvePeriod($request);
-        $schemaReady = Schema::hasTable('mobile_crashes');
+        $schemaReady = DashboardCache::tableExists('mobile_crashes');
         $crashes = null;
 
         if ($schemaReady) {
             $crashes = MobileCrash::query()
+                ->select(MobileCrash::LIST_COLUMNS)
                 ->whereBetween('occurred_at', [$start, $end])
                 ->latest('occurred_at')
                 ->paginate(100)
@@ -46,7 +46,7 @@ class MobileCrashesController extends Controller
 
     public function show(Request $request, MobileCrash $crash)
     {
-        $schemaReady = Schema::hasTable('mobile_crashes');
+        $schemaReady = DashboardCache::tableExists('mobile_crashes');
         [$start, $end] = $this->resolvePeriod($request);
 
         return view('mobile.crash-detail', compact('crash', 'schemaReady', 'start', 'end'));
@@ -137,7 +137,7 @@ class MobileCrashesController extends Controller
     private function buildDashboardData(Request $request): array
     {
         [$start, $end] = $this->resolvePeriod($request);
-        $schemaReady = Schema::hasTable('mobile_crashes');
+        $schemaReady = DashboardCache::tableExists('mobile_crashes');
 
         $summary = [
             'crashes' => 0,
@@ -190,6 +190,7 @@ class MobileCrashesController extends Controller
                 ->get();
 
             $recentCrashes = (clone $base)
+                ->select(MobileCrash::LIST_COLUMNS)
                 ->latest('occurred_at')
                 ->limit(40)
                 ->get();
@@ -321,27 +322,7 @@ class MobileCrashesController extends Controller
 
     private function resolvePeriod(Request $request): array
     {
-        try {
-            $start = $request->filled('start')
-                ? Carbon::parse((string) $request->query('start'))->startOfDay()
-                : now()->subDays(29)->startOfDay();
-        } catch (\Throwable) {
-            $start = now()->subDays(29)->startOfDay();
-        }
-
-        try {
-            $end = $request->filled('end')
-                ? Carbon::parse((string) $request->query('end'))->endOfDay()
-                : now()->endOfDay();
-        } catch (\Throwable) {
-            $end = now()->endOfDay();
-        }
-
-        if ($end->lt($start)) {
-            $end = $start->copy()->endOfDay();
-        }
-
-        return [$start, $end];
+        return MobileRetention::resolvePeriod($request);
     }
 
     private function parseOccurredAt(mixed $value): Carbon

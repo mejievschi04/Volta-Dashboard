@@ -1,39 +1,31 @@
 @extends('layouts.app')
 
-@section('title', 'Volta App – Prezentare – VOLTA')
+@section('title', 'Volta App – Panou general – VOLTA')
 @section('header-title', 'Volta App')
-
-@push('styles')
-<link rel="stylesheet" href="{{ url('css/mobile-analytics.css') }}">
-@endpush
 
 @section('content')
 @php
   $q = request()->only(['start', 'end']);
   $days = max(1, (int) $start->diffInDays($end) + 1);
-  $periodPresets = [
-    ['label' => '7 zile', 'start' => now()->subDays(6)->format('Y-m-d'), 'end' => now()->format('Y-m-d')],
-    ['label' => '30 zile', 'start' => now()->subDays(29)->format('Y-m-d'), 'end' => now()->format('Y-m-d')],
-    ['label' => 'Luna curentă', 'start' => now()->startOfMonth()->format('Y-m-d'), 'end' => now()->format('Y-m-d')],
-    ['label' => '90 zile', 'start' => now()->subDays(89)->format('Y-m-d'), 'end' => now()->format('Y-m-d')],
-  ];
+  $periodPresets = \App\Support\MobileRetention::presets();
   $maxEvent = max(1, (int) ($eventBreakdown->max('total') ?? 1));
 @endphp
 
 <div class="ma-page">
   @if(isset($schemaReady) && !$schemaReady)
     <div class="ma-alert">
-      Tabela pentru evenimente mobile nu este încă creată. Rulează <code>php artisan migrate</code> și reîncarcă pagina.
+      Tabela pentru evenimente din aplicație nu este încă creată. Rulează <code>php artisan migrate</code> și reîncarcă pagina.
     </div>
   @endif
 
   <section class="ma-hero">
     <div class="ma-hero__row">
       <div>
-        <h1 class="ma-hero__title">Prezentare Volta App</h1>
+        <p class="ma-kicker">Aplicația Volta</p>
+        <h1 class="ma-hero__title">Panou general</h1>
         <p class="ma-hero__lead">
-          Activitate în aplicația mobilă: sesiuni, conversie, produse și comenzi —
-          {{ $start->format('d.m.Y') }} – {{ $end->format('d.m.Y') }} ({{ $days }} zile).
+          Cum se folosește magazinul din telefon:
+          {{ $start->format('d.m.Y') }} – {{ $end->format('d.m.Y') }} · {{ $days }} {{ $days === 1 ? 'zi' : 'zile' }}.
         </p>
       </div>
       <form method="get" action="{{ route('mobile.analytics') }}" class="ma-filters">
@@ -61,71 +53,94 @@
     </div>
   </section>
 
-  <div class="ma-kpis">
-    <div class="ma-kpi">
-      <span class="ma-kpi__label"><i class="fas fa-users" aria-hidden="true"></i> Sesiuni</span>
-      <div class="ma-kpi__value">{{ number_format($summary['sessions'], 0, ',', '.') }}</div>
-      <span class="ma-kpi__help">{{ number_format($summary['users'], 0, ',', '.') }} utilizatori · {{ number_format($summary['events_per_session'] ?? 0, 1, ',', '.') }} evenimente/sesiune</span>
+  <section class="ma-section">
+    <div class="ma-section__head">
+      <h2>Activitate</h2>
+      <p>Cine a deschis aplicația și cât a rămas</p>
     </div>
-    <div class="ma-kpi ma-kpi--accent">
-      <span class="ma-kpi__label"><i class="fas fa-percent" aria-hidden="true"></i> Rată conversie</span>
-      <div class="ma-kpi__value">{{ number_format($summary['conversion_rate'] ?? 0, 2, ',', '.') }}%</div>
-      <span class="ma-kpi__help">Comenzi / sesiuni în interval</span>
+    <div class="ma-kpis">
+      <div class="ma-kpi">
+        <span class="ma-kpi__label"><i class="fas fa-users" aria-hidden="true"></i> Vizite în aplicație</span>
+        <div class="ma-kpi__value">{{ number_format($summary['sessions'], 0, ',', '.') }}</div>
+        <span class="ma-kpi__help">{{ number_format($summary['users'], 0, ',', '.') }} persoane distincte</span>
+      </div>
+      <div class="ma-kpi">
+        <span class="ma-kpi__label"><i class="fas fa-bolt" aria-hidden="true"></i> Acțiuni înregistrate</span>
+        <div class="ma-kpi__value">{{ number_format($summary['events'], 0, ',', '.') }}</div>
+        <span class="ma-kpi__help">{{ number_format($summary['events_per_session'] ?? 0, 1, ',', '.') }} acțiuni pe vizită</span>
+      </div>
+      <div class="ma-kpi">
+        <span class="ma-kpi__label"><i class="fas fa-file-lines" aria-hidden="true"></i> Pagini deschise</span>
+        <div class="ma-kpi__value">{{ number_format($summary['page_views'], 0, ',', '.') }}</div>
+        <span class="ma-kpi__help">{{ number_format($summary['avg_page_seconds'], 0, ',', '.') }} secunde pe pagină, în medie</span>
+      </div>
+      <div class="ma-kpi">
+        <span class="ma-kpi__label"><i class="fas fa-right-to-bracket" aria-hidden="true"></i> Autentificări</span>
+        <div class="ma-kpi__value">{{ number_format($summary['logins'], 0, ',', '.') }}</div>
+        <span class="ma-kpi__help">{{ number_format($summary['map_opens'], 0, ',', '.') }} deschideri ale hărții</span>
+      </div>
     </div>
-    <div class="ma-kpi ma-kpi--good">
-      <span class="ma-kpi__label"><i class="fas fa-bag-shopping" aria-hidden="true"></i> Comenzi</span>
-      <div class="ma-kpi__value">{{ number_format($summary['orders'], 0, ',', '.') }}</div>
-      <span class="ma-kpi__help">{{ number_format($summary['cart_abandons'], 0, ',', '.') }} abandonuri coș</span>
-    </div>
-    <div class="ma-kpi {{ ($summary['view_to_cart_rate'] ?? 0) < 5 ? 'ma-kpi--warn' : '' }}">
-      <span class="ma-kpi__label"><i class="fas fa-cart-plus" aria-hidden="true"></i> Produs → Coș</span>
-      <div class="ma-kpi__value">{{ number_format($summary['view_to_cart_rate'] ?? 0, 1, ',', '.') }}%</div>
-      <span class="ma-kpi__help">{{ number_format($summary['add_to_cart'], 0, ',', '.') }} add-to-cart din {{ number_format($summary['product_views'], 0, ',', '.') }} views</span>
-    </div>
-  </div>
+  </section>
 
-  <div class="ma-kpis">
-    <div class="ma-kpi">
-      <span class="ma-kpi__label"><i class="fas fa-bolt" aria-hidden="true"></i> Evenimente</span>
-      <div class="ma-kpi__value">{{ number_format($summary['events'], 0, ',', '.') }}</div>
-      <span class="ma-kpi__help">{{ number_format($summary['page_views'], 0, ',', '.') }} page views</span>
+  <section class="ma-section">
+    <div class="ma-section__head">
+      <h2>Magazin</h2>
+      <p>De la produs până la comandă</p>
     </div>
-    <div class="ma-kpi">
-      <span class="ma-kpi__label"><i class="fas fa-eye" aria-hidden="true"></i> Vizualizări produs</span>
-      <div class="ma-kpi__value">{{ number_format($summary['product_views'], 0, ',', '.') }}</div>
-      <span class="ma-kpi__help">{{ number_format($summary['searches'], 0, ',', '.') }} căutări</span>
+    <div class="ma-kpis">
+      <div class="ma-kpi ma-kpi--accent">
+        <span class="ma-kpi__label"><i class="fas fa-percent" aria-hidden="true"></i> Comenzi din vizite</span>
+        <div class="ma-kpi__value">{{ number_format($summary['conversion_rate'] ?? 0, 2, ',', '.') }}%</div>
+        <span class="ma-kpi__help">Câte vizite s-au încheiat cu o comandă</span>
+      </div>
+      <div class="ma-kpi ma-kpi--good">
+        <span class="ma-kpi__label"><i class="fas fa-bag-shopping" aria-hidden="true"></i> Comenzi finalizate</span>
+        <div class="ma-kpi__value">{{ number_format($summary['orders'], 0, ',', '.') }}</div>
+        <span class="ma-kpi__help">{{ number_format($summary['cart_abandons'], 0, ',', '.') }} coșuri părăsite</span>
+      </div>
+      <div class="ma-kpi {{ ($summary['view_to_cart_rate'] ?? 0) < 5 ? 'ma-kpi--warn' : '' }}">
+        <span class="ma-kpi__label"><i class="fas fa-cart-plus" aria-hidden="true"></i> Din produs în coș</span>
+        <div class="ma-kpi__value">{{ number_format($summary['view_to_cart_rate'] ?? 0, 1, ',', '.') }}%</div>
+        <span class="ma-kpi__help">{{ number_format($summary['add_to_cart'], 0, ',', '.') }} adăugări din {{ number_format($summary['product_views'], 0, ',', '.') }} vizualizări</span>
+      </div>
+      <div class="ma-kpi">
+        <span class="ma-kpi__label"><i class="fas fa-box-open" aria-hidden="true"></i> Produse privite</span>
+        <div class="ma-kpi__value">{{ number_format($summary['product_views'], 0, ',', '.') }}</div>
+        <span class="ma-kpi__help">{{ number_format($summary['searches'], 0, ',', '.') }} căutări · {{ number_format($summary['banner_clicks'], 0, ',', '.') }} click-uri pe bannere</span>
+      </div>
     </div>
-    <div class="ma-kpi">
-      <span class="ma-kpi__label"><i class="fas fa-image" aria-hidden="true"></i> Click bannere</span>
-      <div class="ma-kpi__value">{{ number_format($summary['banner_clicks'], 0, ',', '.') }}</div>
-      <span class="ma-kpi__help">{{ number_format($summary['logins'], 0, ',', '.') }} login-uri · {{ number_format($summary['map_opens'], 0, ',', '.') }} hartă</span>
-    </div>
-    <div class="ma-kpi">
-      <span class="ma-kpi__label"><i class="fas fa-clock" aria-hidden="true"></i> Timp mediu pagină</span>
-      <div class="ma-kpi__value">{{ number_format($summary['avg_page_seconds'], 0, ',', '.') }}s</div>
-      <span class="ma-kpi__help">Pe baza evenimentelor cu duration</span>
-    </div>
-  </div>
+  </section>
 
-  <div class="ma-shortcuts">
-    <a class="ma-shortcut" href="{{ route('mobile.analytics.meta', $q) }}">
-      <i class="fas fa-layer-group" aria-hidden="true"></i>
-      <span><strong>Meta</strong><span>KPI executive + sănătate</span></span>
-    </a>
-    <a class="ma-shortcut" href="{{ route('mobile.analytics.funnels', $q) }}">
-      <i class="fas fa-filter-circle-dollar" aria-hidden="true"></i>
-      <span><strong>Pâlnie conversie</strong><span>Drop-off pe etape</span></span>
-    </a>
-    <a class="ma-shortcut" href="{{ route('mobile.analytics.events', $q) }}">
-      <i class="fas fa-bolt" aria-hidden="true"></i>
-      <span><strong>Evenimente</strong><span>Pagini, bannere, feed</span></span>
-    </a>
-    <a class="ma-shortcut" href="{{ route('mobile.crashes', $q) }}">
-      <i class="fas fa-bug" aria-hidden="true"></i>
-      <span><strong>Crash-uri</strong><span>Stabilitate app</span></span>
-    </a>
-  </div>
+  <section class="ma-section">
+    <div class="ma-section__head">
+      <h2>Navigare rapidă</h2>
+      <p>Detalii pe ecrane separate</p>
+    </div>
+    <div class="ma-shortcuts">
+      <a class="ma-shortcut" href="{{ route('mobile.analytics.funnels', $q) }}">
+        <i class="fas fa-filter-circle-dollar" aria-hidden="true"></i>
+        <span><strong>Drum spre comandă</strong><span>Unde se pierde clientul</span></span>
+      </a>
+      <a class="ma-shortcut" href="{{ route('mobile.analytics.events', $q) }}">
+        <i class="fas fa-bolt" aria-hidden="true"></i>
+        <span><strong>Activitate</strong><span>Pagini, bannere, acțiuni</span></span>
+      </a>
+      <a class="ma-shortcut" href="{{ route('mobile.crashes', $q) }}">
+        <i class="fas fa-bug" aria-hidden="true"></i>
+        <span><strong>Erori aplicație</strong><span>Stabilitate</span></span>
+      </a>
+      <a class="ma-shortcut" href="{{ route('mobile.feedback', $q) }}">
+        <i class="fas fa-comment-dots" aria-hidden="true"></i>
+        <span><strong>Mesaje din app</strong><span>Rapoarte de la clienți</span></span>
+      </a>
+    </div>
+  </section>
 
+  <section class="ma-section">
+    <div class="ma-section__head">
+      <h2>Detalii</h2>
+      <p>Evoluție pe zile și acțiuni frecvente</p>
+    </div>
   <div class="ma-grid">
     <section class="ma-card">
       <div class="ma-card__head">
@@ -138,17 +153,20 @@
 
     <section class="ma-card">
       <div class="ma-card__head">
-        <h2><i class="fas fa-list-check" aria-hidden="true"></i> Top tipuri evenimente</h2>
-        <a class="ma-card__link" href="{{ route('mobile.analytics.event-types', $q) }}">Vezi toate →</a>
+        <h2><i class="fas fa-list-check" aria-hidden="true"></i> Cele mai frecvente acțiuni</h2>
+        <a class="ma-card__link" href="{{ route('mobile.analytics.event-types', $q) }}">Toate tipurile →</a>
       </div>
       <div class="ma-card__body">
         @if($eventBreakdown->isEmpty())
-          <div class="ma-empty"><i class="fas fa-inbox" aria-hidden="true"></i>Nu există evenimente în perioada selectată.</div>
+          <div class="ma-empty"><i class="fas fa-inbox" aria-hidden="true"></i>Nu există acțiuni în perioada selectată.</div>
         @else
           @foreach($eventBreakdown->take(10) as $row)
-            @php $pct = round(((int) $row->total / $maxEvent) * 100); @endphp
+            @php
+              $label = \App\Support\MobileLabels::event($row->event_name);
+              $pct = round(((int) $row->total / $maxEvent) * 100);
+            @endphp
             <div class="ma-bar-row">
-              <div class="ma-bar-row__label" title="{{ $row->event_name }}">{{ $row->event_name }}</div>
+              <div class="ma-bar-row__label" title="{{ $label }}">{{ $label }}</div>
               <div class="ma-bar-row__track"><div class="ma-bar-row__fill" style="width: {{ $pct }}%;"></div></div>
               <div class="ma-bar-row__value">{{ number_format((int) $row->total, 0, ',', '.') }}</div>
             </div>
@@ -157,11 +175,17 @@
       </div>
     </section>
   </div>
+  </section>
 
+  <section class="ma-section">
+    <div class="ma-section__head">
+      <h2>Ce caută oamenii</h2>
+      <p>Căutări și produse vizitate</p>
+    </div>
   <div class="ma-grid ma-grid--2">
     <section class="ma-card">
       <div class="ma-card__head">
-        <h2><i class="fas fa-magnifying-glass" aria-hidden="true"></i> Top căutări</h2>
+        <h2><i class="fas fa-magnifying-glass" aria-hidden="true"></i> Ce se caută cel mai des</h2>
       </div>
       <div class="ma-card__body">
         @if(($topSearches ?? collect())->isEmpty())
@@ -169,7 +193,7 @@
         @else
           <div class="ma-table-wrap">
             <table class="ma-table">
-              <thead><tr><th>Query</th><th class="num">Total</th></tr></thead>
+              <thead><tr><th>Căutare</th><th class="num">De câte ori</th></tr></thead>
               <tbody>
               @foreach($topSearches as $row)
                 <tr>
@@ -186,7 +210,7 @@
 
     <section class="ma-card">
       <div class="ma-card__head">
-        <h2><i class="fas fa-box-open" aria-hidden="true"></i> Top produse vizualizate</h2>
+        <h2><i class="fas fa-box-open" aria-hidden="true"></i> Produse privite cel mai des</h2>
       </div>
       <div class="ma-card__body">
         @if(($topProducts ?? collect())->isEmpty())
@@ -194,7 +218,7 @@
         @else
           <div class="ma-table-wrap">
             <table class="ma-table">
-              <thead><tr><th>Produs</th><th class="num">Total</th></tr></thead>
+              <thead><tr><th>Produs</th><th class="num">De câte ori</th></tr></thead>
               <tbody>
               @foreach($topProducts as $row)
                 <tr>
@@ -209,6 +233,7 @@
       </div>
     </section>
   </div>
+  </section>
 </div>
 @endsection
 
@@ -233,12 +258,12 @@ document.addEventListener('DOMContentLoaded', function () {
     order_completed: palette ? palette.emerald : { line: 'rgb(16, 185, 129)', area: 'rgba(16, 185, 129, 0.12)' }
   };
   var names = {
-    page_view: 'Pagini',
-    product_view: 'Produse',
+    page_view: 'Pagini deschise',
+    product_view: 'Produse privite',
     search: 'Căutări',
-    add_to_cart: 'În coș',
-    banner_click: 'Bannere',
-    cart_abandoned: 'Abandon',
+    add_to_cart: 'Adăugat în coș',
+    banner_click: 'Click pe banner',
+    cart_abandoned: 'Coș părăsit',
     order_completed: 'Comenzi'
   };
 

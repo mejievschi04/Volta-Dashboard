@@ -27,6 +27,9 @@
   @php $styleCssVersion = @filemtime(public_path('css/style.css')) ?: 0; @endphp
   <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ $styleCssVersion }}"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  @if(request()->routeIs('mobile.analytics*', 'mobile.crashes*', 'mobile.feedback*'))
+    <link rel="stylesheet" href="{{ asset('css/mobile-analytics.css') }}?v={{ @filemtime(public_path('css/mobile-analytics.css')) ?: 0 }}">
+  @endif
   @stack('styles')
 </head>
 <body>
@@ -58,37 +61,34 @@
         </a>
         @elseif($isMobileModule && $canAccessMobileModule)
         <a href="{{ route('mobile.analytics', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics') ? 'active' : '' }}">
-          <i class="fas fa-chart-line"></i><span class="txt">Prezentare</span>
-        </a>
-        <a href="{{ route('mobile.analytics.meta', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.meta') ? 'active' : '' }}">
-          <i class="fas fa-layer-group"></i><span class="txt">Meta</span>
+          <i class="fas fa-chart-line"></i><span class="txt">Panou general</span>
         </a>
         <a href="{{ route('mobile.analytics.events', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.events') ? 'active' : '' }}">
-          <i class="fas fa-bolt"></i><span class="txt">Evenimente</span>
+          <i class="fas fa-bolt"></i><span class="txt">Activitate</span>
         </a>
         <a href="{{ route('mobile.analytics.funnels', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.funnels') ? 'active' : '' }}">
-          <i class="fas fa-filter-circle-dollar"></i><span class="txt">Pâlnie</span>
+          <i class="fas fa-filter-circle-dollar"></i><span class="txt">Drum spre comandă</span>
         </a>
         <a href="{{ route('mobile.analytics.pages', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.pages') ? 'active' : '' }}">
-          <i class="fas fa-file-lines"></i><span class="txt">Pagini</span>
+          <i class="fas fa-file-lines"></i><span class="txt">Pagini vizitate</span>
         </a>
         <a href="{{ route('mobile.analytics.event-types', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.event-types') ? 'active' : '' }}">
-          <i class="fas fa-list-check"></i><span class="txt">Tipuri</span>
+          <i class="fas fa-list-check"></i><span class="txt">Tipuri de acțiuni</span>
         </a>
         <a href="{{ route('mobile.analytics.banners', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.banners') ? 'active' : '' }}">
           <i class="fas fa-rectangle-ad"></i><span class="txt">Bannere</span>
         </a>
         <a href="{{ route('mobile.analytics.recent-events', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.recent-events') ? 'active' : '' }}">
-          <i class="fas fa-clock-rotate-left"></i><span class="txt">Recente</span>
+          <i class="fas fa-clock-rotate-left"></i><span class="txt">Ultimele acțiuni</span>
         </a>
         <a href="{{ route('mobile.analytics.abandon', $mobileQuery) }}" class="{{ request()->routeIs('mobile.analytics.abandon') ? 'active' : '' }}">
-          <i class="fas fa-cart-arrow-down"></i><span class="txt">Abandon coș</span>
+          <i class="fas fa-cart-arrow-down"></i><span class="txt">Coșuri părăsite</span>
         </a>
         <a href="{{ route('mobile.crashes', $mobileQuery) }}" class="{{ request()->routeIs('mobile.crashes*') ? 'active' : '' }}">
-          <i class="fas fa-bug"></i><span class="txt">Crash-uri</span>
+          <i class="fas fa-bug"></i><span class="txt">Erori aplicație</span>
         </a>
         <a href="{{ route('mobile.feedback', $mobileQuery) }}" class="{{ request()->routeIs('mobile.feedback*') ? 'active' : '' }}">
-          <i class="fas fa-comment-dots"></i><span class="txt">Feedback</span>
+          <i class="fas fa-comment-dots"></i><span class="txt">Mesaje din app</span>
         </a>
         @else
         <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">

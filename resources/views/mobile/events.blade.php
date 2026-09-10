@@ -1,26 +1,23 @@
 @extends('layouts.app')
 
-@section('title', 'Volta App – Evenimente – VOLTA')
+@section('title', 'Volta App – Activitate – VOLTA')
 @section('header-title', 'Volta App')
-
-@push('styles')
-<link rel="stylesheet" href="{{ url('css/mobile-analytics.css') }}">
-@endpush
 
 @section('content')
 @php $q = request()->only(['start', 'end']); @endphp
 
 <div class="ma-page">
   @if(isset($schemaReady) && !$schemaReady)
-    <div class="ma-alert">Tabela pentru evenimente mobile nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
+    <div class="ma-alert">Tabela pentru datele din aplicație nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
   @endif
 
   <section class="ma-hero">
     <div class="ma-hero__row">
       <div>
-        <h1 class="ma-hero__title">Evenimente</h1>
+        <p class="ma-kicker">Aplicația Volta</p>
+        <h1 class="ma-hero__title">Activitate</h1>
         <p class="ma-hero__lead">
-          Pagini vizitate, performanța bannerelor și feed-ul recent de acțiuni din app.
+          Ce pagini s-au deschis, cum merge publicitatea și ultimele acțiuni din aplicație.
         </p>
       </div>
       <form method="get" action="{{ route('mobile.analytics.events') }}" class="ma-filters">
@@ -39,12 +36,12 @@
 
   <div class="ma-kpis">
     <div class="ma-kpi">
-      <span class="ma-kpi__label"><i class="fas fa-bolt" aria-hidden="true"></i> Evenimente</span>
+      <span class="ma-kpi__label"><i class="fas fa-bolt" aria-hidden="true"></i> Acțiuni</span>
       <div class="ma-kpi__value">{{ number_format($summary['events'], 0, ',', '.') }}</div>
       <span class="ma-kpi__help">Total pe interval</span>
     </div>
     <div class="ma-kpi">
-      <span class="ma-kpi__label"><i class="fas fa-file-lines" aria-hidden="true"></i> Page views</span>
+      <span class="ma-kpi__label"><i class="fas fa-file-lines" aria-hidden="true"></i> Pagini deschise</span>
       <div class="ma-kpi__value">{{ number_format($summary['page_views'], 0, ',', '.') }}</div>
       <span class="ma-kpi__help">{{ number_format($summary['avg_page_seconds'], 0, ',', '.') }}s timp mediu</span>
     </div>
@@ -54,9 +51,9 @@
       <span class="ma-kpi__help">Interacțiuni promo</span>
     </div>
     <div class="ma-kpi ma-kpi--accent">
-      <span class="ma-kpi__label"><i class="fas fa-users" aria-hidden="true"></i> Sesiuni</span>
+        <span class="ma-kpi__label"><i class="fas fa-users" aria-hidden="true"></i> Vizite</span>
       <div class="ma-kpi__value">{{ number_format($summary['sessions'], 0, ',', '.') }}</div>
-      <span class="ma-kpi__help">{{ number_format($summary['events_per_session'] ?? 0, 1, ',', '.') }} evenimente/sesiune</span>
+      <span class="ma-kpi__help">{{ number_format($summary['events_per_session'] ?? 0, 1, ',', '.') }} acțiuni pe vizită</span>
     </div>
   </div>
 
@@ -71,11 +68,11 @@
     </a>
     <a class="ma-shortcut" href="{{ route('mobile.analytics.event-types', $q) }}">
       <i class="fas fa-list-check" aria-hidden="true"></i>
-      <span><strong>Tipuri</strong><span>Breakdown evenimente</span></span>
+      <span><strong>Tipuri de acțiuni</strong><span>Câte din fiecare</span></span>
     </a>
     <a class="ma-shortcut" href="{{ route('mobile.analytics.recent-events', $q) }}">
       <i class="fas fa-clock-rotate-left" aria-hidden="true"></i>
-      <span><strong>Recente</strong><span>Feed live</span></span>
+      <span><strong>Ultimele acțiuni</strong><span>În ordine cronologică</span></span>
     </a>
   </div>
 
@@ -88,7 +85,7 @@
       <div class="ma-card__body ma-table-wrap">
         <table class="ma-table">
           <thead>
-            <tr><th>Pagină</th><th class="num">Views</th><th class="num">Timp mediu</th><th class="num">Evenimente</th></tr>
+            <tr><th>Pagină</th><th class="num">Deschideri</th><th class="num">Timp mediu</th><th class="num">Acțiuni</th></tr>
           </thead>
           <tbody>
           @forelse($topPages as $page)
@@ -134,22 +131,22 @@
 
   <section class="ma-card">
     <div class="ma-card__head">
-      <h2><i class="fas fa-clock-rotate-left" aria-hidden="true"></i> Flux evenimente recente</h2>
-      <a class="ma-card__link" href="{{ route('mobile.analytics.recent-events', $q) }}">Feed complet →</a>
+      <h2><i class="fas fa-clock-rotate-left" aria-hidden="true"></i> Ultimele acțiuni</h2>
+      <a class="ma-card__link" href="{{ route('mobile.analytics.recent-events', $q) }}">Toate acțiunile →</a>
     </div>
     <div class="ma-card__body ma-table-wrap">
       @if($recentEvents->isEmpty())
-        <div class="ma-empty"><i class="fas fa-inbox" aria-hidden="true"></i>Nu există evenimente recente în perioada selectată.</div>
+          <div class="ma-empty"><i class="fas fa-inbox" aria-hidden="true"></i>Nu există acțiuni recente în perioada selectată.</div>
       @else
         <table class="ma-table">
           <thead>
-            <tr><th>Ora</th><th>Eveniment</th><th>Pagină</th><th>User</th><th>Sesiune</th><th>Detalii</th></tr>
+            <tr><th>Ora</th><th>Acțiune</th><th>Pagină</th><th>Utilizator</th><th>Vizită</th><th>Detalii</th></tr>
           </thead>
           <tbody>
           @foreach($recentEvents as $event)
             <tr>
               <td class="ma-muted">{{ optional($event->occurred_at)->format('d.m H:i') }}</td>
-              <td><span class="ma-badge">{{ $event->event_name }}</span></td>
+              <td><span class="ma-badge">{{ \App\Support\MobileLabels::event($event->event_name) }}</span></td>
               <td>{{ $event->page ?: '—' }}</td>
               <td>{{ $event->mobile_user_id ?: '—' }}</td>
               <td class="ma-muted">{{ $event->session_id ? \Illuminate\Support\Str::limit($event->session_id, 14) : '—' }}</td>

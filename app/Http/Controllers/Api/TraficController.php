@@ -9,6 +9,7 @@ use App\Models\OnecKpiSync;
 use App\Support\DbDate;
 use App\Support\LunaRomana;
 use App\Services\GoogleAnalyticsService;
+use App\Support\DashboardCache;
 use Illuminate\Support\Facades\DB;
 
 class TraficController extends Controller
@@ -18,8 +19,33 @@ class TraficController extends Controller
         $luna = $request->get('month');
         $startDate = $request->get('start_date');
         $endDate = $request->get('end_date');
-        
+
         try {
+            $payload = DashboardCache::flexible(
+                'trafic:'.$luna.':'.$startDate.':'.$endDate,
+                $luna ? DashboardCache::ttlForMonth($luna) : DashboardCache::ttlLive(),
+                fn () => $this->buildIndexPayload($luna, $startDate, $endDate)
+            );
+
+            return response()->json($payload);
+        } catch (\Exception $e) {
+            \Log::error('TraficController error', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ], 500);
+        }
+    }
+
+    private function buildIndexPayload($luna, $startDate, $endDate): array
+    {
             $query = TrafficSource::query();
             
             // Dacă avem start_date și end_date, folosim perioada
@@ -246,7 +272,7 @@ class TraficController extends Controller
             $referral = ($totals['yandex'] ?? 0) + ($totals['other'] ?? 0);
             $googleCpc = $totals['google_cpc'] ?? 0;
             
-            return response()->json([
+            return [
                 'success' => true,
                 'month' => $luna,
                 'start_date' => $startDate,
@@ -262,24 +288,8 @@ class TraficController extends Controller
                     'directe' => $directe,
                     'referral' => $referral,
                     'google_cpc' => $googleCpc,
-                ]
-            ]);
-            
-        } catch (\Exception $e) {
-            \Log::error('TraficController error', [
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
-            ], 500);
-        }
+                ],
+            ];
     }
 
     /**
@@ -301,6 +311,17 @@ class TraficController extends Controller
             [$startMonth, $endMonth] = [$endMonth, $startMonth];
         }
 
+        $payload = DashboardCache::flexible(
+            'trafic-raport:'.$startMonth.':'.$endMonth,
+            DashboardCache::ttlForMonth($endMonth),
+            fn () => $this->buildRaportPayload($startMonth, $endMonth, $gaService)
+        );
+
+        return response()->json($payload);
+    }
+
+    private function buildRaportPayload(string $startMonth, string $endMonth, GoogleAnalyticsService $gaService): array
+    {
         $months = $this->monthKeysBetween($startMonth, $endMonth);
         $gaByMonth = [];
         $gaWarning = null;
@@ -367,7 +388,7 @@ class TraficController extends Controller
             ? round($totals['conversion_weighted'] / $totals['rate_months'], 2)
             : null;
 
-        return response()->json([
+        return [
             'success' => true,
             'start_month' => $startMonth,
             'end_month' => $endMonth,
@@ -384,7 +405,7 @@ class TraficController extends Controller
                 'conversion_rate' => $avgConversie,
             ],
             'ga_warning' => $gaWarning,
-        ]);
+        ];
     }
 
     private function normalizeMonthKey(?string $value): ?string

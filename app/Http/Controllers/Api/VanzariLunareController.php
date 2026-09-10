@@ -8,13 +8,30 @@ use App\Models\PlanVanzari;
 use App\Models\OnecKpiSync;
 use App\Models\TrafficSource;
 use App\Support\DbDate;
+use App\Support\DashboardCache;
 
 class VanzariLunareController extends Controller
 {
     public function index(Request $request)
     {
         try {
-            // Perioadă fixă: din ianuarie 2023 până la sfârșitul lunii curente
+            $payload = DashboardCache::flexible(
+                'vanzari-lunare:'.date('Y-m'),
+                DashboardCache::ttlLive(),
+                fn () => $this->buildIndexPayload()
+            );
+
+            return response()->json($payload);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    private function buildIndexPayload(): array
+    {
             $firstDate = '2023-01-01';
             $lastDate = date('Y-m-t');
             $onecByMonth = collect();
@@ -112,7 +129,7 @@ class VanzariLunareController extends Controller
                 $currentDate->modify('+1 month');
             }
 
-            return response()->json([
+            return [
                 'success' => true,
                 'luni' => $luni,
                 'data' => $data,
@@ -122,13 +139,6 @@ class VanzariLunareController extends Controller
                     'totalMonths' => $totalMonths,
                     'currentMonth' => date('Y-m')
                 ]
-            ]);
-            
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
-        }
+            ];
     }
 }

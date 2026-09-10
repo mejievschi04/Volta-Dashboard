@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Support\DashboardCache;
 
 class OneCController extends Controller
 {
@@ -357,6 +358,8 @@ class OneCController extends Controller
                 OnecKpiSync::whereIn('id', $sameMonthIds)->delete();
             }
         });
+
+        DashboardCache::bump();
 
         return $sync;
     }

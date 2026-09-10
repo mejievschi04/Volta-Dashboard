@@ -1,23 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Volta App – Tipuri evenimente – VOLTA')
+@section('title', 'Volta App – Tipuri de acțiuni – VOLTA')
 @section('header-title', 'Volta App')
-
-@push('styles')
-<link rel="stylesheet" href="{{ url('css/mobile-analytics.css') }}">
-@endpush
 
 @section('content')
 <div class="ma-page">
   @if(!$schemaReady)
-    <div class="ma-alert">Tabela pentru evenimente mobile nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
+    <div class="ma-alert">Tabela pentru datele din aplicație nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
   @endif
 
   <section class="ma-hero">
     <div class="ma-hero__row">
       <div>
-        <h1 class="ma-hero__title">Tipuri evenimente</h1>
-        <p class="ma-hero__lead">Distribuția completă pe tipuri de evenimente din aplicație.</p>
+        <p class="ma-kicker">Aplicația Volta</p>
+        <h1 class="ma-hero__title">Tipuri de acțiuni</h1>
+        <p class="ma-hero__lead">Câte acțiuni din fiecare fel s-au înregistrat în aplicație.</p>
       </div>
       <form method="get" action="{{ route('mobile.analytics.event-types') }}" class="ma-filters">
         <div class="ma-field"><label for="typesStart">De la</label><input id="typesStart" type="date" name="start" value="{{ $start->format('Y-m-d') }}"></div>
@@ -29,19 +26,19 @@
 
   <section class="ma-card">
     <div class="ma-card__head">
-      <h2><i class="fas fa-list-check" aria-hidden="true"></i> Breakdown</h2>
+      <h2><i class="fas fa-list-check" aria-hidden="true"></i> Clasament</h2>
       @if($schemaReady && $eventTypes)
         <span class="ma-muted">{{ number_format($eventTypes->total(), 0, ',', '.') }} tipuri</span>
       @endif
     </div>
     <div class="ma-card__body ma-table-wrap">
       <table class="ma-table">
-        <thead><tr><th>Eveniment</th><th class="num">Total</th></tr></thead>
+        <thead><tr><th>Acțiune</th><th class="num">Total</th></tr></thead>
         <tbody>
         @if($schemaReady && $eventTypes && $eventTypes->count())
           @foreach($eventTypes as $row)
             <tr>
-              <td><span class="ma-badge">{{ $row->event_name }}</span></td>
+              <td><span class="ma-badge">{{ \App\Support\MobileLabels::event($row->event_name) }}</span></td>
               <td class="num">{{ number_format((int) $row->total, 0, ',', '.') }}</td>
             </tr>
           @endforeach

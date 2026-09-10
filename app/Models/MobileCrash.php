@@ -32,4 +32,19 @@ class MobileCrash extends Model
         'metadata' => 'array',
         'occurred_at' => 'datetime',
     ];
+
+    public const LIST_COLUMNS = [
+        'id',
+        'fingerprint',
+        'error_type',
+        'error_message',
+        'is_fatal',
+        'screen',
+        'session_id',
+        'mobile_user_id',
+        'device_id',
+        'platform',
+        'app_version',
+        'occurred_at',
+    ];
 }

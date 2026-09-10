@@ -7,7 +7,8 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Schema;
+use App\Support\DashboardCache;
+use App\Support\MobileRetention;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -16,7 +17,7 @@ class MobileFeedbackController extends Controller
     public function index(Request $request)
     {
         [$start, $end] = $this->resolvePeriod($request);
-        $schemaReady = Schema::hasTable('mobile_feedback_reports');
+        $schemaReady = DashboardCache::tableExists('mobile_feedback_reports');
         $reports = null;
         $summary = [
             'total' => 0,
@@ -26,21 +27,30 @@ class MobileFeedbackController extends Controller
         ];
 
         if ($schemaReady) {
-            $base = MobileFeedbackReport::query()->whereBetween('occurred_at', [$start, $end]);
-            $counts = (clone $base)->selectRaw(<<<'SQL'
-                COUNT(*) as total,
-                SUM(CASE WHEN has_screenshot = 1 THEN 1 ELSE 0 END) as with_screenshot,
-                COUNT(DISTINCT device_id) as devices,
-                COUNT(DISTINCT mobile_user_id) as users
-            SQL)->first();
-            $summary = [
-                'total' => (int) $counts->total,
-                'with_screenshot' => (int) $counts->with_screenshot,
-                'devices' => (int) $counts->devices,
-                'users' => (int) $counts->users,
-            ];
+            $summary = DashboardCache::flexible(
+                'mobile:feedback-summary:v1:'.$start->timestamp.':'.$end->timestamp,
+                DashboardCache::ttlMobile(),
+                function () use ($start, $end) {
+                    $counts = MobileFeedbackReport::query()
+                        ->whereBetween('occurred_at', [$start, $end])
+                        ->selectRaw(<<<'SQL'
+                            COUNT(*) as total,
+                            SUM(CASE WHEN has_screenshot = 1 THEN 1 ELSE 0 END) as with_screenshot,
+                            COUNT(DISTINCT device_id) as devices,
+                            COUNT(DISTINCT mobile_user_id) as users
+                        SQL)->first();
+
+                    return [
+                        'total' => (int) $counts->total,
+                        'with_screenshot' => (int) $counts->with_screenshot,
+                        'devices' => (int) $counts->devices,
+                        'users' => (int) $counts->users,
+                    ];
+                }
+            );
 
             $reports = MobileFeedbackReport::query()
+                ->select(MobileFeedbackReport::LIST_COLUMNS)
                 ->whereBetween('occurred_at', [$start, $end])
                 ->latest('occurred_at')
                 ->paginate(50)
@@ -52,7 +62,7 @@ class MobileFeedbackController extends Controller
 
     public function show(Request $request, MobileFeedbackReport $report)
     {
-        $schemaReady = Schema::hasTable('mobile_feedback_reports');
+        $schemaReady = DashboardCache::tableExists('mobile_feedback_reports');
         [$start, $end] = $this->resolvePeriod($request);
 
         return view('mobile.feedback-detail', compact('report', 'schemaReady', 'start', 'end'));
@@ -78,7 +88,7 @@ class MobileFeedbackController extends Controller
             }
         }
 
-        if (! Schema::hasTable('mobile_feedback_reports')) {
+        if (! DashboardCache::tableExists('mobile_feedback_reports')) {
             return response()->json(['success' => false, 'error' => 'Feedback table missing.'], 503);
         }
 
@@ -194,25 +204,7 @@ class MobileFeedbackController extends Controller
 
     private function resolvePeriod(Request $request): array
     {
-        $end = Carbon::today()->endOfDay();
-        $start = Carbon::today()->subDays(29)->startOfDay();
-
-        try {
-            if ($request->filled('start')) {
-                $start = Carbon::parse($request->input('start'))->startOfDay();
-            }
-            if ($request->filled('end')) {
-                $end = Carbon::parse($request->input('end'))->endOfDay();
-            }
-        } catch (\Throwable) {
-            // keep defaults
-        }
-
-        if ($start->gt($end)) {
-            [$start, $end] = [$end->copy()->startOfDay(), $start->copy()->endOfDay()];
-        }
-
-        return [$start, $end];
+        return MobileRetention::resolvePeriod($request);
     }
 
     private function parseOccurredAt(mixed $value): Carbon

@@ -110,26 +110,19 @@ class GoogleAnalyticsController extends Controller
             \DB::beginTransaction();
             
             try {
-                // Ștergem datele existente pentru perioada selectată DOAR dacă avem date noi de inserat
-                if (count($processedData) > 0) {
-                    $deletedRows = TrafficSource::whereBetween('date', [$startDate, $endDate])->delete();
-                }
+                $upsertRows = [];
 
-                // Inserăm datele noi în baza de date
                 foreach ($processedData as $date => $sources) {
                     $totalVisits = 0;
                     $totalNewUsers = 0;
                     $totalReturningUsers = 0;
 
-                    // Calculăm totalurile pentru această zi
                     foreach ($sources as $source => $data) {
-                        // Verificăm dacă este format vechi (doar număr) sau nou (array)
                         if (is_array($data)) {
                             $visits = $data['visits'] ?? 0;
                             $newUsers = $data['new_users'] ?? 0;
                             $returningUsers = $data['returning_users'] ?? 0;
                         } else {
-                            // Compatibilitate cu formatul vechi
                             $visits = $data;
                             $newUsers = 0;
                             $returningUsers = 0;
@@ -139,64 +132,40 @@ class GoogleAnalyticsController extends Controller
                         $totalNewUsers += $newUsers;
                         $totalReturningUsers += $returningUsers;
 
-                        try {
-                            // Folosim updateOrCreate pentru a evita duplicatele
-                            TrafficSource::updateOrCreate(
-                                [
-                                    'source' => $source,
-                                    'date' => $date,
-                                ],
-                                [
-                                    'visits' => $visits,
-                                    'new_users' => $newUsers,
-                                    'returning_users' => $returningUsers,
-                                ]
-                            );
-
-                            $inserted++;
-                        } catch (\Exception $e) {
-                            $errors[] = "Eroare la salvarea datelor pentru {$source} pe {$date}: " . $e->getMessage();
-                            \Log::error("GA Insert error", [
-                                'source' => $source,
-                                'date' => $date,
-                                'error' => $e->getMessage()
-                            ]);
-                        }
+                        $upsertRows[] = [
+                            'source' => $source,
+                            'date' => $date,
+                            'visits' => $visits,
+                            'new_users' => $newUsers,
+                            'returning_users' => $returningUsers,
+                        ];
                     }
 
-                    // Inserăm și totalul
                     if ($totalVisits > 0 || $totalNewUsers > 0 || $totalReturningUsers > 0) {
-                        try {
-                            TrafficSource::updateOrCreate(
-                                [
-                                    'source' => 'total',
-                                    'date' => $date,
-                                ],
-                                [
-                                    'visits' => $totalVisits,
-                                    'new_users' => $totalNewUsers,
-                                    'returning_users' => $totalReturningUsers,
-                                ]
-                            );
-
-                            $inserted++;
-                        } catch (\Exception $e) {
-                            $errors[] = "Eroare la salvarea totalului pentru {$date}: " . $e->getMessage();
-                            \Log::error("GA Insert total error", [
-                                'date' => $date,
-                                'error' => $e->getMessage()
-                            ]);
-                        }
+                        $upsertRows[] = [
+                            'source' => 'total',
+                            'date' => $date,
+                            'visits' => $totalVisits,
+                            'new_users' => $totalNewUsers,
+                            'returning_users' => $totalReturningUsers,
+                        ];
                     }
                 }
 
-                // Dacă avem prea multe erori, facem rollback
-                if (count($errors) > 50) {
-                    \DB::rollBack();
-                    throw new \Exception("Prea multe erori la inserare (" . count($errors) . "). Datele nu au fost modificate.");
+                if (count($upsertRows) > 0) {
+                    $deletedRows = TrafficSource::whereBetween('date', [$startDate, $endDate])->delete();
+                    foreach (array_chunk($upsertRows, 200) as $chunk) {
+                        TrafficSource::upsert(
+                            $chunk,
+                            ['source', 'date'],
+                            ['visits', 'new_users', 'returning_users']
+                        );
+                    }
+                    $inserted = count($upsertRows);
                 }
 
                 \DB::commit();
+                \App\Support\DashboardCache::bump();
                 
             } catch (\Exception $e) {
                 \DB::rollBack();
@@ -225,7 +194,7 @@ class GoogleAnalyticsController extends Controller
                 'line' => $e->getLine(),
             ]);
 
-            $errorMessage = $e->getMessage();
+            $errorMessage = $e->getMessage(); 
             if (strpos($errorMessage, 'Fișierul de credențiale') !== false) {
                 $errorMessage .= ' Încarcă service-account-credentials.json în storage/app/google-analytics/ pe server.';
             } elseif (strpos($errorMessage, 'Property ID') !== false) {

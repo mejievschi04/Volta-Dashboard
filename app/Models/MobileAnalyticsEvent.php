@@ -36,4 +36,16 @@ class MobileAnalyticsEvent extends Model
         'metadata' => 'array',
         'occurred_at' => 'datetime',
     ];
+
+    public const FEED_COLUMNS = [
+        'id',
+        'event_name',
+        'page',
+        'mobile_user_id',
+        'session_id',
+        'duration_ms',
+        'cart_total',
+        'banner_title',
+        'occurred_at',
+    ];
 }

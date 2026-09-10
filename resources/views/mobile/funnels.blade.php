@@ -1,36 +1,33 @@
 @extends('layouts.app')
 
-@section('title', 'Volta App – Pâlnie conversie – VOLTA')
+@section('title', 'Volta App – Drum spre comandă – VOLTA')
 @section('header-title', 'Volta App')
-
-@push('styles')
-<link rel="stylesheet" href="{{ url('css/mobile-analytics.css') }}">
-@endpush
 
 @section('content')
 @php
   $q = request()->only(['start', 'end']);
   $steps = [
-    ['key' => 'visits', 'label' => '1. Vizite pagini', 'value' => (int) ($funnel['visits'] ?? 0)],
-    ['key' => 'product_views', 'label' => '2. Vizualizări produs', 'value' => (int) ($funnel['product_views'] ?? 0), 'rate' => $funnel['visit_to_product_rate'] ?? 0, 'rateLabel' => 'din vizite'],
-    ['key' => 'add_to_cart', 'label' => '3. Adăugat în coș', 'value' => (int) ($funnel['add_to_cart'] ?? 0), 'rate' => $funnel['product_to_cart_rate'] ?? 0, 'rateLabel' => 'din produse'],
-    ['key' => 'checkout_started', 'label' => '4. Checkout început', 'value' => (int) ($funnel['checkout_started'] ?? 0), 'rate' => $funnel['cart_to_checkout_rate'] ?? 0, 'rateLabel' => 'din coș'],
-    ['key' => 'orders_completed', 'label' => '5. Comenzi finalizate', 'value' => (int) ($funnel['orders_completed'] ?? 0), 'rate' => $funnel['checkout_to_order_rate'] ?? 0, 'rateLabel' => 'din checkout'],
+    ['key' => 'visits', 'label' => '1. Pagini deschise', 'value' => (int) ($funnel['visits'] ?? 0)],
+    ['key' => 'product_views', 'label' => '2. Produse privite', 'value' => (int) ($funnel['product_views'] ?? 0), 'rate' => $funnel['visit_to_product_rate'] ?? 0, 'rateLabel' => 'din paginile deschise'],
+    ['key' => 'add_to_cart', 'label' => '3. Adăugat în coș', 'value' => (int) ($funnel['add_to_cart'] ?? 0), 'rate' => $funnel['product_to_cart_rate'] ?? 0, 'rateLabel' => 'din produsele privite'],
+    ['key' => 'checkout_started', 'label' => '4. A început plata', 'value' => (int) ($funnel['checkout_started'] ?? 0), 'rate' => $funnel['cart_to_checkout_rate'] ?? 0, 'rateLabel' => 'din coș'],
+    ['key' => 'orders_completed', 'label' => '5. Comandă finalizată', 'value' => (int) ($funnel['orders_completed'] ?? 0), 'rate' => $funnel['checkout_to_order_rate'] ?? 0, 'rateLabel' => 'din cei care au început plata'],
   ];
   $maxStep = max(1, ...array_column($steps, 'value'));
 @endphp
 
 <div class="ma-page">
   @if(isset($schemaReady) && !$schemaReady)
-    <div class="ma-alert">Tabela pentru evenimente mobile nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
+    <div class="ma-alert">Tabela pentru datele din aplicație nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
   @endif
 
   <section class="ma-hero">
     <div class="ma-hero__row">
       <div>
-        <h1 class="ma-hero__title">Pâlnie de conversie</h1>
+        <p class="ma-kicker">Aplicația Volta</p>
+        <h1 class="ma-hero__title">Drum spre comandă</h1>
         <p class="ma-hero__lead">
-          Parcursul de la vizită la comandă și punctele unde utilizatorii abandonează.
+          De la deschiderea paginii până la comandă și locurile unde clientul se oprește.
         </p>
       </div>
       <form method="get" action="{{ route('mobile.analytics.funnels') }}" class="ma-filters">
@@ -49,31 +46,31 @@
 
   <div class="ma-kpis">
     <div class="ma-kpi">
-      <span class="ma-kpi__label"><i class="fas fa-eye" aria-hidden="true"></i> Vizite → Produs</span>
+      <span class="ma-kpi__label"><i class="fas fa-eye" aria-hidden="true"></i> Din pagină la produs</span>
       <div class="ma-kpi__value">{{ number_format((float) ($funnel['visit_to_product_rate'] ?? 0), 1, ',', '.') }}%</div>
       <span class="ma-kpi__help">{{ number_format($funnel['product_views'] ?? 0, 0, ',', '.') }} / {{ number_format($funnel['visits'], 0, ',', '.') }}</span>
     </div>
     <div class="ma-kpi">
-      <span class="ma-kpi__label"><i class="fas fa-cart-plus" aria-hidden="true"></i> Produs → Coș</span>
+      <span class="ma-kpi__label"><i class="fas fa-cart-plus" aria-hidden="true"></i> Din produs în coș</span>
       <div class="ma-kpi__value">{{ number_format((float) ($funnel['product_to_cart_rate'] ?? 0), 1, ',', '.') }}%</div>
-      <span class="ma-kpi__help">{{ number_format($funnel['add_to_cart'] ?? 0, 0, ',', '.') }} add-to-cart</span>
+      <span class="ma-kpi__help">{{ number_format($funnel['add_to_cart'] ?? 0, 0, ',', '.') }} adăugări în coș</span>
     </div>
     <div class="ma-kpi ma-kpi--good">
-      <span class="ma-kpi__label"><i class="fas fa-bag-shopping" aria-hidden="true"></i> Checkout → Comandă</span>
+      <span class="ma-kpi__label"><i class="fas fa-bag-shopping" aria-hidden="true"></i> Din plată la comandă</span>
       <div class="ma-kpi__value">{{ number_format((float) $funnel['checkout_to_order_rate'], 1, ',', '.') }}%</div>
       <span class="ma-kpi__help">{{ number_format($funnel['orders_completed'], 0, ',', '.') }} comenzi</span>
     </div>
     <div class="ma-kpi ma-kpi--warn">
-      <span class="ma-kpi__label"><i class="fas fa-person-falling" aria-hidden="true"></i> Drop-off după checkout</span>
+      <span class="ma-kpi__label"><i class="fas fa-person-falling" aria-hidden="true"></i> Au plecat după plată</span>
       <div class="ma-kpi__value">{{ number_format((float) $funnel['dropoff_after_checkout_rate'], 1, ',', '.') }}%</div>
-      <span class="ma-kpi__help">{{ number_format($funnel['cart_abandoned'], 0, ',', '.') }} abandonuri · recuperare {{ number_format((float) $funnel['recovery_rate'], 1, ',', '.') }}%</span>
+      <span class="ma-kpi__help">{{ number_format($funnel['cart_abandoned'], 0, ',', '.') }} coșuri părăsite · recuperare {{ number_format((float) $funnel['recovery_rate'], 1, ',', '.') }}%</span>
     </div>
   </div>
 
   <div class="ma-grid">
     <section class="ma-card">
       <div class="ma-card__head">
-        <h2><i class="fas fa-stairs" aria-hidden="true"></i> Etape funnel</h2>
+        <h2><i class="fas fa-stairs" aria-hidden="true"></i> Pașii comenzii</h2>
       </div>
       <div class="ma-card__body">
         <div class="ma-funnel">
@@ -86,7 +83,7 @@
               </div>
               <div class="ma-funnel__bar"><div class="ma-funnel__fill" style="width: {{ $width }}%;"></div></div>
               @if(isset($step['rate']))
-                <div class="ma-funnel__rate">Conversie {{ number_format((float) $step['rate'], 1, ',', '.') }}% {{ $step['rateLabel'] }}</div>
+                <div class="ma-funnel__rate">{{ number_format((float) $step['rate'], 1, ',', '.') }}% {{ $step['rateLabel'] }}</div>
               @endif
             </div>
           @endforeach
@@ -113,9 +110,9 @@
       <table class="ma-table">
         <thead>
           <tr>
-            <th>Pas checkout</th>
-            <th class="num">Abandonuri</th>
-            <th class="num">Total mediu coș</th>
+            <th>Pas din plată</th>
+            <th class="num">Coșuri părăsite</th>
+            <th class="num">Valoare medie coș</th>
             <th class="num">Produse medii</th>
           </tr>
         </thead>
@@ -128,7 +125,7 @@
             <td class="num">{{ $row->avg_items_count !== null ? number_format((float) $row->avg_items_count, 1, ',', '.') : '—' }}</td>
           </tr>
         @empty
-          <tr><td colspan="4" class="ma-muted">Nu există abandonuri pentru perioada selectată.</td></tr>
+          <tr><td colspan="4" class="ma-muted">Nu există coșuri părăsite pentru perioada selectată.</td></tr>
         @endforelse
         </tbody>
       </table>
@@ -145,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!chartEl || typeof Chart === 'undefined') return;
 
   var funnel = @json($funnel);
-  var labels = ['Vizite', 'Produse', 'În coș', 'Checkout', 'Comenzi'];
+  var labels = ['Pagini deschise', 'Produse privite', 'În coș', 'A început plata', 'Comenzi'];
   var values = [
     funnel.visits || 0,
     funnel.product_views || 0,

@@ -17,7 +17,23 @@ class IstoricController extends Controller
     public function index(Request $request)
     {
         try {
-            // Perioadă fixă: din ianuarie 2023 până la luna curentă (ca la restul aplicației)
+            $payload = \App\Support\DashboardCache::flexible(
+                'istoric:'.date('Y-m'),
+                \App\Support\DashboardCache::ttlLive(),
+                fn () => $this->buildIndexPayload()
+            );
+
+            return response()->json($payload);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    private function buildIndexPayload(): array
+    {
             $firstDate = new \DateTime('2023-01-01');
             $endDate = new \DateTime();
             $endDate->modify('last day of this month');
@@ -148,16 +164,9 @@ class IstoricController extends Controller
                 }
             }
             
-            return response()->json([
+            return [
                 'success' => true,
                 'data' => $istoric
-            ]);
-            
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
-        }
+            ];
     }
 }

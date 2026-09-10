@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\GoogleAnalyticsService;
+use App\Support\DashboardCache;
 
 class GAAnalyticsController extends Controller
 {
@@ -15,141 +16,57 @@ class GAAnalyticsController extends Controller
         $this->gaService = $gaService;
     }
 
-    /**
-     * Obține date despre utilizatori
-     */
+    private function cachedReport(Request $request, string $name, callable $fetcher)
+    {
+        $startDate = $request->get('start_date', date('Y-m-01'));
+        $endDate = $request->get('end_date', date('Y-m-d'));
+
+        try {
+            $data = DashboardCache::flexible(
+                'ga-api:'.$name.':'.$startDate.':'.$endDate,
+                DashboardCache::ttlGa($endDate),
+                fn () => $fetcher($startDate, $endDate)
+            );
+
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function users(Request $request)
     {
-        try {
-            $startDate = $request->get('start_date', date('Y-m-01'));
-            $endDate = $request->get('end_date', date('Y-m-d'));
-            
-            $data = $this->gaService->fetchUsersData($startDate, $endDate);
-            
-            return response()->json([
-                'success' => true,
-                'data' => $data
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return $this->cachedReport($request, 'users', fn ($s, $e) => $this->gaService->fetchUsersData($s, $e));
     }
 
-    /**
-     * Obține date despre dispozitive
-     */
     public function devices(Request $request)
     {
-        try {
-            $startDate = $request->get('start_date', date('Y-m-01'));
-            $endDate = $request->get('end_date', date('Y-m-d'));
-            
-            $data = $this->gaService->fetchDevicesData($startDate, $endDate);
-            
-            return response()->json([
-                'success' => true,
-                'data' => $data
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return $this->cachedReport($request, 'devices', fn ($s, $e) => $this->gaService->fetchDevicesData($s, $e));
     }
 
-    /**
-     * Obține date geografice
-     */
     public function geo(Request $request)
     {
-        try {
-            $startDate = $request->get('start_date', date('Y-m-01'));
-            $endDate = $request->get('end_date', date('Y-m-d'));
-            
-            $data = $this->gaService->fetchGeoData($startDate, $endDate);
-            
-            return response()->json([
-                'success' => true,
-                'data' => $data
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return $this->cachedReport($request, 'geo', fn ($s, $e) => $this->gaService->fetchGeoData($s, $e));
     }
 
-    /**
-     * Obține date despre conținut
-     */
     public function content(Request $request)
     {
-        try {
-            $startDate = $request->get('start_date', date('Y-m-01'));
-            $endDate = $request->get('end_date', date('Y-m-d'));
-            
-            $data = $this->gaService->fetchContentData($startDate, $endDate);
-            
-            return response()->json([
-                'success' => true,
-                'data' => $data
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return $this->cachedReport($request, 'content', fn ($s, $e) => $this->gaService->fetchContentData($s, $e));
     }
 
-    /**
-     * Obține date despre e-commerce
-     */
     public function ecommerce(Request $request)
     {
-        try {
-            $startDate = $request->get('start_date', date('Y-m-01'));
-            $endDate = $request->get('end_date', date('Y-m-d'));
-            
-            $data = $this->gaService->fetchEcommerceData($startDate, $endDate);
-            
-            return response()->json([
-                'success' => true,
-                'data' => $data
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return $this->cachedReport($request, 'ecommerce', fn ($s, $e) => $this->gaService->fetchEcommerceData($s, $e));
     }
 
-    /**
-     * Obține date despre campanii
-     */
     public function campaigns(Request $request)
     {
-        try {
-            $startDate = $request->get('start_date', date('Y-m-01'));
-            $endDate = $request->get('end_date', date('Y-m-d'));
-            
-            $data = $this->gaService->fetchCampaignsData($startDate, $endDate);
-            
-            return response()->json([
-                'success' => true,
-                'data' => $data
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return $this->cachedReport($request, 'campaigns', fn ($s, $e) => $this->gaService->fetchCampaignsData($s, $e));
     }
 }

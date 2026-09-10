@@ -26,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         \App\Console\Commands\FetchOneCKpi::class,
         \App\Console\Commands\SyncGa4Traffic::class,
         \App\Console\Commands\EnsureDevUser::class,
-        \App\Console\Commands\BackfillLivrariRaioane::class,
+        \App\Console\Commands\PruneMobileTelemetry::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {
         // Adăugăm logging pentru middleware auth

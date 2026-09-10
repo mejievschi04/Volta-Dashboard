@@ -187,15 +187,15 @@
     <nav class="mobile-shell__module-nav" aria-label="Navigare Statistici Mobile">
       <a href="{{ route('mobile.analytics', $mobileQuery) }}" class="mobile-shell__module-link {{ request()->routeIs('mobile.analytics') ? 'is-active' : '' }}">
         <i class="fas fa-chart-line" aria-hidden="true"></i>
-        <span>Prezentare</span>
+        <span>Panou general</span>
       </a>
       <a href="{{ route('mobile.analytics.events', $mobileQuery) }}" class="mobile-shell__module-link {{ request()->routeIs('mobile.analytics.events') ? 'is-active' : '' }}">
         <i class="fas fa-bolt" aria-hidden="true"></i>
-        <span>Evenimente</span>
+        <span>Activitate</span>
       </a>
       <a href="{{ route('mobile.analytics.funnels', $mobileQuery) }}" class="mobile-shell__module-link {{ request()->routeIs('mobile.analytics.funnels') ? 'is-active' : '' }}">
         <i class="fas fa-filter-circle-dollar" aria-hidden="true"></i>
-        <span>Pâlnie conversie</span>
+        <span>Drum spre comandă</span>
       </a>
     </nav>
 

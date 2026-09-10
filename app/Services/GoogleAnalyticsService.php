@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Support\DashboardCache;
 use Exception;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class GoogleAnalyticsService
 {
@@ -65,7 +67,19 @@ class GoogleAnalyticsService
     /**
      * Obține access token folosind Service Account
      */
+    private function tokenCacheKey(): string
+    {
+        return 'ga:access_token:'.md5((string) $this->propertyId.'|'.(string) $this->credentialsPath);
+    }
+
     private function getAccessToken()
+    {
+        return Cache::remember($this->tokenCacheKey(), now()->addMinutes(50), function () {
+            return $this->requestAccessToken();
+        });
+    }
+
+    private function requestAccessToken()
     {
         $this->ensureCredentialsLoaded();
         
@@ -84,6 +98,7 @@ class GoogleAnalyticsService
             
             $response = Http::timeout(30)
                 ->connectTimeout(10)
+                ->retry(2, 250)
                 ->withOptions([
                     'verify' => $sslVerify,
                 ])
@@ -225,8 +240,6 @@ class GoogleAnalyticsService
             throw new Exception("Property ID nu este configurat! Verifică config/google-analytics.php");
         }
 
-        $accessToken = $this->getAccessToken();
-
         $url = "https://analyticsdata.googleapis.com/v1beta/properties/{$this->propertyId}:runReport";
 
         $requestBody = [
@@ -254,88 +267,7 @@ class GoogleAnalyticsService
             ]
         ];
 
-        // Încercăm mai întâi cu HTTP Client-ul Laravel
-        try {
-            $sslVerify = filter_var(env('GA_SSL_VERIFY', false), FILTER_VALIDATE_BOOLEAN);
-            
-            $response = Http::timeout(30)
-                ->connectTimeout(10)
-                ->withOptions([
-                    'verify' => $sslVerify,
-                ])
-                ->withToken($accessToken)
-                ->post($url, $requestBody);
-
-            if ($response->successful()) {
-                $data = $response->json();
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    Log::error("GA API JSON decode failed", [
-                        'error' => json_last_error_msg(),
-                        'response' => substr($response->body(), 0, 500)
-                    ]);
-                    throw new Exception("Eroare la decodarea răspunsului JSON: " . json_last_error_msg());
-                }
-                return $data;
-            }
-
-            Log::error("GA API request failed (HTTP Client)", [
-                'status' => $response->status(),
-                'response' => $response->body(),
-                'url' => $url
-            ]);
-            throw new Exception("Eroare la cererea către GA4 API: HTTP {$response->status()} - {$response->body()}");
-            
-        } catch (\Exception $e) {
-            // Fallback la cURL dacă HTTP Client eșuează
-            Log::warning("GA API HTTP Client failed, trying cURL", ['error' => $e->getMessage()]);
-            
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestBody));
-            
-            // Configurare SSL - pentru XAMPP pe Windows, dezactivăm verificarea
-            $sslVerify = filter_var(env('GA_SSL_VERIFY', false), FILTER_VALIDATE_BOOLEAN);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $sslVerify);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $sslVerify ? 2 : 0);
-            
-            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Authorization: Bearer ' . $accessToken,
-                'Content-Type: application/json'
-            ]);
-
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $curlError = curl_error($ch);
-            curl_close($ch);
-
-            if ($curlError) {
-                Log::error("GA API curl error", ['error' => $curlError]);
-                throw new Exception("Eroare cURL la extragerea datelor din GA4: {$curlError}");
-            }
-
-            if ($httpCode !== 200) {
-                Log::error("GA API request failed", [
-                    'http_code' => $httpCode,
-                    'response' => $response,
-                    'url' => $url
-                ]);
-                throw new Exception("Eroare la cererea către GA4 API: HTTP {$httpCode} - {$response}");
-            }
-
-            $data = json_decode($response, true);
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                Log::error("GA API JSON decode failed", [
-                    'error' => json_last_error_msg(),
-                    'response' => substr($response, 0, 500)
-                ]);
-                throw new Exception("Eroare la decodarea răspunsului JSON: " . json_last_error_msg());
-            }
-
-            return $data;
-        }
+        return $this->makeApiRequest($url, $this->getAccessToken(), $requestBody, $endDate);
     }
 
     /**
@@ -643,36 +575,47 @@ class GoogleAnalyticsService
     }
 
     /**
-     * Face o cerere către GA4 API
+     * Face o cerere către GA4 API (cu cache fresh/stale și retry).
      */
-    private function makeApiRequest($url, $accessToken, $requestBody)
+    private function makeApiRequest($url, $accessToken, $requestBody, $endDate = null)
     {
-        try {
-            $sslVerify = filter_var(env('GA_SSL_VERIFY', false), FILTER_VALIDATE_BOOLEAN);
-            
-            $response = Http::timeout(30)
-                ->connectTimeout(10)
-                ->withOptions(['verify' => $sslVerify])
-                ->withToken($accessToken)
-                ->post($url, $requestBody);
+        $endDate = $endDate
+            ?? ($requestBody['dateRanges'][0]['endDate'] ?? date('Y-m-d'));
+        $cacheKey = 'ga:report:'.md5(json_encode([$this->propertyId, $url, $requestBody]));
 
-            if ($response->successful()) {
-                $data = $response->json();
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    throw new Exception("Eroare la decodarea răspunsului JSON: " . json_last_error_msg());
+        return DashboardCache::flexible($cacheKey, DashboardCache::ttlGa((string) $endDate), function () use ($url, $accessToken, $requestBody) {
+            try {
+                $sslVerify = filter_var(env('GA_SSL_VERIFY', true), FILTER_VALIDATE_BOOLEAN);
+
+                $response = Http::timeout(30)
+                    ->connectTimeout(10)
+                    ->retry(2, 250)
+                    ->withOptions(['verify' => $sslVerify])
+                    ->withToken($accessToken)
+                    ->post($url, $requestBody);
+
+                if ($response->status() === 401) {
+                    Cache::forget($this->tokenCacheKey());
                 }
-                return $data;
-            }
 
-            throw new Exception("Eroare la cererea către GA4 API: HTTP {$response->status()} - {$response->body()}");
-            
-        } catch (\Exception $e) {
-            Log::error("GA API request failed", [
-                'error' => $e->getMessage(),
-                'url' => $url
-            ]);
-            throw $e;
-        }
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (json_last_error() !== JSON_ERROR_NONE) {
+                        throw new Exception("Eroare la decodarea răspunsului JSON: " . json_last_error_msg());
+                    }
+
+                    return $data;
+                }
+
+                throw new Exception("Eroare la cererea către GA4 API: HTTP {$response->status()} - {$response->body()}");
+            } catch (\Exception $e) {
+                Log::error("GA API request failed", [
+                    'error' => $e->getMessage(),
+                    'url' => $url,
+                ]);
+                throw $e;
+            }
+        });
     }
 }
 

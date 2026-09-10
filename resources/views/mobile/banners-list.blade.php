@@ -3,19 +3,16 @@
 @section('title', 'Volta App – Bannere – VOLTA')
 @section('header-title', 'Volta App')
 
-@push('styles')
-<link rel="stylesheet" href="{{ url('css/mobile-analytics.css') }}">
-@endpush
-
 @section('content')
 <div class="ma-page">
   @if(!$schemaReady)
-    <div class="ma-alert">Tabela pentru evenimente mobile nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
+    <div class="ma-alert">Tabela pentru datele din aplicație nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
   @endif
 
   <section class="ma-hero">
     <div class="ma-hero__row">
       <div>
+        <p class="ma-kicker">Aplicația Volta</p>
         <h1 class="ma-hero__title">Bannere</h1>
         <p class="ma-hero__lead">Performanța bannerelor din app: click-uri și ultima interacțiune.</p>
       </div>

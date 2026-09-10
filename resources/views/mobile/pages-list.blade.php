@@ -1,23 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Volta App – Pagini – VOLTA')
+@section('title', 'Volta App – Pagini vizitate – VOLTA')
 @section('header-title', 'Volta App')
-
-@push('styles')
-<link rel="stylesheet" href="{{ url('css/mobile-analytics.css') }}">
-@endpush
 
 @section('content')
 <div class="ma-page">
   @if(!$schemaReady)
-    <div class="ma-alert">Tabela pentru evenimente mobile nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
+    <div class="ma-alert">Tabela pentru datele din aplicație nu este încă creată. Rulează <code>php artisan migrate</code>.</div>
   @endif
 
   <section class="ma-hero">
     <div class="ma-hero__row">
       <div>
-        <h1 class="ma-hero__title">Pagini app</h1>
-        <p class="ma-hero__lead">Toate ecranele din aplicație, cu views, timp mediu și volum de evenimente.</p>
+        <p class="ma-kicker">Aplicația Volta</p>
+        <h1 class="ma-hero__title">Pagini vizitate</h1>
+        <p class="ma-hero__lead">Toate ecranele din aplicație, cu deschideri, timp mediu și volum de acțiuni.</p>
       </div>
       <form method="get" action="{{ route('mobile.analytics.pages') }}" class="ma-filters">
         <div class="ma-field"><label for="pagesStart">De la</label><input id="pagesStart" type="date" name="start" value="{{ $start->format('Y-m-d') }}"></div>
@@ -36,7 +33,7 @@
     </div>
     <div class="ma-card__body ma-table-wrap">
       <table class="ma-table">
-        <thead><tr><th>Pagină</th><th class="num">Views</th><th class="num">Timp mediu</th><th class="num">Evenimente</th></tr></thead>
+        <thead><tr><th>Pagină</th><th class="num">Deschideri</th><th class="num">Timp mediu</th><th class="num">Acțiuni</th></tr></thead>
         <tbody>
         @if($schemaReady && $pages && $pages->count())
           @foreach($pages as $page)
