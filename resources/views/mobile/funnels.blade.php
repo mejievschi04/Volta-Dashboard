@@ -42,6 +42,15 @@
         <button class="ma-btn" type="submit"><i class="fas fa-filter" aria-hidden="true"></i> Aplică</button>
       </form>
     </div>
+    <div class="ma-period">
+      @foreach(\App\Support\MobileRetention::presets() as $preset)
+        @php $isActive = $start->format('Y-m-d') === $preset['start'] && $end->format('Y-m-d') === $preset['end']; @endphp
+        <a class="ma-period__chip {{ $isActive ? 'is-active' : '' }}"
+           href="{{ route('mobile.analytics.funnels', ['start' => $preset['start'], 'end' => $preset['end']]) }}">
+          {{ $preset['label'] }}
+        </a>
+      @endforeach
+    </div>
   </section>
 
   <div class="ma-kpis">

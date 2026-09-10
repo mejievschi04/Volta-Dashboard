@@ -22,7 +22,7 @@
         <div class="ma-field"><label for="listStart">De la</label><input id="listStart" type="date" name="start" value="{{ $start->format('Y-m-d') }}"></div>
         <div class="ma-field"><label for="listEnd">Până la</label><input id="listEnd" type="date" name="end" value="{{ $end->format('Y-m-d') }}"></div>
         <button class="ma-btn" type="submit"><i class="fas fa-filter" aria-hidden="true"></i> Aplică</button>
-        <a class="ma-btn ma-btn--ghost" href="{{ route('mobile.crashes', $q) }}">Înapoi la erori</a>
+        <a class="ma-btn ma-btn--ghost" href="{{ route('mobile.problems', $q) }}">Înapoi la probleme</a>
       </form>
     </div>
   </section>

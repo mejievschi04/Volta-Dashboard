@@ -32,6 +32,7 @@
         <div class="ma-field"><label for="feedbackStart">De la</label><input id="feedbackStart" type="date" name="start" value="{{ $start->format('Y-m-d') }}"></div>
         <div class="ma-field"><label for="feedbackEnd">Până la</label><input id="feedbackEnd" type="date" name="end" value="{{ $end->format('Y-m-d') }}"></div>
         <button class="ma-btn" type="submit"><i class="fas fa-filter" aria-hidden="true"></i> Aplică</button>
+        <a class="ma-btn ma-btn--ghost" href="{{ route('mobile.problems', $q) }}">Înapoi la probleme</a>
       </form>
     </div>
     <div class="ma-period">

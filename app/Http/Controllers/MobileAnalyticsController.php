@@ -143,7 +143,7 @@ class MobileAnalyticsController extends Controller
         [$start, $end] = $this->resolvePeriod($request);
 
         return DashboardCache::flexible(
-            'mobile:dashboard:v4:'.$section.':'.$start->timestamp.':'.$end->timestamp,
+            'mobile:dashboard:v5:'.$section.':'.$start->timestamp.':'.$end->timestamp,
             DashboardCache::ttlMobile(),
             fn () => $this->buildDashboardData($request, $section)
         );
@@ -158,6 +158,7 @@ class MobileAnalyticsController extends Controller
             'events' => 0,
             'sessions' => 0,
             'users' => 0,
+            'devices' => 0,
             'page_views' => 0,
             'product_views' => 0,
             'searches' => 0,
@@ -215,6 +216,7 @@ class MobileAnalyticsController extends Controller
                 'events' => $eventsCount,
                 'sessions' => $sessionsCount,
                 'users' => (int) $counts->users,
+                'devices' => (int) $counts->devices,
                 'page_views' => $pageViews,
                 'product_views' => $productViews,
                 'searches' => (int) $counts->searches,
@@ -258,6 +260,13 @@ class MobileAnalyticsController extends Controller
                     ->latest('occurred_at')
                     ->limit(80)
                     ->get();
+
+                $eventBreakdown = (clone $base)
+                    ->select('event_name', DB::raw('COUNT(*) as total'))
+                    ->groupBy('event_name')
+                    ->orderByDesc('total')
+                    ->limit(12)
+                    ->get();
             }
 
             if ($section === 'funnels') {
@@ -284,13 +293,6 @@ class MobileAnalyticsController extends Controller
             }
 
             if ($section === 'overview') {
-                $eventBreakdown = (clone $base)
-                    ->select('event_name', DB::raw('COUNT(*) as total'))
-                    ->groupBy('event_name')
-                    ->orderByDesc('total')
-                    ->limit(30)
-                    ->get();
-
                 $topSearches = $this->topMetadataValues(clone $base, 'search', '$.query', 12);
                 $topProducts = $this->topMetadataValues(clone $base, 'product_view', '$.product_name', 12);
                 $dailyChart = $this->dailyChart($start, $end);

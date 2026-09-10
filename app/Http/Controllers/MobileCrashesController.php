@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MobileCrash;
+use App\Models\MobileFeedbackReport;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,8 +20,8 @@ class MobileCrashesController extends Controller
     {
         [$start, $end] = $this->resolvePeriod($request);
 
-        return view('mobile.crashes-overview', DashboardCache::flexible(
-            'mobile:crashes:v3:'.$start->timestamp.':'.$end->timestamp,
+        return view('mobile.problems', DashboardCache::flexible(
+            'mobile:problems:v1:'.$start->timestamp.':'.$end->timestamp,
             DashboardCache::ttlMobile(),
             fn () => $this->buildDashboardData($request)
         ));
@@ -198,6 +199,38 @@ class MobileCrashesController extends Controller
             $dailyChart = $this->dailyChart($start, $end);
         }
 
+        $feedbackReady = DashboardCache::tableExists('mobile_feedback_reports');
+        $feedbackSummary = [
+            'total' => 0,
+            'with_screenshot' => 0,
+            'devices' => 0,
+            'users' => 0,
+        ];
+        $recentReports = collect();
+
+        if ($feedbackReady) {
+            $feedbackCounts = MobileFeedbackReport::query()
+                ->whereBetween('occurred_at', [$start, $end])
+                ->selectRaw(<<<'SQL'
+                    COUNT(*) as total,
+                    SUM(CASE WHEN has_screenshot = 1 THEN 1 ELSE 0 END) as with_screenshot,
+                    COUNT(DISTINCT device_id) as devices,
+                    COUNT(DISTINCT mobile_user_id) as users
+                SQL)->first();
+            $feedbackSummary = [
+                'total' => (int) $feedbackCounts->total,
+                'with_screenshot' => (int) $feedbackCounts->with_screenshot,
+                'devices' => (int) $feedbackCounts->devices,
+                'users' => (int) $feedbackCounts->users,
+            ];
+            $recentReports = MobileFeedbackReport::query()
+                ->select(MobileFeedbackReport::LIST_COLUMNS)
+                ->whereBetween('occurred_at', [$start, $end])
+                ->latest('occurred_at')
+                ->limit(12)
+                ->get();
+        }
+
         return compact(
             'start',
             'end',
@@ -206,7 +239,10 @@ class MobileCrashesController extends Controller
             'topFingerprints',
             'platformBreakdown',
             'recentCrashes',
-            'dailyChart'
+            'dailyChart',
+            'feedbackReady',
+            'feedbackSummary',
+            'recentReports'
         );
     }
 

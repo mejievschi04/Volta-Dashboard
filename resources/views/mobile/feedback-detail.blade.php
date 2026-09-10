@@ -15,7 +15,7 @@
         <p class="ma-hero__lead" style="white-space:pre-wrap;">{{ $report->message }}</p>
       </div>
       <div class="ma-filters">
-        <a class="ma-btn ma-btn--ghost" href="{{ route('mobile.feedback', $q) }}">Înapoi la listă</a>
+        <a class="ma-btn ma-btn--ghost" href="{{ route('mobile.problems', $q) }}">Înapoi la probleme</a>
       </div>
     </div>
   </section>

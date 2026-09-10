@@ -16,7 +16,7 @@
       </div>
       <div class="ma-filters">
         <a class="ma-btn ma-btn--ghost" href="{{ route('mobile.crashes.list', $q) }}">Înapoi la listă</a>
-        <a class="ma-btn" href="{{ route('mobile.crashes', $q) }}">Înapoi la erori</a>
+        <a class="ma-btn" href="{{ route('mobile.problems', $q) }}">Înapoi la probleme</a>
       </div>
     </div>
   </section>

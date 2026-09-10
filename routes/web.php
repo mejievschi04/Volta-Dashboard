@@ -109,10 +109,16 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
         Route::get('/mobile/bannere', [MobileAnalyticsController::class, 'bannersList'])->name('mobile.analytics.banners');
         Route::get('/mobile/evenimente-recente', [MobileAnalyticsController::class, 'recentEventsList'])->name('mobile.analytics.recent-events');
         Route::get('/mobile/abandon-cos', [MobileAnalyticsController::class, 'abandonList'])->name('mobile.analytics.abandon');
-        Route::get('/mobile/crashes', [MobileCrashesController::class, 'index'])->name('mobile.crashes');
+        Route::get('/mobile/probleme', [MobileCrashesController::class, 'index'])->name('mobile.problems');
+        Route::get('/mobile/crashes', function (\Illuminate\Http\Request $request) {
+            return redirect()->route('mobile.problems', $request->only(['start', 'end']));
+        })->name('mobile.crashes');
         Route::get('/mobile/crashes/lista', [MobileCrashesController::class, 'list'])->name('mobile.crashes.list');
         Route::get('/mobile/crashes/{crash}', [MobileCrashesController::class, 'show'])->name('mobile.crashes.show');
-        Route::get('/mobile/feedback', [MobileFeedbackController::class, 'index'])->name('mobile.feedback');
+        Route::get('/mobile/feedback', function (\Illuminate\Http\Request $request) {
+            return redirect()->route('mobile.problems', $request->only(['start', 'end']));
+        });
+        Route::get('/mobile/feedback/lista', [MobileFeedbackController::class, 'index'])->name('mobile.feedback');
         Route::get('/mobile/feedback/{report}', [MobileFeedbackController::class, 'show'])->name('mobile.feedback.show');
     });
     
