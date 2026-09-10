@@ -8,6 +8,7 @@
   $q = request()->only(['start', 'end']);
   $days = max(1, (int) $start->diffInDays($end) + 1);
   $periodPresets = \App\Support\MobileRetention::presets();
+  $maxEvent = max(1, (int) ($eventBreakdown->max('total') ?? 1));
 @endphp
 
 <div class="ma-page">
@@ -55,7 +56,7 @@
   <section class="ma-section">
     <div class="ma-section__head">
       <h2>Cine a venit</h2>
-      <p>Vizitatori și sesiuni</p>
+      <p>Vizitatori, sesiuni și carduri generate</p>
     </div>
     <div class="ma-kpis">
       <div class="ma-kpi ma-kpi--accent">
@@ -66,17 +67,17 @@
       <div class="ma-kpi">
         <span class="ma-kpi__label"><i class="fas fa-arrow-right-to-bracket" aria-hidden="true"></i> Sesiuni</span>
         <div class="ma-kpi__value">{{ number_format($summary['sessions'], 0, ',', '.') }}</div>
-        <span class="ma-kpi__help">{{ number_format($summary['events_per_session'] ?? 0, 1, ',', '.') }} acțiuni pe sesiune</span>
+        <span class="ma-kpi__help">{{ number_format($summary['events_per_session'] ?? 0, 1, ',', '.') }} acțiuni pe sesiune · {{ number_format($summary['devices'] ?? 0, 0, ',', '.') }} dispozitive</span>
       </div>
       <div class="ma-kpi">
-        <span class="ma-kpi__label"><i class="fas fa-mobile-screen" aria-hidden="true"></i> Dispozitive</span>
-        <div class="ma-kpi__value">{{ number_format($summary['devices'] ?? 0, 0, ',', '.') }}</div>
-        <span class="ma-kpi__help">Telefoane distincte</span>
+        <span class="ma-kpi__label"><i class="fas fa-id-card" aria-hidden="true"></i> Carduri generate</span>
+        <div class="ma-kpi__value">{{ number_format($summary['cards_generated'] ?? 0, 0, ',', '.') }}</div>
+        <span class="ma-kpi__help">Carduri create din aplicație</span>
       </div>
       <div class="ma-kpi ma-kpi--good">
-        <span class="ma-kpi__label"><i class="fas fa-bag-shopping" aria-hidden="true"></i> Comenzi din sesiuni</span>
-        <div class="ma-kpi__value">{{ number_format($summary['conversion_rate'] ?? 0, 2, ',', '.') }}%</div>
-        <span class="ma-kpi__help">{{ number_format($summary['orders'], 0, ',', '.') }} comenzi finalizate</span>
+        <span class="ma-kpi__label"><i class="fas fa-bag-shopping" aria-hidden="true"></i> Comenzi</span>
+        <div class="ma-kpi__value">{{ number_format($summary['orders'], 0, ',', '.') }}</div>
+        <span class="ma-kpi__help">{{ number_format($summary['conversion_rate'] ?? 0, 2, ',', '.') }}% din sesiuni</span>
       </div>
     </div>
   </section>
@@ -102,10 +103,10 @@
         <div class="ma-kpi__value">{{ number_format($summary['cart_abandons'], 0, ',', '.') }}</div>
         <span class="ma-kpi__help"><a class="ma-card__link" href="{{ route('mobile.analytics.funnels', $q) }}">Vezi drumul spre comandă →</a></span>
       </div>
-      <div class="ma-kpi ma-kpi--good">
-        <span class="ma-kpi__label"><i class="fas fa-bag-shopping" aria-hidden="true"></i> Comenzi</span>
-        <div class="ma-kpi__value">{{ number_format($summary['orders'], 0, ',', '.') }}</div>
-        <span class="ma-kpi__help">Finalizate în aplicație</span>
+      <div class="ma-kpi">
+        <span class="ma-kpi__label"><i class="fas fa-file-lines" aria-hidden="true"></i> Pagini deschise</span>
+        <div class="ma-kpi__value">{{ number_format($summary['page_views'], 0, ',', '.') }}</div>
+        <span class="ma-kpi__help">{{ number_format($summary['avg_page_seconds'], 0, ',', '.') }} secunde pe pagină, în medie</span>
       </div>
     </div>
   </section>
@@ -118,6 +119,32 @@
     <section class="ma-card">
       <div class="ma-card__body">
         <div class="ma-chart"><canvas id="mobileOverviewChart"></canvas></div>
+      </div>
+    </section>
+  </section>
+
+  <section class="ma-section">
+    <div class="ma-section__head">
+      <h2>Cele mai frecvente acțiuni</h2>
+      <p>Ce trimite aplicația în perioada selectată</p>
+    </div>
+    <section class="ma-card">
+      <div class="ma-card__body">
+        @if($eventBreakdown->isEmpty())
+          <div class="ma-empty"><i class="fas fa-inbox" aria-hidden="true"></i>Nu există acțiuni în perioada selectată.</div>
+        @else
+          @foreach($eventBreakdown->take(10) as $row)
+            @php
+              $label = \App\Support\MobileLabels::event($row->event_name);
+              $pct = round(((int) $row->total / $maxEvent) * 100);
+            @endphp
+            <div class="ma-bar-row">
+              <div class="ma-bar-row__label" title="{{ $row->event_name }}">{{ $label }}</div>
+              <div class="ma-bar-row__track"><div class="ma-bar-row__fill" style="width: {{ $pct }}%;"></div></div>
+              <div class="ma-bar-row__value">{{ number_format((int) $row->total, 0, ',', '.') }}</div>
+            </div>
+          @endforeach
+        @endif
       </div>
     </section>
   </section>

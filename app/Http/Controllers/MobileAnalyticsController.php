@@ -143,7 +143,7 @@ class MobileAnalyticsController extends Controller
         [$start, $end] = $this->resolvePeriod($request);
 
         return DashboardCache::flexible(
-            'mobile:dashboard:v5:'.$section.':'.$start->timestamp.':'.$end->timestamp,
+            'mobile:dashboard:v6:'.$section.':'.$start->timestamp.':'.$end->timestamp,
             DashboardCache::ttlMobile(),
             fn () => $this->buildDashboardData($request, $section)
         );
@@ -166,6 +166,7 @@ class MobileAnalyticsController extends Controller
             'banner_clicks' => 0,
             'cart_abandons' => 0,
             'orders' => 0,
+            'cards_generated' => 0,
             'logins' => 0,
             'map_opens' => 0,
             'avg_page_seconds' => 0,
@@ -224,6 +225,7 @@ class MobileAnalyticsController extends Controller
                 'banner_clicks' => (int) $counts->banner_clicks,
                 'cart_abandons' => (int) $counts->cart_abandons,
                 'orders' => $ordersCount,
+                'cards_generated' => (int) ($counts->cards_generated ?? 0),
                 'logins' => (int) $counts->logins,
                 'map_opens' => (int) $counts->map_opens,
                 'avg_page_seconds' => round(((float) $counts->avg_duration_ms) / 1000),
@@ -293,6 +295,13 @@ class MobileAnalyticsController extends Controller
             }
 
             if ($section === 'overview') {
+                $eventBreakdown = (clone $base)
+                    ->select('event_name', DB::raw('COUNT(*) as total'))
+                    ->groupBy('event_name')
+                    ->orderByDesc('total')
+                    ->limit(12)
+                    ->get();
+
                 $topSearches = $this->topMetadataValues(clone $base, 'search', '$.query', 12);
                 $topProducts = $this->topMetadataValues(clone $base, 'product_view', '$.product_name', 12);
                 $dailyChart = $this->dailyChart($start, $end);
@@ -472,6 +481,25 @@ class MobileAnalyticsController extends Controller
             }
         }
 
+        if (DashboardCache::tableExists('mobile_event_daily_rollups')) {
+            $rollupRows = DB::table('mobile_event_daily_rollups')
+                ->select('day', 'event_name', 'total')
+                ->whereBetween('day', [$start->toDateString(), $end->toDateString()])
+                ->whereIn('event_name', $eventNames)
+                ->get();
+
+            foreach ($rollupRows as $row) {
+                $day = (string) $row->day;
+                $event = (string) $row->event_name;
+                if (! isset($labelIndex[$day], $datasets[$event])) {
+                    continue;
+                }
+                if ((int) $datasets[$event][$labelIndex[$day]] === 0) {
+                    $datasets[$event][$labelIndex[$day]] = (int) $row->total;
+                }
+            }
+        }
+
         return ['labels' => $labels, 'datasets' => $datasets];
     }
 
@@ -555,15 +583,81 @@ class MobileAnalyticsController extends Controller
         }
     }
 
+    private function mergeRollupCounts(object $live, Carbon $start, Carbon $end): object
+    {
+        if (! DashboardCache::tableExists('mobile_event_daily_rollups')) {
+            return $live;
+        }
+
+        $liveDays = MobileAnalyticsEvent::query()
+            ->whereBetween('occurred_at', [$start, $end])
+            ->selectRaw('DATE(occurred_at) as day')
+            ->groupBy(DB::raw('DATE(occurred_at)'))
+            ->pluck('day')
+            ->filter()
+            ->all();
+
+        $query = DB::table('mobile_event_daily_rollups')
+            ->whereBetween('day', [$start->toDateString(), $end->toDateString()]);
+        if ($liveDays !== []) {
+            $query->whereNotIn('day', $liveDays);
+        }
+
+        $rows = $query
+            ->select('event_name', DB::raw('SUM(total) as total'))
+            ->groupBy('event_name')
+            ->get();
+
+        $map = [
+            'page_view' => 'page_views',
+            'product_view' => 'product_views',
+            'search' => 'searches',
+            'add_to_cart' => 'add_to_cart',
+            'banner_click' => 'banner_clicks',
+            'cart_abandoned' => 'cart_abandons',
+            'order_completed' => 'orders',
+            'login_success' => 'logins',
+            'map_open' => 'map_opens',
+            'checkout_started' => 'checkout_started',
+            'checkout_completed' => 'checkout_completed',
+        ];
+
+        foreach ($rows as $row) {
+            $name = (string) $row->event_name;
+            $total = (int) $row->total;
+            $live->events = (int) $live->events + $total;
+
+            if (isset($map[$name])) {
+                $field = $map[$name];
+                $live->{$field} = (int) ($live->{$field} ?? 0) + $total;
+            }
+
+            if ($this->isGeneratedCardEvent($name)) {
+                $live->cards_generated = (int) ($live->cards_generated ?? 0) + $total;
+            }
+        }
+
+        return $live;
+    }
+
+    private function isGeneratedCardEvent(string $name): bool
+    {
+        $key = strtolower($name);
+
+        return str_contains($key, 'card') && ! str_contains($key, 'cart');
+    }
+
     private function periodCounts(Carbon $start, Carbon $end): object
     {
         return DashboardCache::flexible(
-            'mobile:counts:v1:'.$start->timestamp.':'.$end->timestamp,
+            'mobile:counts:v3:'.$start->timestamp.':'.$end->timestamp,
             DashboardCache::ttlMobile(),
             function () use ($start, $end) {
-                return $this->aggregateCounts(
+                $live = $this->aggregateCounts(
                     MobileAnalyticsEvent::query()->whereBetween('occurred_at', [$start, $end])
                 );
+
+                return $this->mergeRollupCounts($live, $start, $end);
             }
         );
     }
@@ -584,6 +678,7 @@ class MobileAnalyticsController extends Controller
             SUM(CASE WHEN event_name = 'banner_click' THEN 1 ELSE 0 END) as banner_clicks,
             SUM(CASE WHEN event_name = 'cart_abandoned' THEN 1 ELSE 0 END) as cart_abandons,
             SUM(CASE WHEN event_name = 'order_completed' THEN 1 ELSE 0 END) as orders,
+            SUM(CASE WHEN LOWER(event_name) LIKE '%card%' AND LOWER(event_name) NOT LIKE '%cart%' THEN 1 ELSE 0 END) as cards_generated,
             SUM(CASE WHEN event_name = 'login_success' THEN 1 ELSE 0 END) as logins,
             SUM(CASE WHEN event_name = 'map_open' THEN 1 ELSE 0 END) as map_opens,
             SUM(CASE WHEN event_name = 'checkout_started' THEN 1 ELSE 0 END) as checkout_started,
