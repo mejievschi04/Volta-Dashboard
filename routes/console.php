@@ -11,4 +11,5 @@ Artisan::command('inspire', function () {
 /* Sincronizări zilnice la 07:00 (ora României) */
 Schedule::command('1c:fetch-kpi --sync')->dailyAt('07:00')->timezone('Europe/Bucharest');
 Schedule::command('ga4:sync')->dailyAt('07:00')->timezone('Europe/Bucharest');
+Schedule::command('mobile:rollup')->hourly()->timezone('Europe/Bucharest');
 Schedule::command('mobile:prune')->dailyAt('03:15')->timezone('Europe/Bucharest');

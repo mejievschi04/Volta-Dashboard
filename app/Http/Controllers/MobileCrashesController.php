@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\MobileCrash;
 use App\Models\MobileFeedbackReport;
+use App\Support\DashboardCache;
+use App\Support\MobileDailyRollup;
+use App\Support\MobileRetention;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use App\Support\DashboardCache;
-use App\Support\MobileRetention;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -21,8 +22,8 @@ class MobileCrashesController extends Controller
         [$start, $end] = $this->resolvePeriod($request);
 
         return view('mobile.problems', DashboardCache::flexible(
-            'mobile:problems:v1:'.$start->timestamp.':'.$end->timestamp,
-            DashboardCache::ttlMobile(),
+            'mobile:problems:v3:'.$start->timestamp.':'.$end->timestamp,
+            DashboardCache::ttlMobileRange($start, $end),
             fn () => $this->buildDashboardData($request)
         ));
     }
@@ -153,24 +154,61 @@ class MobileCrashesController extends Controller
         $dailyChart = ['labels' => [], 'totals' => []];
 
         if ($schemaReady) {
-            $base = MobileCrash::query()->whereBetween('occurred_at', [$start, $end]);
+            $lastRolled = MobileDailyRollup::lastCrashDay();
+            $liveFrom = $start->copy();
+            $crashes = 0;
+            $fatal = 0;
+            $fingerprints = 0;
 
-            $counts = (clone $base)->selectRaw(<<<'SQL'
-                COUNT(*) as crashes,
-                COUNT(DISTINCT device_id) as devices,
-                COUNT(DISTINCT mobile_user_id) as users,
-                SUM(CASE WHEN is_fatal = 1 THEN 1 ELSE 0 END) as fatal,
-                COUNT(DISTINCT fingerprint) as fingerprints
-            SQL)->first();
+            if ($lastRolled && $lastRolled->gte($start)) {
+                $histEnd = $lastRolled->copy()->endOfDay();
+                if ($histEnd->gt($end)) {
+                    $histEnd = $end->copy();
+                }
+                $hist = MobileDailyRollup::crashTotals($start, $histEnd);
+                $crashes += $hist['total'];
+                $fatal += $hist['fatal'];
+                $fingerprints += $hist['fingerprints'];
+                $liveFrom = $lastRolled->copy()->addDay()->startOfDay();
+            }
+
+            $devices = 0;
+            $users = 0;
+            if ($liveFrom->lte($end)) {
+                $live = MobileCrash::query()
+                    ->whereBetween('occurred_at', [$liveFrom, $end])
+                    ->selectRaw(<<<'SQL'
+                        COUNT(*) as crashes,
+                        COUNT(DISTINCT device_id) as devices,
+                        COUNT(DISTINCT mobile_user_id) as users,
+                        SUM(CASE WHEN is_fatal = 1 THEN 1 ELSE 0 END) as fatal,
+                        COUNT(DISTINCT fingerprint) as fingerprints
+                    SQL)->first();
+                $crashes += (int) ($live->crashes ?? 0);
+                $fatal += (int) ($live->fatal ?? 0);
+                $fingerprints += (int) ($live->fingerprints ?? 0);
+                $devices = (int) ($live->devices ?? 0);
+                $users = (int) ($live->users ?? 0);
+            }
+
             $summary = [
-                'crashes' => (int) $counts->crashes,
-                'devices' => (int) $counts->devices,
-                'users' => (int) $counts->users,
-                'fatal' => (int) $counts->fatal,
-                'fingerprints' => (int) $counts->fingerprints,
+                'crashes' => $crashes,
+                'devices' => $devices,
+                'users' => $users,
+                'fatal' => $fatal,
+                'fingerprints' => $fingerprints,
             ];
 
-            $topFingerprints = (clone $base)
+            $listFrom = $start->copy();
+            if ($start->diffInDays($end) > 45) {
+                $listFrom = $end->copy()->subDays(29)->startOfDay();
+                if ($listFrom->lt($start)) {
+                    $listFrom = $start->copy();
+                }
+            }
+            $listBase = MobileCrash::query()->whereBetween('occurred_at', [$listFrom, $end]);
+
+            $topFingerprints = (clone $listBase)
                 ->select(
                     'fingerprint',
                     'error_type',
@@ -184,14 +222,15 @@ class MobileCrashesController extends Controller
                 ->limit(15)
                 ->get();
 
-            $platformBreakdown = (clone $base)
+            $platformBreakdown = (clone $listBase)
                 ->select('platform', DB::raw('COUNT(*) as total'))
                 ->groupBy('platform')
                 ->orderByDesc('total')
                 ->get();
 
-            $recentCrashes = (clone $base)
+            $recentCrashes = MobileCrash::query()
                 ->select(MobileCrash::LIST_COLUMNS)
+                ->where('occurred_at', '<=', $end)
                 ->latest('occurred_at')
                 ->limit(40)
                 ->get();
@@ -225,7 +264,7 @@ class MobileCrashesController extends Controller
             ];
             $recentReports = MobileFeedbackReport::query()
                 ->select(MobileFeedbackReport::LIST_COLUMNS)
-                ->whereBetween('occurred_at', [$start, $end])
+                ->where('occurred_at', '<=', $end)
                 ->latest('occurred_at')
                 ->limit(12)
                 ->get();
@@ -340,16 +379,38 @@ class MobileCrashesController extends Controller
         $totals = array_fill(0, count($labels), 0);
         $labelIndex = array_flip($labels);
 
-        $rows = MobileCrash::query()
-            ->select(DB::raw('DATE(occurred_at) as day'), DB::raw('COUNT(*) as total'))
-            ->whereBetween('occurred_at', [$start, $end])
-            ->groupBy(DB::raw('DATE(occurred_at)'))
-            ->get();
+        $lastRolled = MobileDailyRollup::lastCrashDay();
+        $liveFrom = $start->copy();
+        if ($lastRolled && $lastRolled->gte($start) && DashboardCache::tableExists('mobile_crash_daily_rollups')) {
+            $histEnd = $lastRolled->copy()->endOfDay();
+            if ($histEnd->gt($end)) {
+                $histEnd = $end->copy();
+            }
+            $rollupRows = DB::table('mobile_crash_daily_rollups')
+                ->select('day', 'total')
+                ->whereBetween('day', [$start->toDateString(), $histEnd->toDateString()])
+                ->get();
+            foreach ($rollupRows as $row) {
+                $day = (string) $row->day;
+                if (isset($labelIndex[$day])) {
+                    $totals[$labelIndex[$day]] = (int) $row->total;
+                }
+            }
+            $liveFrom = $lastRolled->copy()->addDay()->startOfDay();
+        }
 
-        foreach ($rows as $row) {
-            $day = (string) $row->day;
-            if (isset($labelIndex[$day])) {
-                $totals[$labelIndex[$day]] = (int) $row->total;
+        if ($liveFrom->lte($end)) {
+            $rows = MobileCrash::query()
+                ->select(DB::raw('DATE(occurred_at) as day'), DB::raw('COUNT(*) as total'))
+                ->whereBetween('occurred_at', [$liveFrom, $end])
+                ->groupBy(DB::raw('DATE(occurred_at)'))
+                ->get();
+
+            foreach ($rows as $row) {
+                $day = (string) $row->day;
+                if (isset($labelIndex[$day])) {
+                    $totals[$labelIndex[$day]] = (int) $row->total;
+                }
             }
         }
 

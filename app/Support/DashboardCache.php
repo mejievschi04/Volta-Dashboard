@@ -42,7 +42,23 @@ class DashboardCache
     /** @return array{0: int, 1: int} */
     public static function ttlMobile(): array
     {
-        return [60, 300];
+        return [90, 420];
+    }
+
+    /** Cache mai lung pe intervale mari (toată perioada / 90 zile). */
+    public static function ttlMobileRange(\DateTimeInterface $start, \DateTimeInterface $end): array
+    {
+        $days = max(1, (int) $start->diff($end)->days + 1);
+        $includesToday = $end->format('Y-m-d') >= date('Y-m-d');
+
+        if ($days >= 60) {
+            return $includesToday ? [300, 1800] : [900, 7200];
+        }
+        if ($days >= 14) {
+            return $includesToday ? [180, 900] : [600, 3600];
+        }
+
+        return $includesToday ? [90, 420] : [300, 1800];
     }
 
     public static function tableExists(string $table): bool

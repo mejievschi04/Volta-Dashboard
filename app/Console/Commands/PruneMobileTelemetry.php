@@ -6,11 +6,13 @@ use App\Models\MobileAnalyticsEvent;
 use App\Models\MobileCrash;
 use App\Models\MobileFeedbackReport;
 use App\Support\DashboardCache;
+use App\Support\MobileDailyRollup;
 use App\Support\MobileRetention;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 
 class PruneMobileTelemetry extends Command
 {
@@ -65,31 +67,12 @@ class PruneMobileTelemetry extends Command
             return $count;
         }
 
-        if (Schema::hasTable('mobile_event_daily_rollups')) {
-            $rows = MobileAnalyticsEvent::query()
-                ->where('occurred_at', '<', $cutoff)
-                ->selectRaw('DATE(occurred_at) as day, event_name, COUNT(*) as total, COUNT(DISTINCT session_id) as sessions, COUNT(DISTINCT mobile_user_id) as users')
-                ->groupBy(DB::raw('DATE(occurred_at)'), 'event_name')
-                ->get();
-
-            $now = now();
-            $payload = $rows->map(fn ($row) => [
-                'day' => $row->day,
-                'event_name' => (string) $row->event_name,
-                'total' => (int) $row->total,
-                'sessions' => (int) $row->sessions,
-                'users' => (int) $row->users,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ])->all();
-
-            foreach (array_chunk($payload, 200) as $chunk) {
-                DB::table('mobile_event_daily_rollups')->upsert(
-                    $chunk,
-                    ['day', 'event_name'],
-                    ['total', 'sessions', 'users', 'updated_at']
-                );
-            }
+        $min = MobileAnalyticsEvent::query()->where('occurred_at', '<', $cutoff)->min('occurred_at');
+        if ($min) {
+            MobileDailyRollup::upsertEventRange(
+                Carbon::parse($min)->startOfDay(),
+                Carbon::parse($cutoff)->subSecond()
+            );
         }
 
         $this->deleteInChunks('mobile_analytics_events', $cutoff);
@@ -112,30 +95,12 @@ class PruneMobileTelemetry extends Command
             return $count;
         }
 
-        if (Schema::hasTable('mobile_crash_daily_rollups')) {
-            $rows = MobileCrash::query()
-                ->where('occurred_at', '<', $cutoff)
-                ->selectRaw('DATE(occurred_at) as day, COUNT(*) as total, SUM(CASE WHEN is_fatal = 1 THEN 1 ELSE 0 END) as fatal, COUNT(DISTINCT fingerprint) as fingerprints')
-                ->groupBy(DB::raw('DATE(occurred_at)'))
-                ->get();
-
-            $now = now();
-            $payload = $rows->map(fn ($row) => [
-                'day' => $row->day,
-                'total' => (int) $row->total,
-                'fatal' => (int) $row->fatal,
-                'fingerprints' => (int) $row->fingerprints,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ])->all();
-
-            foreach (array_chunk($payload, 200) as $chunk) {
-                DB::table('mobile_crash_daily_rollups')->upsert(
-                    $chunk,
-                    ['day'],
-                    ['total', 'fatal', 'fingerprints', 'updated_at']
-                );
-            }
+        $min = MobileCrash::query()->where('occurred_at', '<', $cutoff)->min('occurred_at');
+        if ($min) {
+            MobileDailyRollup::upsertCrashRange(
+                Carbon::parse($min)->startOfDay(),
+                Carbon::parse($cutoff)->subSecond()
+            );
         }
 
         $this->deleteInChunks('mobile_crashes', $cutoff);
