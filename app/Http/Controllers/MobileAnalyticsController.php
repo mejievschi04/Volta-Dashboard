@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MobileAnalyticsEvent;
 use App\Support\DashboardCache;
 use App\Support\MobileDailyRollup;
+use App\Support\MobileEventNames;
 use App\Support\MobileRetention;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -144,7 +145,7 @@ class MobileAnalyticsController extends Controller
         [$start, $end] = $this->resolvePeriod($request);
 
         return DashboardCache::flexible(
-            'mobile:dashboard:v8:'.$section.':'.$start->timestamp.':'.$end->timestamp,
+            'mobile:dashboard:v10:'.$section.':'.$start->timestamp.':'.$end->timestamp,
             DashboardCache::ttlMobileRange($start, $end),
             fn () => $this->buildDashboardData($request, $section)
         );
@@ -154,6 +155,7 @@ class MobileAnalyticsController extends Controller
     {
         [$start, $end] = $this->resolvePeriod($request);
         $schemaReady = DashboardCache::tableExists('mobile_analytics_events');
+        $listsCapped = false;
 
         $summary = [
             'events' => 0,
@@ -201,6 +203,7 @@ class MobileAnalyticsController extends Controller
         ];
 
         if ($schemaReady) {
+            $listsCapped = $start->diffInDays($end) > 90;
             $detailFrom = $this->detailWindowStart($start, $end);
             $base = MobileAnalyticsEvent::query()
                 ->whereBetween('occurred_at', [$start, $end]);
@@ -294,7 +297,7 @@ class MobileAnalyticsController extends Controller
             }
 
             if ($section === 'overview') {
-                $eventBreakdown = $this->eventBreakdownFromCounts($counts, null);
+                $eventBreakdown = $this->eventBreakdownFromCounts($counts, $base);
                 $topSearches = $this->topMetadataValues($detailBase, 'search', '$.query', 12);
                 $topProducts = $this->topMetadataValues($detailBase, 'product_view', '$.product_name', 12);
                 $dailyChart = $this->dailyChart($start, $end);
@@ -314,7 +317,8 @@ class MobileAnalyticsController extends Controller
             'topSearches',
             'topProducts',
             'dailyChart',
-            'funnel'
+            'funnel',
+            'listsCapped'
         );
     }
 
@@ -424,7 +428,7 @@ class MobileAnalyticsController extends Controller
         }
 
         return [
-            'event_name' => (string) (Arr::get($event, 'event_name') ?? Arr::get($event, 'event') ?? ''),
+            'event_name' => MobileEventNames::canonical((string) (Arr::get($event, 'event_name') ?? Arr::get($event, 'event') ?? '')),
             'session_id' => $this->nullableString(Arr::get($event, 'session_id')),
             'mobile_user_id' => $this->nullableString(Arr::get($event, 'mobile_user_id') ?? Arr::get($event, 'user_id')),
             'device_id' => $this->nullableString(Arr::get($event, 'device_id') ?? Arr::get($event, 'installation_id')),
@@ -455,51 +459,47 @@ class MobileAnalyticsController extends Controller
             $cursor->addDay();
         }
 
-        $eventNames = ['page_view', 'product_view', 'search', 'add_to_cart', 'banner_click', 'cart_abandoned', 'order_completed'];
-        $datasets = array_fill_keys($eventNames, array_fill(0, count($labels), 0));
+        $eventNames = MobileEventNames::chartEvents();
+        $datasets = array_fill_keys(
+            ['page_view', 'product_view', 'search', 'add_to_cart', 'banner_click', 'cart_abandoned', 'order_completed'],
+            array_fill(0, count($labels), 0)
+        );
         $labelIndex = array_flip($labels);
 
-        $lastRolled = MobileDailyRollup::lastEventDay();
-        $liveFrom = $start->copy();
-        if ($lastRolled && $lastRolled->gte($start)) {
-            $histEnd = $lastRolled->copy()->endOfDay();
+        $rolledDays = $this->rolledEventDays($start, $end);
+        if ($rolledDays !== []) {
+            $histEnd = now()->subDay()->endOfDay();
             if ($histEnd->gt($end)) {
                 $histEnd = $end->copy();
             }
 
-            if (DashboardCache::tableExists('mobile_event_daily_rollups')) {
-                $rollupRows = DB::table('mobile_event_daily_rollups')
-                    ->select('day', 'event_name', 'total')
-                    ->whereBetween('day', [$start->toDateString(), $histEnd->toDateString()])
-                    ->whereIn('event_name', $eventNames)
-                    ->get();
-
-                foreach ($rollupRows as $row) {
-                    $day = (string) $row->day;
-                    $event = (string) $row->event_name;
-                    if (isset($labelIndex[$day], $datasets[$event])) {
-                        $datasets[$event][$labelIndex[$day]] = (int) $row->total;
-                    }
-                }
-            }
-
-            $liveFrom = $lastRolled->copy()->addDay()->startOfDay();
-        }
-
-        if ($liveFrom->lte($end)) {
-            $rows = MobileAnalyticsEvent::query()
-                ->select(DB::raw('DATE(occurred_at) as day'), 'event_name', DB::raw('COUNT(*) as total'))
-                ->whereBetween('occurred_at', [$liveFrom, $end])
+            $rollupRows = DB::table('mobile_event_daily_rollups')
+                ->select('day', 'event_name', 'total')
+                ->whereBetween('day', [$start->toDateString(), $histEnd->toDateString()])
                 ->whereIn('event_name', $eventNames)
-                ->groupBy(DB::raw('DATE(occurred_at)'), 'event_name')
                 ->get();
 
-            foreach ($rows as $row) {
+            foreach ($rollupRows as $row) {
                 $day = (string) $row->day;
-                $event = (string) $row->event_name;
+                $event = MobileEventNames::canonical((string) $row->event_name);
                 if (isset($labelIndex[$day], $datasets[$event])) {
-                    $datasets[$event][$labelIndex[$day]] = (int) $row->total;
+                    $datasets[$event][$labelIndex[$day]] += (int) $row->total;
                 }
+            }
+        }
+
+        $live = $this->liveEventsQuery($start, $end, $rolledDays);
+        $rows = $live
+            ->select(DB::raw('DATE(occurred_at) as day'), 'event_name', DB::raw('COUNT(*) as total'))
+            ->whereIn('event_name', $eventNames)
+            ->groupBy(DB::raw('DATE(occurred_at)'), 'event_name')
+            ->get();
+
+        foreach ($rows as $row) {
+            $day = (string) $row->day;
+            $event = MobileEventNames::canonical((string) $row->event_name);
+            if (isset($labelIndex[$day], $datasets[$event])) {
+                $datasets[$event][$labelIndex[$day]] += (int) $row->total;
             }
         }
 
@@ -570,7 +570,7 @@ class MobileAnalyticsController extends Controller
     {
         try {
             return (clone $base)
-                ->where('event_name', $eventName)
+                ->whereIn('event_name', MobileEventNames::aliases($eventName))
                 ->whereNotNull('metadata')
                 ->select(
                     DB::raw("JSON_UNQUOTE(JSON_EXTRACT(metadata, '{$jsonPath}')) as label"),
@@ -626,86 +626,75 @@ class MobileAnalyticsController extends Controller
             'map_open' => 'map_opens',
             'checkout_started' => 'checkout_started',
             'checkout_completed' => 'checkout_completed',
+            'discount_card_generate_success' => 'cards_generated',
         ];
 
         foreach ($totals as $name => $total) {
             $total = (int) $total;
             $counts->events = (int) $counts->events + $total;
             $counts->by_event[$name] = (int) ($counts->by_event[$name] ?? 0) + $total;
-            if (isset($map[$name])) {
-                $field = $map[$name];
+            $canonical = MobileEventNames::canonical((string) $name);
+            if (isset($map[$canonical])) {
+                $field = $map[$canonical];
                 $counts->{$field} = (int) $counts->{$field} + $total;
             }
         }
     }
 
-    private function addCountObject(object $into, object $add): void
+    private function addNamedCounts(object $into, object $add): void
     {
         foreach ([
-            'events', 'sessions', 'users', 'devices', 'logged_in_sessions',
+            'events', 'logged_in_sessions',
             'page_views', 'product_views', 'searches', 'add_to_cart', 'banner_clicks',
             'cart_abandons', 'orders', 'cards_generated', 'logins', 'map_opens',
             'checkout_started', 'checkout_completed', 'checkout_step_sessions',
         ] as $field) {
             $into->{$field} = (int) ($into->{$field} ?? 0) + (int) ($add->{$field} ?? 0);
         }
-
-        $into->avg_duration_ms = (float) ($add->avg_duration_ms ?? $into->avg_duration_ms ?? 0);
     }
 
     private function isGeneratedCardEvent(string $name): bool
     {
-        $key = strtolower($name);
-
-        return str_contains($key, 'card') && ! str_contains($key, 'cart');
+        return MobileEventNames::isCardGenerated($name);
     }
 
     private function periodCounts(Carbon $start, Carbon $end): object
     {
         return DashboardCache::flexible(
-            'mobile:counts:v5:'.$start->timestamp.':'.$end->timestamp,
+            'mobile:counts:v7:'.$start->timestamp.':'.$end->timestamp,
             DashboardCache::ttlMobileRange($start, $end),
             function () use ($start, $end) {
                 $counts = $this->emptyCounts();
-                $liveFrom = $start->copy();
-                $lastRolled = MobileDailyRollup::lastEventDay();
+                $rolledDays = $this->rolledEventDays($start, $end);
 
-                if ($lastRolled && $lastRolled->gte($start)) {
-                    $histEnd = $lastRolled->copy()->endOfDay();
+                if ($rolledDays !== []) {
+                    $histEnd = now()->subDay()->endOfDay();
                     if ($histEnd->gt($end)) {
                         $histEnd = $end->copy();
                     }
                     $hist = MobileDailyRollup::eventTotals($start, $histEnd);
                     $this->applyEventTotals($counts, $hist['totals']);
-                    $counts->sessions = (int) $counts->sessions + $hist['sessions'];
-                    $counts->users = (int) $counts->users + $hist['users'];
-                    $liveFrom = $lastRolled->copy()->addDay()->startOfDay();
                 }
 
-                if ($liveFrom->lte($end)) {
-                    $live = $this->aggregateCounts(
-                        MobileAnalyticsEvent::query()->whereBetween('occurred_at', [$liveFrom, $end])
-                    );
-                    $this->addCountObject($counts, $live);
+                $named = $this->aggregateCounts($this->liveEventsQuery($start, $end, $rolledDays));
+                $this->addNamedCounts($counts, $named);
 
-                    // Extra GROUP BY only for the unrolled tail (usually today).
-                    // Without rollups this would scan the whole range a second time.
-                    if ($lastRolled) {
-                        $liveEvents = MobileAnalyticsEvent::query()
-                            ->whereBetween('occurred_at', [$liveFrom, $end])
-                            ->select('event_name', DB::raw('COUNT(*) as total'))
-                            ->groupBy('event_name')
-                            ->pluck('total', 'event_name');
+                $liveEvents = $this->liveEventsQuery($start, $end, $rolledDays)
+                    ->select('event_name', DB::raw('COUNT(*) as total'))
+                    ->groupBy('event_name')
+                    ->pluck('total', 'event_name');
 
-                        foreach ($liveEvents as $name => $total) {
-                            $counts->by_event[$name] = (int) ($counts->by_event[$name] ?? 0) + (int) $total;
-                        }
+                foreach ($liveEvents as $name => $total) {
+                    $counts->by_event[$name] = (int) ($counts->by_event[$name] ?? 0) + (int) $total;
+                }
 
-                        $counts->cards_generated = 0;
-                        foreach ($counts->by_event as $name => $total) {
-                            if ($this->isGeneratedCardEvent((string) $name)) {
-                                $counts->cards_generated += (int) $total;
-                            }
+                $this->fillUniquesFromRaw($counts, $start, $end);
+
+                if ($counts->by_event !== []) {
+                    $counts->cards_generated = 0;
+                    foreach ($counts->by_event as $name => $total) {
+                        if ($this->isGeneratedCardEvent((string) $name)) {
+                            $counts->cards_generated += (int) $total;
                         }
                     }
                 }
@@ -715,42 +704,131 @@ class MobileAnalyticsController extends Controller
         );
     }
 
+    /** @param list<string> $rolledDays */
+    private function liveEventsQuery(Carbon $start, Carbon $end, array $rolledDays)
+    {
+        $query = MobileAnalyticsEvent::query()->whereBetween('occurred_at', [$start, $end]);
+        if ($rolledDays === []) {
+            return $query;
+        }
+
+        $placeholders = implode(',', array_fill(0, count($rolledDays), '?'));
+
+        return $query->whereRaw(
+            '(occurred_at >= ? OR DATE(occurred_at) NOT IN ('.$placeholders.'))',
+            array_merge([now()->startOfDay()->toDateTimeString()], $rolledDays)
+        );
+    }
+
+    /** @return list<string> */
+    private function rolledEventDays(Carbon $start, Carbon $end): array
+    {
+        if (! DashboardCache::tableExists('mobile_event_daily_rollups')) {
+            return [];
+        }
+
+        $until = now()->subDay()->startOfDay();
+        if ($end->copy()->startOfDay()->lt($until)) {
+            $until = $end->copy()->startOfDay();
+        }
+        if ($until->lt($start->copy()->startOfDay())) {
+            return [];
+        }
+
+        return DB::table('mobile_event_daily_rollups')
+            ->whereBetween('day', [$start->toDateString(), $until->toDateString()])
+            ->distinct()
+            ->pluck('day')
+            ->map(fn ($day) => Carbon::parse((string) $day)->toDateString())
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    private function fillUniquesFromRaw(object $counts, Carbon $start, Carbon $end): void
+    {
+        $counts->sessions = 0;
+        $counts->users = 0;
+        $counts->devices = 0;
+
+        $minRaw = MobileAnalyticsEvent::query()->min('occurred_at');
+        if (! $minRaw) {
+            $histEnd = now()->subDay()->endOfDay();
+            if ($histEnd->gt($end)) {
+                $histEnd = $end->copy();
+            }
+            $hist = MobileDailyRollup::eventTotals($start, $histEnd);
+            $counts->sessions = $hist['sessions'];
+            $counts->users = $hist['users'];
+
+            return;
+        }
+
+        $minRawDay = Carbon::parse($minRaw)->startOfDay();
+        $uniqueFrom = $start->copy();
+        if ($minRawDay->gt($start)) {
+            $hist = MobileDailyRollup::eventTotals($start, $minRawDay->copy()->subSecond());
+            $counts->sessions += $hist['sessions'];
+            $counts->users += $hist['users'];
+            $uniqueFrom = $minRawDay;
+        }
+
+        if ($uniqueFrom->lte($end)) {
+            $row = MobileAnalyticsEvent::query()
+                ->whereBetween('occurred_at', [$uniqueFrom, $end])
+                ->selectRaw(<<<'SQL'
+                    COUNT(DISTINCT session_id) as sessions,
+                    COUNT(DISTINCT mobile_user_id) as users,
+                    COUNT(DISTINCT device_id) as devices,
+                    AVG(CASE WHEN duration_ms IS NOT NULL THEN duration_ms END) as avg_duration_ms
+                SQL)
+                ->first();
+
+            $counts->sessions += (int) ($row->sessions ?? 0);
+            $counts->users += (int) ($row->users ?? 0);
+            $counts->devices += (int) ($row->devices ?? 0);
+            $counts->avg_duration_ms = (float) ($row->avg_duration_ms ?? 0);
+        }
+    }
+
     /** Calculate frequently used counters with a single scan of the period. */
     private function aggregateCounts($base): object
     {
-        $row = $base->selectRaw(<<<'SQL'
-            COUNT(*) as events,
-            COUNT(DISTINCT session_id) as sessions,
-            COUNT(DISTINCT mobile_user_id) as users,
-            COUNT(DISTINCT device_id) as devices,
-            COUNT(DISTINCT CASE WHEN mobile_user_id IS NOT NULL THEN session_id END) as logged_in_sessions,
-            SUM(CASE WHEN event_name = 'page_view' THEN 1 ELSE 0 END) as page_views,
-            SUM(CASE WHEN event_name = 'product_view' THEN 1 ELSE 0 END) as product_views,
-            SUM(CASE WHEN event_name = 'search' THEN 1 ELSE 0 END) as searches,
-            SUM(CASE WHEN event_name = 'add_to_cart' THEN 1 ELSE 0 END) as add_to_cart,
-            SUM(CASE WHEN event_name = 'banner_click' THEN 1 ELSE 0 END) as banner_clicks,
-            SUM(CASE WHEN event_name = 'cart_abandoned' THEN 1 ELSE 0 END) as cart_abandons,
-            SUM(CASE WHEN event_name = 'order_completed' THEN 1 ELSE 0 END) as orders,
-            SUM(CASE WHEN event_name IN ('card_generated','card_created','generate_card','card_generate','cards_generated','card_generat','generare_card') THEN 1 ELSE 0 END) as cards_generated,
-            SUM(CASE WHEN event_name = 'login_success' THEN 1 ELSE 0 END) as logins,
-            SUM(CASE WHEN event_name = 'map_open' THEN 1 ELSE 0 END) as map_opens,
-            SUM(CASE WHEN event_name = 'checkout_started' THEN 1 ELSE 0 END) as checkout_started,
-            SUM(CASE WHEN event_name = 'checkout_completed' THEN 1 ELSE 0 END) as checkout_completed,
-            COUNT(DISTINCT CASE WHEN event_name = 'checkout_step' AND checkout_step >= 2 THEN session_id END) as checkout_step_sessions,
-            AVG(CASE WHEN duration_ms IS NOT NULL THEN duration_ms END) as avg_duration_ms
-        SQL)->first();
+        $sql = implode(",\n            ", [
+            'COUNT(*) as events',
+            'COUNT(DISTINCT session_id) as sessions',
+            'COUNT(DISTINCT mobile_user_id) as users',
+            'COUNT(DISTINCT device_id) as devices',
+            'COUNT(DISTINCT CASE WHEN mobile_user_id IS NOT NULL THEN session_id END) as logged_in_sessions',
+            MobileEventNames::sqlSum('page_view', 'page_views'),
+            MobileEventNames::sqlSum('product_view', 'product_views'),
+            MobileEventNames::sqlSum('search', 'searches'),
+            MobileEventNames::sqlSum('add_to_cart', 'add_to_cart'),
+            MobileEventNames::sqlSum('banner_click', 'banner_clicks'),
+            MobileEventNames::sqlSum('cart_abandoned', 'cart_abandons'),
+            MobileEventNames::sqlSum('order_completed', 'orders'),
+            MobileEventNames::sqlSum('discount_card_generate_success', 'cards_generated'),
+            MobileEventNames::sqlSum('login_success', 'logins'),
+            MobileEventNames::sqlSum('map_open', 'map_opens'),
+            MobileEventNames::sqlSum('checkout_started', 'checkout_started'),
+            MobileEventNames::sqlSum('checkout_completed', 'checkout_completed'),
+            'COUNT(DISTINCT CASE WHEN event_name = \'checkout_step\' AND checkout_step >= 2 THEN session_id END) as checkout_step_sessions',
+            'AVG(CASE WHEN duration_ms IS NOT NULL THEN duration_ms END) as avg_duration_ms',
+        ]);
+
+        $row = $base->selectRaw($sql)->first();
 
         return $row ?: $this->emptyCounts();
     }
 
-    /** Liste / JSON extras pe intervale lungi: ultimele 30 de zile, nu tot istoricul. */
+    /** Liste detaliate pe intervale foarte lungi: ultimele 90 de zile. */
     private function detailWindowStart(Carbon $start, Carbon $end): Carbon
     {
-        if ($start->diffInDays($end) <= 45) {
+        if ($start->diffInDays($end) <= 90) {
             return $start->copy();
         }
 
-        $from = $end->copy()->subDays(29)->startOfDay();
+        $from = $end->copy()->subDays(89)->startOfDay();
 
         return $from->lt($start) ? $start->copy() : $from;
     }

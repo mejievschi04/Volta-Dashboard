@@ -22,7 +22,7 @@ class MobileCrashesController extends Controller
         [$start, $end] = $this->resolvePeriod($request);
 
         return view('mobile.problems', DashboardCache::flexible(
-            'mobile:problems:v3:'.$start->timestamp.':'.$end->timestamp,
+            'mobile:problems:v4:'.$start->timestamp.':'.$end->timestamp,
             DashboardCache::ttlMobileRange($start, $end),
             fn () => $this->buildDashboardData($request)
         ));
@@ -161,15 +161,21 @@ class MobileCrashesController extends Controller
             $fingerprints = 0;
 
             if ($lastRolled && $lastRolled->gte($start)) {
-                $histEnd = $lastRolled->copy()->endOfDay();
-                if ($histEnd->gt($end)) {
-                    $histEnd = $end->copy();
+                $closed = now()->subDay()->startOfDay();
+                if ($lastRolled->gt($closed)) {
+                    $lastRolled = $closed;
                 }
-                $hist = MobileDailyRollup::crashTotals($start, $histEnd);
-                $crashes += $hist['total'];
-                $fatal += $hist['fatal'];
-                $fingerprints += $hist['fingerprints'];
-                $liveFrom = $lastRolled->copy()->addDay()->startOfDay();
+                if ($lastRolled->gte($start->copy()->startOfDay())) {
+                    $histEnd = $lastRolled->copy()->endOfDay();
+                    if ($histEnd->gt($end)) {
+                        $histEnd = $end->copy();
+                    }
+                    $hist = MobileDailyRollup::crashTotals($start, $histEnd);
+                    $crashes += $hist['total'];
+                    $fatal += $hist['fatal'];
+                    $fingerprints += $hist['fingerprints'];
+                    $liveFrom = $lastRolled->copy()->addDay()->startOfDay();
+                }
             }
 
             $devices = 0;
@@ -179,16 +185,22 @@ class MobileCrashesController extends Controller
                     ->whereBetween('occurred_at', [$liveFrom, $end])
                     ->selectRaw(<<<'SQL'
                         COUNT(*) as crashes,
-                        COUNT(DISTINCT device_id) as devices,
-                        COUNT(DISTINCT mobile_user_id) as users,
                         SUM(CASE WHEN is_fatal = 1 THEN 1 ELSE 0 END) as fatal,
                         COUNT(DISTINCT fingerprint) as fingerprints
                     SQL)->first();
                 $crashes += (int) ($live->crashes ?? 0);
                 $fatal += (int) ($live->fatal ?? 0);
                 $fingerprints += (int) ($live->fingerprints ?? 0);
-                $devices = (int) ($live->devices ?? 0);
-                $users = (int) ($live->users ?? 0);
+            }
+
+            $rawUniques = MobileCrash::query()
+                ->whereBetween('occurred_at', [$start, $end])
+                ->selectRaw('COUNT(DISTINCT device_id) as devices, COUNT(DISTINCT mobile_user_id) as users, COUNT(DISTINCT fingerprint) as fingerprints')
+                ->first();
+            $devices = (int) ($rawUniques->devices ?? 0);
+            $users = (int) ($rawUniques->users ?? 0);
+            if ((int) ($rawUniques->fingerprints ?? 0) > 0) {
+                $fingerprints = (int) $rawUniques->fingerprints;
             }
 
             $summary = [
@@ -200,8 +212,8 @@ class MobileCrashesController extends Controller
             ];
 
             $listFrom = $start->copy();
-            if ($start->diffInDays($end) > 45) {
-                $listFrom = $end->copy()->subDays(29)->startOfDay();
+            if ($start->diffInDays($end) > 90) {
+                $listFrom = $end->copy()->subDays(89)->startOfDay();
                 if ($listFrom->lt($start)) {
                     $listFrom = $start->copy();
                 }

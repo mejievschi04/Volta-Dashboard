@@ -72,7 +72,7 @@
       <div class="ma-kpi">
         <span class="ma-kpi__label"><i class="fas fa-id-card" aria-hidden="true"></i> Carduri generate</span>
         <div class="ma-kpi__value">{{ number_format($summary['cards_generated'] ?? 0, 0, ',', '.') }}</div>
-        <span class="ma-kpi__help">Carduri create din aplicație</span>
+        <span class="ma-kpi__help">Carduri de reducere generate din profil</span>
       </div>
       <div class="ma-kpi ma-kpi--good">
         <span class="ma-kpi__label"><i class="fas fa-bag-shopping" aria-hidden="true"></i> Comenzi</span>
@@ -152,7 +152,7 @@
   <section class="ma-section">
     <div class="ma-section__head">
       <h2>Ce caută oamenii</h2>
-      <p>Căutări și produse vizitate</p>
+      <p>Căutări și produse vizitate{{ !empty($listsCapped) ? ' (ultimele 90 de zile din interval)' : '' }}</p>
     </div>
     <div class="ma-grid ma-grid--2">
       <section class="ma-card">
