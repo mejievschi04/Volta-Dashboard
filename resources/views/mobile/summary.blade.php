@@ -51,7 +51,6 @@
       <div class="ma-kpi ma-kpi--accent">
         <span class="ma-kpi__label"><i class="fas fa-user" aria-hidden="true"></i> Utilizatori</span>
         <div class="ma-kpi__value">{{ $fmt($summary['devices']) }}</div>
-        <span class="ma-kpi__help">{{ $fmt($summary['users']) }} cu cont · restul fără autentificare</span>
       </div>
       <div class="ma-kpi">
         <span class="ma-kpi__label"><i class="fas fa-arrow-right-to-bracket" aria-hidden="true"></i> Sesiuni</span>
@@ -76,7 +75,6 @@
       <div class="ma-kpi">
         <span class="ma-kpi__label"><i class="fas fa-cart-plus" aria-hidden="true"></i> Adăugat în coș</span>
         <div class="ma-kpi__value">{{ $fmt($summary['add_to_cart']) }}</div>
-        <span class="ma-kpi__help">{{ $fmt($summary['cart_abandons']) }} coșuri părăsite</span>
       </div>
       <div class="ma-kpi ma-kpi--good">
         <span class="ma-kpi__label"><i class="fas fa-bag-shopping" aria-hidden="true"></i> Comenzi</span>
