@@ -51,7 +51,78 @@ class MobileDailyRollup
             );
         }
 
+        self::upsertActiveRange($from, $to);
+
         return count($payload);
+    }
+
+    /** kind => coloana din mobile_analytics_events */
+    public const ACTIVE_KINDS = [
+        'user' => 'mobile_user_id',
+        'device' => 'device_id',
+        'session' => 'session_id',
+    ];
+
+    /** Cine a fost activ în fiecare zi (doar ID-uri), ca unicii să rămână exacți după prune. */
+    public static function upsertActiveRange(Carbon $from, Carbon $to): int
+    {
+        if (! DashboardCache::tableExists('mobile_analytics_events')
+            || ! DashboardCache::tableExists('mobile_daily_actives')) {
+            return 0;
+        }
+
+        $from = $from->copy()->startOfDay();
+        $to = $to->copy()->endOfDay();
+        if ($to->lt($from)) {
+            return 0;
+        }
+
+        $written = 0;
+        foreach (self::ACTIVE_KINDS as $kind => $column) {
+            $rows = MobileAnalyticsEvent::query()
+                ->whereBetween('occurred_at', [$from, $to])
+                ->whereNotNull($column)
+                ->where($column, '!=', '')
+                ->selectRaw("DATE(occurred_at) as day, {$column} as identity")
+                ->groupBy(DB::raw('DATE(occurred_at)'), $column)
+                ->toBase()
+                ->get();
+
+            $payload = $rows->map(fn ($row) => [
+                'day' => $row->day,
+                'kind' => $kind,
+                'identity' => substr((string) $row->identity, 0, 128),
+            ])->all();
+
+            foreach (array_chunk($payload, 500) as $chunk) {
+                DB::table('mobile_daily_actives')->insertOrIgnore($chunk);
+            }
+            $written += count($payload);
+        }
+
+        return $written;
+    }
+
+    public static function lastActiveDay(): ?Carbon
+    {
+        if (! DashboardCache::tableExists('mobile_daily_actives')) {
+            return null;
+        }
+
+        $day = DB::table('mobile_daily_actives')->max('day');
+
+        return $day ? Carbon::parse($day)->startOfDay() : null;
+    }
+
+    public static function firstActiveDay(): ?Carbon
+    {
+        if (! DashboardCache::tableExists('mobile_daily_actives')) {
+            return null;
+        }
+
+        $day = DB::table('mobile_daily_actives')->min('day');
+
+        return $day ? Carbon::parse($day)->startOfDay() : null;
     }
 
     public static function upsertCrashRange(Carbon $from, Carbon $to): int

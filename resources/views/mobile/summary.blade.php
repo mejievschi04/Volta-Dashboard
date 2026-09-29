@@ -50,8 +50,8 @@
     <div class="ma-kpis">
       <div class="ma-kpi ma-kpi--accent">
         <span class="ma-kpi__label"><i class="fas fa-user" aria-hidden="true"></i> Utilizatori</span>
-        <div class="ma-kpi__value">{{ $fmt($summary['users']) }}</div>
-        <span class="ma-kpi__help">Persoane cu cont care au folosit aplicația</span>
+        <div class="ma-kpi__value">{{ $fmt($summary['devices']) }}</div>
+        <span class="ma-kpi__help">{{ $fmt($summary['users']) }} cu cont · restul fără autentificare</span>
       </div>
       <div class="ma-kpi">
         <span class="ma-kpi__label"><i class="fas fa-arrow-right-to-bracket" aria-hidden="true"></i> Sesiuni</span>
@@ -84,9 +84,9 @@
         <span class="ma-kpi__help">{{ number_format($summary['conversion_rate'] ?? 0, 2, ',', '.') }}% din sesiuni</span>
       </div>
       <div class="ma-kpi">
-        <span class="ma-kpi__label"><i class="fas fa-right-to-bracket" aria-hidden="true"></i> Autentificări</span>
-        <div class="ma-kpi__value">{{ $fmt($summary['logins']) }}</div>
-        <span class="ma-kpi__help">Intrări în cont din aplicație</span>
+        <span class="ma-kpi__label"><i class="fas fa-rectangle-ad" aria-hidden="true"></i> Click bannere</span>
+        <div class="ma-kpi__value">{{ $fmt($summary['banner_clicks']) }}</div>
+        <span class="ma-kpi__help">Total click-uri pe bannerele din aplicație</span>
       </div>
     </div>
   </section>

@@ -61,13 +61,13 @@
     <div class="ma-kpis">
       <div class="ma-kpi ma-kpi--accent">
         <span class="ma-kpi__label"><i class="fas fa-user" aria-hidden="true"></i> Vizitatori</span>
-        <div class="ma-kpi__value">{{ number_format($summary['users'], 0, ',', '.') }}</div>
-        <span class="ma-kpi__help">Persoane distincte cu cont în app</span>
+        <div class="ma-kpi__value">{{ number_format($summary['devices'] ?? 0, 0, ',', '.') }}</div>
+        <span class="ma-kpi__help">{{ number_format($summary['users'], 0, ',', '.') }} cu cont · restul fără autentificare</span>
       </div>
       <div class="ma-kpi">
         <span class="ma-kpi__label"><i class="fas fa-arrow-right-to-bracket" aria-hidden="true"></i> Sesiuni</span>
         <div class="ma-kpi__value">{{ number_format($summary['sessions'], 0, ',', '.') }}</div>
-        <span class="ma-kpi__help">{{ number_format($summary['events_per_session'] ?? 0, 1, ',', '.') }} acțiuni pe sesiune · {{ number_format($summary['devices'] ?? 0, 0, ',', '.') }} dispozitive</span>
+        <span class="ma-kpi__help">{{ number_format($summary['events_per_session'] ?? 0, 1, ',', '.') }} acțiuni pe sesiune</span>
       </div>
       <div class="ma-kpi">
         <span class="ma-kpi__label"><i class="fas fa-id-card" aria-hidden="true"></i> Carduri generate</span>

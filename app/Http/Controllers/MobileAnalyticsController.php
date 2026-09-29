@@ -150,7 +150,7 @@ class MobileAnalyticsController extends Controller
         [$start, $end] = $this->resolvePeriod($request);
 
         return DashboardCache::flexible(
-            'mobile:dashboard:v10:'.$section.':'.$start->timestamp.':'.$end->timestamp,
+            'mobile:dashboard:v11:'.$section.':'.$start->timestamp.':'.$end->timestamp,
             DashboardCache::ttlMobileRange($start, $end),
             fn () => $this->buildDashboardData($request, $section)
         );
@@ -667,7 +667,7 @@ class MobileAnalyticsController extends Controller
     private function periodCounts(Carbon $start, Carbon $end): object
     {
         return DashboardCache::flexible(
-            'mobile:counts:v7:'.$start->timestamp.':'.$end->timestamp,
+            'mobile:counts:v8:'.$start->timestamp.':'.$end->timestamp,
             DashboardCache::ttlMobileRange($start, $end),
             function () use ($start, $end) {
                 $counts = $this->emptyCounts();
@@ -751,50 +751,105 @@ class MobileAnalyticsController extends Controller
             ->all();
     }
 
+    /**
+     * Unici exacți pe interval: zilele închise din mobile_daily_actives + coada live din evenimente,
+     * reunite cu UNION ca aceeași persoană să nu fie numărată de două ori.
+     */
     private function fillUniquesFromRaw(object $counts, Carbon $start, Carbon $end): void
     {
         $counts->sessions = 0;
         $counts->users = 0;
         $counts->devices = 0;
 
-        $minRaw = MobileAnalyticsEvent::query()->min('occurred_at');
-        if (! $minRaw) {
-            $histEnd = now()->subDay()->endOfDay();
-            if ($histEnd->gt($end)) {
-                $histEnd = $end->copy();
+        $activesFrom = null;
+        $activesTo = null;
+        $rawFrom = $start->copy();
+
+        $lastActive = MobileDailyRollup::lastActiveDay();
+        if ($lastActive) {
+            $closed = now()->subDay()->startOfDay();
+            $activesTo = $lastActive->lt($closed) ? $lastActive : $closed;
+            if ($activesTo->gt($end)) {
+                $activesTo = $end->copy()->startOfDay();
             }
-            $hist = MobileDailyRollup::eventTotals($start, $histEnd);
-            $counts->sessions = $hist['sessions'];
-            $counts->users = $hist['users'];
-
-            return;
+            if ($activesTo->gte($start->copy()->startOfDay())) {
+                $activesFrom = $start->copy()->startOfDay();
+                $rawFrom = $activesTo->copy()->addDay()->startOfDay();
+            } else {
+                $activesTo = null;
+            }
         }
 
-        $minRawDay = Carbon::parse($minRaw)->startOfDay();
-        $uniqueFrom = $start->copy();
-        if ($minRawDay->gt($start)) {
-            $hist = MobileDailyRollup::eventTotals($start, $minRawDay->copy()->subSecond());
-            $counts->sessions += $hist['sessions'];
-            $counts->users += $hist['users'];
-            $uniqueFrom = $minRawDay;
+        foreach (MobileDailyRollup::ACTIVE_KINDS as $kind => $column) {
+            $parts = [];
+            if ($activesFrom && $activesTo) {
+                $parts[] = DB::table('mobile_daily_actives')
+                    ->distinct()
+                    ->select('identity')
+                    ->where('kind', $kind)
+                    ->whereBetween('day', [$activesFrom->toDateString(), $activesTo->toDateString()]);
+            }
+            if ($rawFrom->lte($end)) {
+                $parts[] = DB::table('mobile_analytics_events')
+                    ->distinct()
+                    ->selectRaw("{$column} as identity")
+                    ->whereBetween('occurred_at', [$rawFrom, $end])
+                    ->whereNotNull($column)
+                    ->where($column, '!=', '');
+            }
+            if ($parts === []) {
+                continue;
+            }
+
+            $union = array_shift($parts);
+            foreach ($parts as $part) {
+                $union->union($part);
+            }
+
+            $total = DB::query()->fromSub($union, 'u')->count();
+            $field = ['user' => 'users', 'device' => 'devices', 'session' => 'sessions'][$kind];
+            $counts->{$field} = (int) $total;
         }
 
-        if ($uniqueFrom->lte($end)) {
-            $row = MobileAnalyticsEvent::query()
-                ->whereBetween('occurred_at', [$uniqueFrom, $end])
-                ->selectRaw(<<<'SQL'
-                    COUNT(DISTINCT session_id) as sessions,
-                    COUNT(DISTINCT mobile_user_id) as users,
-                    COUNT(DISTINCT device_id) as devices,
-                    AVG(CASE WHEN duration_ms IS NOT NULL THEN duration_ms END) as avg_duration_ms
-                SQL)
-                ->first();
+        $legacy = $this->legacyUniqueTotals($start, $end);
+        $counts->sessions += $legacy['sessions'];
+        $counts->users += $legacy['users'];
 
-            $counts->sessions += (int) ($row->sessions ?? 0);
-            $counts->users += (int) ($row->users ?? 0);
-            $counts->devices += (int) ($row->devices ?? 0);
-            $counts->avg_duration_ms = (float) ($row->avg_duration_ms ?? 0);
+        $avg = MobileAnalyticsEvent::query()
+            ->whereBetween('occurred_at', [$start, $end])
+            ->whereNotNull('duration_ms')
+            ->avg('duration_ms');
+        $counts->avg_duration_ms = (float) ($avg ?? 0);
+    }
+
+    /**
+     * Zile vechi care au doar totaluri zilnice (fără listă de activi și fără date brute).
+     * Acolo unicii sunt aproximați ca sumă pe zile.
+     *
+     * @return array{sessions: int, users: int}
+     */
+    private function legacyUniqueTotals(Carbon $start, Carbon $end): array
+    {
+        $bounds = array_filter([
+            MobileDailyRollup::firstActiveDay(),
+            ($minRaw = MobileAnalyticsEvent::query()->min('occurred_at')) ? Carbon::parse($minRaw)->startOfDay() : null,
+        ]);
+        if ($bounds === []) {
+            return ['sessions' => 0, 'users' => 0];
         }
+
+        $firstExact = min($bounds);
+        $legacyEnd = $firstExact->copy()->subDay()->endOfDay();
+        if ($legacyEnd->gt($end)) {
+            $legacyEnd = $end->copy();
+        }
+        if ($legacyEnd->lt($start)) {
+            return ['sessions' => 0, 'users' => 0];
+        }
+
+        $hist = MobileDailyRollup::eventTotals($start, $legacyEnd);
+
+        return ['sessions' => $hist['sessions'], 'users' => $hist['users']];
     }
 
     /** Calculate frequently used counters with a single scan of the period. */

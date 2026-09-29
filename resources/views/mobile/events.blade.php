@@ -59,9 +59,9 @@
       <span class="ma-kpi__help">{{ number_format($summary['avg_page_seconds'], 0, ',', '.') }} secunde pe pagină, în medie</span>
     </div>
     <div class="ma-kpi">
-      <span class="ma-kpi__label"><i class="fas fa-right-to-bracket" aria-hidden="true"></i> Autentificări</span>
-      <div class="ma-kpi__value">{{ number_format($summary['logins'], 0, ',', '.') }}</div>
-      <span class="ma-kpi__help">{{ number_format($summary['map_opens'], 0, ',', '.') }} deschideri ale hărții</span>
+      <span class="ma-kpi__label"><i class="fas fa-map-location-dot" aria-hidden="true"></i> Deschideri hartă</span>
+      <div class="ma-kpi__value">{{ number_format($summary['map_opens'], 0, ',', '.') }}</div>
+      <span class="ma-kpi__help">Harta magazinelor deschisă din aplicație</span>
     </div>
     <div class="ma-kpi">
       <span class="ma-kpi__label"><i class="fas fa-rectangle-ad" aria-hidden="true"></i> Click bannere</span>
