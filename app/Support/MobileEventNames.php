@@ -73,7 +73,7 @@ class MobileEventNames
     }
 
     /** @return list<string> */
-    public static function chartEvents(): array
+    public static function chartSeries(): array
     {
         return [
             'page_view',
@@ -83,6 +83,19 @@ class MobileEventNames
             'banner_click',
             'cart_abandoned',
             'order_completed',
+            'discount_card_generate_success',
         ];
+    }
+
+    /** Toate numele brute care alimentează seriile din grafic. */
+    /** @return list<string> */
+    public static function chartEvents(): array
+    {
+        $names = [];
+        foreach (self::chartSeries() as $series) {
+            array_push($names, ...self::aliases($series));
+        }
+
+        return array_values(array_unique($names));
     }
 }

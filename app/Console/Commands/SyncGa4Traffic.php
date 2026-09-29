@@ -11,7 +11,7 @@ class SyncGa4Traffic extends Command
     protected $signature = 'ga4:sync
                             {--month= : Luna (YYYY-MM); implicit: luna curentă}';
 
-    protected $description = 'Sincronizează datele din Google Analytics 4 (trafic) în baza de date. Folosit și de scheduler (zilnic 07:00).';
+    protected $description = 'Sincronizează datele din Google Analytics 4 (trafic) în baza de date. Folosit și de scheduler (zilnic 05:00, 12:00, 16:00).';
 
     public function handle(): int
     {

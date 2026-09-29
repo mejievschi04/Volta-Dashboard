@@ -173,9 +173,9 @@ class OneCController extends Controller
             $dateStart = $p['start'];
             $dateEnd = $p['end'];
 
-            // Un singur sync per lună: skip doar dacă avem deja date până la sfârșitul perioadei cerute
-            // (astfel în cursul lunii actualizăm zilnic, iar în luna următoare reîmprospătăm luna completă)
-            if (! $force) {
+            // Lunile trecute: skip dacă avem deja date până la sfârșitul lunii.
+            // Luna curentă se reîmprospătează la fiecare rulare (scheduler-ul rulează de mai multe ori pe zi).
+            if (! $force && $dateEnd !== $today) {
                 $monthStart = substr($dateStart, 0, 7);
                 $existing = OnecKpiSync::where('period_start', '>=', $dateStart)
                     ->where('period_start', '<', date('Y-m-d', strtotime($monthStart . '-01 +1 month')))

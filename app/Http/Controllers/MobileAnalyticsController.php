@@ -32,6 +32,11 @@ class MobileAnalyticsController extends Controller
         return view('mobile.funnels', $this->cachedDashboardData($request, 'funnels'));
     }
 
+    public function summary(Request $request)
+    {
+        return view('mobile.summary', $this->cachedDashboardData($request, 'summary'));
+    }
+
     public function pagesList(Request $request)
     {
         [$start, $end] = $this->resolvePeriod($request);
@@ -302,6 +307,10 @@ class MobileAnalyticsController extends Controller
                 $topProducts = $this->topMetadataValues($detailBase, 'product_view', '$.product_name', 12);
                 $dailyChart = $this->dailyChart($start, $end);
             }
+
+            if ($section === 'summary') {
+                $dailyChart = $this->dailyChart($start, $end);
+            }
         }
 
         return compact(
@@ -460,10 +469,7 @@ class MobileAnalyticsController extends Controller
         }
 
         $eventNames = MobileEventNames::chartEvents();
-        $datasets = array_fill_keys(
-            ['page_view', 'product_view', 'search', 'add_to_cart', 'banner_click', 'cart_abandoned', 'order_completed'],
-            array_fill(0, count($labels), 0)
-        );
+        $datasets = array_fill_keys(MobileEventNames::chartSeries(), array_fill(0, count($labels), 0));
         $labelIndex = array_flip($labels);
 
         $rolledDays = $this->rolledEventDays($start, $end);

@@ -89,6 +89,8 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
         Route::get('/operatori/{operatorId}/upload', [UploadOperatorVanzariController::class, 'uploadForm'])->name('operatori.upload');
         Route::post('/operatori/{operatorId}/upload', [UploadOperatorVanzariController::class, 'upload'])->name('operatori.upload.post');
         
+        Route::get('/aplicatia-volta', [MobileAnalyticsController::class, 'summary'])->name('aplicatia-volta');
+
         Route::get('/rapoarte/raport-lunar', [RaportLunarController::class, 'index'])->name('rapoarte.raport-lunar');
         Route::post('/rapoarte/raport-lunar/inputs', [RaportLunarController::class, 'storeInputs'])->name('rapoarte.raport-lunar.inputs');
     });

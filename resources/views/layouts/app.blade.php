@@ -27,7 +27,7 @@
   @php $styleCssVersion = @filemtime(public_path('css/style.css')) ?: 0; @endphp
   <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ $styleCssVersion }}"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  @if(request()->routeIs('mobile.analytics*', 'mobile.crashes*', 'mobile.feedback*', 'mobile.problems'))
+  @if(request()->routeIs('mobile.analytics*', 'mobile.crashes*', 'mobile.feedback*', 'mobile.problems', 'aplicatia-volta'))
     <link rel="stylesheet" href="{{ asset('css/mobile-analytics.css') }}?v={{ @filemtime(public_path('css/mobile-analytics.css')) ?: 0 }}">
   @endif
   @stack('styles')
@@ -95,6 +95,9 @@
           <i class="fas fa-cog"></i><span class="txt">Setări</span>
         </a>
         @if(auth()->check() && auth()->user()->isAdmin())
+        <a href="{{ route('aplicatia-volta') }}" class="{{ request()->routeIs('aplicatia-volta') ? 'active' : '' }}">
+          <i class="fas fa-mobile-screen-button"></i><span class="txt">Aplicația Volta</span>
+        </a>
         <a href="{{ route('rapoarte.raport-lunar') }}" class="{{ request()->routeIs('rapoarte.raport-lunar') ? 'active' : '' }}">
           <i class="fas fa-file-contract"></i><span class="txt">Raport lunar</span>
         </a>
