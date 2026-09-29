@@ -150,7 +150,7 @@ class MobileAnalyticsController extends Controller
         [$start, $end] = $this->resolvePeriod($request);
 
         return DashboardCache::flexible(
-            'mobile:dashboard:v11:'.$section.':'.$start->timestamp.':'.$end->timestamp,
+            'mobile:dashboard:v12:'.$section.':'.$start->timestamp.':'.$end->timestamp,
             DashboardCache::ttlMobileRange($start, $end),
             fn () => $this->buildDashboardData($request, $section)
         );
@@ -509,7 +509,12 @@ class MobileAnalyticsController extends Controller
             }
         }
 
-        return ['labels' => $labels, 'datasets' => $datasets];
+        return ['labels' => self::europeanLabels($labels), 'datasets' => $datasets];
+    }
+
+    public static function europeanLabels(array $ymdLabels): array
+    {
+        return array_map(static fn (string $day): string => Carbon::parse($day)->format('d.m.Y'), $ymdLabels);
     }
 
     private function funnelFromCounts(object $counts, int $pageViews, int $productViews, int $addToCart, int $cartAbandoned, int $orders): array

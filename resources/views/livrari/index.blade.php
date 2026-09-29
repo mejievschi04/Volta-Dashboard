@@ -5,7 +5,6 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/operatori.css') }}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <style>
   /* ---------- Page base ---------- */
@@ -2487,7 +2486,7 @@
   }
   function resetForm() {
     if (form) form.reset();
-    if (dataLivrarii) dataLivrarii.value = new Date().toISOString().slice(0, 10);
+    if (dataLivrarii) window.VoltaDateInputs.set(dataLivrarii, 'today');
     if (window.LivrariLocationLookup) window.LivrariLocationLookup.reset('modal_localitate', 'modal_raion');
     setDuplicateComanda(false);
   }
@@ -2707,7 +2706,7 @@
     currentEditRow = row;
     var id = row.dataset.id;
     if (editNumarComanda) editNumarComanda.value = row.dataset.numarComanda || '';
-    editDataLivrarii.value = row.dataset.dataLivrarii || '';
+    window.VoltaDateInputs.set(editDataLivrarii, row.dataset.dataLivrarii || '');
     if (window.LivrariLocationLookup) {
       window.LivrariLocationLookup.set('edit_localitate', 'edit_raion', row.dataset.localitate || '', row.dataset.raion || '');
     } else {
@@ -2852,8 +2851,6 @@
 @endpush
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ro.js"></script>
 <script>
 (function() {
   var trigger = document.getElementById('livrariPerioadaTrigger');

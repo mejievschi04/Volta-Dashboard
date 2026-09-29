@@ -30,6 +30,9 @@
   @if(request()->routeIs('mobile.analytics*', 'mobile.crashes*', 'mobile.feedback*', 'mobile.problems', 'aplicatia-volta'))
     <link rel="stylesheet" href="{{ asset('css/mobile-analytics.css') }}?v={{ @filemtime(public_path('css/mobile-analytics.css')) ?: 0 }}">
   @endif
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/plugins/monthSelect/style.css">
+  <link rel="stylesheet" href="{{ asset('css/volta-date-inputs.css') }}">
   @stack('styles')
 </head>
 <body>
@@ -176,6 +179,10 @@
   <script src="{{ asset('js/excel-export-exceljs.js') }}"></script>
   @endif
   <script src="{{ asset('js/volta-chart-theme.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/ro.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/plugins/monthSelect/index.js"></script>
+  <script src="{{ asset('js/volta-date-inputs.js') }}"></script>
   @stack('scripts')
   <script>
     // Suprimă erorile de la extensiile browserului

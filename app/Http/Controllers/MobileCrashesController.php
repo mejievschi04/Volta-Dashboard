@@ -22,7 +22,7 @@ class MobileCrashesController extends Controller
         [$start, $end] = $this->resolvePeriod($request);
 
         return view('mobile.problems', DashboardCache::flexible(
-            'mobile:problems:v4:'.$start->timestamp.':'.$end->timestamp,
+            'mobile:problems:v5:'.$start->timestamp.':'.$end->timestamp,
             DashboardCache::ttlMobileRange($start, $end),
             fn () => $this->buildDashboardData($request)
         ));
@@ -426,7 +426,7 @@ class MobileCrashesController extends Controller
             }
         }
 
-        return ['labels' => $labels, 'totals' => $totals];
+        return ['labels' => MobileAnalyticsController::europeanLabels($labels), 'totals' => $totals];
     }
 
     private function resolvePeriod(Request $request): array

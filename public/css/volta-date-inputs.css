@@ -1,0 +1,44 @@
+/* Calendar pentru câmpurile de dată (flatpickr), adaptat temei dashboard-ului */
+.volta-flatpickr.flatpickr-calendar {
+  background: var(--bg-elevated, #1e293b);
+  border: 1px solid var(--border-primary, rgba(255, 238, 0, 0.18));
+  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.45);
+  border-radius: 12px;
+  color: var(--text-primary, #fff);
+}
+.volta-flatpickr.flatpickr-calendar.arrowTop::before,
+.volta-flatpickr.flatpickr-calendar.arrowTop::after { border-bottom-color: var(--border-primary, #334155); }
+.volta-flatpickr.flatpickr-calendar.arrowBottom::before,
+.volta-flatpickr.flatpickr-calendar.arrowBottom::after { border-top-color: var(--border-primary, #334155); }
+.volta-flatpickr .flatpickr-months,
+.volta-flatpickr .flatpickr-weekdays,
+.volta-flatpickr span.flatpickr-weekday { background: transparent; }
+.volta-flatpickr .flatpickr-months .flatpickr-month,
+.volta-flatpickr .flatpickr-current-month,
+.volta-flatpickr .flatpickr-current-month .flatpickr-monthDropdown-months,
+.volta-flatpickr .flatpickr-current-month input.cur-year { color: var(--text-primary, #fff); fill: var(--text-primary, #fff); }
+.volta-flatpickr span.flatpickr-weekday { color: var(--text-tertiary, #94a3b8); }
+.volta-flatpickr .flatpickr-prev-month svg,
+.volta-flatpickr .flatpickr-next-month svg { fill: var(--brand, #FFEE00); }
+.volta-flatpickr .flatpickr-day,
+.volta-flatpickr .flatpickr-monthSelect-month { color: var(--text-secondary, #E5E7EB); border-radius: 8px; }
+.volta-flatpickr .flatpickr-day.prevMonthDay,
+.volta-flatpickr .flatpickr-day.nextMonthDay,
+.volta-flatpickr .flatpickr-day.flatpickr-disabled { color: var(--text-disabled, #64748b); }
+.volta-flatpickr .flatpickr-day:hover,
+.volta-flatpickr .flatpickr-monthSelect-month:hover {
+  background: rgba(255, 238, 0, 0.2);
+  border-color: rgba(255, 238, 0, 0.32);
+  color: var(--text-primary, #fff);
+}
+.volta-flatpickr .flatpickr-day.today { border-color: var(--brand, #FFEE00); }
+.volta-flatpickr .flatpickr-day.selected,
+.volta-flatpickr .flatpickr-day.selected:hover,
+.volta-flatpickr .flatpickr-monthSelect-month.selected,
+.volta-flatpickr .flatpickr-monthSelect-month.selected:hover {
+  background: var(--brand, #FFEE00);
+  border-color: var(--brand, #FFEE00);
+  color: #0a0a0a;
+}
+.volta-flatpickr .flatpickr-monthSelect-months { margin: 8px 6px; }
+input.volta-date-display { cursor: pointer; }

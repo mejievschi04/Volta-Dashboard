@@ -15,6 +15,9 @@
   <link rel="stylesheet" href="{{ url('css/style.css') }}"/>
   <link rel="stylesheet" href="{{ url('css/operatori.css') }}?v={{ @filemtime(public_path('css/operatori.css')) ?: 0 }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/plugins/monthSelect/style.css">
+  <link rel="stylesheet" href="{{ asset('css/volta-date-inputs.css') }}">
   @stack('styles')
 </head>
 <body class="operator-portal">
@@ -67,6 +70,10 @@
   <script src="{{ asset('js/excel-export-exceljs.js') }}"></script>
   @endif
   <script src="{{ asset('js/volta-chart-theme.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/ro.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/plugins/monthSelect/index.js"></script>
+  <script src="{{ asset('js/volta-date-inputs.js') }}"></script>
   @stack('scripts')
 </body>
 </html>
