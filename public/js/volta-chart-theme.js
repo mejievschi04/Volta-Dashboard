@@ -25,6 +25,21 @@
     },
   };
 
+  var docEl = global.document && global.document.documentElement;
+  if (docEl && docEl.getAttribute("data-theme") === "neon-glass") {
+    C.grid = "rgba(0, 229, 255, 0.09)";
+    C.gridAxis = "rgba(0, 229, 255, 0.18)";
+    C.surface = "rgba(10, 12, 32, 0.94)";
+    C.brand = "rgb(0, 229, 255)";
+    C.brandSoft = "rgba(0, 229, 255, 0.16)";
+    C.series.amber = { line: "rgb(0, 229, 255)", area: "rgba(0, 229, 255, 0.18)" };
+    C.series.cyan = { line: "rgb(255, 43, 214)", area: "rgba(255, 43, 214, 0.16)" };
+    C.series.violet = { line: "rgb(157, 120, 255)", area: "rgba(157, 120, 255, 0.18)" };
+    C.series.emerald = { line: "rgb(0, 255, 163)", area: "rgba(0, 255, 163, 0.16)" };
+    C.series.rose = { line: "rgb(255, 77, 141)", area: "rgba(255, 77, 141, 0.18)" };
+  }
+  var neon = !!(docEl && docEl.getAttribute("data-theme") === "neon-glass");
+
   function isMobile() {
     return typeof global.innerWidth === "number" && global.innerWidth <= 768;
   }
@@ -56,10 +71,10 @@
   function tooltip() {
     return {
       enabled: true,
-      backgroundColor: "rgba(30, 41, 59, 0.96)",
+      backgroundColor: C.surface,
       titleColor: C.brand,
       bodyColor: C.textPrimary,
-      borderColor: "rgba(255, 238, 0, 0.25)",
+      borderColor: neon ? "rgba(0, 229, 255, 0.35)" : "rgba(255, 238, 0, 0.25)",
       borderWidth: 1,
       padding: 12,
       cornerRadius: 10,
@@ -203,12 +218,12 @@
     /** Preseturi gradient pentru bare dashboard */
     /** Culori solide (fără gradient) — compatibile cu clone JSON în modal */
     barSolid: {
-      brand: "rgb(255, 238, 0)",
-      brandHover: "rgb(255, 247, 120)",
-      coral: "rgb(251, 113, 133)",
-      coralHover: "rgb(253, 164, 175)",
-      sky: "rgb(180, 188, 204)",
-      skyHover: "rgb(212, 218, 228)",
+      brand: neon ? "rgb(0, 229, 255)" : "rgb(255, 238, 0)",
+      brandHover: neon ? "rgb(125, 249, 255)" : "rgb(255, 247, 120)",
+      coral: neon ? "rgb(255, 43, 214)" : "rgb(251, 113, 133)",
+      coralHover: neon ? "rgb(255, 130, 230)" : "rgb(253, 164, 175)",
+      sky: neon ? "rgb(157, 120, 255)" : "rgb(180, 188, 204)",
+      skyHover: neon ? "rgb(196, 176, 255)" : "rgb(212, 218, 228)",
     },
   };
 })(typeof window !== "undefined" ? window : this);

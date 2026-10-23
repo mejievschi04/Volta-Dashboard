@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 @php
-  $uiTheme = auth()->check() ? (auth()->user()->theme ?? 'dark') : 'dark';
-  if (!in_array($uiTheme, ['dark', 'dark-red'], true)) {
-    $uiTheme = 'dark';
-  }
+  $uiTheme = \App\Support\UiTheme::current();
 @endphp
 <html lang="ro" data-theme="{{ $uiTheme }}">
 <head>
@@ -34,6 +31,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/plugins/monthSelect/style.css">
   <link rel="stylesheet" href="{{ asset('css/volta-date-inputs.css') }}">
   @stack('styles')
+  @include('partials.theme-assets')
 </head>
 <body>
   <div class="app">

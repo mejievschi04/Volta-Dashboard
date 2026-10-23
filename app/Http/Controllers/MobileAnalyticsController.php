@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MobileAnalyticsEvent;
+use App\Services\VoltaChatAnalyticsService;
 use App\Support\DashboardCache;
 use App\Support\MobileDailyRollup;
 use App\Support\MobileEventNames;
@@ -35,6 +36,26 @@ class MobileAnalyticsController extends Controller
     public function summary(Request $request)
     {
         return view('mobile.summary', $this->cachedDashboardData($request, 'summary'));
+    }
+
+    public function chatSummary(Request $request, VoltaChatAnalyticsService $chat)
+    {
+        [$start, $end] = $this->resolvePeriod($request);
+
+        $result = $chat->fetch($start, $end, [
+            'type' => $request->query('chat_type'),
+            'grain' => $request->query('chat_grain'),
+            'channelId' => $request->query('chat_channel'),
+            'operatorSort' => $request->query('chat_sort'),
+        ]);
+
+        return view('mobile.partials.voltachat', [
+            'chat' => $result['data'],
+            'chatError' => $result['error'],
+            'chatFilters' => $result['filters'],
+            'start' => $start,
+            'end' => $end,
+        ]);
     }
 
     public function pagesList(Request $request)

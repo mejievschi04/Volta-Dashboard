@@ -90,6 +90,7 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
         Route::post('/operatori/{operatorId}/upload', [UploadOperatorVanzariController::class, 'upload'])->name('operatori.upload.post');
         
         Route::get('/aplicatia-volta', [MobileAnalyticsController::class, 'summary'])->name('aplicatia-volta');
+        Route::get('/aplicatia-volta/voltachat', [MobileAnalyticsController::class, 'chatSummary'])->name('aplicatia-volta.voltachat');
 
         Route::get('/rapoarte/raport-lunar', [RaportLunarController::class, 'index'])->name('rapoarte.raport-lunar');
         Route::post('/rapoarte/raport-lunar/inputs', [RaportLunarController::class, 'storeInputs'])->name('rapoarte.raport-lunar.inputs');
@@ -155,6 +156,7 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
     Route::get('/api/istoric', [\App\Http\Controllers\Api\IstoricController::class, 'index'])->name('api.istoric');
     Route::get('/export/istoric/pdf', [\App\Http\Controllers\ExportPdfController::class, 'exportIstoric'])->name('export.istoric.pdf');
     Route::get('/export/comparare/pdf', [\App\Http\Controllers\ExportPdfController::class, 'exportComparare'])->name('export.comparare.pdf');
+    Route::get('/export/evolutie-comenzi/pdf', [\App\Http\Controllers\ExportPdfController::class, 'exportEvolutieComenzi'])->name('export.evolutie-comenzi.pdf');
     
     // Google Analytics Routes
     Route::post('/api/ga/sync', [\App\Http\Controllers\GoogleAnalyticsController::class, 'sync'])->name('api.ga.sync');

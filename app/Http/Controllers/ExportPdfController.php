@@ -186,6 +186,149 @@ class ExportPdfController extends Controller
         }
     }
 
+    public function exportEvolutieComenzi(Request $request)
+    {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        try {
+            $istoricResponse = (new IstoricController())->index(new Request());
+            $istoricPayload = json_decode($istoricResponse->getContent(), true);
+            if (! $istoricPayload || ! ($istoricPayload['success'] ?? false)) {
+                return redirect()->back()->with('error', 'Nu am putut genera raportul de evoluție a comenzilor.');
+            }
+
+            $byMonth = [];
+            foreach ($istoricPayload['data'] ?? [] as $row) {
+                $byMonth[(string) $row['luna']] = $row;
+            }
+
+            [$start, $end] = $this->evolutieRange($request);
+            $currentMonth = date('Y-m');
+
+            $months = [];
+            $cursor = \DateTime::createFromFormat('Y-m-d', $start.'-01');
+            $last = \DateTime::createFromFormat('Y-m-d', $end.'-01');
+            while ($cursor && $last && $cursor <= $last) {
+                $months[] = $cursor->format('Y-m');
+                $cursor->modify('+1 month');
+            }
+
+            $growth = static fn (float $now, float $before): ?float => $before > 0 ? round((($now - $before) / $before) * 100, 1) : null;
+            $shift = static fn (string $ym, string $modifier): string => (new \DateTime($ym.'-01'))->modify($modifier)->format('Y-m');
+
+            $rows = [];
+            foreach ($months as $ym) {
+                $row = $byMonth[$ym] ?? [];
+                $comenzi = (int) ($row['comenzi'] ?? 0);
+                $prevComenzi = (int) ($byMonth[$shift($ym, '-1 month')]['comenzi'] ?? 0);
+                $yoyComenzi = (int) ($byMonth[$shift($ym, '-1 year')]['comenzi'] ?? 0);
+
+                $rows[] = [
+                    'luna' => $ym,
+                    'label' => LunaRomana::labelFromYm($ym),
+                    'short' => $this->shortMonthLabel($ym),
+                    'in_curs' => $ym === $currentMonth,
+                    'comenzi' => $comenzi,
+                    'diferenta' => $prevComenzi > 0 ? $comenzi - $prevComenzi : null,
+                    'crestere' => $growth($comenzi, $prevComenzi),
+                    'crestere_an' => $growth($comenzi, $yoyComenzi),
+                    'comenzi_zi' => (float) ($row['comenzi_zi'] ?? 0),
+                    'vanzari' => (float) ($row['vanzari_luna'] ?? 0),
+                    'cec_mediu' => (float) ($row['cec_mediu'] ?? 0),
+                    'conversie' => (float) ($row['conversie'] ?? 0),
+                ];
+            }
+
+            $values = array_column($rows, 'comenzi');
+            /* Luna în curs e parțială: rămâne în grafic și tabel, dar nu intră în creșteri, medie și extreme. */
+            $completed = array_values(array_filter($rows, fn ($r) => ! $r['in_curs']));
+            $basis = $completed ?: $rows;
+            $withOrders = array_values(array_filter($basis, fn ($r) => $r['comenzi'] > 0));
+            $first = $withOrders[0] ?? null;
+            $lastRow = $withOrders ? $withOrders[count($withOrders) - 1] : null;
+            $monthlyGrowths = array_values(array_filter(array_column($basis, 'crestere'), fn ($g) => $g !== null));
+            $best = $withOrders ? array_reduce($withOrders, fn ($c, $r) => $c === null || $r['comenzi'] > $c['comenzi'] ? $r : $c) : null;
+            $worst = $withOrders ? array_reduce($withOrders, fn ($c, $r) => $c === null || $r['comenzi'] < $c['comenzi'] ? $r : $c) : null;
+
+            $summary = [
+                'total' => array_sum($values),
+                'medie' => $withOrders ? round(array_sum(array_column($withOrders, 'comenzi')) / count($withOrders)) : 0,
+                'exclude_curent' => count($completed) !== count($rows) && $completed,
+                'crestere_totala' => $first && $lastRow && $first !== $lastRow ? $growth($lastRow['comenzi'], $first['comenzi']) : null,
+                'crestere_medie' => $monthlyGrowths ? round(array_sum($monthlyGrowths) / count($monthlyGrowths), 1) : null,
+                'prima' => $first,
+                'ultima' => $lastRow,
+                'best' => $best,
+                'worst' => $worst,
+                'max' => max($values ?: [0]),
+            ];
+
+            $options = new Options();
+            $options->set([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => false,
+                'defaultFont' => 'DejaVu Sans',
+                'chroot' => [public_path(), base_path()],
+                'tempDir' => sys_get_temp_dir(),
+            ]);
+
+            $pdf = new Dompdf($options);
+            $pdf->loadHtml(view('rapoarte.pdf.evolutie-comenzi', [
+                'rows' => $rows,
+                'summary' => $summary,
+                'periodLabel' => $this->comparareRangeLabel($start, $end),
+                'logoPath' => public_path('images/volta-logo.png'),
+            ])->render());
+            $pdf->setPaper('A4', 'landscape');
+            $pdf->render();
+
+            return response($pdf->output(), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="evolutie_comenzi_'.$start.'_'.$end.'.pdf"',
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Eroare export evoluție comenzi PDF: '.$e->getMessage());
+
+            return redirect()->back()->with('error', 'Eroare la generarea PDF: '.$e->getMessage());
+        }
+    }
+
+    /** Intervalul ales; altfel anul selectat; altfel ultimele 12 luni. Nu trece de luna curentă. */
+    private function evolutieRange(Request $request): array
+    {
+        $current = date('Y-m');
+        $start = (string) $request->get('luna_start', '');
+        $end = (string) $request->get('luna_end', '');
+        $an = (string) $request->get('an', '');
+        $valid = static fn (string $ym): bool => (bool) preg_match('/^\d{4}-\d{2}$/', $ym);
+
+        if (! $valid($start) && ! $valid($end) && preg_match('/^\d{4}$/', $an)) {
+            $start = $an.'-01';
+            $end = $an.'-12';
+        }
+        if (! $valid($end)) {
+            $end = $current;
+        }
+        if (! $valid($start)) {
+            $start = (new \DateTime($end.'-01'))->modify('-11 months')->format('Y-m');
+        }
+        if ($start > $end) {
+            [$start, $end] = [$end, $start];
+        }
+
+        return [min($start, $current), min($end, $current)];
+    }
+
+    private function shortMonthLabel(string $ym): string
+    {
+        $short = [1 => 'Ian', 'Feb', 'Mar', 'Apr', 'Mai', 'Iun', 'Iul', 'Aug', 'Sep', 'Oct', 'Noi', 'Dec'];
+        [$year, $month] = array_map('intval', explode('-', $ym));
+
+        return ($short[$month] ?? $month).' '.substr((string) $year, 2);
+    }
+
     private function normalizeComparareRange(string $start, string $end): array
     {
         $start = preg_match('/^\d{4}-\d{2}$/', $start) ? $start : date('Y-m');

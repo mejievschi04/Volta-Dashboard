@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ro" data-theme="dark">
+@php $uiTheme = \App\Support\UiTheme::current(); @endphp
+<html lang="ro" data-theme="{{ $uiTheme }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -159,6 +160,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/plugins/monthSelect/style.css">
   <link rel="stylesheet" href="{{ asset('css/volta-date-inputs.css') }}">
   @stack('styles')
+  @include('partials.theme-assets')
 </head>
 <body class="mobile-analytics-layout">
   <div class="mobile-shell">

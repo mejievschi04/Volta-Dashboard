@@ -117,6 +117,9 @@
         <button type="button" id="istoricExportPdfBtn" class="btn secondary">
           <i class="fas fa-file-pdf" aria-hidden="true"></i> PDF
         </button>
+        <button type="button" id="istoricEvolutieComenziBtn" class="btn secondary" title="PDF cu evoluția lunară a comenzilor pentru intervalul ales (implicit ultimele 12 luni)">
+          <i class="fas fa-chart-column" aria-hidden="true"></i> Evoluție comenzi
+        </button>
       </span>
     </h3>
     <div class="comparare-table-wrap">
@@ -523,6 +526,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const search = document.getElementById('searchInput').value || '';
     const params = new URLSearchParams({ an: an, luna: luna, luna_start: lunaStart, luna_end: lunaEnd, search: search });
     window.location.href = @json(route('export.istoric.pdf')) + '?' + params.toString();
+  });
+  document.getElementById('istoricEvolutieComenziBtn').addEventListener('click', function () {
+    const params = new URLSearchParams({
+      luna_start: document.getElementById('filterLunaStart').value || '',
+      luna_end: document.getElementById('filterLunaEnd').value || '',
+      an: document.getElementById('filterAn').value || ''
+    });
+    window.location.href = @json(route('export.evolutie-comenzi.pdf')) + '?' + params.toString();
   });
   loadIstoric();
 });

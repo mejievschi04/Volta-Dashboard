@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ro" data-theme="dark">
+@php $uiTheme = \App\Support\UiTheme::current(); @endphp
+<html lang="ro" data-theme="{{ $uiTheme }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
@@ -12,6 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="{{ url('css/login.css') }}">
+  @include('partials.theme-assets')
 </head>
 <body>
   <canvas id="darkVeilCanvas" class="dark-veil-canvas" aria-hidden="true"></canvas>
@@ -328,7 +330,7 @@
               float glossLocal = tri(uStarSpeed / (PERIOD * seed + 1.0));
               float flareSize = smoothstep(0.9, 1.0, size) * glossLocal;
               float whiteMix = smoothstep(0.35, 0.9, Hash21(si + 7.0));
-              vec3 yellow = vec3(1.0, 0.933, 0.0); // #ffee00
+              vec3 yellow = {{ $uiTheme === 'neon-glass' ? 'vec3(0.0, 0.898, 1.0)' : 'vec3(1.0, 0.933, 0.0)' }};
               vec3 white = vec3(1.0, 1.0, 1.0);
               vec3 base = mix(yellow, white, whiteMix);
               vec2 pad = vec2(tris(seed * 34.0 + uTime * uSpeed / 10.0), tris(seed * 38.0 + uTime * uSpeed / 30.0)) - 0.5;
@@ -464,7 +466,7 @@
         rotationY: 0.0,
         starSpeed: 0.38,
         density: 0.82,
-        hueShift: 52.0, // closer to VOLTA yellow (#ffee00)
+        hueShift: {{ $uiTheme === 'neon-glass' ? '200.0' : '52.0' }},
         speed: 0.72,
         glowIntensity: 0.24,
         saturation: 1.1,

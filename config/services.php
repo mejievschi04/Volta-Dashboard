@@ -49,6 +49,11 @@ return [
         'key' => env('MOBILE_CRASHES_KEY', ''),
     ],
 
+    'voltachat' => [
+        'url' => env('VOLTACHAT_URL', ''),
+        'analytics_token' => env('VOLTACHAT_ANALYTICS_TOKEN', ''),
+    ],
+
     'mobile_feedback' => [
         'key' => env('MOBILE_FEEDBACK_KEY', env('MOBILE_ANALYTICS_KEY', '')),
     ],

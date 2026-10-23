@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Operator;
+use App\Support\UiTheme;
 
 class DashboardController extends Controller
 {
@@ -66,7 +67,7 @@ class DashboardController extends Controller
             'currency' => 'nullable|string|max:10',
             'language' => 'nullable|string|max:50',
             'country' => 'nullable|string|max:100',
-            'theme' => 'nullable|in:dark,dark-red',
+            'theme' => 'nullable|in:'.implode(',', array_keys(UiTheme::THEMES)),
         ]);
 
         $user = auth()->user();
@@ -87,6 +88,7 @@ class DashboardController extends Controller
         }
         if (! $user->isOperator() && $request->filled('theme')) {
             $user->theme = $request->theme;
+            UiTheme::remember($user->theme);
         }
         $user->save();
 

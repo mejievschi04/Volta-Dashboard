@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Support\DevMode;
+use App\Support\UiTheme;
 
 class LoginController extends Controller
 {
@@ -92,6 +93,8 @@ class LoginController extends Controller
                     'session_persists' => $request->session()->has('_token'),
                     'auth_after_save' => Auth::check()
                 ]);
+
+                UiTheme::remember($user->theme ?? UiTheme::DEFAULT);
 
                 return redirect($redirectUrl);
             } else {

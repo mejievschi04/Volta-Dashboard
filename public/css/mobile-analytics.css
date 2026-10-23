@@ -846,3 +846,78 @@
     grid-template-columns: 88px minmax(0, 1fr) 56px;
   }
 }
+
+/* VoltaChat (Aplicația Volta) */
+.vc-section { margin-top: 10px; }
+.vc-section.is-loading > * { opacity: 0.55; transition: opacity 0.15s ease; }
+.vc-section .ma-section__head h2 { display: inline-flex; align-items: center; gap: 8px; }
+.vc-section .ma-section__head h2 i { color: var(--brand, #ffee00); }
+.vc-head { flex-wrap: wrap; align-items: flex-end; }
+.vc-head p { margin-top: 4px; }
+.vc-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.vc-filters select {
+  min-height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(15, 23, 42, 0.74);
+  color: #e2e8f0;
+  padding: 7px 10px;
+  font: inherit;
+  font-size: 0.8rem;
+}
+.vc-loading { padding: 40px; text-align: center; color: #64748b; font-size: 1.4rem; }
+.vc-section .ma-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.vc-small { font-size: 0.7rem; }
+.vc-divider { height: 1px; background: rgba(148, 163, 184, 0.14); margin: 16px 0; }
+.vc-rank--status span { background: rgba(167, 139, 250, 0.85); }
+.vc-chart--small { min-height: 240px; }
+
+.vc-heat {
+  display: grid;
+  grid-template-columns: 26px repeat(24, minmax(0, 1fr));
+  gap: 3px;
+  align-items: center;
+}
+.vc-heat__hour { color: #64748b; font-size: 0.6rem; font-weight: 700; text-align: left; }
+.vc-heat__dow { color: #94a3b8; font-size: 0.66rem; font-weight: 700; }
+.vc-heat__cell {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  background:
+    linear-gradient(rgba(var(--brand-rgb, 255, 238, 0), var(--vc-a, 0)), rgba(var(--brand-rgb, 255, 238, 0), var(--vc-a, 0))),
+    rgba(148, 163, 184, 0.07);
+}
+.vc-heat__cell:hover { outline: 1px solid rgba(248, 250, 252, 0.6); }
+
+.vc-sort { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.vc-sort .ma-period__chip { min-height: 28px; font-size: 0.7rem; }
+.vc-ops td { vertical-align: middle; }
+.vc-good { color: #34d399 !important; }
+.vc-bad { color: #fb7185 !important; }
+.vc-buckets {
+  display: flex;
+  height: 8px;
+  min-width: 140px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(148, 163, 184, 0.14);
+}
+.vc-buckets span { display: block; height: 100%; }
+.vc-buckets__meta { margin-top: 4px; color: #64748b; font-size: 0.68rem; white-space: nowrap; }
+.vc-slow summary { cursor: pointer; color: #e2e8f0; font-weight: 600; white-space: nowrap; }
+.vc-slow ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 4px; }
+.vc-slow li { display: flex; gap: 8px; align-items: baseline; font-size: 0.74rem; white-space: nowrap; }
+.vc-slow a { color: var(--brand, #ffee00); font-weight: 700; text-decoration: none; }
+.vc-slow a:hover { text-decoration: underline; }
+.vc-slow em { font-style: normal; color: #64748b; }
+.vc-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; font-size: 0.7rem; color: #cbd5e1; }
+.vc-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.vc-legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+@media (max-width: 1100px) {
+  .vc-section .ma-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .vc-section .ma-kpis { grid-template-columns: 1fr; }
+  .vc-filters, .vc-filters .ma-field, .vc-filters select { width: 100%; }
+}

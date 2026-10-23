@@ -1,0 +1,501 @@
+/*
+ * Temă „Neon Glass” — neo-glassmorphism futurist: cyan electric, magenta, violet. Fără galben.
+ * Activă doar pe html[data-theme="neon-glass"]; celelalte teme nu sunt afectate.
+ * Se încarcă după theme-neon-glass-recolor.css (generat), ca regulile de aici să aibă ultimul cuvânt.
+ * Fără backdrop-filter pe secțiuni mari: ar muta modalele position:fixed din interior.
+ */
+
+html[data-theme="neon-glass"] {
+  color-scheme: dark;
+
+  --neon-cyan: #00e5ff;
+  --neon-cyan-rgb: 0, 229, 255;
+  --neon-magenta: #ff2bd6;
+  --neon-magenta-rgb: 255, 43, 214;
+  --neon-violet: #9d78ff;
+  --neon-blue: #3d7bff;
+  --neon-mint: #00ffa3;
+
+  --font-display: "Space Grotesk", "Noto Sans", system-ui, sans-serif;
+
+  --glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%);
+  --glass-bg-strong: linear-gradient(145deg, rgba(20, 22, 52, 0.94) 0%, rgba(8, 10, 28, 0.96) 100%);
+  --glass-border: rgba(120, 230, 255, 0.16);
+  --glass-border-hover: rgba(0, 229, 255, 0.55);
+  --glass-blur: blur(18px) saturate(160%);
+  --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0 24px rgba(0, 229, 255, 0.04), 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 18px rgba(0, 229, 255, 0.06);
+  --glass-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 0 28px rgba(0, 229, 255, 0.07), 0 14px 38px rgba(0, 0, 0, 0.55), 0 0 26px rgba(0, 229, 255, 0.28), 0 0 60px rgba(255, 43, 214, 0.1);
+
+  --bg-sidebar-toggle: rgba(6, 8, 22, 0.66);
+  --bg-sidebar-toggle-hover: rgba(12, 14, 36, 0.72);
+  --bg-primary: #03040c;
+  --bg-secondary: rgba(255, 255, 255, 0.05);
+  --bg-tertiary: rgba(255, 255, 255, 0.08);
+  --bg-elevated: rgba(255, 255, 255, 0.05);
+  --bg-surface: rgba(255, 255, 255, 0.05);
+
+  --text-primary: #f2f7ff;
+  --text-secondary: #c9d4f2;
+  --text-tertiary: #8e9bc4;
+  --text-disabled: #5d6690;
+  --text-inverse: #02040c;
+
+  --border-primary: rgba(120, 230, 255, 0.14);
+  --border-secondary: rgba(120, 230, 255, 0.24);
+  --border-light: rgba(255, 255, 255, 0.07);
+
+  --brand: #00e5ff;
+  --brand-rgb: 0, 229, 255;
+  --brand-dark: #00b8d4;
+  --brand-on-dark: #00e5ff;
+  --brand-10: rgba(0, 229, 255, 0.12);
+  --brand-20: rgba(0, 229, 255, 0.2);
+  --brand-30: rgba(0, 229, 255, 0.3);
+  --info: #00e5ff;
+  --info-light: #7df9ff;
+
+  --card-radius: 18px;
+  --radius-lg: 14px;
+  --glow: 0 0 22px rgba(0, 229, 255, 0.3);
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* ---------- Fundal: spațiu întunecat + pete neon + grilă holografică ---------- */
+html[data-theme="neon-glass"] {
+  background-color: #03040c;
+}
+
+html[data-theme="neon-glass"] body {
+  background: transparent;
+}
+
+html[data-theme="neon-glass"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(46vw 46vw at 104% 10%, rgba(0, 229, 255, 0.28), transparent 60%),
+    radial-gradient(58vw 58vw at 50% 118%, rgba(157, 120, 255, 0.34), transparent 62%),
+    radial-gradient(36vw 36vw at 0% 72%, rgba(255, 43, 214, 0.2), transparent 60%),
+    radial-gradient(30vw 30vw at 40% -12%, rgba(61, 123, 255, 0.18), transparent 62%),
+    linear-gradient(160deg, #02030a 0%, #070a1e 52%, #03040c 100%);
+}
+
+html[data-theme="neon-glass"]::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0, 229, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.045) 1px, transparent 1px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 3px);
+  background-size: 56px 56px, 56px 56px, 100% 3px;
+  -webkit-mask-image: radial-gradient(ellipse at 55% 35%, #000 0%, transparent 80%);
+  mask-image: radial-gradient(ellipse at 55% 35%, #000 0%, transparent 80%);
+}
+
+html[data-theme="neon-glass"] ::selection {
+  background: rgba(255, 43, 214, 0.4);
+  color: #fff;
+}
+
+/* Logo Volta recolorat în cyan doar în această temă */
+html[data-theme="neon-glass"] .logo-mark,
+html[data-theme="neon-glass"] .login-logo .logo-mark,
+html[data-theme="neon-glass"] .operator-nav-mark img {
+  filter: hue-rotate(130deg) saturate(1.4) drop-shadow(0 0 10px rgba(0, 229, 255, 0.7));
+}
+
+/* ---------- Tipografie futuristă ---------- */
+html[data-theme="neon-glass"] .main h1,
+html[data-theme="neon-glass"] .main h2,
+html[data-theme="neon-glass"] .ma-hero__title,
+html[data-theme="neon-glass"] .logo h1,
+html[data-theme="neon-glass"] .login-logo h1,
+html[data-theme="neon-glass"] .ma-kpi__value,
+html[data-theme="neon-glass"] .operatori-stat-value,
+html[data-theme="neon-glass"] .card .value,
+html[data-theme="neon-glass"] .raport-lunar-num {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+html[data-theme="neon-glass"] .main h1,
+html[data-theme="neon-glass"] .ma-hero__title {
+  background: linear-gradient(90deg, #ffffff 0%, #b9f6ff 45%, #ffb3f1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 14px rgba(0, 229, 255, 0.25));
+}
+
+html[data-theme="neon-glass"] .logo h1 {
+  color: #fff;
+  text-shadow: 0 0 12px rgba(0, 229, 255, 0.6), 0 0 28px rgba(255, 43, 214, 0.25);
+}
+
+html[data-theme="neon-glass"] .ma-kpi__value,
+html[data-theme="neon-glass"] .operatori-stat-value,
+html[data-theme="neon-glass"] .card .value,
+html[data-theme="neon-glass"] .raport-lunar-num {
+  color: #eafcff;
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.55), 0 0 26px rgba(0, 229, 255, 0.25);
+}
+
+html[data-theme="neon-glass"] .ma-kicker,
+html[data-theme="neon-glass"] .ma-kpi__label,
+html[data-theme="neon-glass"] .operatori-stat-label {
+  letter-spacing: 0.08em;
+}
+
+html[data-theme="neon-glass"] .ma-kicker {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 10px rgba(255, 43, 214, 0.6);
+}
+
+/* ---------- Sidebar ---------- */
+html[data-theme="neon-glass"] .sidebar {
+  background: linear-gradient(180deg, rgba(10, 12, 32, 0.74) 0%, rgba(4, 5, 16, 0.8) 100%);
+  border-right: 1px solid rgba(0, 229, 255, 0.14);
+  box-shadow: inset -1px 0 0 rgba(255, 43, 214, 0.12), 8px 0 40px rgba(0, 0, 0, 0.5), 1px 0 22px rgba(0, 229, 255, 0.08);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+
+html[data-theme="neon-glass"] .logo { border-bottom-color: rgba(0, 229, 255, 0.1); }
+
+html[data-theme="neon-glass"] .nav h3 {
+  color: var(--neon-magenta);
+  border-bottom-color: rgba(0, 229, 255, 0.1);
+  text-shadow: 0 0 12px rgba(255, 43, 214, 0.6);
+}
+
+html[data-theme="neon-glass"] .nav a { color: var(--text-secondary); }
+
+html[data-theme="neon-glass"] .nav a:hover {
+  color: #fff;
+  background: rgba(0, 229, 255, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(0, 229, 255, 0.14);
+}
+
+html[data-theme="neon-glass"] .nav a::before {
+  background: linear-gradient(180deg, var(--neon-cyan), var(--neon-magenta));
+  box-shadow: 0 0 12px var(--neon-cyan), 0 0 24px rgba(255, 43, 214, 0.6);
+}
+
+html[data-theme="neon-glass"] .nav a.active {
+  color: var(--neon-cyan);
+  background: linear-gradient(90deg, rgba(0, 229, 255, 0.2) 0%, rgba(157, 120, 255, 0.08) 65%, transparent 100%);
+  box-shadow: inset 0 0 0 1px rgba(0, 229, 255, 0.28), 0 0 24px rgba(0, 229, 255, 0.14);
+  text-shadow: 0 0 12px rgba(0, 229, 255, 0.7);
+}
+
+html[data-theme="neon-glass"] .nav a:hover i,
+html[data-theme="neon-glass"] .nav a.active i {
+  color: var(--neon-cyan);
+  filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.85));
+}
+
+html[data-theme="neon-glass"] .sidebar::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.35); }
+
+/* ---------- Suprafețe de sticlă (carduri, panouri) ---------- */
+html[data-theme="neon-glass"] .topbar,
+html[data-theme="neon-glass"] .card,
+html[data-theme="neon-glass"] .panel,
+html[data-theme="neon-glass"] .chart-container,
+html[data-theme="neon-glass"] .chart-wrapper,
+html[data-theme="neon-glass"] .chart-card,
+html[data-theme="neon-glass"] .trafic-card,
+html[data-theme="neon-glass"] .row .trafic-source-card,
+html[data-theme="neon-glass"] .ta-panel,
+html[data-theme="neon-glass"] .mobile-panel,
+html[data-theme="neon-glass"] .ma-card,
+html[data-theme="neon-glass"] .ma-kpi,
+html[data-theme="neon-glass"] .ma-hero,
+html[data-theme="neon-glass"] .operator-card,
+html[data-theme="neon-glass"] .top-card,
+html[data-theme="neon-glass"] .operatori-content-card,
+html[data-theme="neon-glass"] .operatori-sidebar-card,
+html[data-theme="neon-glass"] .operatori-card-main,
+html[data-theme="neon-glass"] .operatori-card-dezactivati,
+html[data-theme="neon-glass"] .operatori-directory-card,
+html[data-theme="neon-glass"] .operatori-filter-panel,
+html[data-theme="neon-glass"] .operatori-stat-box,
+html[data-theme="neon-glass"] .operatori-overview-stat,
+html[data-theme="neon-glass"] .operator-me-card,
+html[data-theme="neon-glass"] .operator-me-stat,
+html[data-theme="neon-glass"] .livrari-card,
+html[data-theme="neon-glass"] .livrari-kpi-total-card,
+html[data-theme="neon-glass"] .livrari-filters-card,
+html[data-theme="neon-glass"] .comparare-table-section,
+html[data-theme="neon-glass"] .raport-lunar-hero,
+html[data-theme="neon-glass"] .raport-lunar-panel,
+html[data-theme="neon-glass"] .raport-lunar-stat,
+html[data-theme="neon-glass"] .raport-lunar-toolbar-card,
+html[data-theme="neon-glass"] .setari-1c-block,
+html[data-theme="neon-glass"] .istoric-empty,
+html[data-theme="neon-glass"] .raport-lunar-empty {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  color: var(--text-primary);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+html[data-theme="neon-glass"] .topbar {
+  border-left: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow), inset 3px 0 0 var(--neon-cyan), -4px 0 20px rgba(0, 229, 255, 0.35);
+}
+
+html[data-theme="neon-glass"] .card:hover,
+html[data-theme="neon-glass"] .ma-kpi:hover,
+html[data-theme="neon-glass"] .ma-card:hover,
+html[data-theme="neon-glass"] .trafic-card:hover,
+html[data-theme="neon-glass"] .operatori-stat-box:hover,
+html[data-theme="neon-glass"] .operator-card:hover,
+html[data-theme="neon-glass"] .top-card:hover,
+html[data-theme="neon-glass"] .livrari-card:hover,
+html[data-theme="neon-glass"] .raport-lunar-stat:hover,
+html[data-theme="neon-glass"] .operator-me-stat:hover {
+  border-color: var(--glass-border-hover);
+  box-shadow: var(--glass-shadow-hover);
+}
+
+/* Secțiunile mari rămân transparente (fără blur) */
+html[data-theme="neon-glass"] .livrari-section-panel,
+html[data-theme="neon-glass"] .ma-section,
+html[data-theme="neon-glass"] .container {
+  background: transparent;
+}
+
+/* Iconițe și accente din carduri */
+html[data-theme="neon-glass"] .main .fa-solid,
+html[data-theme="neon-glass"] .main .fas {
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.35);
+}
+
+/* ---------- Butoane ---------- */
+html[data-theme="neon-glass"] .btn:not(.secondary):not(.btn-danger),
+html[data-theme="neon-glass"] .ma-btn:not(.ma-btn--ghost),
+html[data-theme="neon-glass"] .operatori-btn-primary,
+html[data-theme="neon-glass"] .trafic-action-btn--primary,
+html[data-theme="neon-glass"] .livrari-btn-open-modal,
+html[data-theme="neon-glass"] .btn-login {
+  background: linear-gradient(120deg, #00e5ff 0%, #3d7bff 55%, #b04dff 100%);
+  color: #fff;
+  border: 1px solid rgba(125, 249, 255, 0.7);
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.25), 0 0 20px rgba(0, 229, 255, 0.45), 0 0 40px rgba(176, 77, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+html[data-theme="neon-glass"] .btn:not(.secondary):not(.btn-danger):hover,
+html[data-theme="neon-glass"] .ma-btn:not(.ma-btn--ghost):hover,
+html[data-theme="neon-glass"] .operatori-btn-primary:hover,
+html[data-theme="neon-glass"] .trafic-action-btn--primary:hover,
+html[data-theme="neon-glass"] .livrari-btn-open-modal:hover,
+html[data-theme="neon-glass"] .btn-login:hover {
+  color: #fff;
+  box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.45), 0 0 30px rgba(0, 229, 255, 0.7), 0 0 60px rgba(255, 43, 214, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+html[data-theme="neon-glass"] .btn.secondary,
+html[data-theme="neon-glass"] .operatori-btn-secondary,
+html[data-theme="neon-glass"] .operatori-btn-ghost,
+html[data-theme="neon-glass"] .trafic-action-btn:not(.trafic-action-btn--primary),
+html[data-theme="neon-glass"] .ma-btn--ghost,
+html[data-theme="neon-glass"] .ma-period__chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(120, 230, 255, 0.2);
+  color: var(--text-secondary);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+html[data-theme="neon-glass"] .btn.secondary:hover,
+html[data-theme="neon-glass"] .operatori-btn-secondary:hover,
+html[data-theme="neon-glass"] .operatori-btn-ghost:hover,
+html[data-theme="neon-glass"] .trafic-action-btn:not(.trafic-action-btn--primary):hover,
+html[data-theme="neon-glass"] .ma-btn--ghost:hover,
+html[data-theme="neon-glass"] .ma-period__chip:hover {
+  color: #fff;
+  border-color: rgba(255, 43, 214, 0.65);
+  box-shadow: 0 0 18px rgba(255, 43, 214, 0.32);
+}
+
+html[data-theme="neon-glass"] .ma-period__chip.is-active,
+html[data-theme="neon-glass"] .ma-period__chip.active {
+  color: var(--neon-cyan);
+  border-color: rgba(0, 229, 255, 0.6);
+  background: rgba(0, 229, 255, 0.12);
+  box-shadow: 0 0 18px rgba(0, 229, 255, 0.32);
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+}
+
+/* ---------- Câmpuri de formular ---------- */
+html[data-theme="neon-glass"] .main input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]):not([type="submit"]):not([type="button"]),
+html[data-theme="neon-glass"] .main select,
+html[data-theme="neon-glass"] .main textarea {
+  background-color: rgba(255, 255, 255, 0.045);
+  border-color: rgba(120, 230, 255, 0.18);
+  color: var(--text-primary);
+}
+
+html[data-theme="neon-glass"] .main input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):focus,
+html[data-theme="neon-glass"] .main select:focus,
+html[data-theme="neon-glass"] .main textarea:focus {
+  outline: none;
+  border-color: rgba(0, 229, 255, 0.8);
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.16), 0 0 20px rgba(0, 229, 255, 0.3);
+}
+
+html[data-theme="neon-glass"] select option {
+  background: #0a0c22;
+  color: #f2f7ff;
+}
+
+html[data-theme="neon-glass"] input[type="checkbox"],
+html[data-theme="neon-glass"] input[type="radio"],
+html[data-theme="neon-glass"] input[type="range"] {
+  accent-color: var(--neon-cyan);
+}
+
+/* ---------- Tabele ---------- */
+html[data-theme="neon-glass"] .main table thead,
+html[data-theme="neon-glass"] .main table thead tr,
+html[data-theme="neon-glass"] .main table thead th,
+html[data-theme="neon-glass"] .operatori-table-yellow thead tr {
+  background: rgba(0, 229, 255, 0.06);
+  color: #bdf8ff;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.28);
+  letter-spacing: 0.06em;
+}
+
+html[data-theme="neon-glass"] .main table tbody tr:hover td {
+  background: rgba(255, 43, 214, 0.06);
+}
+
+html[data-theme="neon-glass"] .raport-lunar-table tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+html[data-theme="neon-glass"] .ma-table-wrap,
+html[data-theme="neon-glass"] .livrari-table-wrap,
+html[data-theme="neon-glass"] .operatori-table-wrap,
+html[data-theme="neon-glass"] .comparare-table-wrap {
+  border-color: rgba(120, 230, 255, 0.12);
+}
+
+/* ---------- Badge-uri, alerte ---------- */
+html[data-theme="neon-glass"] .ma-badge,
+html[data-theme="neon-glass"] .operatori-badge,
+html[data-theme="neon-glass"] .kpi-source-badge {
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.16);
+}
+
+html[data-theme="neon-glass"] .ma-alert {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* ---------- Modale ---------- */
+html[data-theme="neon-glass"] .livrari-modal-overlay,
+html[data-theme="neon-glass"] .operatori-modal-overlay,
+html[data-theme="neon-glass"] .dashboard-chart-modal__backdrop,
+html[data-theme="neon-glass"] .modal {
+  background: rgba(2, 3, 10, 0.62);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+html[data-theme="neon-glass"] .livrari-modal,
+html[data-theme="neon-glass"] .operatori-modal,
+html[data-theme="neon-glass"] .dashboard-chart-modal__panel,
+html[data-theme="neon-glass"] .modal-content {
+  background: var(--glass-bg-strong);
+  border: 1px solid rgba(0, 229, 255, 0.22);
+  border-radius: 20px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 30px 80px rgba(0, 0, 0, 0.65), 0 0 40px rgba(0, 229, 255, 0.14), 0 0 80px rgba(255, 43, 214, 0.1);
+}
+
+/* ---------- Calendar flatpickr ---------- */
+html[data-theme="neon-glass"] .volta-flatpickr.flatpickr-calendar,
+html[data-theme="neon-glass"] .livrari-flatpickr.flatpickr-calendar {
+  background: var(--glass-bg-strong);
+  border-color: rgba(0, 229, 255, 0.32);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 229, 255, 0.16);
+}
+
+html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-day.selected,
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-day.selected,
+html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-monthSelect-month.selected {
+  background: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+  color: #02040c;
+  box-shadow: 0 0 14px rgba(0, 229, 255, 0.7);
+}
+
+html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-day:hover,
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-day:hover {
+  background: rgba(0, 229, 255, 0.16);
+  border-color: rgba(0, 229, 255, 0.4);
+}
+
+html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-day.today,
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-day.today {
+  border-color: var(--neon-magenta);
+}
+
+/* ---------- Scrollbar ---------- */
+html[data-theme="neon-glass"] ::-webkit-scrollbar { width: 10px; height: 10px; }
+html[data-theme="neon-glass"] ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.03); }
+html[data-theme="neon-glass"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(0, 229, 255, 0.5), rgba(255, 43, 214, 0.5));
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* ---------- Login ---------- */
+html[data-theme="neon-glass"] .login-box {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.025) 100%);
+  border: 1px solid rgba(0, 229, 255, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 50px rgba(0, 229, 255, 0.14), 0 0 90px rgba(255, 43, 214, 0.12);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  backdrop-filter: blur(22px) saturate(160%);
+}
+
+html[data-theme="neon-glass"] .input-group input {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(120, 230, 255, 0.2);
+}
+
+html[data-theme="neon-glass"] .input-group input:focus {
+  border-color: rgba(0, 229, 255, 0.8);
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.16), 0 0 20px rgba(0, 229, 255, 0.3);
+}
+
+html[data-theme="neon-glass"] .input-group input:focus ~ .input-icon { color: var(--neon-cyan); }
+
+html[data-theme="neon-glass"] .input-focus-line {
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta));
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme="neon-glass"] .card,
+  html[data-theme="neon-glass"] .ma-card,
+  html[data-theme="neon-glass"] .ma-kpi,
+  html[data-theme="neon-glass"] .sidebar {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: #0a0c22;
+  }
+}

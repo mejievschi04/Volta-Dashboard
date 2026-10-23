@@ -1,0 +1,1063 @@
+/* Generat de scripts/build-neon-recolor.mjs — nu edita manual. */
+
+/* public/css/login.css */
+html[data-theme="neon-glass"] .input-group input {
+  border: 2px solid rgba(0, 229, 255, 0.15);
+}
+html[data-theme="neon-glass"] .input-group input:hover:not(:focus) {
+  border-color: rgba(0, 229, 255, 0.25);
+}
+html[data-theme="neon-glass"] .btn-login {
+  background: linear-gradient(135deg, var(--brand) 0%, #00c8f0 100%);
+}
+@media (hover: none) and (pointer: coarse) {
+  html[data-theme="neon-glass"] .input-group input:hover:not(:focus) {
+    border-color: rgba(0, 229, 255, 0.15);
+  }
+  html[data-theme="neon-glass"] .password-toggle:active {
+    background: rgba(0, 229, 255, 0.15);
+  }
+}
+html[data-theme="neon-glass"] .login-welcome-name {
+  text-shadow: 0 0 40px rgba(0, 229, 255, 0.18);
+}
+
+/* public/css/mobile-analytics.css */
+html[data-theme="neon-glass"] .ma-page::before {
+  background:
+    radial-gradient(ellipse 70% 80% at 8% 0%, rgba(0, 229, 255, 0.08), transparent 55%),
+    radial-gradient(ellipse 50% 60% at 92% 10%, rgba(56, 189, 248, 0.06), transparent 50%);
+}
+html[data-theme="neon-glass"] .ma-alert {
+  border: 1px solid rgba(0, 229, 255, 0.34);
+  background: rgba(0, 229, 255, 0.09);
+}
+html[data-theme="neon-glass"] .ma-hero {
+  background:
+    linear-gradient(165deg, rgba(0, 229, 255, 0.05) 0%, transparent 38%),
+    linear-gradient(155deg, rgba(30, 41, 59, 0.96) 0%, rgba(15, 23, 42, 0.98) 100%);
+  border: 1px solid rgba(0, 229, 255, 0.14);
+  box-shadow:
+    0 0 0 1px rgba(0, 229, 255, 0.04) inset,
+    0 18px 40px rgba(0, 0, 0, 0.32);
+}
+html[data-theme="neon-glass"] .ma-hero::after {
+  border: 1px solid rgba(0, 229, 255, 0.12);
+}
+html[data-theme="neon-glass"] .ma-hero::before {
+  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.95), rgba(56, 189, 248, 0.45), transparent);
+}
+html[data-theme="neon-glass"] .ma-kicker {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .ma-kicker::before {
+  background: #00e5ff;
+}
+html[data-theme="neon-glass"] .ma-period__chip:hover,
+html[data-theme="neon-glass"] .ma-period__chip.is-active {
+  border-color: rgba(0, 229, 255, 0.55);
+  color: #00e5ff;
+  background: rgba(0, 229, 255, 0.08);
+}
+html[data-theme="neon-glass"] .ma-btn {
+  background: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .ma-kpi {
+  background:
+    linear-gradient(180deg, rgba(0, 229, 255, 0.04) 0%, transparent 28%),
+    linear-gradient(160deg, rgba(26, 34, 48, 0.96) 0%, rgba(14, 19, 29, 0.98) 100%);
+}
+html[data-theme="neon-glass"] .ma-kpi::before {
+  background: rgba(0, 229, 255, 0.55);
+}
+html[data-theme="neon-glass"] .ma-kpi:hover {
+  border-color: rgba(0, 229, 255, 0.4);
+  box-shadow: 0 0 24px rgba(0, 229, 255, 0.08);
+}
+html[data-theme="neon-glass"] .ma-kpi__label i {
+  color: rgba(0, 229, 255, 0.9);
+}
+html[data-theme="neon-glass"] .ma-kpi--accent .ma-kpi__value {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .ma-card {
+  background:
+    linear-gradient(180deg, rgba(0, 229, 255, 0.035) 0%, transparent 22%),
+    linear-gradient(160deg, rgba(26, 34, 48, 0.96) 0%, rgba(14, 19, 29, 0.98) 100%);
+}
+html[data-theme="neon-glass"] .ma-card::after {
+  border-right: 1px solid rgba(0, 229, 255, 0.35);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.35);
+}
+html[data-theme="neon-glass"] .ma-card::before {
+  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.7), transparent);
+}
+html[data-theme="neon-glass"] .ma-card__head i {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .ma-card__link:hover {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .ma-badge {
+  border: 1px solid rgba(0, 229, 255, 0.28);
+  background: rgba(0, 229, 255, 0.09);
+  color: #7df9ff;
+}
+html[data-theme="neon-glass"] .ma-shortcut:hover {
+  border-color: rgba(0, 229, 255, 0.4);
+  box-shadow: 0 0 24px rgba(0, 229, 255, 0.08);
+}
+html[data-theme="neon-glass"] .ma-shortcut i {
+  background: rgba(0, 229, 255, 0.12);
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .ma-funnel__count {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .ma-funnel__fill {
+  background: linear-gradient(90deg, rgba(0, 229, 255, 0.95), rgba(0, 200, 240, 0.7));
+}
+html[data-theme="neon-glass"] .ma-bar-row__fill {
+  background: rgba(0, 229, 255, 0.75);
+}
+html[data-theme="neon-glass"] .ma-alert--soft {
+  border-color: var(--brand-30, rgba(0, 229, 255, 0.3));
+  background: var(--brand-10, rgba(0, 229, 255, 0.12));
+}
+html[data-theme="neon-glass"] .ma-alert--soft strong {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .ma-meta-funnel__track span {
+  background: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .ma-heat__bar {
+  background: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .ma-rank__bar span {
+  background: rgba(0, 229, 255, 0.85);
+}
+
+/* public/css/operatori.css */
+html[data-theme="neon-glass"] .operator-portal .operator-app::before {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(0, 229, 255, 0.12), transparent 50%),
+    radial-gradient(ellipse 60% 50% at 100% 50%, rgba(12, 28, 54, 0.22), transparent 52%),
+    radial-gradient(ellipse 50% 40% at 0% 80%, rgba(12, 28, 54, 0.2), transparent 48%);
+}
+html[data-theme="neon-glass"] .operator-portal .operator-nav {
+  box-shadow:
+    0 1px 0 rgba(0, 229, 255, 0.04) inset,
+    0 8px 32px rgba(0, 0, 0, 0.35);
+}
+html[data-theme="neon-glass"] .operator-portal .operator-nav-wordmark-stats {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operator-portal .operator-nav-links a.active {
+  background: var(--brand-10, rgba(0, 229, 255, 0.12));
+  color: var(--brand, #00e5ff);
+  border-color: rgba(0, 229, 255, 0.2);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.08);
+}
+html[data-theme="neon-glass"] .operator-portal .operator-user-avatar {
+  background: var(--brand, #00e5ff);
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.2);
+}
+html[data-theme="neon-glass"] .operator-portal .setari-wrap--operator .setari-operator-card {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(0, 229, 255, 0.1), transparent 42%),
+    linear-gradient(165deg, rgba(31, 41, 55, 0.94), rgba(15, 23, 42, 0.98));
+}
+html[data-theme="neon-glass"] .operator-portal .setari-wrap--operator .setari-section-title i {
+  color: var(--brand, #00e5ff);
+  background: rgba(0, 229, 255, 0.14);
+  border: 1px solid rgba(0, 229, 255, 0.26);
+}
+html[data-theme="neon-glass"] .operator-portal .setari-wrap--operator .setari-photo-btn {
+  background: rgba(0, 229, 255, 0.12);
+}
+html[data-theme="neon-glass"] .operator-portal .setari-wrap--operator .setari-photo-btn:hover {
+  background: rgba(0, 229, 255, 0.22);
+}
+html[data-theme="neon-glass"] .operator-portal .setari-wrap--operator .field input[type="password"]:focus {
+  border-color: rgba(0, 229, 255, 0.42);
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.14);
+}
+html[data-theme="neon-glass"] .operator-portal .operator-main :is(.livrari-card, .setari-operator-card, .operator-me-card):hover {
+  border-color: rgba(0, 229, 255, 0.2);
+}
+html[data-theme="neon-glass"] .operator-portal .operator-main :is(a, button, .btn, input, select, textarea):focus-visible {
+  box-shadow:
+    0 0 0 2px rgba(15, 23, 42, 0.75),
+    0 0 0 4px rgba(0, 229, 255, 0.24);
+}
+html[data-theme="neon-glass"] .operator-me-avatar--initial {
+  background-image: linear-gradient(135deg, var(--brand, #00e5ff), var(--brand-dark, #00c8f0));
+}
+html[data-theme="neon-glass"] .operator-me-badge {
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operator-me-card__title i {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operator-me-stat--brand .operator-me-stat__icon {
+  background: rgba(0, 229, 255, 0.2);
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operator-me-total--brand .operator-me-total__value {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operator-me-table th {
+  background: rgba(0, 229, 255, 0.14);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.22);
+}
+html[data-theme="neon-glass"] .operator-me-table tbody tr:hover {
+  background: rgba(0, 229, 255, 0.08);
+}
+html[data-theme="neon-glass"] .operator-me-empty__text strong {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operator-team-kpi-header h2 i {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operator-team-kpi-badge {
+  background: rgba(0, 229, 255, 0.12);
+  color: var(--brand, #00e5ff);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+}
+html[data-theme="neon-glass"] .operatori-page-icon {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operatori-table-title i {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operatori-table tbody tr.operatori-row-click:hover {
+  background: rgba(0, 229, 255, 0.07);
+}
+html[data-theme="neon-glass"] .operatori-table tbody tr.operatori-row-click:focus-visible {
+  outline: 2px solid rgba(0, 229, 255, 0.55);
+}
+html[data-theme="neon-glass"] .operatori-name-link:hover {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .operatori-btn-photo:hover {
+  color: var(--brand, #00e5ff);
+  border-color: rgba(0, 229, 255, 0.5);
+}
+html[data-theme="neon-glass"] .operatori-btn-avatar-upload {
+  border: 2px solid var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operatori-btn-avatar-upload:hover {
+  background: rgba(0, 229, 255, 0.3);
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operatori-btn-photo-block {
+  background: rgba(0, 229, 255, 0.15);
+  color: var(--brand, #00e5ff);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+}
+html[data-theme="neon-glass"] .operatori-btn-photo-block:hover {
+  background: rgba(0, 229, 255, 0.25);
+  border-color: rgba(0, 229, 255, 0.6);
+}
+html[data-theme="neon-glass"] .operatori-avatar {
+  background: linear-gradient(135deg, #00e5ff 0%, #00e5ff 100%);
+}
+html[data-theme="neon-glass"] .operatori-badge {
+  color: var(--brand, #00e5ff);
+  border: 1px solid var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operatori-stat-row--yellow {
+  background: rgba(0, 229, 255, 0.2);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+}
+html[data-theme="neon-glass"] .operatori-stat-row--yellow .operatori-stat-icon {
+  background: rgba(0, 229, 255, 0.2);
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operatori-section-icon--yellow {
+  background: linear-gradient(135deg, #00e5ff 0%, #00e5ff 100%);
+}
+html[data-theme="neon-glass"] .operatori-stat-box--yellow {
+  background: rgba(0, 229, 255, 0.1);
+  border-color: rgba(0, 229, 255, 0.2);
+}
+html[data-theme="neon-glass"] .operatori-stat-box--yellow .operatori-stat-value {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operatori-directory-hero {
+  background: radial-gradient(circle at 88% 0%, rgba(0, 229, 255, 0.16), transparent 29%), linear-gradient(120deg, #172033, #0f172a 68%);
+}
+html[data-theme="neon-glass"] .operatori-directory-hero::after {
+  border: 1px solid rgba(0, 229, 255, 0.22);
+}
+html[data-theme="neon-glass"] .operatori-eyebrow {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .operatori-filter-panel__heading i {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .operatori-table-title--directory > span > i {
+  background: #00e5ff;
+}
+html[data-theme="neon-glass"] .operatori-person-link:hover > i {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .operatori-person-avatar {
+  border: 1px solid rgba(0, 229, 255, .32);
+  color: #00e5ff;
+  background: rgba(0, 229, 255, .08);
+}
+html[data-theme="neon-glass"] .operatori-detail-page .operatori-back:hover {
+  border-color: rgba(0, 229, 255, .45);
+  background: rgba(0, 229, 255, .07);
+}
+html[data-theme="neon-glass"] .operatori-profile-hero {
+  background-image: radial-gradient(circle at 83% 10%, rgba(0, 229, 255, .19), transparent 24%), linear-gradient(130deg, #26334a, #121b2c 53%, #0b1220);
+}
+html[data-theme="neon-glass"] .operatori-section-icon {
+  background: rgba(0, 229, 255, .12);
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .operatori-btn-primary {
+  background: linear-gradient(135deg, #00e5ff 0%, #00e5ff 100%);
+}
+html[data-theme="neon-glass"] .operatori-modal-title-icon {
+  background: linear-gradient(135deg, #00e5ff 0%, #00e5ff 100%);
+}
+html[data-theme="neon-glass"] .operatori-form-label {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operatori-form-input:focus {
+  border-color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operatori-notes-card .operatori-sidebar-title i {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operatori-detail-page .operatori-table-yellow thead tr,
+html[data-theme="neon-glass"] .operatori-table-yellow thead tr {
+  background: linear-gradient(135deg, #00e5ff 0%, #00e5ff 100%) !important;
+}
+html[data-theme="neon-glass"] .operator-card {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .back-button a {
+  color: var(--brand, #00e5ff);
+  border: 1px solid var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .back-button a:hover {
+  background: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .operator-card {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .top-card {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .top-card .medal {
+  color: var(--brand, #00e5ff);
+}
+@media (max-width: 768px) {
+  html[data-theme="neon-glass"] div[style*="color: var(--brand, #00e5ff); font-weight: 700; font-size: 18px; margin-left: 16px"] {
+    font-size: 10px !important;
+    margin-left: 0 !important;
+    margin-top: 2px !important;
+    align-self: flex-end !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+  }
+}
+@media (max-width: 480px) {
+  html[data-theme="neon-glass"] div[style*="color: var(--brand, #00e5ff); font-weight: 700; font-size: 18px; margin-left: 16px"] {
+    font-size: 11px !important;
+    margin-left: 0 !important;
+    margin-top: 2px !important;
+    align-self: flex-end !important;
+  }
+  html[data-theme="neon-glass"] div[style*="color: var(--brand, #00e5ff); font-weight: 700; font-size: 18px; margin-left: 16px"] {
+    font-size: 9px !important;
+    margin-left: 0 !important;
+    margin-top: 2px !important;
+    align-self: flex-end !important;
+  }
+}
+@media (max-width: 480px) {
+  html[data-theme="neon-glass"] a[style*="padding: 12px 24px"][style*="background: linear-gradient(135deg, #00e5ff"] {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+/* public/css/style.css */
+html[data-theme="neon-glass"] th,
+html[data-theme="neon-glass"] td {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] th {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] tr:hover td {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .sidebar-mobile-entry--mobile {
+  border: 1px solid rgba(0, 229, 255, 0.38);
+  background: linear-gradient(165deg, rgba(0, 229, 255, 0.16) 0%, rgba(0, 229, 255, 0.08) 100%);
+  color: #7df9ff;
+}
+html[data-theme="neon-glass"] .sidebar-mobile-entry--mobile:hover {
+  border-color: rgba(0, 229, 255, 0.62);
+  background: linear-gradient(165deg, rgba(0, 229, 255, 0.22) 0%, rgba(0, 229, 255, 0.11) 100%);
+}
+html[data-theme="neon-glass"] .chart-container:hover {
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(0, 229, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border-color: rgba(0, 229, 255, 0.18);
+}
+html[data-theme="neon-glass"] .chart-panel__icon {
+  background: linear-gradient(145deg, rgba(0, 229, 255, 0.18), rgba(0, 229, 255, 0.05));
+}
+html[data-theme="neon-glass"] .dashboard-chart-modal__panel {
+  border: 1px solid rgba(0, 229, 255, 0.18);
+}
+html[data-theme="neon-glass"] .raport-lunar-hero__badge {
+  background: linear-gradient(145deg, rgba(0, 229, 255, 0.2), rgba(0, 229, 255, 0.05));
+}
+html[data-theme="neon-glass"] .raport-lunar-month-input:focus {
+  border-color: rgba(0, 229, 255, 0.45);
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.12);
+}
+html[data-theme="neon-glass"] .raport-lunar-stat--accent {
+  border-color: rgba(0, 229, 255, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(0, 229, 255, 0.06);
+}
+html[data-theme="neon-glass"] .raport-lunar-panel__icon {
+  background: linear-gradient(145deg, rgba(0, 229, 255, 0.18), rgba(0, 229, 255, 0.04));
+}
+html[data-theme="neon-glass"] .raport-lunar-panel__icon--money {
+  color: #7df9ff;
+  background: linear-gradient(145deg, rgba(0, 200, 240, 0.22), rgba(0, 200, 240, 0.06));
+}
+html[data-theme="neon-glass"] .raport-lunar-panel__tag {
+  border: 1px solid rgba(0, 229, 255, 0.28);
+  background: rgba(0, 229, 255, 0.08);
+}
+html[data-theme="neon-glass"] .raport-lunar-total-row td {
+  background: rgba(0, 229, 255, 0.09) !important;
+}
+html[data-theme="neon-glass"] .raport-lunar-row--callcenter td {
+  background: rgba(0, 229, 255, 0.07) !important;
+}
+html[data-theme="neon-glass"] .raport-lunar-num-input:focus {
+  border-color: rgba(0, 229, 255, 0.45);
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.12);
+}
+
+/* public/css/trafic.css */
+html[data-theme="neon-glass"] .trafic-action-btn--primary {
+  background: linear-gradient(135deg, #00c8f0 0%, var(--brand) 55%, #00b8d4 100%);
+}
+html[data-theme="neon-glass"] .trafic-action-btn--primary:hover {
+  background: linear-gradient(135deg, #fdd835 0%, var(--brand) 55%, #00c8f0 100%);
+}
+
+/* public/css/volta-date-inputs.css */
+html[data-theme="neon-glass"] .volta-flatpickr.flatpickr-calendar {
+  border: 1px solid var(--border-primary, rgba(0, 229, 255, 0.18));
+}
+html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-prev-month svg,
+html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-next-month svg {
+  fill: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-day:hover,
+html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-monthSelect-month:hover {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: rgba(0, 229, 255, 0.32);
+}
+html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-day.today {
+  border-color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-day.selected,
+html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-day.selected:hover,
+html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-monthSelect-month.selected,
+html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-monthSelect-month.selected:hover {
+  background: var(--brand, #00e5ff);
+  border-color: var(--brand, #00e5ff);
+}
+
+/* resources/views/dashboard/setari.blade.php */
+html[data-theme="neon-glass"] .setari-photo-btn {
+  background: var(--brand-10, rgba(0, 229, 255, 0.15));
+  color: var(--brand, #00e5ff);
+  border: 1px solid var(--brand-20, rgba(0, 229, 255, 0.4));
+}
+html[data-theme="neon-glass"] .setari-photo-btn:hover {
+  background: var(--brand-20, rgba(0, 229, 255, 0.25));
+}
+
+/* resources/views/dashboard/trafic-analiza.blade.php */
+html[data-theme="neon-glass"] .ta-tab {
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  background: rgba(0, 229, 255, 0.06);
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .ta-tab:hover {
+  background: rgba(0, 229, 255, 0.14);
+  border-color: rgba(0, 229, 255, 0.42);
+}
+html[data-theme="neon-glass"] .ta-tab.is-active {
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.22) 0%, rgba(0, 229, 255, 0.12) 100%);
+  border-color: rgba(0, 229, 255, 0.5);
+  box-shadow: inset 3px 0 0 rgba(0, 229, 255, 0.8);
+}
+html[data-theme="neon-glass"] .ta-panel-title i {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .ta-placeholder i {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .ta-loading i {
+  color: var(--brand, #00e5ff);
+}
+
+/* resources/views/dashboard/trafic-raport.blade.php */
+html[data-theme="neon-glass"] .trafic-raport-mode button.active {
+  border-color: rgba(0, 229, 255, 0.5);
+  background: rgba(0, 229, 255, 0.12);
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .trafic-raport-generate {
+  background: #00e5ff;
+}
+html[data-theme="neon-glass"] .trafic-raport-card h2 i {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .trafic-raport-table th {
+  background: rgba(0, 229, 255, 0.12);
+}
+html[data-theme="neon-glass"] .trafic-raport-table tbody tr:hover td {
+  background: rgba(0, 229, 255, 0.05);
+}
+html[data-theme="neon-glass"] .trafic-raport-table tfoot td {
+  color: #00e5ff;
+  border-top: 2px solid rgba(0, 229, 255, 0.25);
+}
+html[data-theme="neon-glass"] .trafic-raport-loading i {
+  color: #00e5ff;
+}
+
+/* resources/views/dashboard/trafic-stats.blade.php */
+html[data-theme="neon-glass"] .stats-page h1 {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .stat-btn {
+  color: #00e5ff;
+  border: 2px solid rgba(0, 229, 255, 0.3);
+}
+html[data-theme="neon-glass"] .stat-btn:hover {
+  background: rgba(0, 229, 255, 0.1);
+  border-color: rgba(0, 229, 255, 0.6);
+}
+html[data-theme="neon-glass"] .stat-btn.active {
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.2) 0%, rgba(0, 229, 255, 0.1) 100%);
+  border-color: #00e5ff;
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .stat-btn-total {
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.15) 0%, rgba(0, 229, 255, 0.05) 100%);
+  border-color: rgba(0, 229, 255, 0.5);
+}
+html[data-theme="neon-glass"] .stat-btn-total:hover {
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.25) 0%, rgba(0, 229, 255, 0.15) 100%);
+}
+html[data-theme="neon-glass"] .stats-general-card h3 {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .chart-wrapper-modern {
+  border: 1px solid rgba(0, 229, 255, 0.1);
+}
+html[data-theme="neon-glass"] .chart-wrapper-modern::before {
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(0, 229, 255, 0.5), 
+    rgba(0, 229, 255, 0.8), 
+    rgba(0, 229, 255, 0.5), 
+    transparent
+  );
+}
+html[data-theme="neon-glass"] .chart-wrapper-modern::after {
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(0, 229, 255, 0.3), 
+    transparent
+  );
+}
+html[data-theme="neon-glass"] .stat-item {
+  border-left: 4px solid #00e5ff;
+}
+html[data-theme="neon-glass"] .stat-item .value {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .back-btn {
+  color: #00e5ff;
+  border: 1px solid rgba(0, 229, 255, 0.2);
+}
+html[data-theme="neon-glass"] .back-btn:hover {
+  background: rgba(0, 229, 255, 0.1);
+  border-color: rgba(0, 229, 255, 0.4);
+}
+html[data-theme="neon-glass"] .loading i {
+  color: #00e5ff;
+}
+
+/* resources/views/dashboard/trafic.blade.php */
+html[data-theme="neon-glass"] .trafic-header h1 {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .year-selector-wrapper:hover,
+html[data-theme="neon-glass"] .month-selector-wrapper:hover {
+  border-color: rgba(0, 229, 255, 0.2);
+}
+html[data-theme="neon-glass"] .year-select:hover,
+html[data-theme="neon-glass"] .month-select:hover {
+  border-color: rgba(0, 229, 255, 0.25);
+}
+html[data-theme="neon-glass"] .stat-btn-main {
+  color: #00e5ff;
+  border: 1px solid rgba(0, 229, 255, 0.25);
+}
+html[data-theme="neon-glass"] .stat-btn-main:hover {
+  background: rgba(0, 229, 255, 0.12);
+  border-color: rgba(0, 229, 255, 0.4);
+}
+html[data-theme="neon-glass"] .sync-btn {
+  background: #00e5ff;
+}
+html[data-theme="neon-glass"] .sync-btn:hover {
+  box-shadow: 0 4px 14px rgba(0, 229, 255, 0.35);
+}
+
+/* resources/views/dev-mode/locked.blade.php */
+html[data-theme="neon-glass"] main {
+  border: 1px solid rgba(0, 229, 255, 0.18);
+}
+html[data-theme="neon-glass"] .mark {
+  background: rgba(0, 229, 255, 0.12);
+  color: #00e5ff;
+}
+
+/* resources/views/dev-mode/panel.blade.php */
+html[data-theme="neon-glass"] .status strong {
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .primary {
+  background: #00e5ff;
+}
+
+/* resources/views/layouts/mobile-analytics.blade.php */
+html[data-theme="neon-glass"] .mobile-shell::before {
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.06) 0%, rgba(0, 229, 255, 0) 72%);
+}
+html[data-theme="neon-glass"] .mobile-shell__link:hover,
+html[data-theme="neon-glass"] .mobile-shell__logout:hover {
+  border-color: rgba(0, 229, 255, 0.48);
+}
+html[data-theme="neon-glass"] .mobile-shell__module-link:hover {
+  border-color: rgba(0, 229, 255, 0.45);
+}
+html[data-theme="neon-glass"] .mobile-shell__module-link.is-active {
+  border-color: rgba(0, 229, 255, 0.75);
+}
+
+/* resources/views/livrari/index.blade.php */
+html[data-theme="neon-glass"] .livrari-overview-label i {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-overview-chart-title i {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-section-btn:hover {
+  border-color: rgba(0, 229, 255, 0.42);
+}
+html[data-theme="neon-glass"] .livrari-section-btn.is-active {
+  border-color: rgba(0, 229, 255, 0.72);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 229, 255, 0.15) inset;
+}
+html[data-theme="neon-glass"] .livrari-card:hover {
+  border-color: rgba(0, 229, 255, 0.14);
+}
+html[data-theme="neon-glass"] .livrari-card h2 i {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-search-input:focus {
+  border-color: rgba(0, 229, 255, 0.45);
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.18);
+}
+html[data-theme="neon-glass"] .livrari-filters select {
+  background-image:
+      linear-gradient(45deg, transparent 50%, var(--brand, #00e5ff) 50%),
+      linear-gradient(135deg, var(--brand, #00e5ff) 50%, transparent 50%);
+}
+html[data-theme="neon-glass"] .livrari-filters select:focus {
+  border-color: rgba(0, 229, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.35) inset;
+}
+html[data-theme="neon-glass"] .livrari-filters select:hover {
+  border-color: rgba(0, 229, 255, 0.32);
+}
+html[data-theme="neon-glass"] .livrari-perioada-field:hover {
+  border-color: rgba(0, 229, 255, 0.28);
+}
+html[data-theme="neon-glass"] .livrari-perioada-field:focus-within {
+  border-color: rgba(0, 229, 255, 0.45);
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.18);
+}
+html[data-theme="neon-glass"] .livrari-perioada-icon {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-preset-btn:hover {
+  background: rgba(0, 229, 255, 0.12);
+  color: var(--brand, #00e5ff);
+  border-color: rgba(0, 229, 255, 0.35);
+}
+html[data-theme="neon-glass"] .livrari-filters select option:checked,
+html[data-theme="neon-glass"] .livrari-filter-item select option:checked {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-filters select:focus-visible,
+html[data-theme="neon-glass"] .livrari-filter-item select:focus-visible {
+  outline: 2px solid rgba(0, 229, 255, 0.35);
+}
+html[data-theme="neon-glass"] .livrari-filter-item select:focus {
+  border-color: rgba(0, 229, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.35) inset;
+}
+html[data-theme="neon-glass"] .livrari-filter-item select:hover {
+  border-color: rgba(0, 229, 255, 0.32);
+}
+html[data-theme="neon-glass"] .livrari-btn-primary {
+  background: linear-gradient(135deg, #00c8f0 0%, #00e5ff 55%, #00b8d4 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 229, 255, 0.15);
+}
+html[data-theme="neon-glass"] .livrari-btn-primary:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 229, 255, 0.28);
+}
+html[data-theme="neon-glass"] .livrari-btn-muted:hover {
+  border-color: rgba(0, 229, 255, 0.35);
+}
+html[data-theme="neon-glass"] .livrari-btn-muted.is-active {
+  border-color: rgba(0, 229, 255, 0.72);
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.95) 0%, rgba(0, 200, 240, 0.95) 100%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 229, 255, 0.18);
+}
+html[data-theme="neon-glass"] .livrari-btn-edit {
+  background: rgba(0, 229, 255, 0.08);
+  color: var(--brand, #00e5ff);
+  border: 1px solid rgba(0, 229, 255, 0.28);
+}
+html[data-theme="neon-glass"] .livrari-btn-edit:hover {
+  background: rgba(0, 229, 255, 0.16);
+  border-color: rgba(0, 229, 255, 0.45);
+}
+html[data-theme="neon-glass"] .livrari-pag__edge--link:hover {
+  background: rgba(0, 229, 255, 0.12);
+  border-color: rgba(0, 229, 255, 0.35);
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-pag__num--link:hover {
+  background: rgba(0, 229, 255, 0.12);
+  border-color: rgba(0, 229, 255, 0.25);
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-pag__num--current {
+  background: linear-gradient(135deg, #00c8f0 0%, #00e5ff 55%, #00b8d4 100%);
+  border-color: rgba(0, 229, 255, 0.45);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 4px 14px rgba(0, 229, 255, 0.2);
+}
+html[data-theme="neon-glass"] .livrari-btn-open-modal {
+  background: linear-gradient(135deg, #00c8f0 0%, #00e5ff 50%, #00b8d4 100%);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 229, 255, 0.2);
+}
+html[data-theme="neon-glass"] .livrari-btn-open-modal:hover {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(0, 229, 255, 0.35);
+}
+html[data-theme="neon-glass"] .livrari-modal {
+  border: 1px solid rgba(0, 229, 255, 0.12);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 229, 255, 0.06);
+}
+html[data-theme="neon-glass"] .livrari-modal-title i {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-add-field input:focus,
+html[data-theme="neon-glass"] .livrari-add-field select:focus {
+  border-color: rgba(0, 229, 255, 0.45);
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.16);
+}
+html[data-theme="neon-glass"] .livrari-raion-menu {
+  border: 1px solid rgba(0, 229, 255, 0.2);
+}
+html[data-theme="neon-glass"] .livrari-raion-option:hover,
+html[data-theme="neon-glass"] .livrari-raion-option.is-active {
+  background: rgba(0, 229, 255, 0.14);
+  color: #00e5ff;
+}
+html[data-theme="neon-glass"] .livrari-export-choice input,
+html[data-theme="neon-glass"] .livrari-export-check input {
+  accent-color: #00e5ff;
+}
+html[data-theme="neon-glass"] .livrari-export-tool:hover {
+  color: #00e5ff;
+  border-color: rgba(0, 229, 255, 0.28);
+}
+html[data-theme="neon-glass"] .livrari-map-detail {
+  border: 1px solid rgba(0, 229, 255, 0.16);
+  background: rgba(0, 229, 255, 0.06);
+}
+html[data-theme="neon-glass"] .livrari-map-detail-count {
+  background: #00e5ff;
+}
+html[data-theme="neon-glass"] .livrari-map-row:hover {
+  border-color: rgba(0, 229, 255, 0.28);
+  background: rgba(0, 229, 255, 0.08);
+}
+html[data-theme="neon-glass"] .livrari-map-row-count {
+  background: #00e5ff;
+}
+html[data-theme="neon-glass"] .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header {
+  background: linear-gradient(90deg, rgba(0, 229, 255, 0.08) 0%, transparent 55%);
+}
+html[data-theme="neon-glass"] .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header-icon {
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.2) 0%, rgba(0, 200, 240, 0.08) 100%);
+  border: 1px solid rgba(0, 229, 255, 0.28);
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-page--admin .livrari-kpi-total-card {
+  background: linear-gradient(145deg, rgba(0, 229, 255, 0.1) 0%, rgba(0, 200, 240, 0.04) 100%);
+  border: 1px solid rgba(0, 229, 255, 0.22);
+}
+html[data-theme="neon-glass"] .livrari-page--admin .livrari-kpi-total-icon {
+  background: rgba(0, 229, 255, 0.16);
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-page--admin .livrari-kpi-total-value {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-page--admin .livrari-per-operator-title i {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-page--admin .livrari-per-operator-table td.livrari-td-num {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-page--admin .livrari-per-operator-table tbody tr:hover td {
+  background: rgba(0, 229, 255, 0.06);
+}
+html[data-theme="neon-glass"] .livrari-page .livrari-card h2 i {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-page .livrari-btn-primary {
+  background: linear-gradient(135deg, var(--brand-dark, #00c8f0) 0%, var(--brand, #00e5ff) 100%);
+}
+html[data-theme="neon-glass"] .livrari-page .livrari-filter-item select:focus,
+html[data-theme="neon-glass"] .livrari-page .livrari-search-input:focus,
+html[data-theme="neon-glass"] .livrari-page .livrari-perioada-field:focus-within {
+  border-color: rgba(0, 229, 255, 0.45);
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.16);
+}
+html[data-theme="neon-glass"] .livrari-page .flatpickr-prev-month svg,
+html[data-theme="neon-glass"] .livrari-page .flatpickr-next-month svg {
+  fill: #00e5ff;
+}
+html[data-theme="neon-glass"] .livrari-page .flatpickr-day:hover {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: rgba(0, 229, 255, 0.3);
+}
+html[data-theme="neon-glass"] .livrari-page .flatpickr-day.selected,
+html[data-theme="neon-glass"] .livrari-page .flatpickr-day.startRange,
+html[data-theme="neon-glass"] .livrari-page .flatpickr-day.endRange {
+  background: #00e5ff;
+  border-color: #00e5ff;
+}
+html[data-theme="neon-glass"] .livrari-page .flatpickr-day.inRange {
+  background: rgba(0, 229, 255, 0.22);
+  border-color: rgba(0, 229, 255, 0.25);
+}
+html[data-theme="neon-glass"] .livrari-page .numInputWrapper span.arrowUp:after {
+  border-bottom-color: #00e5ff;
+}
+html[data-theme="neon-glass"] .livrari-page .numInputWrapper span.arrowDown:after {
+  border-top-color: #00e5ff;
+}
+html[data-theme="neon-glass"] .livrari-date-display:focus {
+  border-color: rgba(0, 229, 255, 0.45);
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.16);
+}
+html[data-theme="neon-glass"] .livrari-flatpickr.flatpickr-calendar {
+  border: 1px solid rgba(0, 229, 255, 0.18);
+}
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-prev-month svg,
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-next-month svg {
+  fill: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-day:hover {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: rgba(0, 229, 255, 0.32);
+}
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-day.selected,
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-day.startRange,
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-day.endRange {
+  background: var(--brand, #00e5ff);
+  border-color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-day.inRange {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: rgba(0, 229, 255, 0.25);
+}
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-day.today {
+  border-color: rgba(0, 229, 255, 0.45);
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-day.today:hover {
+  background: rgba(0, 229, 255, 0.2);
+}
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-monthDropdown-months {
+  background-image: linear-gradient(45deg, transparent 50%, var(--brand, #00e5ff) 50%), linear-gradient(135deg, var(--brand, #00e5ff) 50%, transparent 50%);
+}
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-monthDropdown-months option:checked,
+html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-monthDropdown-months option:hover {
+  color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-flatpickr .numInputWrapper span.arrowUp:after {
+  border-bottom-color: var(--brand, #00e5ff);
+}
+html[data-theme="neon-glass"] .livrari-flatpickr .numInputWrapper span.arrowDown:after {
+  border-top-color: var(--brand, #00e5ff);
+}
+
+/* resources/views/livrari/map.blade.php */
+html[data-theme="neon-glass"] .livrari-map-btn-primary {
+  background: #00e5ff;
+  border-color: #00e5ff;
+}
+html[data-theme="neon-glass"] .livrari-map-btn-primary:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 229, 255, 0.4);
+}
+html[data-theme="neon-glass"] .livrari-map-canvas {
+  background:
+      radial-gradient(circle at 22% 24%, rgba(0, 229, 255, 0.06), transparent 24%),
+      linear-gradient(135deg, #060d1f 0%, #0f1a33 54%, #14213d 100%);
+}
+html[data-theme="neon-glass"] .leaflet-tooltip.livrari-map-raion-label {
+  border: 1px solid rgba(0, 229, 255, 0.72);
+  color: #00e5ff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(0, 229, 255, 0.16);
+}
+html[data-theme="neon-glass"] .livrari-map-count {
+  background: #00e5ff;
+}
+html[data-theme="neon-glass"] .livrari-map-row:hover,
+html[data-theme="neon-glass"] .livrari-map-row.is-active {
+  border-color: rgba(0, 229, 255, 0.34);
+  background: rgba(0, 229, 255, 0.09);
+}
+html[data-theme="neon-glass"] .livrari-map-legend-scale {
+  background: linear-gradient(90deg, #000000 0%, #00e5ff 100%);
+}
+html[data-theme="neon-glass"] .livrari-map-btn-primary {
+  background: #00e5ff !important;
+  border-color: #00e5ff !important;
+}
+
+/* resources/views/mobile/index.blade.php */
+html[data-theme="neon-glass"] .mobile-alert {
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  background: rgba(0, 229, 255, 0.08);
+}
+html[data-theme="neon-glass"] .mobile-badge {
+  border: 1px solid rgba(0, 229, 255, 0.24);
+  background: rgba(0, 229, 255, 0.08);
+}
+
+/* resources/views/operatori/create.blade.php */
+@media (max-width: 768px) {
+  html[data-theme="neon-glass"] a[style*="color: #00e5ff"] {
+    font-size: 12px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 6px 12px !important;
+    background: rgba(31, 41, 55, 0.3) !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(0, 229, 255, 0.2) !important;
+  }
+  html[data-theme="neon-glass"] label[style*="color: #00e5ff"] {
+    font-size: 11px !important;
+    margin-bottom: 6px !important;
+  }
+}
+@media (max-width: 480px) {
+  html[data-theme="neon-glass"] a[style*="color: #00e5ff"] {
+    font-size: 11px !important;
+    padding: 5px 10px !important;
+  }
+  html[data-theme="neon-glass"] label[style*="color: #00e5ff"] {
+    font-size: 10px !important;
+    margin-bottom: 5px !important;
+  }
+}
+
+/* resources/views/operatori/edit.blade.php */
+@media (max-width: 768px) {
+  html[data-theme="neon-glass"] a[style*="color: #00e5ff"] {
+    font-size: 12px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 6px 12px !important;
+    background: rgba(31, 41, 55, 0.3) !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(0, 229, 255, 0.2) !important;
+  }
+  html[data-theme="neon-glass"] label[style*="color: #00e5ff"] {
+    font-size: 11px !important;
+    margin-bottom: 6px !important;
+  }
+}
+@media (max-width: 480px) {
+  html[data-theme="neon-glass"] a[style*="color: #00e5ff"] {
+    font-size: 11px !important;
+    padding: 5px 10px !important;
+  }
+  html[data-theme="neon-glass"] label[style*="color: #00e5ff"] {
+    font-size: 10px !important;
+    margin-bottom: 5px !important;
+  }
+}
+
+/* resources/views/rapoarte/pdf/comparare.blade.php */
+html[data-theme="neon-glass"] .header {
+  border-bottom: 3px solid #00e5ff;
+}
+html[data-theme="neon-glass"] th {
+  background: #00e5ff;
+}
+
+/* resources/views/rapoarte/pdf/istoric.blade.php */
+html[data-theme="neon-glass"] .header {
+  border-bottom: 3px solid #00e5ff;
+}
+html[data-theme="neon-glass"] .stats-section {
+  border: 2px solid #00e5ff;
+}
+html[data-theme="neon-glass"] .table-title {
+  border-bottom: 2px solid #00e5ff;
+}
+html[data-theme="neon-glass"] thead {
+  background: #00e5ff;
+}
+html[data-theme="neon-glass"] .footer {
+  border-top: 2px solid #00e5ff;
+}
+html[data-theme="neon-glass"] .filters-info {
+  border-left: 3px solid #00e5ff;
+}

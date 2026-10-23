@@ -122,8 +122,9 @@
         <div class="field">
           <label>Temă interfață</label>
           <select name="theme">
-            <option value="dark" {{ (Auth::user()->theme ?? 'dark') === 'dark' ? 'selected' : '' }}>Dark (default)</option>
-            <option value="dark-red" {{ (Auth::user()->theme ?? 'dark') === 'dark-red' ? 'selected' : '' }}>Dark Red</option>
+            @foreach(\App\Support\UiTheme::THEMES as $themeKey => $themeLabel)
+              <option value="{{ $themeKey }}" {{ \App\Support\UiTheme::current() === $themeKey ? 'selected' : '' }}>{{ $themeLabel }}</option>
+            @endforeach
           </select>
         </div>
         <div class="field">
