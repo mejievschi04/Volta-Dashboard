@@ -24,7 +24,7 @@
   @php $styleCssVersion = @filemtime(public_path('css/style.css')) ?: 0; @endphp
   <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ $styleCssVersion }}"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  @if(request()->routeIs('mobile.analytics*', 'mobile.crashes*', 'mobile.feedback*', 'mobile.problems', 'aplicatia-volta'))
+  @if(request()->routeIs('mobile.analytics*', 'mobile.crashes*', 'mobile.feedback*', 'mobile.problems', 'aplicatia-volta', 'voltachat'))
     <link rel="stylesheet" href="{{ asset('css/mobile-analytics.css') }}?v={{ @filemtime(public_path('css/mobile-analytics.css')) ?: 0 }}">
   @endif
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
@@ -95,10 +95,15 @@
         <a href="{{ route('setari') }}" class="{{ request()->routeIs('setari*') ? 'active' : '' }}">
           <i class="fas fa-cog"></i><span class="txt">Setări</span>
         </a>
-        @if(auth()->check() && auth()->user()->isAdmin())
+        @if(auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isDev()))
         <a href="{{ route('aplicatia-volta') }}" class="{{ request()->routeIs('aplicatia-volta') ? 'active' : '' }}">
           <i class="fas fa-mobile-screen-button"></i><span class="txt">Aplicația Volta</span>
         </a>
+        <a href="{{ route('voltachat') }}" class="{{ request()->routeIs('voltachat') ? 'active' : '' }}">
+          <i class="fas fa-comments"></i><span class="txt">VoltaChat</span>
+        </a>
+        @endif
+        @if(auth()->check() && auth()->user()->isAdmin())
         <a href="{{ route('rapoarte.raport-lunar') }}" class="{{ request()->routeIs('rapoarte.raport-lunar') ? 'active' : '' }}">
           <i class="fas fa-file-contract"></i><span class="txt">Raport lunar</span>
         </a>

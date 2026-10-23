@@ -6,14 +6,14 @@ use Illuminate\Support\Facades\Cookie;
 
 class UiTheme
 {
-    public const DEFAULT = 'neon-glass';
+    public const DEFAULT = 'dark';
 
     public const COOKIE = 'volta_theme';
 
     public const THEMES = [
-        'neon-glass' => 'Neon Glass (default)',
-        'dark' => 'Dark',
+        'dark' => 'Dark (default)',
         'dark-red' => 'Dark Red',
+        'neon-glass' => 'Neon Glass',
     ];
 
     public static function normalize(?string $theme): string

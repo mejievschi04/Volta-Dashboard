@@ -14,6 +14,8 @@
     /** Accent principal Volta (galben curat) */
     brand: "rgb(255, 238, 0)",
     brandSoft: "rgba(255, 238, 0, 0.16)",
+    brandHover: "rgb(255, 247, 120)",
+    tooltipBorder: "rgba(255, 238, 0, 0.25)",
     font: "'Noto Sans', system-ui, -apple-system, sans-serif",
     series: {
       amber: { line: "rgb(255, 238, 0)", area: "rgba(255, 238, 0, 0.14)" },
@@ -32,11 +34,23 @@
     C.surface = "rgba(10, 12, 32, 0.94)";
     C.brand = "rgb(45, 212, 232)";
     C.brandSoft = "rgba(45, 212, 232, 0.16)";
+    C.brandHover = "rgb(140, 232, 244)";
+    C.tooltipBorder = "rgba(45, 212, 232, 0.35)";
     C.series.amber = { line: "rgb(45, 212, 232)", area: "rgba(45, 212, 232, 0.18)" };
     C.series.cyan = { line: "rgb(214, 92, 196)", area: "rgba(214, 92, 196, 0.16)" };
     C.series.violet = { line: "rgb(146, 128, 236)", area: "rgba(146, 128, 236, 0.18)" };
     C.series.emerald = { line: "rgb(52, 211, 153)", area: "rgba(52, 211, 153, 0.16)" };
     C.series.rose = { line: "rgb(236, 112, 150)", area: "rgba(236, 112, 150, 0.18)" };
+  }
+  if (docEl && docEl.getAttribute("data-theme") === "dark-red") {
+    C.grid = "rgba(235, 190, 200, 0.1)";
+    C.gridAxis = "rgba(235, 190, 200, 0.18)";
+    C.surface = "rgba(26, 16, 20, 0.95)";
+    C.brand = "rgb(242, 92, 105)";
+    C.brandSoft = "rgba(242, 92, 105, 0.16)";
+    C.brandHover = "rgb(255, 140, 150)";
+    C.tooltipBorder = "rgba(242, 92, 105, 0.35)";
+    C.series.amber = { line: "rgb(242, 92, 105)", area: "rgba(242, 92, 105, 0.16)" };
   }
   var neon = !!(docEl && docEl.getAttribute("data-theme") === "neon-glass");
 
@@ -74,7 +88,7 @@
       backgroundColor: C.surface,
       titleColor: C.brand,
       bodyColor: C.textPrimary,
-      borderColor: neon ? "rgba(45, 212, 232, 0.35)" : "rgba(255, 238, 0, 0.25)",
+      borderColor: C.tooltipBorder,
       borderWidth: 1,
       padding: 12,
       cornerRadius: 10,
@@ -218,8 +232,8 @@
     /** Preseturi gradient pentru bare dashboard */
     /** Culori solide (fără gradient) — compatibile cu clone JSON în modal */
     barSolid: {
-      brand: neon ? "rgb(45, 212, 232)" : "rgb(255, 238, 0)",
-      brandHover: neon ? "rgb(140, 232, 244)" : "rgb(255, 247, 120)",
+      brand: C.brand,
+      brandHover: C.brandHover,
       coral: neon ? "rgb(214, 92, 196)" : "rgb(251, 113, 133)",
       coralHover: neon ? "rgb(228, 132, 214)" : "rgb(253, 164, 175)",
       sky: neon ? "rgb(146, 128, 236)" : "rgb(180, 188, 204)",

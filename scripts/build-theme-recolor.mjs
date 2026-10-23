@@ -1,24 +1,25 @@
 #!/usr/bin/env node
 /*
- * Generează public/css/theme-neon-glass-recolor.css: fiecare regulă CSS care folosește galben
- * (din public/css/*.css și din blocurile <style> ale view-urilor) e redeclarată sub
- * html[data-theme="neon-glass"], cu galbenul înlocuit de nuanțe neon cyan.
- * Rulează din nou după ce adaugi stiluri cu galben: node scripts/build-neon-recolor.mjs
+ * Generează public/css/theme-recolor-<temă>.css pentru temele care nu folosesc galbenul Volta:
+ * fiecare regulă CSS cu galben (din public/css/*.css și din blocurile <style> ale view-urilor)
+ * e redeclarată sub html[data-theme="<temă>"], cu galbenul înlocuit de accentul temei.
+ * Paletele trebuie să fie identice cu cele din public/js/theme-recolor.js (selectorii [style*=] depind de ele).
+ * Rulează din nou după ce adaugi stiluri cu galben: node scripts/build-theme-recolor.mjs
  */
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const root = new URL('..', import.meta.url).pathname;
-const output = join(root, 'public/css/theme-neon-glass-recolor.css');
-const SCOPE = 'html[data-theme="neon-glass"]';
-const SKIP_FILES = new Set(['theme-neon-glass.css', 'theme-neon-glass-recolor.css']);
+const SKIP_FILES = new Set(['theme-neon-glass.css', 'theme-glass.css']);
 
-const RGB = {
-  main: [45, 212, 232],
-  deep: [34, 190, 214],
-  dark: [24, 166, 190],
-  light: [140, 232, 244],
+/* main e folosit și ca text pe fundal închis, și ca fundal sub text închis: ambele trebuie să treacă de 4.5:1 */
+const PALETTES = {
+  'neon-glass': { main: [45, 212, 232], deep: [34, 190, 214], dark: [24, 166, 190], light: [140, 232, 244] },
+  'dark-red': { main: [242, 92, 105], deep: [232, 74, 88], dark: [214, 58, 72], light: [255, 140, 150] },
 };
+
+let RGB = PALETTES['neon-glass'];
+let SCOPE = 'html[data-theme="neon-glass"]';
 const HEX = {
   ffee00: 'main', fe0: 'main', fff000: 'main', ffe600: 'main',
   facc15: 'deep', eab308: 'deep', ffd700: 'deep',
@@ -139,7 +140,7 @@ function emit(items, indent = '') {
       if (inner) css += `${indent}${item.group} {\n${inner}${indent}}\n`;
       continue;
     }
-    /* Selectorii care țintesc galbenul din style="" trebuie să prindă și atributul recolorat de theme-neon-glass.js */
+    /* Selectorii care țintesc galbenul din style="" trebuie să prindă și atributul recolorat de theme-recolor.js */
     const recoloredSelector = recolor(item.selector);
     const selectorChanged = recoloredSelector !== item.selector;
     const decls = splitTop(item.body, ';')
@@ -168,7 +169,7 @@ function walk(dir, ext, list = []) {
 
 const sources = [];
 for (const file of readdirSync(join(root, 'public/css')).sort()) {
-  if (!file.endsWith('.css') || file.endsWith('.min.css') || SKIP_FILES.has(file)) continue;
+  if (!file.endsWith('.css') || file.endsWith('.min.css') || SKIP_FILES.has(file) || file.startsWith('theme-recolor-')) continue;
   sources.push([`public/css/${file}`, readFileSync(join(root, 'public/css', file), 'utf8')]);
 }
 for (const file of walk(join(root, 'resources/views'), '.blade.php').sort()) {
@@ -179,15 +180,23 @@ for (const file of walk(join(root, 'resources/views'), '.blade.php').sort()) {
   if (blocks.length) sources.push([relative(root, file), blocks.join('\n')]);
 }
 
-let result = '/* Generat de scripts/build-neon-recolor.mjs — nu edita manual. */\n';
-let rules = 0;
-for (const [name, raw] of sources) {
-  const css = stripComments(raw).replace(/\{\{[\s\S]*?\}\}|\{!![\s\S]*?!!\}/g, 'BLADE').replace(/@(php|endphp|if|endif|foreach|endforeach)\b[^\n]*/g, '');
-  const block = emit(parse(css));
-  if (!block) continue;
-  rules += (block.match(/\{\n/g) || []).length;
-  result += `\n/* ${name} */\n${block}`;
-}
+const parsed = sources.map(([name, raw]) => [
+  name,
+  parse(stripComments(raw).replace(/\{\{[\s\S]*?\}\}|\{!![\s\S]*?!!\}/g, 'BLADE').replace(/@(php|endphp|if|endif|foreach|endforeach)\b[^\n]*/g, '')),
+]);
 
-writeFileSync(output, result);
-console.log(`${relative(root, output)}: ${rules} reguli din ${sources.length} surse`);
+for (const [theme, palette] of Object.entries(PALETTES)) {
+  RGB = palette;
+  SCOPE = `html[data-theme="${theme}"]`;
+  const output = join(root, `public/css/theme-recolor-${theme}.css`);
+  let result = '/* Generat de scripts/build-theme-recolor.mjs — nu edita manual. */\n';
+  let rules = 0;
+  for (const [name, items] of parsed) {
+    const block = emit(items);
+    if (!block) continue;
+    rules += (block.match(/\{\n/g) || []).length;
+    result += `\n/* ${name} */\n${block}`;
+  }
+  writeFileSync(output, result);
+  console.log(`${relative(root, output)}: ${rules} reguli din ${sources.length} surse`);
+}

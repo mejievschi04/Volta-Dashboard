@@ -1,13 +1,16 @@
 /*
- * Tema „Neon Glass”: înlocuiește galbenul rămas în atributele style="" și în culorile graficelor Chart.js.
- * Aceeași paletă ca scripts/build-neon-recolor.mjs (păstrează formatul identic, selectorii [style*=] depind de el).
+ * Temele fără galben (Neon Glass, Dark Red): înlocuiește galbenul rămas în atributele style="" și în culorile graficelor Chart.js.
+ * Aceleași palete ca scripts/build-theme-recolor.mjs (păstrează formatul identic, selectorii [style*=] depind de el).
  */
 (function () {
   'use strict';
 
-  if (document.documentElement.getAttribute('data-theme') !== 'neon-glass') return;
-
-  var RGB = { main: [45, 212, 232], deep: [34, 190, 214], dark: [24, 166, 190], light: [140, 232, 244] };
+  var PALETTES = {
+    'neon-glass': { main: [45, 212, 232], deep: [34, 190, 214], dark: [24, 166, 190], light: [140, 232, 244] },
+    'dark-red': { main: [242, 92, 105], deep: [232, 74, 88], dark: [214, 58, 72], light: [255, 140, 150] }
+  };
+  var RGB = PALETTES[document.documentElement.getAttribute('data-theme')];
+  if (!RGB) return;
   var HEX = {
     ffee00: 'main', fe0: 'main', fff000: 'main', ffe600: 'main',
     facc15: 'deep', eab308: 'deep', ffd700: 'deep',

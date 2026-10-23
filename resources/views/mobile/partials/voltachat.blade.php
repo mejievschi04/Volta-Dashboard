@@ -1,14 +1,7 @@
 @php
   $fmt = fn ($value) => number_format((float) $value, 0, ',', '.');
   $dec = fn ($value, $d = 1) => number_format((float) $value, $d, ',', '.');
-  $pct = function ($value) {
-      $value = (float) $value;
-      if ($value > 0 && $value <= 1) {
-          $value *= 100;
-      }
-
-      return number_format($value, 1, ',', '.').'%';
-  };
+  $pct = fn ($value) => number_format((float) $value, 1, ',', '.').'%';
   $dur = function ($seconds) {
       if ($seconds === null || $seconds === '') {
           return '—';
@@ -125,8 +118,8 @@
     </div>
     <div class="ma-kpi">
       <span class="ma-kpi__label"><i class="fas fa-inbox" aria-hidden="true"></i> În lucru</span>
-      <div class="ma-kpi__value">{{ $fmt(($kpis['status_new'] ?? 0) + ($kpis['status_open'] ?? 0) + ($kpis['status_active'] ?? 0)) }}</div>
-      <span class="ma-kpi__help">{{ $fmt($kpis['status_new'] ?? 0) }} noi · {{ $fmt($kpis['status_open'] ?? 0) }} deschise · {{ $fmt($kpis['status_active'] ?? 0) }} active</span>
+      <div class="ma-kpi__value">{{ $fmt($kpis['status_active'] ?? (($kpis['status_new'] ?? 0) + ($kpis['status_open'] ?? 0))) }}</div>
+      <span class="ma-kpi__help">Neînchise: {{ $fmt($kpis['status_new'] ?? 0) }} noi · {{ $fmt($kpis['status_open'] ?? 0) }} deschise</span>
     </div>
     <div class="ma-kpi ma-kpi--good">
       <span class="ma-kpi__label"><i class="fas fa-check-double" aria-hidden="true"></i> Citite de operatori</span>
@@ -180,7 +173,7 @@
             <span class="vc-heat__dow">{{ $dowName }}</span>
             @for($h = 0; $h < 24; $h++)
               @php $v = $heat[$dow][$h] ?? 0; @endphp
-              <span class="vc-heat__cell" style="--vc-a: {{ $v ? round(0.12 + 0.88 * $v / $heatMax, 3) : 0 }}" title="{{ $dowName }} {{ str_pad($h, 2, '0', STR_PAD_LEFT) }}:00 · {{ $fmt($v) }} {{ $v === 1 ? 'dialog' : 'dialoguri' }}"></span>
+              <span class="vc-heat__cell" style="--vc-a: {{ $v ? round(0.12 + 0.88 * $v / $heatMax, 3) : 0 }}" title="{{ $dowName }} {{ str_pad($h, 2, '0', STR_PAD_LEFT) }}:00 · {{ $fmt($v) }} {{ $v === 1 ? 'mesaj' : 'mesaje' }}"></span>
             @endfor
           @endforeach
         </div>

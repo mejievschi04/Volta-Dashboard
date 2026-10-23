@@ -1,0 +1,1032 @@
+/* Generat de scripts/build-theme-recolor.mjs — nu edita manual. */
+
+/* public/css/login.css */
+html[data-theme="dark-red"] .input-group input {
+  border: 2px solid rgba(242, 92, 105, 0.15);
+}
+html[data-theme="dark-red"] .input-group input:hover:not(:focus) {
+  border-color: rgba(242, 92, 105, 0.25);
+}
+html[data-theme="dark-red"] .btn-login {
+  background: linear-gradient(135deg, var(--brand) 0%, #e84a58 100%);
+}
+@media (hover: none) and (pointer: coarse) {
+  html[data-theme="dark-red"] .input-group input:hover:not(:focus) {
+    border-color: rgba(242, 92, 105, 0.15);
+  }
+  html[data-theme="dark-red"] .password-toggle:active {
+    background: rgba(242, 92, 105, 0.15);
+  }
+}
+html[data-theme="dark-red"] .login-welcome-name {
+  text-shadow: none;
+}
+
+/* public/css/mobile-analytics.css */
+html[data-theme="dark-red"] .ma-page::before {
+  background:
+    radial-gradient(ellipse 70% 80% at 8% 0%, rgba(242, 92, 105, 0.08), transparent 55%),
+    radial-gradient(ellipse 50% 60% at 92% 10%, rgba(56, 189, 248, 0.06), transparent 50%);
+}
+html[data-theme="dark-red"] .ma-alert {
+  border: 1px solid rgba(242, 92, 105, 0.34);
+  background: rgba(242, 92, 105, 0.09);
+}
+html[data-theme="dark-red"] .ma-hero {
+  background:
+    linear-gradient(165deg, rgba(242, 92, 105, 0.05) 0%, transparent 38%),
+    linear-gradient(155deg, rgba(30, 41, 59, 0.96) 0%, rgba(15, 23, 42, 0.98) 100%);
+  border: 1px solid rgba(242, 92, 105, 0.14);
+  box-shadow: 0 0 0 1px rgba(242, 92, 105, 0.04) inset, 0 18px 40px rgba(0, 0, 0, 0.32);
+}
+html[data-theme="dark-red"] .ma-hero::after {
+  border: 1px solid rgba(242, 92, 105, 0.12);
+}
+html[data-theme="dark-red"] .ma-hero::before {
+  background: linear-gradient(90deg, transparent, rgba(242, 92, 105, 0.95), rgba(56, 189, 248, 0.45), transparent);
+}
+html[data-theme="dark-red"] .ma-kicker {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .ma-kicker::before {
+  background: #f25c69;
+}
+html[data-theme="dark-red"] .ma-period__chip:hover,
+html[data-theme="dark-red"] .ma-period__chip.is-active {
+  border-color: rgba(242, 92, 105, 0.55);
+  color: #f25c69;
+  background: rgba(242, 92, 105, 0.08);
+}
+html[data-theme="dark-red"] .ma-btn {
+  background: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .ma-kpi {
+  background:
+    linear-gradient(180deg, rgba(242, 92, 105, 0.04) 0%, transparent 28%),
+    linear-gradient(160deg, rgba(26, 34, 48, 0.96) 0%, rgba(14, 19, 29, 0.98) 100%);
+}
+html[data-theme="dark-red"] .ma-kpi::before {
+  background: rgba(242, 92, 105, 0.55);
+}
+html[data-theme="dark-red"] .ma-kpi:hover {
+  border-color: rgba(242, 92, 105, 0.4);
+  box-shadow: none;
+}
+html[data-theme="dark-red"] .ma-kpi__label i {
+  color: rgba(242, 92, 105, 0.9);
+}
+html[data-theme="dark-red"] .ma-kpi--accent .ma-kpi__value {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .ma-card {
+  background:
+    linear-gradient(180deg, rgba(242, 92, 105, 0.035) 0%, transparent 22%),
+    linear-gradient(160deg, rgba(26, 34, 48, 0.96) 0%, rgba(14, 19, 29, 0.98) 100%);
+}
+html[data-theme="dark-red"] .ma-card::after {
+  border-right: 1px solid rgba(242, 92, 105, 0.35);
+  border-bottom: 1px solid rgba(242, 92, 105, 0.35);
+}
+html[data-theme="dark-red"] .ma-card::before {
+  background: linear-gradient(90deg, transparent, rgba(242, 92, 105, 0.7), transparent);
+}
+html[data-theme="dark-red"] .ma-card__head i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .ma-card__link:hover {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .ma-badge {
+  border: 1px solid rgba(242, 92, 105, 0.28);
+  background: rgba(242, 92, 105, 0.09);
+  color: #ff8c96;
+}
+html[data-theme="dark-red"] .ma-shortcut:hover {
+  border-color: rgba(242, 92, 105, 0.4);
+  box-shadow: none;
+}
+html[data-theme="dark-red"] .ma-shortcut i {
+  background: rgba(242, 92, 105, 0.12);
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .ma-funnel__count {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .ma-funnel__fill {
+  background: linear-gradient(90deg, rgba(242, 92, 105, 0.95), rgba(232, 74, 88, 0.7));
+}
+html[data-theme="dark-red"] .ma-bar-row__fill {
+  background: rgba(242, 92, 105, 0.75);
+}
+html[data-theme="dark-red"] .ma-alert--soft {
+  border-color: var(--brand-30, rgba(242, 92, 105, 0.3));
+  background: var(--brand-10, rgba(242, 92, 105, 0.12));
+}
+html[data-theme="dark-red"] .ma-alert--soft strong {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .ma-meta-funnel__track span {
+  background: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .ma-heat__bar {
+  background: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .ma-rank__bar span {
+  background: rgba(242, 92, 105, 0.85);
+}
+html[data-theme="dark-red"] .vc-section .ma-section__head h2 i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .vc-slow a {
+  color: var(--brand, #f25c69);
+}
+
+/* public/css/operatori.css */
+html[data-theme="dark-red"] .operator-portal .operator-app::before {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(242, 92, 105, 0.12), transparent 50%),
+    radial-gradient(ellipse 60% 50% at 100% 50%, rgba(12, 28, 54, 0.22), transparent 52%),
+    radial-gradient(ellipse 50% 40% at 0% 80%, rgba(12, 28, 54, 0.2), transparent 48%);
+}
+html[data-theme="dark-red"] .operator-portal .operator-nav {
+  box-shadow: 0 1px 0 rgba(242, 92, 105, 0.04) inset, 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+html[data-theme="dark-red"] .operator-portal .operator-nav-wordmark-stats {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operator-portal .operator-nav-links a.active {
+  background: var(--brand-10, rgba(242, 92, 105, 0.12));
+  color: var(--brand, #f25c69);
+  border-color: rgba(242, 92, 105, 0.2);
+  box-shadow: none;
+}
+html[data-theme="dark-red"] .operator-portal .operator-user-avatar {
+  background: var(--brand, #f25c69);
+  box-shadow: 0 0 0 2px rgba(242, 92, 105, 0.2);
+}
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .setari-operator-card {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(242, 92, 105, 0.1), transparent 42%),
+    linear-gradient(165deg, rgba(31, 41, 55, 0.94), rgba(15, 23, 42, 0.98));
+}
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .setari-section-title i {
+  color: var(--brand, #f25c69);
+  background: rgba(242, 92, 105, 0.14);
+  border: 1px solid rgba(242, 92, 105, 0.26);
+}
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .setari-photo-btn {
+  background: rgba(242, 92, 105, 0.12);
+}
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .setari-photo-btn:hover {
+  background: rgba(242, 92, 105, 0.22);
+}
+html[data-theme="dark-red"] .operator-portal .setari-wrap--operator .field input[type="password"]:focus {
+  border-color: rgba(242, 92, 105, 0.42);
+  box-shadow: 0 0 0 2px rgba(242, 92, 105, 0.14);
+}
+html[data-theme="dark-red"] .operator-portal .operator-main :is(.livrari-card, .setari-operator-card, .operator-me-card):hover {
+  border-color: rgba(242, 92, 105, 0.2);
+}
+html[data-theme="dark-red"] .operator-portal .operator-main :is(a, button, .btn, input, select, textarea):focus-visible {
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.75), 0 0 0 4px rgba(242, 92, 105, 0.24);
+}
+html[data-theme="dark-red"] .operator-me-avatar--initial {
+  background-image: linear-gradient(135deg, var(--brand, #f25c69), var(--brand-dark, #e84a58));
+}
+html[data-theme="dark-red"] .operator-me-badge {
+  border: 1px solid rgba(242, 92, 105, 0.35);
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operator-me-card__title i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operator-me-stat--brand .operator-me-stat__icon {
+  background: rgba(242, 92, 105, 0.2);
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operator-me-total--brand .operator-me-total__value {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operator-me-table th {
+  background: rgba(242, 92, 105, 0.14);
+  border-bottom: 1px solid rgba(242, 92, 105, 0.22);
+}
+html[data-theme="dark-red"] .operator-me-table tbody tr:hover {
+  background: rgba(242, 92, 105, 0.08);
+}
+html[data-theme="dark-red"] .operator-me-empty__text strong {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operator-team-kpi-header h2 i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operator-team-kpi-badge {
+  background: rgba(242, 92, 105, 0.12);
+  color: var(--brand, #f25c69);
+  border: 1px solid rgba(242, 92, 105, 0.35);
+}
+html[data-theme="dark-red"] .operatori-page-icon {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operatori-table-title i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operatori-table tbody tr.operatori-row-click:hover {
+  background: rgba(242, 92, 105, 0.07);
+}
+html[data-theme="dark-red"] .operatori-table tbody tr.operatori-row-click:focus-visible {
+  outline: 2px solid rgba(242, 92, 105, 0.55);
+}
+html[data-theme="dark-red"] .operatori-name-link:hover {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .operatori-btn-photo:hover {
+  color: var(--brand, #f25c69);
+  border-color: rgba(242, 92, 105, 0.5);
+}
+html[data-theme="dark-red"] .operatori-btn-avatar-upload {
+  border: 2px solid var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operatori-btn-avatar-upload:hover {
+  background: rgba(242, 92, 105, 0.3);
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operatori-btn-photo-block {
+  background: rgba(242, 92, 105, 0.15);
+  color: var(--brand, #f25c69);
+  border: 1px solid rgba(242, 92, 105, 0.4);
+}
+html[data-theme="dark-red"] .operatori-btn-photo-block:hover {
+  background: rgba(242, 92, 105, 0.25);
+  border-color: rgba(242, 92, 105, 0.6);
+}
+html[data-theme="dark-red"] .operatori-avatar {
+  background: linear-gradient(135deg, #f25c69 0%, #f25c69 100%);
+}
+html[data-theme="dark-red"] .operatori-badge {
+  color: var(--brand, #f25c69);
+  border: 1px solid var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operatori-stat-row--yellow {
+  background: rgba(242, 92, 105, 0.2);
+  border: 1px solid rgba(242, 92, 105, 0.2);
+}
+html[data-theme="dark-red"] .operatori-stat-row--yellow .operatori-stat-icon {
+  background: rgba(242, 92, 105, 0.2);
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operatori-section-icon--yellow {
+  background: linear-gradient(135deg, #f25c69 0%, #f25c69 100%);
+}
+html[data-theme="dark-red"] .operatori-stat-box--yellow {
+  background: rgba(242, 92, 105, 0.1);
+  border-color: rgba(242, 92, 105, 0.2);
+}
+html[data-theme="dark-red"] .operatori-stat-box--yellow .operatori-stat-value {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operatori-directory-hero {
+  background: radial-gradient(circle at 88% 0%, rgba(242, 92, 105, 0.16), transparent 29%), linear-gradient(120deg, #172033, #0f172a 68%);
+}
+html[data-theme="dark-red"] .operatori-directory-hero::after {
+  border: 1px solid rgba(242, 92, 105, 0.22);
+}
+html[data-theme="dark-red"] .operatori-eyebrow {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .operatori-filter-panel__heading i {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .operatori-table-title--directory > span > i {
+  background: #f25c69;
+}
+html[data-theme="dark-red"] .operatori-person-link:hover > i {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .operatori-person-avatar {
+  border: 1px solid rgba(242, 92, 105, .32);
+  color: #f25c69;
+  background: rgba(242, 92, 105, .08);
+}
+html[data-theme="dark-red"] .operatori-detail-page .operatori-back:hover {
+  border-color: rgba(242, 92, 105, .45);
+  background: rgba(242, 92, 105, .07);
+}
+html[data-theme="dark-red"] .operatori-profile-hero {
+  background-image: radial-gradient(circle at 83% 10%, rgba(242, 92, 105, .19), transparent 24%), linear-gradient(130deg, #26334a, #121b2c 53%, #0b1220);
+}
+html[data-theme="dark-red"] .operatori-section-icon {
+  background: rgba(242, 92, 105, .12);
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .operatori-btn-primary {
+  background: linear-gradient(135deg, #f25c69 0%, #f25c69 100%);
+}
+html[data-theme="dark-red"] .operatori-modal-title-icon {
+  background: linear-gradient(135deg, #f25c69 0%, #f25c69 100%);
+}
+html[data-theme="dark-red"] .operatori-form-label {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operatori-form-input:focus {
+  border-color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operatori-notes-card .operatori-sidebar-title i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operatori-detail-page .operatori-table-yellow thead tr,
+html[data-theme="dark-red"] .operatori-table-yellow thead tr {
+  background: linear-gradient(135deg, #f25c69 0%, #f25c69 100%) !important;
+}
+html[data-theme="dark-red"] .operator-card {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .back-button a {
+  color: var(--brand, #f25c69);
+  border: 1px solid var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .back-button a:hover {
+  background: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .operator-card {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .top-card {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .top-card .medal {
+  color: var(--brand, #f25c69);
+}
+@media (max-width: 768px) {
+  html[data-theme="dark-red"] div[style*="color: var(--brand, #f25c69); font-weight: 700; font-size: 18px; margin-left: 16px"] {
+    font-size: 10px !important;
+    margin-left: 0 !important;
+    margin-top: 2px !important;
+    align-self: flex-end !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+  }
+}
+@media (max-width: 480px) {
+  html[data-theme="dark-red"] div[style*="color: var(--brand, #f25c69); font-weight: 700; font-size: 18px; margin-left: 16px"] {
+    font-size: 11px !important;
+    margin-left: 0 !important;
+    margin-top: 2px !important;
+    align-self: flex-end !important;
+  }
+  html[data-theme="dark-red"] div[style*="color: var(--brand, #f25c69); font-weight: 700; font-size: 18px; margin-left: 16px"] {
+    font-size: 9px !important;
+    margin-left: 0 !important;
+    margin-top: 2px !important;
+    align-self: flex-end !important;
+  }
+}
+@media (max-width: 480px) {
+  html[data-theme="dark-red"] a[style*="padding: 12px 24px"][style*="background: linear-gradient(135deg, #f25c69"] {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+/* public/css/style.css */
+html[data-theme="dark-red"] th,
+html[data-theme="dark-red"] td {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] th {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] tr:hover td {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .sidebar-mobile-entry--mobile {
+  border: 1px solid rgba(242, 92, 105, 0.38);
+  background: linear-gradient(165deg, rgba(242, 92, 105, 0.16) 0%, rgba(242, 92, 105, 0.08) 100%);
+  color: #ff8c96;
+}
+html[data-theme="dark-red"] .sidebar-mobile-entry--mobile:hover {
+  border-color: rgba(242, 92, 105, 0.62);
+  background: linear-gradient(165deg, rgba(242, 92, 105, 0.22) 0%, rgba(242, 92, 105, 0.11) 100%);
+}
+html[data-theme="dark-red"] .chart-container:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(242, 92, 105, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border-color: rgba(242, 92, 105, 0.18);
+}
+html[data-theme="dark-red"] .chart-panel__icon {
+  background: linear-gradient(145deg, rgba(242, 92, 105, 0.18), rgba(242, 92, 105, 0.05));
+}
+html[data-theme="dark-red"] .dashboard-chart-modal__panel {
+  border: 1px solid rgba(242, 92, 105, 0.18);
+}
+html[data-theme="dark-red"] .raport-lunar-hero__badge {
+  background: linear-gradient(145deg, rgba(242, 92, 105, 0.2), rgba(242, 92, 105, 0.05));
+}
+html[data-theme="dark-red"] .raport-lunar-month-input:focus {
+  border-color: rgba(242, 92, 105, 0.45);
+  box-shadow: 0 0 0 3px rgba(242, 92, 105, 0.12);
+}
+html[data-theme="dark-red"] .raport-lunar-stat--accent {
+  border-color: rgba(242, 92, 105, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(242, 92, 105, 0.06);
+}
+html[data-theme="dark-red"] .raport-lunar-panel__icon {
+  background: linear-gradient(145deg, rgba(242, 92, 105, 0.18), rgba(242, 92, 105, 0.04));
+}
+html[data-theme="dark-red"] .raport-lunar-panel__icon--money {
+  color: #ff8c96;
+  background: linear-gradient(145deg, rgba(232, 74, 88, 0.22), rgba(232, 74, 88, 0.06));
+}
+html[data-theme="dark-red"] .raport-lunar-panel__tag {
+  border: 1px solid rgba(242, 92, 105, 0.28);
+  background: rgba(242, 92, 105, 0.08);
+}
+html[data-theme="dark-red"] .raport-lunar-total-row td {
+  background: rgba(242, 92, 105, 0.09) !important;
+}
+html[data-theme="dark-red"] .raport-lunar-row--callcenter td {
+  background: rgba(242, 92, 105, 0.07) !important;
+}
+html[data-theme="dark-red"] .raport-lunar-num-input:focus {
+  border-color: rgba(242, 92, 105, 0.45);
+  box-shadow: 0 0 0 2px rgba(242, 92, 105, 0.12);
+}
+
+/* public/css/trafic.css */
+html[data-theme="dark-red"] .trafic-action-btn--primary {
+  background: linear-gradient(135deg, #e84a58 0%, var(--brand) 55%, #d63a48 100%);
+}
+html[data-theme="dark-red"] .trafic-action-btn--primary:hover {
+  background: linear-gradient(135deg, #fdd835 0%, var(--brand) 55%, #e84a58 100%);
+}
+
+/* public/css/volta-date-inputs.css */
+html[data-theme="dark-red"] .volta-flatpickr.flatpickr-calendar {
+  border: 1px solid var(--border-primary, rgba(242, 92, 105, 0.18));
+}
+html[data-theme="dark-red"] .volta-flatpickr .flatpickr-prev-month svg,
+html[data-theme="dark-red"] .volta-flatpickr .flatpickr-next-month svg {
+  fill: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .volta-flatpickr .flatpickr-day:hover,
+html[data-theme="dark-red"] .volta-flatpickr .flatpickr-monthSelect-month:hover {
+  background: rgba(242, 92, 105, 0.2);
+  border-color: rgba(242, 92, 105, 0.32);
+}
+html[data-theme="dark-red"] .volta-flatpickr .flatpickr-day.today {
+  border-color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .volta-flatpickr .flatpickr-day.selected,
+html[data-theme="dark-red"] .volta-flatpickr .flatpickr-day.selected:hover,
+html[data-theme="dark-red"] .volta-flatpickr .flatpickr-monthSelect-month.selected,
+html[data-theme="dark-red"] .volta-flatpickr .flatpickr-monthSelect-month.selected:hover {
+  background: var(--brand, #f25c69);
+  border-color: var(--brand, #f25c69);
+}
+
+/* resources/views/dashboard/setari.blade.php */
+html[data-theme="dark-red"] .setari-photo-btn {
+  background: var(--brand-10, rgba(242, 92, 105, 0.15));
+  color: var(--brand, #f25c69);
+  border: 1px solid var(--brand-20, rgba(242, 92, 105, 0.4));
+}
+html[data-theme="dark-red"] .setari-photo-btn:hover {
+  background: var(--brand-20, rgba(242, 92, 105, 0.25));
+}
+
+/* resources/views/dashboard/trafic-analiza.blade.php */
+html[data-theme="dark-red"] .ta-tab {
+  border: 1px solid rgba(242, 92, 105, 0.2);
+  background: rgba(242, 92, 105, 0.06);
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .ta-tab:hover {
+  background: rgba(242, 92, 105, 0.14);
+  border-color: rgba(242, 92, 105, 0.42);
+}
+html[data-theme="dark-red"] .ta-tab.is-active {
+  background: linear-gradient(135deg, rgba(242, 92, 105, 0.22) 0%, rgba(242, 92, 105, 0.12) 100%);
+  border-color: rgba(242, 92, 105, 0.5);
+  box-shadow: inset 3px 0 0 rgba(242, 92, 105, 0.8);
+}
+html[data-theme="dark-red"] .ta-panel-title i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .ta-placeholder i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .ta-loading i {
+  color: var(--brand, #f25c69);
+}
+
+/* resources/views/dashboard/trafic-raport.blade.php */
+html[data-theme="dark-red"] .trafic-raport-mode button.active {
+  border-color: rgba(242, 92, 105, 0.5);
+  background: rgba(242, 92, 105, 0.12);
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .trafic-raport-generate {
+  background: #f25c69;
+}
+html[data-theme="dark-red"] .trafic-raport-card h2 i {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .trafic-raport-table th {
+  background: rgba(242, 92, 105, 0.12);
+}
+html[data-theme="dark-red"] .trafic-raport-table tbody tr:hover td {
+  background: rgba(242, 92, 105, 0.05);
+}
+html[data-theme="dark-red"] .trafic-raport-table tfoot td {
+  color: #f25c69;
+  border-top: 2px solid rgba(242, 92, 105, 0.25);
+}
+html[data-theme="dark-red"] .trafic-raport-loading i {
+  color: #f25c69;
+}
+
+/* resources/views/dashboard/trafic-stats.blade.php */
+html[data-theme="dark-red"] .stats-page h1 {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .stat-btn {
+  color: #f25c69;
+  border: 2px solid rgba(242, 92, 105, 0.3);
+}
+html[data-theme="dark-red"] .stat-btn:hover {
+  background: rgba(242, 92, 105, 0.1);
+  border-color: rgba(242, 92, 105, 0.6);
+}
+html[data-theme="dark-red"] .stat-btn.active {
+  background: linear-gradient(135deg, rgba(242, 92, 105, 0.2) 0%, rgba(242, 92, 105, 0.1) 100%);
+  border-color: #f25c69;
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .stat-btn-total {
+  background: linear-gradient(135deg, rgba(242, 92, 105, 0.15) 0%, rgba(242, 92, 105, 0.05) 100%);
+  border-color: rgba(242, 92, 105, 0.5);
+}
+html[data-theme="dark-red"] .stat-btn-total:hover {
+  background: linear-gradient(135deg, rgba(242, 92, 105, 0.25) 0%, rgba(242, 92, 105, 0.15) 100%);
+}
+html[data-theme="dark-red"] .stats-general-card h3 {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .chart-wrapper-modern {
+  border: 1px solid rgba(242, 92, 105, 0.1);
+}
+html[data-theme="dark-red"] .chart-wrapper-modern::before {
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(242, 92, 105, 0.5), 
+    rgba(242, 92, 105, 0.8), 
+    rgba(242, 92, 105, 0.5), 
+    transparent
+  );
+}
+html[data-theme="dark-red"] .chart-wrapper-modern::after {
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(242, 92, 105, 0.3), 
+    transparent
+  );
+}
+html[data-theme="dark-red"] .stat-item {
+  border-left: 4px solid #f25c69;
+}
+html[data-theme="dark-red"] .stat-item .value {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .back-btn {
+  color: #f25c69;
+  border: 1px solid rgba(242, 92, 105, 0.2);
+}
+html[data-theme="dark-red"] .back-btn:hover {
+  background: rgba(242, 92, 105, 0.1);
+  border-color: rgba(242, 92, 105, 0.4);
+}
+html[data-theme="dark-red"] .loading i {
+  color: #f25c69;
+}
+
+/* resources/views/dashboard/trafic.blade.php */
+html[data-theme="dark-red"] .trafic-header h1 {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .year-selector-wrapper:hover,
+html[data-theme="dark-red"] .month-selector-wrapper:hover {
+  border-color: rgba(242, 92, 105, 0.2);
+}
+html[data-theme="dark-red"] .year-select:hover,
+html[data-theme="dark-red"] .month-select:hover {
+  border-color: rgba(242, 92, 105, 0.25);
+}
+html[data-theme="dark-red"] .stat-btn-main {
+  color: #f25c69;
+  border: 1px solid rgba(242, 92, 105, 0.25);
+}
+html[data-theme="dark-red"] .stat-btn-main:hover {
+  background: rgba(242, 92, 105, 0.12);
+  border-color: rgba(242, 92, 105, 0.4);
+}
+html[data-theme="dark-red"] .sync-btn {
+  background: #f25c69;
+}
+html[data-theme="dark-red"] .sync-btn:hover {
+  box-shadow: 0 4px 14px rgba(242, 92, 105, 0.35);
+}
+
+/* resources/views/dev-mode/locked.blade.php */
+html[data-theme="dark-red"] main {
+  border: 1px solid rgba(242, 92, 105, 0.18);
+}
+html[data-theme="dark-red"] .mark {
+  background: rgba(242, 92, 105, 0.12);
+  color: #f25c69;
+}
+
+/* resources/views/dev-mode/panel.blade.php */
+html[data-theme="dark-red"] .status strong {
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .primary {
+  background: #f25c69;
+}
+
+/* resources/views/layouts/mobile-analytics.blade.php */
+html[data-theme="dark-red"] .mobile-shell::before {
+  background: radial-gradient(circle, rgba(242, 92, 105, 0.06) 0%, rgba(242, 92, 105, 0) 72%);
+}
+html[data-theme="dark-red"] .mobile-shell__link:hover,
+html[data-theme="dark-red"] .mobile-shell__logout:hover {
+  border-color: rgba(242, 92, 105, 0.48);
+}
+html[data-theme="dark-red"] .mobile-shell__module-link:hover {
+  border-color: rgba(242, 92, 105, 0.45);
+}
+html[data-theme="dark-red"] .mobile-shell__module-link.is-active {
+  border-color: rgba(242, 92, 105, 0.75);
+}
+
+/* resources/views/livrari/index.blade.php */
+html[data-theme="dark-red"] .livrari-overview-label i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-overview-chart-title i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-section-btn:hover {
+  border-color: rgba(242, 92, 105, 0.42);
+}
+html[data-theme="dark-red"] .livrari-section-btn.is-active {
+  border-color: rgba(242, 92, 105, 0.72);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(242, 92, 105, 0.15) inset;
+}
+html[data-theme="dark-red"] .livrari-card:hover {
+  border-color: rgba(242, 92, 105, 0.14);
+}
+html[data-theme="dark-red"] .livrari-card h2 i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-search-input:focus {
+  border-color: rgba(242, 92, 105, 0.45);
+  box-shadow: 0 0 0 2px rgba(242, 92, 105, 0.18);
+}
+html[data-theme="dark-red"] .livrari-filters select {
+  background-image:
+      linear-gradient(45deg, transparent 50%, var(--brand, #f25c69) 50%),
+      linear-gradient(135deg, var(--brand, #f25c69) 50%, transparent 50%);
+}
+html[data-theme="dark-red"] .livrari-filters select:focus {
+  border-color: rgba(242, 92, 105, 0.5);
+  box-shadow: 0 0 0 2px rgba(242, 92, 105, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.35) inset;
+}
+html[data-theme="dark-red"] .livrari-filters select:hover {
+  border-color: rgba(242, 92, 105, 0.32);
+}
+html[data-theme="dark-red"] .livrari-perioada-field:hover {
+  border-color: rgba(242, 92, 105, 0.28);
+}
+html[data-theme="dark-red"] .livrari-perioada-field:focus-within {
+  border-color: rgba(242, 92, 105, 0.45);
+  box-shadow: 0 0 0 2px rgba(242, 92, 105, 0.18);
+}
+html[data-theme="dark-red"] .livrari-perioada-icon {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-preset-btn:hover {
+  background: rgba(242, 92, 105, 0.12);
+  color: var(--brand, #f25c69);
+  border-color: rgba(242, 92, 105, 0.35);
+}
+html[data-theme="dark-red"] .livrari-filters select option:checked,
+html[data-theme="dark-red"] .livrari-filter-item select option:checked {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-filters select:focus-visible,
+html[data-theme="dark-red"] .livrari-filter-item select:focus-visible {
+  outline: 2px solid rgba(242, 92, 105, 0.35);
+}
+html[data-theme="dark-red"] .livrari-filter-item select:focus {
+  border-color: rgba(242, 92, 105, 0.5);
+  box-shadow: 0 0 0 2px rgba(242, 92, 105, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.35) inset;
+}
+html[data-theme="dark-red"] .livrari-filter-item select:hover {
+  border-color: rgba(242, 92, 105, 0.32);
+}
+html[data-theme="dark-red"] .livrari-btn-primary {
+  background: linear-gradient(135deg, #e84a58 0%, #f25c69 55%, #d63a48 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(242, 92, 105, 0.15);
+}
+html[data-theme="dark-red"] .livrari-btn-primary:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(242, 92, 105, 0.28);
+}
+html[data-theme="dark-red"] .livrari-btn-muted:hover {
+  border-color: rgba(242, 92, 105, 0.35);
+}
+html[data-theme="dark-red"] .livrari-btn-muted.is-active {
+  border-color: rgba(242, 92, 105, 0.72);
+  background: linear-gradient(135deg, rgba(242, 92, 105, 0.95) 0%, rgba(232, 74, 88, 0.95) 100%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(242, 92, 105, 0.18);
+}
+html[data-theme="dark-red"] .livrari-btn-edit {
+  background: rgba(242, 92, 105, 0.08);
+  color: var(--brand, #f25c69);
+  border: 1px solid rgba(242, 92, 105, 0.28);
+}
+html[data-theme="dark-red"] .livrari-btn-edit:hover {
+  background: rgba(242, 92, 105, 0.16);
+  border-color: rgba(242, 92, 105, 0.45);
+}
+html[data-theme="dark-red"] .livrari-pag__edge--link:hover {
+  background: rgba(242, 92, 105, 0.12);
+  border-color: rgba(242, 92, 105, 0.35);
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-pag__num--link:hover {
+  background: rgba(242, 92, 105, 0.12);
+  border-color: rgba(242, 92, 105, 0.25);
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-pag__num--current {
+  background: linear-gradient(135deg, #e84a58 0%, #f25c69 55%, #d63a48 100%);
+  border-color: rgba(242, 92, 105, 0.45);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 4px 14px rgba(242, 92, 105, 0.2);
+}
+html[data-theme="dark-red"] .livrari-btn-open-modal {
+  background: linear-gradient(135deg, #e84a58 0%, #f25c69 50%, #d63a48 100%);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(242, 92, 105, 0.2);
+}
+html[data-theme="dark-red"] .livrari-btn-open-modal:hover {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(242, 92, 105, 0.35);
+}
+html[data-theme="dark-red"] .livrari-modal {
+  border: 1px solid rgba(242, 92, 105, 0.12);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(242, 92, 105, 0.06);
+}
+html[data-theme="dark-red"] .livrari-modal-title i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-add-field input:focus,
+html[data-theme="dark-red"] .livrari-add-field select:focus {
+  border-color: rgba(242, 92, 105, 0.45);
+  box-shadow: 0 0 0 2px rgba(242, 92, 105, 0.16);
+}
+html[data-theme="dark-red"] .livrari-raion-menu {
+  border: 1px solid rgba(242, 92, 105, 0.2);
+}
+html[data-theme="dark-red"] .livrari-raion-option:hover,
+html[data-theme="dark-red"] .livrari-raion-option.is-active {
+  background: rgba(242, 92, 105, 0.14);
+  color: #f25c69;
+}
+html[data-theme="dark-red"] .livrari-export-choice input,
+html[data-theme="dark-red"] .livrari-export-check input {
+  accent-color: #f25c69;
+}
+html[data-theme="dark-red"] .livrari-export-tool:hover {
+  color: #f25c69;
+  border-color: rgba(242, 92, 105, 0.28);
+}
+html[data-theme="dark-red"] .livrari-map-detail {
+  border: 1px solid rgba(242, 92, 105, 0.16);
+  background: rgba(242, 92, 105, 0.06);
+}
+html[data-theme="dark-red"] .livrari-map-detail-count {
+  background: #f25c69;
+}
+html[data-theme="dark-red"] .livrari-map-row:hover {
+  border-color: rgba(242, 92, 105, 0.28);
+  background: rgba(242, 92, 105, 0.08);
+}
+html[data-theme="dark-red"] .livrari-map-row-count {
+  background: #f25c69;
+}
+html[data-theme="dark-red"] .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header {
+  background: linear-gradient(90deg, rgba(242, 92, 105, 0.08) 0%, transparent 55%);
+}
+html[data-theme="dark-red"] .livrari-page--admin .livrari-admin-kpi .livrari-kpi-header-icon {
+  background: linear-gradient(135deg, rgba(242, 92, 105, 0.2) 0%, rgba(232, 74, 88, 0.08) 100%);
+  border: 1px solid rgba(242, 92, 105, 0.28);
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-page--admin .livrari-kpi-total-card {
+  background: linear-gradient(145deg, rgba(242, 92, 105, 0.1) 0%, rgba(232, 74, 88, 0.04) 100%);
+  border: 1px solid rgba(242, 92, 105, 0.22);
+}
+html[data-theme="dark-red"] .livrari-page--admin .livrari-kpi-total-icon {
+  background: rgba(242, 92, 105, 0.16);
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-page--admin .livrari-kpi-total-value {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-page--admin .livrari-per-operator-title i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-page--admin .livrari-per-operator-table td.livrari-td-num {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-page--admin .livrari-per-operator-table tbody tr:hover td {
+  background: rgba(242, 92, 105, 0.06);
+}
+html[data-theme="dark-red"] .livrari-page .livrari-card h2 i {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-page .livrari-btn-primary {
+  background: linear-gradient(135deg, var(--brand-dark, #e84a58) 0%, var(--brand, #f25c69) 100%);
+}
+html[data-theme="dark-red"] .livrari-page .livrari-filter-item select:focus,
+html[data-theme="dark-red"] .livrari-page .livrari-search-input:focus,
+html[data-theme="dark-red"] .livrari-page .livrari-perioada-field:focus-within {
+  border-color: rgba(242, 92, 105, 0.45);
+  box-shadow: 0 0 0 2px rgba(242, 92, 105, 0.16);
+}
+html[data-theme="dark-red"] .livrari-page .flatpickr-prev-month svg,
+html[data-theme="dark-red"] .livrari-page .flatpickr-next-month svg {
+  fill: #f25c69;
+}
+html[data-theme="dark-red"] .livrari-page .flatpickr-day:hover {
+  background: rgba(242, 92, 105, 0.2);
+  border-color: rgba(242, 92, 105, 0.3);
+}
+html[data-theme="dark-red"] .livrari-page .flatpickr-day.selected,
+html[data-theme="dark-red"] .livrari-page .flatpickr-day.startRange,
+html[data-theme="dark-red"] .livrari-page .flatpickr-day.endRange {
+  background: #f25c69;
+  border-color: #f25c69;
+}
+html[data-theme="dark-red"] .livrari-page .flatpickr-day.inRange {
+  background: rgba(242, 92, 105, 0.22);
+  border-color: rgba(242, 92, 105, 0.25);
+}
+html[data-theme="dark-red"] .livrari-page .numInputWrapper span.arrowUp:after {
+  border-bottom-color: #f25c69;
+}
+html[data-theme="dark-red"] .livrari-page .numInputWrapper span.arrowDown:after {
+  border-top-color: #f25c69;
+}
+html[data-theme="dark-red"] .livrari-date-display:focus {
+  border-color: rgba(242, 92, 105, 0.45);
+  box-shadow: 0 0 0 2px rgba(242, 92, 105, 0.16);
+}
+html[data-theme="dark-red"] .livrari-flatpickr.flatpickr-calendar {
+  border: 1px solid rgba(242, 92, 105, 0.18);
+}
+html[data-theme="dark-red"] .livrari-flatpickr .flatpickr-prev-month svg,
+html[data-theme="dark-red"] .livrari-flatpickr .flatpickr-next-month svg {
+  fill: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-flatpickr .flatpickr-day:hover {
+  background: rgba(242, 92, 105, 0.2);
+  border-color: rgba(242, 92, 105, 0.32);
+}
+html[data-theme="dark-red"] .livrari-flatpickr .flatpickr-day.selected,
+html[data-theme="dark-red"] .livrari-flatpickr .flatpickr-day.startRange,
+html[data-theme="dark-red"] .livrari-flatpickr .flatpickr-day.endRange {
+  background: var(--brand, #f25c69);
+  border-color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-flatpickr .flatpickr-day.inRange {
+  background: rgba(242, 92, 105, 0.2);
+  border-color: rgba(242, 92, 105, 0.25);
+}
+html[data-theme="dark-red"] .livrari-flatpickr .flatpickr-day.today {
+  border-color: rgba(242, 92, 105, 0.45);
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-flatpickr .flatpickr-day.today:hover {
+  background: rgba(242, 92, 105, 0.2);
+}
+html[data-theme="dark-red"] .livrari-flatpickr .flatpickr-monthDropdown-months {
+  background-image: linear-gradient(45deg, transparent 50%, var(--brand, #f25c69) 50%), linear-gradient(135deg, var(--brand, #f25c69) 50%, transparent 50%);
+}
+html[data-theme="dark-red"] .livrari-flatpickr .flatpickr-monthDropdown-months option:checked,
+html[data-theme="dark-red"] .livrari-flatpickr .flatpickr-monthDropdown-months option:hover {
+  color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-flatpickr .numInputWrapper span.arrowUp:after {
+  border-bottom-color: var(--brand, #f25c69);
+}
+html[data-theme="dark-red"] .livrari-flatpickr .numInputWrapper span.arrowDown:after {
+  border-top-color: var(--brand, #f25c69);
+}
+
+/* resources/views/livrari/map.blade.php */
+html[data-theme="dark-red"] .livrari-map-btn-primary {
+  background: #f25c69;
+  border-color: #f25c69;
+}
+html[data-theme="dark-red"] .livrari-map-btn-primary:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(242, 92, 105, 0.4);
+}
+html[data-theme="dark-red"] .livrari-map-canvas {
+  background:
+      radial-gradient(circle at 22% 24%, rgba(242, 92, 105, 0.06), transparent 24%),
+      linear-gradient(135deg, #060d1f 0%, #0f1a33 54%, #14213d 100%);
+}
+html[data-theme="dark-red"] .leaflet-tooltip.livrari-map-raion-label {
+  border: 1px solid rgba(242, 92, 105, 0.72);
+  color: #f25c69;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(242, 92, 105, 0.16);
+}
+html[data-theme="dark-red"] .livrari-map-count {
+  background: #f25c69;
+}
+html[data-theme="dark-red"] .livrari-map-row:hover,
+html[data-theme="dark-red"] .livrari-map-row.is-active {
+  border-color: rgba(242, 92, 105, 0.34);
+  background: rgba(242, 92, 105, 0.09);
+}
+html[data-theme="dark-red"] .livrari-map-legend-scale {
+  background: linear-gradient(90deg, #000000 0%, #f25c69 100%);
+}
+html[data-theme="dark-red"] .livrari-map-btn-primary {
+  background: #f25c69 !important;
+  border-color: #f25c69 !important;
+}
+
+/* resources/views/mobile/index.blade.php */
+html[data-theme="dark-red"] .mobile-alert {
+  border: 1px solid rgba(242, 92, 105, 0.3);
+  background: rgba(242, 92, 105, 0.08);
+}
+html[data-theme="dark-red"] .mobile-badge {
+  border: 1px solid rgba(242, 92, 105, 0.24);
+  background: rgba(242, 92, 105, 0.08);
+}
+
+/* resources/views/operatori/create.blade.php */
+@media (max-width: 768px) {
+  html[data-theme="dark-red"] a[style*="color: #f25c69"] {
+    font-size: 12px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 6px 12px !important;
+    background: rgba(31, 41, 55, 0.3) !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(242, 92, 105, 0.2) !important;
+  }
+  html[data-theme="dark-red"] label[style*="color: #f25c69"] {
+    font-size: 11px !important;
+    margin-bottom: 6px !important;
+  }
+}
+@media (max-width: 480px) {
+  html[data-theme="dark-red"] a[style*="color: #f25c69"] {
+    font-size: 11px !important;
+    padding: 5px 10px !important;
+  }
+  html[data-theme="dark-red"] label[style*="color: #f25c69"] {
+    font-size: 10px !important;
+    margin-bottom: 5px !important;
+  }
+}
+
+/* resources/views/operatori/edit.blade.php */
+@media (max-width: 768px) {
+  html[data-theme="dark-red"] a[style*="color: #f25c69"] {
+    font-size: 12px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 6px 12px !important;
+    background: rgba(31, 41, 55, 0.3) !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(242, 92, 105, 0.2) !important;
+  }
+  html[data-theme="dark-red"] label[style*="color: #f25c69"] {
+    font-size: 11px !important;
+    margin-bottom: 6px !important;
+  }
+}
+@media (max-width: 480px) {
+  html[data-theme="dark-red"] a[style*="color: #f25c69"] {
+    font-size: 11px !important;
+    padding: 5px 10px !important;
+  }
+  html[data-theme="dark-red"] label[style*="color: #f25c69"] {
+    font-size: 10px !important;
+    margin-bottom: 5px !important;
+  }
+}

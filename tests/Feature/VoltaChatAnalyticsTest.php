@@ -73,7 +73,24 @@ class VoltaChatAnalyticsTest extends TestCase
             && str_starts_with($r->url(), 'https://chat.example/api/analytics?')
             && $r['from'] === '2026-10-01' && $r['to'] === '2026-10-23' && (int) $r['channelId'] === 2 && $r['grain'] === 'day');
 
-        $this->get('/aplicatia-volta?start=2026-10-01&end=2026-10-23')->assertOk()->assertSee('voltaChatSection');
+        $this->get('/voltachat?start=2026-10-01&end=2026-10-23')->assertOk()->assertSee('voltaChatSection');
+    }
+
+    public function test_access_admin_and_dev_only(): void
+    {
+        config(['services.voltachat.url' => '', 'services.voltachat.analytics_token' => '']);
+
+        $dev = User::factory()->create(['role' => 'dev', 'username' => 'vcdev'.uniqid()]);
+        $this->actingAs($dev)->get('/aplicatia-volta')->assertOk()->assertDontSee('voltaChatSection');
+        $this->actingAs($dev)->get('/voltachat')->assertOk()->assertSee('voltaChatSection');
+        $this->actingAs($dev)->get('/aplicatia-volta/voltachat')->assertOk();
+        $this->actingAs($dev)->get('/istoric')->assertSee(route('aplicatia-volta'), false);
+        $this->actingAs($dev)->get('/istoric')->assertSee(route('voltachat'), false);
+
+        $user = User::factory()->create(['role' => 'user', 'username' => 'vcuser'.uniqid()]);
+        $this->actingAs($user)->get('/aplicatia-volta')->assertRedirect(route('dashboard'));
+        $this->actingAs($user)->get('/aplicatia-volta/voltachat')->assertRedirect(route('dashboard'));
+        $this->actingAs($user)->get('/voltachat')->assertRedirect(route('dashboard'));
     }
 
     public function test_errors(): void

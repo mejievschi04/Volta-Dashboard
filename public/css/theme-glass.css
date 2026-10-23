@@ -1,0 +1,512 @@
+/*
+ * Neo-glassmorphism comun pentru toate temele (Dark, Dark Red, Neon Glass).
+ * Fiecare temă își dă doar paleta (--g-*); componentele de mai jos sunt aceleași.
+ * Reguli de contrast (WCAG AA): text normal ≥ 4.5:1, text mare și iconițe ≥ 3:1 față de suprafața din spate.
+ *  - --g-accent-text  = accentul folosit pentru TEXT pe fundal închis
+ *  - --g-accent-fill  = accentul folosit ca FUNDAL (butoane, zile selectate), cu --g-on-accent deasupra
+ * Fără backdrop-filter pe secțiuni mari: ar muta modalele position:fixed din interior.
+ */
+
+/* ---------- Palete ---------- */
+html[data-theme="dark"] {
+  --g-accent-text: #ffee00;
+  --g-accent-rgb: 255, 238, 0;
+  --g-accent-fill: linear-gradient(120deg, #ffee00 0%, #ffd84d 100%);
+  --g-accent-solid: #ffee00;
+  --g-on-accent: #0b0f1a;
+  --g-tint-rgb: 170, 190, 230;
+  --g-bg-0: #060912;
+  --g-bg-1: #0b1020;
+  --g-spot-1: rgba(255, 238, 0, 0.045);
+  --g-spot-2: rgba(80, 110, 200, 0.09);
+  --g-panel-rgb: 14, 17, 30;
+}
+
+html[data-theme="dark-red"] {
+  --g-accent-text: #f25c69;
+  --g-accent-rgb: 225, 45, 60;
+  --g-accent-fill: linear-gradient(120deg, #d11a2a 0%, #a50f1d 100%);
+  --g-accent-solid: #c1121f;
+  --g-on-accent: #ffffff;
+  --g-tint-rgb: 235, 190, 200;
+  --g-bg-0: #0c0809;
+  --g-bg-1: #150d10;
+  --g-spot-1: rgba(193, 18, 31, 0.08);
+  --g-spot-2: rgba(120, 40, 70, 0.08);
+  --g-panel-rgb: 22, 13, 16;
+
+  --brand: #f25c69;
+  --brand-rgb: 242, 92, 105;
+  --brand-dark: #c1121f;
+  --brand-on-dark: #f25c69;
+  --brand-10: rgba(242, 92, 105, 0.1);
+  --brand-20: rgba(242, 92, 105, 0.18);
+  --brand-30: rgba(242, 92, 105, 0.28);
+  --text-tertiary: #b9aab0;
+}
+
+html[data-theme="neon-glass"] {
+  --g-accent-text: #2dd4e8;
+  --g-accent-rgb: 45, 212, 232;
+  --g-accent-fill: linear-gradient(120deg, #2dd4e8 0%, #6aa8ff 100%);
+  --g-accent-solid: #2dd4e8;
+  --g-on-accent: #04121a;
+  --g-tint-rgb: 170, 200, 235;
+  --g-bg-0: #04050d;
+  --g-bg-1: #080a18;
+  --g-spot-1: rgba(45, 212, 232, 0.07);
+  --g-spot-2: rgba(146, 128, 236, 0.08);
+  --g-panel-rgb: 12, 14, 28;
+}
+
+/* ---------- Variabile comune ---------- */
+html[data-theme] {
+  color-scheme: dark;
+
+  --g-surface: linear-gradient(145deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.025) 100%);
+  --g-surface-strong: linear-gradient(160deg, rgba(var(--g-panel-rgb), 0.97) 0%, rgba(var(--g-panel-rgb), 0.99) 100%);
+  --g-border: rgba(var(--g-tint-rgb), 0.11);
+  --g-border-strong: rgba(var(--g-tint-rgb), 0.2);
+  --g-border-hover: rgba(var(--g-accent-rgb), 0.35);
+  --g-blur: blur(16px) saturate(130%);
+  --g-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 8px 24px rgba(0, 0, 0, 0.32);
+  --g-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 12px 30px rgba(0, 0, 0, 0.4);
+
+  --bg-secondary: rgba(255, 255, 255, 0.045);
+  --bg-tertiary: rgba(255, 255, 255, 0.07);
+  --bg-elevated: rgba(255, 255, 255, 0.045);
+  --bg-surface: rgba(255, 255, 255, 0.045);
+  --border-primary: rgba(var(--g-tint-rgb), 0.11);
+  --border-secondary: rgba(var(--g-tint-rgb), 0.2);
+  --border-light: rgba(255, 255, 255, 0.06);
+
+  --card-radius: 16px;
+  --radius-lg: 14px;
+  --glow: none;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.32);
+  --shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.42);
+  --font-display: "Space Grotesk", "Noto Sans", system-ui, sans-serif;
+
+  background-color: var(--g-bg-0);
+}
+
+/* ---------- Fundal ---------- */
+html[data-theme] body {
+  background: transparent;
+}
+
+html[data-theme]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(50vw 50vw at 105% 0%, var(--g-spot-1), transparent 65%),
+    radial-gradient(60vw 60vw at 40% 120%, var(--g-spot-2), transparent 65%),
+    linear-gradient(160deg, var(--g-bg-0) 0%, var(--g-bg-1) 55%, var(--g-bg-0) 100%);
+}
+
+/* Logo Volta în roșul temei Dark Red */
+html[data-theme="dark-red"] .logo-mark,
+html[data-theme="dark-red"] .login-logo .logo-mark,
+html[data-theme="dark-red"] .operator-nav-mark img {
+  filter: brightness(0) saturate(100%) invert(32%) sepia(86%) saturate(2600%) hue-rotate(337deg) brightness(97%) contrast(96%);
+}
+
+html[data-theme] ::selection {
+  background: rgba(var(--g-accent-rgb), 0.32);
+  color: #fff;
+}
+
+/* ---------- Tipografie ---------- */
+html[data-theme] .main h1,
+html[data-theme] .main h2,
+html[data-theme] .ma-hero__title,
+html[data-theme] .logo h1,
+html[data-theme] .login-logo h1,
+html[data-theme] .ma-kpi__value,
+html[data-theme] .operatori-stat-value,
+html[data-theme] .card .value,
+html[data-theme] .raport-lunar-num {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+html[data-theme] .ma-kicker { color: var(--g-accent-text); }
+
+html[data-theme] .main,
+html[data-theme] .main *,
+html[data-theme] .sidebar,
+html[data-theme] .sidebar *,
+html[data-theme] .login-box,
+html[data-theme] .login-box * {
+  text-shadow: none !important;
+}
+
+/* Text secundar mic: minim 4.5:1 pe sticlă (#64748b avea ~3.6:1) */
+html[data-theme] .ma-section__head p,
+html[data-theme] .ma-kpi__help,
+html[data-theme] .ma-rank__meta,
+html[data-theme] .ma-heat__cell em,
+html[data-theme] .vc-heat__hour,
+html[data-theme] .vc-buckets__meta,
+html[data-theme] .vc-slow em,
+html[data-theme] .ma-empty i,
+html[data-theme] .operatori-empty-hint,
+html[data-theme] .ma-muted {
+  color: var(--text-tertiary);
+}
+
+/* ---------- Sidebar ---------- */
+html[data-theme] .sidebar {
+  background: linear-gradient(180deg, rgba(var(--g-panel-rgb), 0.82) 0%, rgba(var(--g-panel-rgb), 0.9) 100%);
+  border-right: 1px solid var(--g-border);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+  -webkit-backdrop-filter: var(--g-blur);
+  backdrop-filter: var(--g-blur);
+}
+
+html[data-theme] .logo { border-bottom-color: var(--g-border); }
+
+html[data-theme] .nav h3 {
+  color: var(--text-tertiary);
+  border-bottom-color: var(--g-border);
+}
+
+html[data-theme] .nav a { color: var(--text-secondary); }
+
+html[data-theme] .nav a:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: none;
+}
+
+html[data-theme] .nav a::before {
+  background: var(--g-accent-text);
+  box-shadow: none;
+}
+
+html[data-theme] .nav a.active {
+  color: #fff;
+  background: rgba(var(--g-accent-rgb), 0.1);
+  box-shadow: inset 0 0 0 1px rgba(var(--g-accent-rgb), 0.18);
+}
+
+html[data-theme] .nav a:hover i,
+html[data-theme] .nav a.active i {
+  color: var(--g-accent-text);
+  filter: none;
+}
+
+html[data-theme] .sidebar::-webkit-scrollbar-thumb { background: rgba(var(--g-tint-rgb), 0.18); }
+
+/* ---------- Suprafețe de sticlă ---------- */
+html[data-theme] .header,
+html[data-theme] .topbar,
+html[data-theme] .card,
+html[data-theme] .panel,
+html[data-theme] .chart-container,
+html[data-theme] .chart-card,
+html[data-theme] .trafic-card,
+html[data-theme] .row .trafic-source-card,
+html[data-theme] .ta-panel,
+html[data-theme] .mobile-panel,
+html[data-theme] .ma-card,
+html[data-theme] .ma-kpi,
+html[data-theme] .ma-hero,
+html[data-theme] .month-selector-wrapper,
+html[data-theme] .operator-card,
+html[data-theme] .operatori-card,
+html[data-theme] .top-card,
+html[data-theme] .operatori-content-card,
+html[data-theme] .operatori-sidebar-card,
+html[data-theme] .operatori-card-main,
+html[data-theme] .operatori-card-dezactivati,
+html[data-theme] .operatori-directory-card,
+html[data-theme] .operatori-filter-panel,
+html[data-theme] .operatori-stat-box,
+html[data-theme] .operatori-overview-stat,
+html[data-theme] .operator-me-card,
+html[data-theme] .operator-me-stat,
+html[data-theme] .livrari-card,
+html[data-theme] .livrari-kpi-total-card,
+html[data-theme] .livrari-filters-card,
+html[data-theme] .comparare-table-section,
+html[data-theme] .raport-lunar-hero,
+html[data-theme] .raport-lunar-panel,
+html[data-theme] .raport-lunar-stat,
+html[data-theme] .raport-lunar-toolbar-card,
+html[data-theme] .setari-1c-block,
+html[data-theme] .istoric-empty,
+html[data-theme] .raport-lunar-empty {
+  background: var(--g-surface);
+  border: 1px solid var(--g-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--g-shadow);
+  -webkit-backdrop-filter: var(--g-blur);
+  backdrop-filter: var(--g-blur);
+  color: var(--text-primary);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+html[data-theme] .header,
+html[data-theme] .topbar {
+  border-left: 2px solid rgba(var(--g-accent-rgb), 0.6);
+}
+
+html[data-theme] .card:hover,
+html[data-theme] .ma-kpi:hover,
+html[data-theme] .ma-card:hover,
+html[data-theme] .trafic-card:hover,
+html[data-theme] .operatori-stat-box:hover,
+html[data-theme] .operator-card:hover,
+html[data-theme] .top-card:hover,
+html[data-theme] .livrari-card:hover,
+html[data-theme] .raport-lunar-stat:hover,
+html[data-theme] .operator-me-stat:hover {
+  border-color: var(--g-border-hover);
+  box-shadow: var(--g-shadow-hover);
+}
+
+html[data-theme] .chart-container {
+  background: var(--g-surface) !important;
+}
+
+/* Graficele din carduri stau pe un strat ușor mai închis, ca axele să rămână lizibile */
+html[data-theme] .chart-container .chart-wrapper {
+  background: rgba(0, 0, 0, 0.16);
+  border: 1px solid var(--g-border);
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+html[data-theme] .ma-card::before,
+html[data-theme] .ma-card::after,
+html[data-theme] .ma-kpi::before,
+html[data-theme] .ma-kpi::after,
+html[data-theme] .ma-hero::before,
+html[data-theme] .ma-hero::after {
+  display: none;
+}
+
+html[data-theme] .livrari-section-panel,
+html[data-theme] .ma-section,
+html[data-theme] .container {
+  background: transparent;
+}
+
+/* ---------- Butoane ---------- */
+html[data-theme] .btn:not(.secondary):not(.btn-danger),
+html[data-theme] .ma-btn:not(.ma-btn--ghost),
+html[data-theme] .operatori-btn-primary,
+html[data-theme] .trafic-action-btn--primary,
+html[data-theme] .livrari-btn-open-modal,
+html[data-theme] .livrari-btn-primary,
+html[data-theme] .btn-login {
+  background: var(--g-accent-fill);
+  color: var(--g-on-accent);
+  border: 1px solid transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+html[data-theme] .btn:not(.secondary):not(.btn-danger) i,
+html[data-theme] .ma-btn:not(.ma-btn--ghost) i,
+html[data-theme] .btn-login i {
+  color: inherit;
+}
+
+html[data-theme] .btn:not(.secondary):not(.btn-danger):hover,
+html[data-theme] .ma-btn:not(.ma-btn--ghost):hover,
+html[data-theme] .operatori-btn-primary:hover,
+html[data-theme] .trafic-action-btn--primary:hover,
+html[data-theme] .livrari-btn-open-modal:hover,
+html[data-theme] .btn-login:hover {
+  color: var(--g-on-accent);
+  filter: brightness(1.07);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+html[data-theme] .btn.secondary,
+html[data-theme] .operatori-btn-secondary,
+html[data-theme] .operatori-btn-ghost,
+html[data-theme] .trafic-action-btn:not(.trafic-action-btn--primary),
+html[data-theme] .ma-btn--ghost,
+html[data-theme] .ma-period__chip {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--g-border-strong);
+  color: var(--text-secondary);
+  box-shadow: none;
+}
+
+html[data-theme] .btn.secondary:hover,
+html[data-theme] .operatori-btn-secondary:hover,
+html[data-theme] .operatori-btn-ghost:hover,
+html[data-theme] .trafic-action-btn:not(.trafic-action-btn--primary):hover,
+html[data-theme] .ma-btn--ghost:hover,
+html[data-theme] .ma-period__chip:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(var(--g-tint-rgb), 0.32);
+  box-shadow: none;
+}
+
+html[data-theme] .ma-period__chip.is-active,
+html[data-theme] .ma-period__chip.active,
+html[data-theme] .evolutie-chip.is-active {
+  color: var(--g-accent-text);
+  border-color: rgba(var(--g-accent-rgb), 0.45);
+  background: rgba(var(--g-accent-rgb), 0.1);
+  box-shadow: none;
+}
+
+/* ---------- Câmpuri ---------- */
+html[data-theme] .main input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]):not([type="submit"]):not([type="button"]),
+html[data-theme] .main select,
+html[data-theme] .main textarea {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: var(--g-border-strong);
+  color: var(--text-primary);
+  box-shadow: none;
+}
+
+html[data-theme] .main input::placeholder,
+html[data-theme] .main textarea::placeholder {
+  color: var(--text-tertiary);
+  opacity: 0.85;
+}
+
+html[data-theme] .main input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):focus,
+html[data-theme] .main select:focus,
+html[data-theme] .main textarea:focus {
+  outline: none;
+  border-color: rgba(var(--g-accent-rgb), 0.65);
+  box-shadow: 0 0 0 3px rgba(var(--g-accent-rgb), 0.14);
+}
+
+html[data-theme] select option {
+  background: rgb(var(--g-panel-rgb));
+  color: #eef2fb;
+}
+
+html[data-theme] input[type="checkbox"],
+html[data-theme] input[type="radio"],
+html[data-theme] input[type="range"] {
+  accent-color: var(--g-accent-solid);
+}
+
+/* ---------- Tabele ---------- */
+html[data-theme] .main table thead,
+html[data-theme] .main table thead tr,
+html[data-theme] .main table thead th,
+html[data-theme] .operatori-table-yellow thead tr {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--g-border-strong);
+  letter-spacing: 0.05em;
+}
+
+html[data-theme] .main table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+html[data-theme] .ma-table-wrap,
+html[data-theme] .livrari-table-wrap,
+html[data-theme] .operatori-table-wrap,
+html[data-theme] .comparare-table-wrap {
+  border-color: var(--g-border);
+}
+
+html[data-theme] .ma-badge,
+html[data-theme] .operatori-badge,
+html[data-theme] .kpi-source-badge {
+  box-shadow: none;
+}
+
+/* ---------- Modale ---------- */
+html[data-theme] .livrari-modal-overlay,
+html[data-theme] .operatori-modal-overlay,
+html[data-theme] .dashboard-chart-modal__backdrop,
+html[data-theme] .modal {
+  background: rgba(3, 4, 10, 0.66);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+html[data-theme] .evolutie-dialog,
+html[data-theme] .livrari-modal,
+html[data-theme] .operatori-modal,
+html[data-theme] .dashboard-chart-modal__panel,
+html[data-theme] .modal-content {
+  background: var(--g-surface-strong);
+  border: 1px solid var(--g-border-strong);
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+/* ---------- Calendar ---------- */
+html[data-theme] .volta-flatpickr.flatpickr-calendar,
+html[data-theme] .livrari-flatpickr.flatpickr-calendar {
+  background: var(--g-surface-strong);
+  border-color: var(--g-border-strong);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme] .volta-flatpickr .flatpickr-day.selected,
+html[data-theme] .livrari-flatpickr .flatpickr-day.selected,
+html[data-theme] .volta-flatpickr .flatpickr-monthSelect-month.selected {
+  background: var(--g-accent-solid);
+  border-color: var(--g-accent-solid);
+  color: var(--g-on-accent);
+  box-shadow: none;
+}
+
+html[data-theme] .volta-flatpickr .flatpickr-day:hover,
+html[data-theme] .livrari-flatpickr .flatpickr-day:hover {
+  background: rgba(var(--g-accent-rgb), 0.12);
+  border-color: rgba(var(--g-accent-rgb), 0.3);
+}
+
+/* ---------- Scrollbar ---------- */
+html[data-theme] ::-webkit-scrollbar { width: 10px; height: 10px; }
+html[data-theme] ::-webkit-scrollbar-track { background: transparent; }
+html[data-theme] ::-webkit-scrollbar-thumb {
+  background: rgba(var(--g-tint-rgb), 0.18);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* ---------- Login ---------- */
+html[data-theme] .login-box {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid var(--g-border-strong);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 24px 60px rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  backdrop-filter: blur(20px) saturate(130%);
+}
+
+html[data-theme] .input-group input {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--g-border-strong);
+}
+
+html[data-theme] .input-group input:focus {
+  border-color: rgba(var(--g-accent-rgb), 0.65);
+  box-shadow: 0 0 0 3px rgba(var(--g-accent-rgb), 0.14);
+}
+
+html[data-theme] .input-group input:focus ~ .input-icon { color: var(--g-accent-text); }
+html[data-theme] .input-focus-line { background: var(--g-accent-solid); }
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme] .card,
+  html[data-theme] .ma-card,
+  html[data-theme] .ma-kpi,
+  html[data-theme] .sidebar {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgb(var(--g-panel-rgb));
+  }
+}

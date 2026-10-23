@@ -1,20 +1,15 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    /** Cine era pe vechea temă implicită (dark sau nesetat) trece pe Neon Glass; Dark Red rămâne neschimbat. */
+    /** Neon Glass nu mai e tema implicită (vezi 2026_10_23_120000_restore_dark_default_theme); migrarea rămâne goală. */
     public function up(): void
     {
-        DB::table('users')
-            ->where(fn ($q) => $q->whereNull('theme')->orWhere('theme', 'dark'))
-            ->update(['theme' => 'neon-glass']);
     }
 
     public function down(): void
     {
-        DB::table('users')->where('theme', 'neon-glass')->update(['theme' => 'dark']);
     }
 };

@@ -38,6 +38,13 @@ class MobileAnalyticsController extends Controller
         return view('mobile.summary', $this->cachedDashboardData($request, 'summary'));
     }
 
+    public function chatPage(Request $request)
+    {
+        [$start, $end] = $this->resolvePeriod($request);
+
+        return view('mobile.voltachat', compact('start', 'end'));
+    }
+
     public function chatSummary(Request $request, VoltaChatAnalyticsService $chat)
     {
         [$start, $end] = $this->resolvePeriod($request);

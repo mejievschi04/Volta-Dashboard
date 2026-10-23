@@ -89,11 +89,15 @@ Route::middleware(['auth', \App\Http\Middleware\RestrictOperator::class])->group
         Route::get('/operatori/{operatorId}/upload', [UploadOperatorVanzariController::class, 'uploadForm'])->name('operatori.upload');
         Route::post('/operatori/{operatorId}/upload', [UploadOperatorVanzariController::class, 'upload'])->name('operatori.upload.post');
         
-        Route::get('/aplicatia-volta', [MobileAnalyticsController::class, 'summary'])->name('aplicatia-volta');
-        Route::get('/aplicatia-volta/voltachat', [MobileAnalyticsController::class, 'chatSummary'])->name('aplicatia-volta.voltachat');
-
         Route::get('/rapoarte/raport-lunar', [RaportLunarController::class, 'index'])->name('rapoarte.raport-lunar');
         Route::post('/rapoarte/raport-lunar/inputs', [RaportLunarController::class, 'storeInputs'])->name('rapoarte.raport-lunar.inputs');
+    });
+
+    // Aplicația Volta (statistica aplicației + VoltaChat) - admin și dev
+    Route::middleware([\App\Http\Middleware\CheckAdmin::class.':dev'])->group(function () {
+        Route::get('/aplicatia-volta', [MobileAnalyticsController::class, 'summary'])->name('aplicatia-volta');
+        Route::get('/aplicatia-volta/voltachat', [MobileAnalyticsController::class, 'chatSummary'])->name('aplicatia-volta.voltachat');
+        Route::get('/voltachat', [MobileAnalyticsController::class, 'chatPage'])->name('voltachat');
     });
 
     // Rute Dev: setari tehnice, 1C si management utilizatori.

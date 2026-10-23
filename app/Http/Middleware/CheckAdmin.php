@@ -9,13 +9,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckAdmin
 {
-    public function handle(Request $request, Closure $next): Response
+    /**
+     * @param  string  ...$alsoAllowed  roluri acceptate în plus față de admin (ex. "dev")
+     */
+    public function handle(Request $request, Closure $next, string ...$alsoAllowed): Response
     {
         if (! Auth::check()) {
             return redirect()->route('login');
         }
 
-        if (! Auth::user()->isAdmin()) {
+        $user = Auth::user();
+        $allowed = $user->isAdmin() || (in_array('dev', $alsoAllowed, true) && $user->isDev());
+
+        if (! $allowed) {
             return redirect()->route('dashboard')->with('error', 'Nu aveti permisiunea de a accesa aceasta pagina.');
         }
 
