@@ -14,10 +14,10 @@ const SCOPE = 'html[data-theme="neon-glass"]';
 const SKIP_FILES = new Set(['theme-neon-glass.css', 'theme-neon-glass-recolor.css']);
 
 const RGB = {
-  main: [0, 229, 255],
-  deep: [0, 200, 240],
-  dark: [0, 184, 212],
-  light: [125, 249, 255],
+  main: [45, 212, 232],
+  deep: [34, 190, 214],
+  dark: [24, 166, 190],
+  light: [140, 232, 244],
 };
 const HEX = {
   ffee00: 'main', fe0: 'main', fff000: 'main', ffe600: 'main',
@@ -44,6 +44,28 @@ export function recolor(text) {
       const [nr, ng, nb] = RGB[k];
       return a ? `rgba(${nr}, ${ng}, ${nb}${a.replace(/\s+/g, ' ')})` : `rgb(${nr}, ${ng}, ${nb})`;
     });
+}
+
+/* Tema e „clean”: din umbrele recolorate rămân doar umbrele de adâncime și inelele de focus, fără halouri difuze. */
+function isGlow(part) {
+  const m = part.trim().replace(/^inset\s+/, '').match(/^(-?[\d.]+)(?:px)?\s+(-?[\d.]+)(?:px)?\s+([\d.]+)(?:px)?/);
+  return !!m && Number(m[1]) === 0 && Number(m[2]) === 0 && Number(m[3]) >= 6;
+}
+
+export function calm(decl) {
+  const idx = decl.indexOf(':');
+  const prop = decl.slice(0, idx).trim().toLowerCase();
+  const value = decl.slice(idx + 1).trim();
+  if (prop === 'text-shadow') return `${prop}: none`;
+  if (prop === 'box-shadow') {
+    const kept = splitTop(value, ',').filter((p) => p.trim() && !isGlow(p));
+    return `${prop}: ${kept.length ? kept.map((p) => p.trim()).join(', ') : 'none'}`;
+  }
+  if (prop === 'filter' && value.includes('drop-shadow')) {
+    const rest = value.replace(/drop-shadow\([^()]*(\([^()]*\)[^()]*)*\)/g, '').trim();
+    return `${prop}: ${rest || 'none'}`;
+  }
+  return decl;
 }
 
 function stripComments(css) {
@@ -124,6 +146,7 @@ function emit(items, indent = '') {
       .map((d) => d.trim())
       .filter((d) => d && d.includes(':') && !d.includes('BLADE'))
       .map((d) => [d, recolor(d)])
+      .map(([before, after]) => [before, before !== after ? calm(after) : after])
       .filter(([before, after]) => selectorChanged || before !== after)
       .map(([, after]) => after);
     if (!decls.length) continue;
@@ -149,6 +172,8 @@ for (const file of readdirSync(join(root, 'public/css')).sort()) {
   sources.push([`public/css/${file}`, readFileSync(join(root, 'public/css', file), 'utf8')]);
 }
 for (const file of walk(join(root, 'resources/views'), '.blade.php').sort()) {
+  /* Șabloanele PDF sunt documente separate (dompdf); stilurile lor generice (.header, th) nu au voie în aplicație. */
+  if (file.includes('/pdf/')) continue;
   const html = readFileSync(file, 'utf8');
   const blocks = [...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].map((m) => m[1]);
   if (blocks.length) sources.push([relative(root, file), blocks.join('\n')]);

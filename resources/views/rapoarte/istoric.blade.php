@@ -117,7 +117,7 @@
         <button type="button" id="istoricExportPdfBtn" class="btn secondary">
           <i class="fas fa-file-pdf" aria-hidden="true"></i> PDF
         </button>
-        <button type="button" id="istoricEvolutieComenziBtn" class="btn secondary" title="PDF cu evoluția lunară a comenzilor pentru intervalul ales (implicit ultimele 12 luni)">
+        <button type="button" id="istoricEvolutieComenziBtn" class="btn secondary" title="Alege perioada și descarcă PDF-ul cu evoluția lunară a comenzilor" aria-haspopup="dialog">
           <i class="fas fa-chart-column" aria-hidden="true"></i> Evoluție comenzi
         </button>
       </span>
@@ -150,6 +150,41 @@
     </div>
   </section>
 </div>
+
+<dialog id="evolutieDialog" class="evolutie-dialog" aria-labelledby="evolutieDialogTitle">
+  <form method="dialog" class="evolutie-dialog__form" id="evolutieDialogForm">
+    <div class="evolutie-dialog__head">
+      <h3 id="evolutieDialogTitle"><i class="fas fa-chart-column" aria-hidden="true"></i> Evoluție comenzi</h3>
+      <button type="button" class="evolutie-dialog__close" data-evolutie-close aria-label="Închide"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+    </div>
+    <p class="evolutie-dialog__lead">Alege perioada. Raportul PDF arată comenzile pe fiecare lună, creșterea în % și graficul.</p>
+
+    <div class="evolutie-dialog__presets" role="group" aria-label="Perioade rapide">
+      <button type="button" class="evolutie-chip" data-evolutie-preset="3">Ultimele 3 luni</button>
+      <button type="button" class="evolutie-chip" data-evolutie-preset="6">Ultimele 6 luni</button>
+      <button type="button" class="evolutie-chip" data-evolutie-preset="12">Ultimele 12 luni</button>
+      <button type="button" class="evolutie-chip" data-evolutie-preset="year">Anul curent</button>
+      <button type="button" class="evolutie-chip" data-evolutie-preset="last-year">Anul trecut</button>
+    </div>
+
+    <div class="evolutie-dialog__range">
+      <label>
+        <span>De la</span>
+        <select id="evolutieStart" class="dashboard-month-select"></select>
+      </label>
+      <label>
+        <span>Până la</span>
+        <select id="evolutieEnd" class="dashboard-month-select"></select>
+      </label>
+    </div>
+    <p class="evolutie-dialog__summary" id="evolutieSummary" aria-live="polite"></p>
+
+    <div class="evolutie-dialog__actions">
+      <button type="button" class="btn secondary" data-evolutie-close>Anulează</button>
+      <button type="submit" class="btn" id="evolutieDownloadBtn"><i class="fas fa-file-pdf" aria-hidden="true"></i> Descarcă PDF</button>
+    </div>
+  </form>
+</dialog>
 @endsection
 
 @push('scripts')
@@ -217,6 +252,124 @@ async function loadIstoric() {
     const el = document.getElementById('tableLoading');
     if (el) el.textContent = 'Eroare la încărcarea datelor: ' + err.message;
   }
+}
+
+function setupEvolutieDialog() {
+  const dialog = document.getElementById('evolutieDialog');
+  const form = document.getElementById('evolutieDialogForm');
+  const startSelect = document.getElementById('evolutieStart');
+  const endSelect = document.getElementById('evolutieEnd');
+  const summary = document.getElementById('evolutieSummary');
+  const chips = dialog.querySelectorAll('[data-evolutie-preset]');
+  const monthNames = ['Ianuarie', 'Februarie', 'Martie', 'Aprilie', 'Mai', 'Iunie', 'Iulie', 'August', 'Septembrie', 'Octombrie', 'Noiembrie', 'Decembrie'];
+  const now = new Date();
+  const currentYm = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+
+  const shift = (ym, months) => {
+    const [y, m] = ym.split('-').map(Number);
+    const d = new Date(y, m - 1 + months, 1);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+  };
+  const label = (ym) => {
+    const [y, m] = ym.split('-').map(Number);
+    return monthNames[m - 1] + ' ' + y;
+  };
+  const monthsBetween = (a, b) => {
+    const [ya, ma] = a.split('-').map(Number);
+    const [yb, mb] = b.split('-').map(Number);
+    return (yb - ya) * 12 + (mb - ma) + 1;
+  };
+  const clamp = (ym) => (ym > currentYm ? currentYm : ym);
+
+  function fillMonths() {
+    const known = allData.map(d => d.luna).filter(v => /^\d{4}-\d{2}$/.test(v || '')).sort();
+    let first = known.length ? known[0] : shift(currentYm, -35);
+    const lastYearStart = (now.getFullYear() - 1) + '-01';
+    if (first > lastYearStart) first = lastYearStart;
+    const options = [];
+    for (let ym = currentYm; ym >= first; ym = shift(ym, -1)) {
+      options.push('<option value="' + ym + '">' + label(ym) + (ym === currentYm ? ' (în curs)' : '') + '</option>');
+    }
+    startSelect.innerHTML = options.join('');
+    endSelect.innerHTML = options.join('');
+  }
+
+  function setRange(start, end) {
+    start = clamp(start);
+    end = clamp(end);
+    if (start > end) [start, end] = [end, start];
+    const pick = (select, value) => {
+      select.value = value;
+      if (select.value !== value) select.value = select.options[select.options.length - 1].value;
+    };
+    pick(startSelect, start);
+    pick(endSelect, end);
+    update();
+  }
+
+  function presetRange(preset) {
+    const year = now.getFullYear();
+    if (preset === 'year') return [year + '-01', currentYm];
+    if (preset === 'last-year') return [(year - 1) + '-01', (year - 1) + '-12'];
+    const n = parseInt(preset, 10) || 12;
+    return [shift(currentYm, -(n - 1)), currentYm];
+  }
+
+  function update() {
+    let start = startSelect.value;
+    let end = endSelect.value;
+    if (!start || !end) return;
+    if (start > end) [start, end] = [end, start];
+    const count = monthsBetween(start, end);
+    let text = label(start) + ' – ' + label(end) + ' · ' + count + (count === 1 ? ' lună' : ' luni');
+    if (end === currentYm) text += '. Luna în curs apare în raport, dar nu intră în calculul creșterii.';
+    if (startSelect.value > endSelect.value) text += ' (lunile vor fi inversate)';
+    summary.textContent = text;
+    chips.forEach(chip => {
+      const [ps, pe] = presetRange(chip.getAttribute('data-evolutie-preset'));
+      chip.classList.toggle('is-active', ps === start && pe === end);
+    });
+  }
+
+  function initialRange() {
+    const s = document.getElementById('filterLunaStart').value;
+    const e = document.getElementById('filterLunaEnd').value;
+    const an = document.getElementById('filterAn').value;
+    if (s || e) return [s || e, e || s];
+    if (an) return [an + '-01', an + '-12'];
+    return presetRange('12');
+  }
+
+  document.getElementById('istoricEvolutieComenziBtn').addEventListener('click', function () {
+    fillMonths();
+    const [s, e] = initialRange();
+    setRange(s, e);
+    if (typeof dialog.showModal === 'function') dialog.showModal();
+    else dialog.setAttribute('open', '');
+    startSelect.focus();
+  });
+
+  chips.forEach(chip => chip.addEventListener('click', function () {
+    const [s, e] = presetRange(chip.getAttribute('data-evolutie-preset'));
+    setRange(s, e);
+  }));
+  startSelect.addEventListener('change', update);
+  endSelect.addEventListener('change', update);
+
+  dialog.querySelectorAll('[data-evolutie-close]').forEach(btn => btn.addEventListener('click', () => dialog.close()));
+  dialog.addEventListener('click', function (e) {
+    if (e.target === dialog) dialog.close();
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    let start = startSelect.value;
+    let end = endSelect.value;
+    if (start > end) [start, end] = [end, start];
+    const params = new URLSearchParams({ luna_start: start, luna_end: end });
+    dialog.close();
+    window.location.href = @json(route('export.evolutie-comenzi.pdf')) + '?' + params.toString();
+  });
 }
 
 function populateFilters() {
@@ -527,14 +680,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams({ an: an, luna: luna, luna_start: lunaStart, luna_end: lunaEnd, search: search });
     window.location.href = @json(route('export.istoric.pdf')) + '?' + params.toString();
   });
-  document.getElementById('istoricEvolutieComenziBtn').addEventListener('click', function () {
-    const params = new URLSearchParams({
-      luna_start: document.getElementById('filterLunaStart').value || '',
-      luna_end: document.getElementById('filterLunaEnd').value || '',
-      an: document.getElementById('filterAn').value || ''
-    });
-    window.location.href = @json(route('export.evolutie-comenzi.pdf')) + '?' + params.toString();
-  });
+  setupEvolutieDialog();
   loadIstoric();
 });
 </script>

@@ -7,7 +7,7 @@
 
   if (document.documentElement.getAttribute('data-theme') !== 'neon-glass') return;
 
-  var RGB = { main: [0, 229, 255], deep: [0, 200, 240], dark: [0, 184, 212], light: [125, 249, 255] };
+  var RGB = { main: [45, 212, 232], deep: [34, 190, 214], dark: [24, 166, 190], light: [140, 232, 244] };
   var HEX = {
     ffee00: 'main', fe0: 'main', fff000: 'main', ffe600: 'main',
     facc15: 'deep', eab308: 'deep', ffd700: 'deep',

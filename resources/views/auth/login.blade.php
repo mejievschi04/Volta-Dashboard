@@ -330,7 +330,7 @@
               float glossLocal = tri(uStarSpeed / (PERIOD * seed + 1.0));
               float flareSize = smoothstep(0.9, 1.0, size) * glossLocal;
               float whiteMix = smoothstep(0.35, 0.9, Hash21(si + 7.0));
-              vec3 yellow = {{ $uiTheme === 'neon-glass' ? 'vec3(0.0, 0.898, 1.0)' : 'vec3(1.0, 0.933, 0.0)' }};
+              vec3 yellow = {{ $uiTheme === 'neon-glass' ? 'vec3(0.176, 0.831, 0.91)' : 'vec3(1.0, 0.933, 0.0)' }};
               vec3 white = vec3(1.0, 1.0, 1.0);
               vec3 base = mix(yellow, white, whiteMix);
               vec2 pad = vec2(tris(seed * 34.0 + uTime * uSpeed / 10.0), tris(seed * 38.0 + uTime * uSpeed / 30.0)) - 0.5;

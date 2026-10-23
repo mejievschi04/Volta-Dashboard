@@ -1,5 +1,6 @@
 /*
- * Temă „Neon Glass” — neo-glassmorphism futurist: cyan electric, magenta, violet. Fără galben.
+ * Temă „Neon Glass” — sticlă întunecată, accente cyan / magenta / violet, fără galben.
+ * Variantă „clean”: fără halouri neon, fără text-shadow; adâncimea vine doar din umbre neutre și margini fine.
  * Activă doar pe html[data-theme="neon-glass"]; celelalte teme nu sunt afectate.
  * Se încarcă după theme-neon-glass-recolor.css (generat), ca regulile de aici să aibă ultimul cuvânt.
  * Fără backdrop-filter pe secțiuni mari: ar muta modalele position:fixed din interior.
@@ -8,63 +9,63 @@
 html[data-theme="neon-glass"] {
   color-scheme: dark;
 
-  --neon-cyan: #00e5ff;
-  --neon-cyan-rgb: 0, 229, 255;
-  --neon-magenta: #ff2bd6;
-  --neon-magenta-rgb: 255, 43, 214;
-  --neon-violet: #9d78ff;
-  --neon-blue: #3d7bff;
-  --neon-mint: #00ffa3;
+  --neon-cyan: #2dd4e8;
+  --neon-cyan-rgb: 45, 212, 232;
+  --neon-magenta: #d65cc4;
+  --neon-magenta-rgb: 214, 92, 196;
+  --neon-violet: #9280ec;
+  --neon-blue: #4a7fe8;
+  --neon-mint: #34d399;
 
   --font-display: "Space Grotesk", "Noto Sans", system-ui, sans-serif;
 
-  --glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%);
-  --glass-bg-strong: linear-gradient(145deg, rgba(20, 22, 52, 0.94) 0%, rgba(8, 10, 28, 0.96) 100%);
-  --glass-border: rgba(120, 230, 255, 0.16);
-  --glass-border-hover: rgba(0, 229, 255, 0.55);
-  --glass-blur: blur(18px) saturate(160%);
-  --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0 24px rgba(0, 229, 255, 0.04), 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 18px rgba(0, 229, 255, 0.06);
-  --glass-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 0 28px rgba(0, 229, 255, 0.07), 0 14px 38px rgba(0, 0, 0, 0.55), 0 0 26px rgba(0, 229, 255, 0.28), 0 0 60px rgba(255, 43, 214, 0.1);
+  --glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.02) 100%);
+  --glass-bg-strong: linear-gradient(145deg, rgba(20, 23, 44, 0.96) 0%, rgba(10, 12, 26, 0.97) 100%);
+  --glass-border: rgba(170, 200, 235, 0.1);
+  --glass-border-hover: rgba(45, 212, 232, 0.3);
+  --glass-blur: blur(16px) saturate(130%);
+  --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px rgba(0, 0, 0, 0.32);
+  --glass-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 10px 28px rgba(0, 0, 0, 0.38);
 
-  --bg-sidebar-toggle: rgba(6, 8, 22, 0.66);
-  --bg-sidebar-toggle-hover: rgba(12, 14, 36, 0.72);
-  --bg-primary: #03040c;
-  --bg-secondary: rgba(255, 255, 255, 0.05);
-  --bg-tertiary: rgba(255, 255, 255, 0.08);
-  --bg-elevated: rgba(255, 255, 255, 0.05);
-  --bg-surface: rgba(255, 255, 255, 0.05);
+  --bg-sidebar-toggle: rgba(8, 10, 22, 0.7);
+  --bg-sidebar-toggle-hover: rgba(14, 16, 32, 0.76);
+  --bg-primary: #05060f;
+  --bg-secondary: rgba(255, 255, 255, 0.045);
+  --bg-tertiary: rgba(255, 255, 255, 0.07);
+  --bg-elevated: rgba(255, 255, 255, 0.045);
+  --bg-surface: rgba(255, 255, 255, 0.045);
 
-  --text-primary: #f2f7ff;
-  --text-secondary: #c9d4f2;
-  --text-tertiary: #8e9bc4;
-  --text-disabled: #5d6690;
-  --text-inverse: #02040c;
+  --text-primary: #eef2fb;
+  --text-secondary: #c3cbe0;
+  --text-tertiary: #8a94b4;
+  --text-disabled: #5b6385;
+  --text-inverse: #04060f;
 
-  --border-primary: rgba(120, 230, 255, 0.14);
-  --border-secondary: rgba(120, 230, 255, 0.24);
-  --border-light: rgba(255, 255, 255, 0.07);
+  --border-primary: rgba(170, 200, 235, 0.1);
+  --border-secondary: rgba(170, 200, 235, 0.18);
+  --border-light: rgba(255, 255, 255, 0.06);
 
-  --brand: #00e5ff;
-  --brand-rgb: 0, 229, 255;
-  --brand-dark: #00b8d4;
-  --brand-on-dark: #00e5ff;
-  --brand-10: rgba(0, 229, 255, 0.12);
-  --brand-20: rgba(0, 229, 255, 0.2);
-  --brand-30: rgba(0, 229, 255, 0.3);
-  --info: #00e5ff;
-  --info-light: #7df9ff;
+  --brand: #2dd4e8;
+  --brand-rgb: 45, 212, 232;
+  --brand-dark: #18a6be;
+  --brand-on-dark: #2dd4e8;
+  --brand-10: rgba(45, 212, 232, 0.1);
+  --brand-20: rgba(45, 212, 232, 0.18);
+  --brand-30: rgba(45, 212, 232, 0.28);
+  --info: #2dd4e8;
+  --info-light: #8ce8f4;
 
-  --card-radius: 18px;
+  --card-radius: 16px;
   --radius-lg: 14px;
-  --glow: 0 0 22px rgba(0, 229, 255, 0.3);
-  --shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+  --glow: none;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.32);
+  --shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.42);
 }
 
-/* ---------- Fundal: spațiu întunecat + pete neon + grilă holografică ---------- */
+/* ---------- Fundal: întuneric cu două pete de culoare foarte discrete ---------- */
 html[data-theme="neon-glass"] {
-  background-color: #03040c;
+  background-color: #05060f;
 }
 
 html[data-theme="neon-glass"] body {
@@ -78,30 +79,13 @@ html[data-theme="neon-glass"]::before {
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(46vw 46vw at 104% 10%, rgba(0, 229, 255, 0.28), transparent 60%),
-    radial-gradient(58vw 58vw at 50% 118%, rgba(157, 120, 255, 0.34), transparent 62%),
-    radial-gradient(36vw 36vw at 0% 72%, rgba(255, 43, 214, 0.2), transparent 60%),
-    radial-gradient(30vw 30vw at 40% -12%, rgba(61, 123, 255, 0.18), transparent 62%),
-    linear-gradient(160deg, #02030a 0%, #070a1e 52%, #03040c 100%);
-}
-
-html[data-theme="neon-glass"]::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(0, 229, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 255, 0.045) 1px, transparent 1px),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 3px);
-  background-size: 56px 56px, 56px 56px, 100% 3px;
-  -webkit-mask-image: radial-gradient(ellipse at 55% 35%, #000 0%, transparent 80%);
-  mask-image: radial-gradient(ellipse at 55% 35%, #000 0%, transparent 80%);
+    radial-gradient(50vw 50vw at 105% 0%, rgba(45, 212, 232, 0.07), transparent 65%),
+    radial-gradient(60vw 60vw at 40% 120%, rgba(146, 128, 236, 0.08), transparent 65%),
+    linear-gradient(160deg, #04050d 0%, #080a18 55%, #05060f 100%);
 }
 
 html[data-theme="neon-glass"] ::selection {
-  background: rgba(255, 43, 214, 0.4);
+  background: rgba(45, 212, 232, 0.3);
   color: #fff;
 }
 
@@ -109,10 +93,10 @@ html[data-theme="neon-glass"] ::selection {
 html[data-theme="neon-glass"] .logo-mark,
 html[data-theme="neon-glass"] .login-logo .logo-mark,
 html[data-theme="neon-glass"] .operator-nav-mark img {
-  filter: hue-rotate(130deg) saturate(1.4) drop-shadow(0 0 10px rgba(0, 229, 255, 0.7));
+  filter: hue-rotate(130deg) saturate(0.75) brightness(0.92);
 }
 
-/* ---------- Tipografie futuristă ---------- */
+/* ---------- Tipografie ---------- */
 html[data-theme="neon-glass"] .main h1,
 html[data-theme="neon-glass"] .main h2,
 html[data-theme="neon-glass"] .ma-hero__title,
@@ -127,25 +111,16 @@ html[data-theme="neon-glass"] .raport-lunar-num {
 }
 
 html[data-theme="neon-glass"] .main h1,
-html[data-theme="neon-glass"] .ma-hero__title {
-  background: linear-gradient(90deg, #ffffff 0%, #b9f6ff 45%, #ffb3f1 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 14px rgba(0, 229, 255, 0.25));
-}
-
+html[data-theme="neon-glass"] .ma-hero__title,
 html[data-theme="neon-glass"] .logo h1 {
-  color: #fff;
-  text-shadow: 0 0 12px rgba(0, 229, 255, 0.6), 0 0 28px rgba(255, 43, 214, 0.25);
+  color: #f4f7fd;
 }
 
 html[data-theme="neon-glass"] .ma-kpi__value,
 html[data-theme="neon-glass"] .operatori-stat-value,
 html[data-theme="neon-glass"] .card .value,
 html[data-theme="neon-glass"] .raport-lunar-num {
-  color: #eafcff;
-  text-shadow: 0 0 10px rgba(0, 229, 255, 0.55), 0 0 26px rgba(0, 229, 255, 0.25);
+  color: #f4f7fd;
 }
 
 html[data-theme="neon-glass"] .ma-kicker,
@@ -155,54 +130,59 @@ html[data-theme="neon-glass"] .operatori-stat-label {
 }
 
 html[data-theme="neon-glass"] .ma-kicker {
-  color: var(--neon-magenta);
-  text-shadow: 0 0 10px rgba(255, 43, 214, 0.6);
+  color: var(--neon-cyan);
+}
+
+/* Nimic nu mai strălucește: textul și iconițele rămân plate */
+html[data-theme="neon-glass"] .main,
+html[data-theme="neon-glass"] .main *,
+html[data-theme="neon-glass"] .sidebar,
+html[data-theme="neon-glass"] .sidebar * {
+  text-shadow: none !important;
 }
 
 /* ---------- Sidebar ---------- */
 html[data-theme="neon-glass"] .sidebar {
-  background: linear-gradient(180deg, rgba(10, 12, 32, 0.74) 0%, rgba(4, 5, 16, 0.8) 100%);
-  border-right: 1px solid rgba(0, 229, 255, 0.14);
-  box-shadow: inset -1px 0 0 rgba(255, 43, 214, 0.12), 8px 0 40px rgba(0, 0, 0, 0.5), 1px 0 22px rgba(0, 229, 255, 0.08);
+  background: linear-gradient(180deg, rgba(12, 14, 30, 0.8) 0%, rgba(6, 7, 18, 0.86) 100%);
+  border-right: 1px solid rgba(170, 200, 235, 0.08);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
 }
 
-html[data-theme="neon-glass"] .logo { border-bottom-color: rgba(0, 229, 255, 0.1); }
+html[data-theme="neon-glass"] .logo { border-bottom-color: rgba(170, 200, 235, 0.08); }
 
 html[data-theme="neon-glass"] .nav h3 {
-  color: var(--neon-magenta);
-  border-bottom-color: rgba(0, 229, 255, 0.1);
-  text-shadow: 0 0 12px rgba(255, 43, 214, 0.6);
+  color: var(--text-tertiary);
+  border-bottom-color: rgba(170, 200, 235, 0.08);
 }
 
 html[data-theme="neon-glass"] .nav a { color: var(--text-secondary); }
 
 html[data-theme="neon-glass"] .nav a:hover {
   color: #fff;
-  background: rgba(0, 229, 255, 0.06);
-  box-shadow: inset 0 0 0 1px rgba(0, 229, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: none;
 }
 
 html[data-theme="neon-glass"] .nav a::before {
-  background: linear-gradient(180deg, var(--neon-cyan), var(--neon-magenta));
-  box-shadow: 0 0 12px var(--neon-cyan), 0 0 24px rgba(255, 43, 214, 0.6);
+  background: var(--neon-cyan);
+  box-shadow: none;
 }
 
 html[data-theme="neon-glass"] .nav a.active {
-  color: var(--neon-cyan);
-  background: linear-gradient(90deg, rgba(0, 229, 255, 0.2) 0%, rgba(157, 120, 255, 0.08) 65%, transparent 100%);
-  box-shadow: inset 0 0 0 1px rgba(0, 229, 255, 0.28), 0 0 24px rgba(0, 229, 255, 0.14);
-  text-shadow: 0 0 12px rgba(0, 229, 255, 0.7);
+  color: #fff;
+  background: rgba(45, 212, 232, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(45, 212, 232, 0.16);
 }
 
 html[data-theme="neon-glass"] .nav a:hover i,
 html[data-theme="neon-glass"] .nav a.active i {
   color: var(--neon-cyan);
-  filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.85));
+  filter: none;
 }
 
-html[data-theme="neon-glass"] .sidebar::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.35); }
+html[data-theme="neon-glass"] .sidebar::-webkit-scrollbar-thumb { background: rgba(170, 200, 235, 0.18); }
 
 /* ---------- Suprafețe de sticlă (carduri, panouri) ---------- */
 html[data-theme="neon-glass"] .topbar,
@@ -248,12 +228,13 @@ html[data-theme="neon-glass"] .raport-lunar-empty {
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
   color: var(--text-primary);
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 html[data-theme="neon-glass"] .topbar {
-  border-left: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow), inset 3px 0 0 var(--neon-cyan), -4px 0 20px rgba(0, 229, 255, 0.35);
+  border: 1px solid var(--glass-border);
+  border-left: 2px solid rgba(45, 212, 232, 0.6);
+  box-shadow: var(--glass-shadow);
 }
 
 html[data-theme="neon-glass"] .card:hover,
@@ -270,17 +251,21 @@ html[data-theme="neon-glass"] .operator-me-stat:hover {
   box-shadow: var(--glass-shadow-hover);
 }
 
+/* Liniile decorative din colțul și de pe marginea cardurilor din paginile mobile */
+html[data-theme="neon-glass"] .ma-card::before,
+html[data-theme="neon-glass"] .ma-card::after,
+html[data-theme="neon-glass"] .ma-kpi::before,
+html[data-theme="neon-glass"] .ma-kpi::after,
+html[data-theme="neon-glass"] .ma-hero::before,
+html[data-theme="neon-glass"] .ma-hero::after {
+  display: none;
+}
+
 /* Secțiunile mari rămân transparente (fără blur) */
 html[data-theme="neon-glass"] .livrari-section-panel,
 html[data-theme="neon-glass"] .ma-section,
 html[data-theme="neon-glass"] .container {
   background: transparent;
-}
-
-/* Iconițe și accente din carduri */
-html[data-theme="neon-glass"] .main .fa-solid,
-html[data-theme="neon-glass"] .main .fas {
-  text-shadow: 0 0 8px rgba(0, 229, 255, 0.35);
 }
 
 /* ---------- Butoane ---------- */
@@ -290,11 +275,10 @@ html[data-theme="neon-glass"] .operatori-btn-primary,
 html[data-theme="neon-glass"] .trafic-action-btn--primary,
 html[data-theme="neon-glass"] .livrari-btn-open-modal,
 html[data-theme="neon-glass"] .btn-login {
-  background: linear-gradient(120deg, #00e5ff 0%, #3d7bff 55%, #b04dff 100%);
+  background: linear-gradient(120deg, #26c2d8 0%, #4a7fe8 100%);
   color: #fff;
-  border: 1px solid rgba(125, 249, 255, 0.7);
-  text-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
-  box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.25), 0 0 20px rgba(0, 229, 255, 0.45), 0 0 40px rgba(176, 77, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  border: 1px solid transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 html[data-theme="neon-glass"] .btn:not(.secondary):not(.btn-danger):hover,
@@ -304,7 +288,8 @@ html[data-theme="neon-glass"] .trafic-action-btn--primary:hover,
 html[data-theme="neon-glass"] .livrari-btn-open-modal:hover,
 html[data-theme="neon-glass"] .btn-login:hover {
   color: #fff;
-  box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.45), 0 0 30px rgba(0, 229, 255, 0.7), 0 0 60px rgba(255, 43, 214, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  filter: brightness(1.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 html[data-theme="neon-glass"] .btn.secondary,
@@ -313,11 +298,10 @@ html[data-theme="neon-glass"] .operatori-btn-ghost,
 html[data-theme="neon-glass"] .trafic-action-btn:not(.trafic-action-btn--primary),
 html[data-theme="neon-glass"] .ma-btn--ghost,
 html[data-theme="neon-glass"] .ma-period__chip {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(120, 230, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(170, 200, 235, 0.16);
   color: var(--text-secondary);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  box-shadow: none;
 }
 
 html[data-theme="neon-glass"] .btn.secondary:hover,
@@ -327,39 +311,40 @@ html[data-theme="neon-glass"] .trafic-action-btn:not(.trafic-action-btn--primary
 html[data-theme="neon-glass"] .ma-btn--ghost:hover,
 html[data-theme="neon-glass"] .ma-period__chip:hover {
   color: #fff;
-  border-color: rgba(255, 43, 214, 0.65);
-  box-shadow: 0 0 18px rgba(255, 43, 214, 0.32);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(170, 200, 235, 0.3);
+  box-shadow: none;
 }
 
 html[data-theme="neon-glass"] .ma-period__chip.is-active,
 html[data-theme="neon-glass"] .ma-period__chip.active {
   color: var(--neon-cyan);
-  border-color: rgba(0, 229, 255, 0.6);
-  background: rgba(0, 229, 255, 0.12);
-  box-shadow: 0 0 18px rgba(0, 229, 255, 0.32);
-  text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+  border-color: rgba(45, 212, 232, 0.4);
+  background: rgba(45, 212, 232, 0.1);
+  box-shadow: none;
 }
 
 /* ---------- Câmpuri de formular ---------- */
 html[data-theme="neon-glass"] .main input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]):not([type="submit"]):not([type="button"]),
 html[data-theme="neon-glass"] .main select,
 html[data-theme="neon-glass"] .main textarea {
-  background-color: rgba(255, 255, 255, 0.045);
-  border-color: rgba(120, 230, 255, 0.18);
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: rgba(170, 200, 235, 0.16);
   color: var(--text-primary);
+  box-shadow: none;
 }
 
 html[data-theme="neon-glass"] .main input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):focus,
 html[data-theme="neon-glass"] .main select:focus,
 html[data-theme="neon-glass"] .main textarea:focus {
   outline: none;
-  border-color: rgba(0, 229, 255, 0.8);
-  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.16), 0 0 20px rgba(0, 229, 255, 0.3);
+  border-color: rgba(45, 212, 232, 0.6);
+  box-shadow: 0 0 0 3px rgba(45, 212, 232, 0.12);
 }
 
 html[data-theme="neon-glass"] select option {
-  background: #0a0c22;
-  color: #f2f7ff;
+  background: #0c0e1e;
+  color: #eef2fb;
 }
 
 html[data-theme="neon-glass"] input[type="checkbox"],
@@ -373,37 +358,32 @@ html[data-theme="neon-glass"] .main table thead,
 html[data-theme="neon-glass"] .main table thead tr,
 html[data-theme="neon-glass"] .main table thead th,
 html[data-theme="neon-glass"] .operatori-table-yellow thead tr {
-  background: rgba(0, 229, 255, 0.06);
-  color: #bdf8ff;
-  border-bottom: 1px solid rgba(0, 229, 255, 0.28);
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--text-tertiary);
+  border-bottom: 1px solid rgba(170, 200, 235, 0.12);
   letter-spacing: 0.06em;
 }
 
 html[data-theme="neon-glass"] .main table tbody tr:hover td {
-  background: rgba(255, 43, 214, 0.06);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 html[data-theme="neon-glass"] .raport-lunar-table tbody tr:nth-child(even) td {
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 html[data-theme="neon-glass"] .ma-table-wrap,
 html[data-theme="neon-glass"] .livrari-table-wrap,
 html[data-theme="neon-glass"] .operatori-table-wrap,
 html[data-theme="neon-glass"] .comparare-table-wrap {
-  border-color: rgba(120, 230, 255, 0.12);
+  border-color: rgba(170, 200, 235, 0.1);
 }
 
 /* ---------- Badge-uri, alerte ---------- */
 html[data-theme="neon-glass"] .ma-badge,
 html[data-theme="neon-glass"] .operatori-badge,
 html[data-theme="neon-glass"] .kpi-source-badge {
-  box-shadow: 0 0 12px rgba(0, 229, 255, 0.16);
-}
-
-html[data-theme="neon-glass"] .ma-alert {
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  box-shadow: none;
 }
 
 /* ---------- Modale ---------- */
@@ -411,27 +391,28 @@ html[data-theme="neon-glass"] .livrari-modal-overlay,
 html[data-theme="neon-glass"] .operatori-modal-overlay,
 html[data-theme="neon-glass"] .dashboard-chart-modal__backdrop,
 html[data-theme="neon-glass"] .modal {
-  background: rgba(2, 3, 10, 0.62);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  background: rgba(3, 4, 10, 0.66);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
 }
 
+html[data-theme="neon-glass"] .evolutie-dialog,
 html[data-theme="neon-glass"] .livrari-modal,
 html[data-theme="neon-glass"] .operatori-modal,
 html[data-theme="neon-glass"] .dashboard-chart-modal__panel,
 html[data-theme="neon-glass"] .modal-content {
   background: var(--glass-bg-strong);
-  border: 1px solid rgba(0, 229, 255, 0.22);
-  border-radius: 20px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 30px 80px rgba(0, 0, 0, 0.65), 0 0 40px rgba(0, 229, 255, 0.14), 0 0 80px rgba(255, 43, 214, 0.1);
+  border: 1px solid rgba(170, 200, 235, 0.14);
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
 }
 
 /* ---------- Calendar flatpickr ---------- */
 html[data-theme="neon-glass"] .volta-flatpickr.flatpickr-calendar,
 html[data-theme="neon-glass"] .livrari-flatpickr.flatpickr-calendar {
   background: var(--glass-bg-strong);
-  border-color: rgba(0, 229, 255, 0.32);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 229, 255, 0.16);
+  border-color: rgba(170, 200, 235, 0.16);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
 }
 
 html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-day.selected,
@@ -439,26 +420,26 @@ html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-day.selected,
 html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-monthSelect-month.selected {
   background: var(--neon-cyan);
   border-color: var(--neon-cyan);
-  color: #02040c;
-  box-shadow: 0 0 14px rgba(0, 229, 255, 0.7);
+  color: #04060f;
+  box-shadow: none;
 }
 
 html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-day:hover,
 html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-day:hover {
-  background: rgba(0, 229, 255, 0.16);
-  border-color: rgba(0, 229, 255, 0.4);
+  background: rgba(45, 212, 232, 0.12);
+  border-color: rgba(45, 212, 232, 0.3);
 }
 
 html[data-theme="neon-glass"] .volta-flatpickr .flatpickr-day.today,
 html[data-theme="neon-glass"] .livrari-flatpickr .flatpickr-day.today {
-  border-color: var(--neon-magenta);
+  border-color: rgba(45, 212, 232, 0.5);
 }
 
 /* ---------- Scrollbar ---------- */
 html[data-theme="neon-glass"] ::-webkit-scrollbar { width: 10px; height: 10px; }
-html[data-theme="neon-glass"] ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.03); }
+html[data-theme="neon-glass"] ::-webkit-scrollbar-track { background: transparent; }
 html[data-theme="neon-glass"] ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(0, 229, 255, 0.5), rgba(255, 43, 214, 0.5));
+  background: rgba(170, 200, 235, 0.18);
   border-radius: 10px;
   border: 2px solid transparent;
   background-clip: padding-box;
@@ -466,27 +447,32 @@ html[data-theme="neon-glass"] ::-webkit-scrollbar-thumb {
 
 /* ---------- Login ---------- */
 html[data-theme="neon-glass"] .login-box {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.025) 100%);
-  border: 1px solid rgba(0, 229, 255, 0.22);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 50px rgba(0, 229, 255, 0.14), 0 0 90px rgba(255, 43, 214, 0.12);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  backdrop-filter: blur(22px) saturate(160%);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(170, 200, 235, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 24px 60px rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  backdrop-filter: blur(20px) saturate(130%);
+}
+
+html[data-theme="neon-glass"] .login-box,
+html[data-theme="neon-glass"] .login-box * {
+  text-shadow: none !important;
 }
 
 html[data-theme="neon-glass"] .input-group input {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(120, 230, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(170, 200, 235, 0.16);
 }
 
 html[data-theme="neon-glass"] .input-group input:focus {
-  border-color: rgba(0, 229, 255, 0.8);
-  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.16), 0 0 20px rgba(0, 229, 255, 0.3);
+  border-color: rgba(45, 212, 232, 0.6);
+  box-shadow: 0 0 0 3px rgba(45, 212, 232, 0.12);
 }
 
 html[data-theme="neon-glass"] .input-group input:focus ~ .input-icon { color: var(--neon-cyan); }
 
 html[data-theme="neon-glass"] .input-focus-line {
-  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta));
+  background: var(--neon-cyan);
 }
 
 @media (prefers-reduced-transparency: reduce) {
@@ -496,6 +482,6 @@ html[data-theme="neon-glass"] .input-focus-line {
   html[data-theme="neon-glass"] .sidebar {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    background: #0a0c22;
+    background: #0c0e1e;
   }
 }
