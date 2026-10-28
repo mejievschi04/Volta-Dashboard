@@ -53,6 +53,7 @@
         <span class="operatori-profile-subtitle"><i class="fas fa-database" aria-hidden="true"></i> Date sincronizate din 1C · actualizat pentru perioada selectată</span>
       </div>
     </div>
+    @include('operatori.partials.hero-plan-bonus', ['plan' => $planIndividual ?? null, 'bonus' => $bonusVanzari ?? null])
   </div>
 
   <div class="operatori-detail-grid">
@@ -97,8 +98,6 @@
           </div>
         </div>
       </div>
-      @include('operatori.partials.plan-individual', ['plan' => $planIndividual ?? null, 'showEmpty' => true, 'cardClass' => 'operatori-sidebar-card', 'titleClass' => 'operatori-sidebar-title'])
-      @include('operatori.partials.bonus-vanzari', ['bonus' => $bonusVanzari ?? null, 'cardClass' => 'operatori-sidebar-card', 'titleClass' => 'operatori-sidebar-title'])
     </div>
 
     <div class="operatori-main-feed">

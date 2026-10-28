@@ -89,6 +89,7 @@
   <section class="operator-me-page">
     <header class="operator-me-hero @if($heroCover) operator-me-hero--with-cover @endif" @if($heroCover) style="background-image: url('{{ $heroCover }}');" @endif>
       <div class="operator-me-hero__overlay"></div>
+      @include('operatori.partials.hero-plan-bonus', ['plan' => $planIndividual ?? null, 'bonus' => $bonusVanzari ?? null])
       <div class="operator-me-hero__identity">
         @if($heroAvatar)
           <div class="operator-me-avatar" style="background-image: url('{{ $heroAvatar }}');"></div>
@@ -123,8 +124,6 @@
             @endforeach
           </div>
         </article>
-        @include('operatori.partials.plan-individual', ['plan' => $planIndividual ?? null, 'showEmpty' => true, 'cardClass' => 'operator-me-card', 'titleClass' => 'operator-me-card__title', 'titleTag' => 'h2'])
-        @include('operatori.partials.bonus-vanzari', ['bonus' => $bonusVanzari ?? null, 'cardClass' => 'operator-me-card', 'titleClass' => 'operator-me-card__title', 'titleTag' => 'h2'])
       </aside>
 
       <div class="operator-me-main">
