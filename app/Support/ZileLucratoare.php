@@ -67,4 +67,28 @@ final class ZileLucratoare
             'ramase' => $ramase,
         ];
     }
+
+    /**
+     * Zile luni–vineri dintr-o lună (YYYY-MM), pentru planul individual al operatorilor.
+     * „trecute” = zile încheiate înainte de azi; „ramase” = de azi (inclusiv) până la final de lună.
+     *
+     * @return array{trecute: int, ramase: int}
+     */
+    public static function luniVineriPentruLuna(string $lunaYm, ?string $todayYmd = null): array
+    {
+        $start = \Carbon\CarbonImmutable::createFromFormat('Y-m-d', $lunaYm.'-01')->startOfDay();
+        $end = $start->endOfMonth()->startOfDay();
+        $today = \Carbon\CarbonImmutable::parse($todayYmd ?? now()->toDateString())->startOfDay();
+
+        $trecute = 0;
+        $ramase = 0;
+        for ($d = $start; $d->lte($end); $d = $d->addDay()) {
+            if ($d->isWeekend()) {
+                continue;
+            }
+            $d->lt($today) ? $trecute++ : $ramase++;
+        }
+
+        return ['trecute' => $trecute, 'ramase' => $ramase];
+    }
 }

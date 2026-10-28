@@ -97,6 +97,8 @@
           </div>
         </div>
       </div>
+      @include('operatori.partials.plan-individual', ['plan' => $planIndividual ?? null, 'showEmpty' => true, 'cardClass' => 'operatori-sidebar-card', 'titleClass' => 'operatori-sidebar-title'])
+      @include('operatori.partials.bonus-vanzari', ['bonus' => $bonusVanzari ?? null, 'cardClass' => 'operatori-sidebar-card', 'titleClass' => 'operatori-sidebar-title'])
     </div>
 
     <div class="operatori-main-feed">
@@ -149,6 +151,7 @@
       </div>
       <div class="operatori-content-card">
         <h2 class="operatori-section-title">Vânzări pe luni</h2>
+        @php $arePlan = $vanzariLunare1c->contains(fn ($l) => ($l->plan_individual ?? null) !== null); @endphp
         <div class="operatori-table-wrap">
           <table class="operatori-table operatori-monthly-sales-table">
             <thead>
@@ -159,6 +162,11 @@
                 <th class="tc">Vânzări (cu TVA)</th>
                 <th class="tc">Cec mediu</th>
                 <th class="tc">Profit</th>
+                <th class="tc">Bonus ({{ \App\Support\BonusVanzari::procentLabel() }})</th>
+                @if($arePlan)
+                <th class="tc">Plan</th>
+                <th class="tc">Îndeplinire</th>
+                @endif
               </tr>
             </thead>
             <tbody>
@@ -170,6 +178,11 @@
                 <td class="tc operatori-monthly-sales-table__amount">{{ number_format($luna->vanzari_cu_tva, 2, ',', '.') }} MDL</td>
                 <td class="tc operatori-monthly-sales-table__amount">{{ number_format($luna->cec_mediu ?? 0, 2, ',', '.') }} MDL</td>
                 <td class="tc operatori-profit operatori-monthly-sales-table__amount">{{ number_format($luna->profit, 2, ',', '.') }} MDL</td>
+                <td class="tc operatori-monthly-sales-table__amount">{{ number_format($luna->bonus ?? 0, 2, ',', '.') }} MDL</td>
+                @if($arePlan)
+                <td class="tc operatori-monthly-sales-table__amount">{{ $luna->plan_individual !== null ? number_format($luna->plan_individual, 2, ',', '.') . ' MDL' : '—' }}</td>
+                <td class="tc">@include('operatori.partials.plan-pct', ['pct' => $luna->indeplinire_plan])</td>
+                @endif
               </tr>
               @endforeach
             </tbody>

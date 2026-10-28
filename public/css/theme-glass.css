@@ -385,9 +385,22 @@ html[data-theme] .main textarea:focus {
   box-shadow: 0 0 0 3px rgba(var(--g-accent-rgb), 0.14);
 }
 
-html[data-theme] select option {
-  background: rgb(var(--g-panel-rgb));
-  color: #eef2fb;
+/* Listele native (mai ales pe Windows) nu suportă fundal transparent: opțiunile trebuie să fie opace. */
+html[data-theme] select option,
+html[data-theme] select optgroup {
+  background-color: rgb(var(--g-panel-rgb)) !important;
+  background-image: none !important;
+  color: #eef2fb !important;
+}
+
+html[data-theme] select option:checked {
+  background-color: rgb(var(--g-panel-rgb)) !important;
+  background-color: color-mix(in srgb, rgb(var(--g-accent-rgb)) 30%, rgb(var(--g-panel-rgb))) !important;
+  color: #ffffff !important;
+}
+
+html[data-theme] select option:disabled {
+  color: #8b93a7 !important;
 }
 
 html[data-theme] input[type="checkbox"],

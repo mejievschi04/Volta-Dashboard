@@ -10,9 +10,13 @@ use App\Models\Operator;
 use App\Models\DateOp;
 use App\Models\Livrare;
 use App\Models\OnecKpiOperator;
+use App\Models\RaportLunarCallCenterInput;
 use App\Models\User;
+use App\Support\BonusVanzari;
 use App\Support\DbDate;
 use App\Support\LunaRomana;
+use App\Support\ZileLucratoare;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class OperatoriController extends Controller
@@ -351,7 +355,12 @@ class OperatoriController extends Controller
             }
         }
 
+        $planIndividual = $this->attachIndividualPlans($operatorNume, $vanzariLunare1c);
+        $bonusVanzari = $this->attachBonus($vanzariLunare1c);
+
         return view('operatori.me', [
+            'planIndividual' => $planIndividual,
+            'bonusVanzari' => $bonusVanzari,
             'operatorNume' => $operatorNume ?: $fullName ?: $user->username,
             'date' => $date,
             'vanzariLunare1c' => $vanzariLunare1c,
@@ -476,7 +485,12 @@ class OperatoriController extends Controller
         $pickupTotal = max(0, $comenziTotal - $nrLivrariTotal);
         $pickupLunaCurenta = max(0, $comenziLunaCurenta - $nrLivrariLunaCurenta);
 
+        $planIndividual = $this->attachIndividualPlans($operatorNume, $vanzariLunare1c);
+        $bonusVanzari = $this->attachBonus($vanzariLunare1c);
+
         return view('operatori.show', [
+            'planIndividual' => $planIndividual,
+            'bonusVanzari' => $bonusVanzari,
             'operator' => $operator,
             'date' => $date,
             'vanzariLunare1c' => $vanzariLunare1c,
@@ -486,6 +500,83 @@ class OperatoriController extends Controller
             'pickupLunaCurenta' => $pickupLunaCurenta,
             'pozitieTopVanzari' => $pozitieTopVanzari,
         ]);
+    }
+
+    /**
+     * Atașează bonusul din vânzări fiecărei luni și întoarce datele lunii curente.
+     *
+     * @param  Collection<int, object>  $vanzariLunare1c
+     * @return array{bonus: float, profit: float, luna_label: string, total: float}
+     */
+    private function attachBonus(Collection $vanzariLunare1c): array
+    {
+        foreach ($vanzariLunare1c as $luna) {
+            $luna->bonus = BonusVanzari::dinProfit((float) $luna->profit);
+        }
+
+        $lunaCurenta = now()->format('Y-m');
+        $profit = (float) optional($vanzariLunare1c->firstWhere('luna', $lunaCurenta))->profit;
+
+        return [
+            'bonus' => BonusVanzari::dinProfit($profit),
+            'profit' => $profit,
+            'luna_label' => LunaRomana::labelFromYm($lunaCurenta),
+            'total' => round((float) $vanzariLunare1c->sum('bonus'), 2),
+        ];
+    }
+
+    /**
+     * Atașează planul individual (setat în Raport lunar) fiecărei luni și calculează progresul lunii curente.
+     *
+     * @param  Collection<int, object>  $vanzariLunare1c
+     * @return array{plan: float, realizat: float, procent: float, rest: float, pe_zi: ?float, zile_ramase: int, prognoza_procent: ?float, luna_label: string}|null
+     */
+    private function attachIndividualPlans(string $operatorNume, Collection $vanzariLunare1c): ?array
+    {
+        $key = mb_strtolower(trim($operatorNume));
+        if ($key === '') {
+            return null;
+        }
+
+        try {
+            $planuri = RaportLunarCallCenterInput::query()
+                ->whereNotNull('plan_individual')
+                ->whereRaw('LOWER(TRIM(operator_nume)) = ?', [$key])
+                ->pluck('plan_individual', 'ym')
+                ->map(fn ($v) => (float) $v);
+        } catch (\Throwable $e) {
+            return null;
+        }
+
+        foreach ($vanzariLunare1c as $luna) {
+            $plan = $planuri->get((string) $luna->luna);
+            $luna->plan_individual = $plan;
+            $luna->indeplinire_plan = $plan !== null && $plan > 0 ? round($luna->vanzari_luna / $plan * 100, 2) : null;
+        }
+
+        $lunaCurenta = now()->format('Y-m');
+        $plan = $planuri->get($lunaCurenta);
+        if ($plan === null || $plan <= 0) {
+            return null;
+        }
+
+        $realizat = (float) optional($vanzariLunare1c->firstWhere('luna', $lunaCurenta))->vanzari_luna;
+        $zile = ZileLucratoare::luniVineriPentruLuna($lunaCurenta);
+        $rest = max(0.0, $plan - $realizat);
+        $prognoza = $zile['trecute'] > 0
+            ? $realizat + ($realizat / $zile['trecute']) * $zile['ramase']
+            : null;
+
+        return [
+            'plan' => $plan,
+            'realizat' => $realizat,
+            'procent' => round($realizat / $plan * 100, 2),
+            'rest' => $rest,
+            'pe_zi' => $zile['ramase'] > 0 ? round($rest / $zile['ramase'], 2) : null,
+            'zile_ramase' => $zile['ramase'],
+            'prognoza_procent' => $prognoza !== null ? round($prognoza / $plan * 100, 2) : null,
+            'luna_label' => LunaRomana::labelFromYm($lunaCurenta),
+        ];
     }
 
     /**

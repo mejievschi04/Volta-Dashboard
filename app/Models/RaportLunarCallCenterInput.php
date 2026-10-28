@@ -13,11 +13,13 @@ class RaportLunarCallCenterInput extends Model
         'operator_nume',
         'chaturi',
         'apeluri',
+        'plan_individual',
     ];
 
     /** @var array<string, string> */
     protected $casts = [
         'chaturi' => 'integer',
         'apeluri' => 'integer',
+        'plan_individual' => 'float',
     ];
 }

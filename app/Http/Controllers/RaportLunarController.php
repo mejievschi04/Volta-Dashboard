@@ -31,6 +31,8 @@ class RaportLunarController extends Controller
             'chaturi.*' => ['nullable'],
             'apeluri' => ['required', 'array'],
             'apeluri.*' => ['nullable'],
+            'plan' => ['nullable', 'array'],
+            'plan.*' => ['nullable'],
         ]);
 
         $ym = $this->raportLunar->normalizeYm($validated['month']);
@@ -56,8 +58,20 @@ class RaportLunarController extends Controller
             return max(0, min(99999999, (int) $v));
         }, $validated['apeluri']);
 
-        if (count($operators) !== count($chaturi) || count($operators) !== count($apeluri)) {
-            return back()->withInput()->withErrors(['rows' => 'Număr inconsistent de rânduri (operators / chaturi / apeluri).']);
+        $planuri = array_map(static function ($v) {
+            if ($v === null) {
+                return null;
+            }
+            $v = str_replace([' ', "\u{00A0}", ','], ['', '', '.'], trim((string) $v));
+            if ($v === '' || ! is_numeric($v)) {
+                return null;
+            }
+
+            return max(0.0, (float) $v);
+        }, $validated['plan'] ?? array_fill(0, count($operators), null));
+
+        if (count($operators) !== count($chaturi) || count($operators) !== count($apeluri) || count($operators) !== count($planuri)) {
+            return back()->withInput()->withErrors(['rows' => 'Număr inconsistent de rânduri (operatori / chaturi / apeluri / plan).']);
         }
 
         $rows = [];
@@ -66,6 +80,7 @@ class RaportLunarController extends Controller
                 'operator_nume' => $name,
                 'chaturi' => (int) ($chaturi[$i] ?? 0),
                 'apeluri' => (int) ($apeluri[$i] ?? 0),
+                'plan_individual' => $planuri[$i] ?? null,
             ];
         }
 
@@ -77,6 +92,6 @@ class RaportLunarController extends Controller
 
         return redirect()
             ->route('rapoarte.raport-lunar', ['month' => $ym])
-            ->with('status', 'Chaturi și apeluri au fost salvate. Procentele s-au actualizat.');
+            ->with('status', 'Chaturi, apeluri și planuri individuale au fost salvate. Procentele s-au actualizat.');
     }
 }

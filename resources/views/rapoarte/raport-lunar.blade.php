@@ -14,7 +14,8 @@
         Aceeași logică ca în Excelul analizat: <strong>pondere chaturi</strong> = chaturi operator / Σ chaturi (afișat în %);
         <strong>pondere apeluri</strong> = apeluri / Σ apeluri (afișat în %);
         <strong>aport activitate</strong> = (chaturi + apeluri operator) / (Σ chaturi + Σ apeluri), afișat ca procent;
-        <strong>aport vânzări</strong> = vânzări fără TVA operator / Σ vânzări (doar operatorii afișați), afișat ca procent.
+        <strong>aport vânzări</strong> = vânzări fără TVA operator / Σ vânzări (doar operatorii afișați), afișat ca procent;
+        <strong>îndeplinire plan</strong> = vânzări fără TVA operator / plan individual setat pentru luna respectivă.
         În raport intră <strong>doar operatorii marcați activi</strong> în pagina Operatori și prezenți în KPI 1C pentru luna aleasă.
       </p>
     </div>
@@ -96,6 +97,14 @@
         <span class="raport-lunar-stat__label">Σ Apeluri (introduse)</span>
         <span class="raport-lunar-stat__value">{{ $footer_total['apeluri'] ?? '0' }}</span>
       </div>
+      <div class="raport-lunar-stat">
+        <span class="raport-lunar-stat__label">Σ Planuri individuale</span>
+        <span class="raport-lunar-stat__value">{{ $sum_plan_individual !== null ? number_format($sum_plan_individual, 2, ',', ' ') . ' MDL' : '—' }}</span>
+        @if($sum_plan_individual !== null && $plan_lunar !== null && $plan_lunar > 0 && abs($sum_plan_individual - $plan_lunar) >= 0.01)
+          @php $planDiff = $sum_plan_individual - $plan_lunar; @endphp
+          <span class="raport-lunar-stat__hint">{{ $planDiff > 0 ? '+' : '−' }}{{ number_format(abs($planDiff), 2, ',', ' ') }} MDL față de planul lunar</span>
+        @endif
+      </div>
     @endif
   </div>
 
@@ -130,8 +139,8 @@
                 <td class="text-center raport-lunar-mono">{{ $r['aport_activitate'] !== '' ? $r['aport_activitate'] : '—' }}</td>
                 <td class="text-right raport-lunar-num">{{ $r['vanzari_fara_tva'] }}</td>
                 <td class="text-center raport-lunar-mono">{{ $r['aport_vanzari'] !== '' ? $r['aport_vanzari'] : '—' }}</td>
-                <td class="text-center raport-lunar-col-muted">—</td>
-                <td class="text-center raport-lunar-col-muted">—</td>
+                <td class="text-center raport-lunar-num">{{ $r['plan_individual'] !== '' ? $r['plan_individual'] : '—' }}</td>
+                <td class="text-center raport-lunar-mono">{{ $r['indeplinire_plan'] !== '' ? $r['indeplinire_plan'] : '—' }}</td>
               </tr>
             @endforeach
             <tr class="raport-lunar-total-row">
@@ -230,11 +239,49 @@
       </section>
     </div>
 
+    <section class="raport-lunar-panel raport-lunar-panel--plan" aria-labelledby="raport-plan-h">
+      <div class="raport-lunar-panel__head">
+        <span class="raport-lunar-panel__icon raport-lunar-panel__icon--money" aria-hidden="true"><i class="fas fa-bullseye"></i></span>
+        <h2 id="raport-plan-h" class="raport-lunar-panel__title">Plan individual</h2>
+        @if($plan_lunar !== null && $plan_lunar > 0)
+          <button type="button" class="btn secondary raport-lunar-btn-icon raport-lunar-plan-split" data-plan-lunar="{{ $plan_lunar }}">
+            <i class="fas fa-divide" aria-hidden="true"></i><span>Împarte planul lunar egal</span>
+          </button>
+        @endif
+      </div>
+      <div class="raport-lunar-table-shell">
+        <div class="raport-lunar-table-scroll">
+          <table class="raport-lunar-table">
+            <thead>
+              <tr>
+                <th>NP</th>
+                <th class="text-right">Vânzări (fără TVA, lei)</th>
+                <th class="text-center">Plan individual (lei)</th>
+                <th class="text-center">Îndeplinire plan</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($operator_rows as $r)
+                <tr>
+                  <td class="text-left raport-lunar-col-np">{{ $r['np'] }}</td>
+                  <td class="text-right raport-lunar-num">{{ $r['vanzari_fara_tva'] }}</td>
+                  <td class="text-center">
+                    <input type="number" name="plan[]" class="raport-lunar-num-input raport-lunar-num-input--wide" min="0" step="0.01" value="{{ $r['plan_individual'] }}" placeholder="—" inputmode="decimal" aria-label="Plan individual {{ $r['np'] }}">
+                  </td>
+                  <td class="text-center raport-lunar-mono raport-lunar-col-muted">{{ $r['indeplinire_plan'] !== '' ? $r['indeplinire_plan'] : '—' }}</td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
     <div class="raport-lunar-form-actions">
       <button type="submit" class="btn raport-lunar-btn-icon">
-        <i class="fas fa-save" aria-hidden="true"></i><span>Salvează chaturi și apeluri</span>
+        <i class="fas fa-save" aria-hidden="true"></i><span>Salvează chaturi, apeluri și planuri</span>
       </button>
-      <p class="raport-lunar-form-hint">După salvare, procentele din TOTAL și foile Excel se recalculează automat. Valorile sunt stocate per lună și per nume operator (din 1C).</p>
+      <p class="raport-lunar-form-hint">După salvare, procentele din TOTAL și foile Excel se recalculează automat. Valorile sunt stocate per lună și per nume operator (din 1C). Lasă planul gol pentru operatorii fără plan.</p>
     </div>
   </form>
   @endif
@@ -276,6 +323,23 @@
 
 @push('scripts')
 <script>
+(function () {
+  var splitBtn = document.querySelector('.raport-lunar-plan-split');
+  if (!splitBtn) return;
+  splitBtn.addEventListener('click', function () {
+    var inputs = document.querySelectorAll('input[name="plan[]"]');
+    var total = parseFloat(splitBtn.getAttribute('data-plan-lunar'));
+    if (!inputs.length || !(total > 0)) return;
+    var hasValues = Array.prototype.some.call(inputs, function (el) { return el.value !== ''; });
+    if (hasValues && !confirm('Înlocuiești planurile completate cu o împărțire egală?')) return;
+    var share = Math.floor(total / inputs.length * 100) / 100;
+    var rest = Math.round((total - share * inputs.length) * 100) / 100;
+    inputs.forEach(function (el, i) {
+      el.value = (i === 0 ? share + rest : share).toFixed(2);
+    });
+  });
+})();
+
 (function () {
   var btn = document.getElementById('raportLunarExportBtn');
   if (!btn || !window.VoltaExcelExport || typeof window.VoltaExcelExport.exportSheets !== 'function') return;

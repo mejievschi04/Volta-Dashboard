@@ -59,7 +59,7 @@ final class CallCenterRaportLunarService
     }
 
     /**
-     * @param  list<array{operator_nume: string, chaturi: int, apeluri: int}>  $rows
+     * @param  list<array{operator_nume: string, chaturi: int, apeluri: int, plan_individual?: ?float}>  $rows
      */
     public function saveOperatorInputs(string $ym, array $rows): void
     {
@@ -75,10 +75,12 @@ final class CallCenterRaportLunarService
             }
             $ch = max(0, min(99999999, (int) ($row['chaturi'] ?? 0)));
             $ap = max(0, min(99999999, (int) ($row['apeluri'] ?? 0)));
+            $plan = $row['plan_individual'] ?? null;
+            $plan = $plan === null ? null : round(max(0, min(9999999999999, (float) $plan)), 2);
 
             RaportLunarCallCenterInput::query()->updateOrCreate(
                 ['ym' => $ym, 'operator_nume' => $name],
-                ['chaturi' => $ch, 'apeluri' => $ap]
+                ['chaturi' => $ch, 'apeluri' => $ap, 'plan_individual' => $plan]
             );
         }
     }
@@ -88,6 +90,7 @@ final class CallCenterRaportLunarService
      *   ym: string,
      *   luna_label: string,
      *   plan_lunar: ?float,
+     *   sum_plan_individual: ?float,
      *   has_sync: bool,
      *   sync_vanzari_fara_tva: ?float,
      *   sync_vanzari_cu_tva: ?float,
@@ -131,6 +134,7 @@ final class CallCenterRaportLunarService
             $input = $inputsByName->get($np);
             $ch = $input ? (int) $input->chaturi : 0;
             $ap = $input ? (int) $input->apeluri : 0;
+            $plan = $input && $input->plan_individual !== null ? (float) $input->plan_individual : null;
             $rows[] = [
                 'np' => $np,
                 'chaturi_int' => $ch,
@@ -143,8 +147,10 @@ final class CallCenterRaportLunarService
                 'vanzari_fara_tva' => $this->fmtNum((float) $op->vanzari_fara_tva),
                 'aport_vanzari' => '',
                 'aport_vanzari_value' => null,
-                'plan_individual' => '',
+                'plan_individual' => $plan !== null ? $this->fmtNum($plan) : '',
+                'plan_individual_value' => $plan,
                 'indeplinire_plan' => '',
+                'indeplinire_plan_value' => null,
                 'pondere_chaturi' => '',
                 'pondere_chaturi_value' => null,
                 'pondere_apeluri' => '',
@@ -185,7 +191,16 @@ final class CallCenterRaportLunarService
                 $rows[$i]['pondere_apeluri_value'] = round($fracAp, 14);
                 $rows[$i]['pondere_apeluri'] = $this->fmtPct($fracAp);
             }
+            $plan = $r['plan_individual_value'];
+            if ($plan !== null && $plan > 0) {
+                $fracPlan = $v / $plan;
+                $rows[$i]['indeplinire_plan_value'] = round($fracPlan, 14);
+                $rows[$i]['indeplinire_plan'] = $this->fmtPct($fracPlan);
+            }
         }
+
+        $planuriIndividuale = array_filter(array_column($rows, 'plan_individual_value'), fn ($p) => $p !== null);
+        $sumPlanIndividual = $planuriIndividuale === [] ? null : (float) array_sum($planuriIndividuale);
 
         $syncFtva = $sync ? (float) $sync->vanzari_fara_tva : null;
         $syncCtva = $sync ? (float) $sync->vanzari_cu_tva : null;
@@ -233,6 +248,8 @@ final class CallCenterRaportLunarService
                 $rows[$i]['aport_vanzari_value'],
                 $rows[$i]['pondere_chaturi_value'],
                 $rows[$i]['pondere_apeluri_value'],
+                $rows[$i]['plan_individual_value'],
+                $rows[$i]['indeplinire_plan_value'],
             );
         }
 
@@ -240,6 +257,7 @@ final class CallCenterRaportLunarService
             'ym' => $ym,
             'luna_label' => LunaRomana::labelFromYm($ym),
             'plan_lunar' => $planLunar,
+            'sum_plan_individual' => $sumPlanIndividual,
             'has_sync' => $sync !== null,
             'sync_vanzari_fara_tva' => $syncFtva,
             'sync_vanzari_cu_tva' => $syncCtva,
@@ -369,8 +387,10 @@ final class CallCenterRaportLunarService
                 isset($r['aport_vanzari_value']) && $r['aport_vanzari_value'] !== null
                     ? round((float) $r['aport_vanzari_value'] * 100, 4)
                     : null,
-                $r['plan_individual'] === '' ? null : $r['plan_individual'],
-                $r['indeplinire_plan'] === '' ? null : $r['indeplinire_plan'],
+                $r['plan_individual_value'],
+                isset($r['indeplinire_plan_value']) && $r['indeplinire_plan_value'] !== null
+                    ? round((float) $r['indeplinire_plan_value'] * 100, 4)
+                    : null,
             ];
         }
 

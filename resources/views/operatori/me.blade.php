@@ -123,6 +123,8 @@
             @endforeach
           </div>
         </article>
+        @include('operatori.partials.plan-individual', ['plan' => $planIndividual ?? null, 'showEmpty' => true, 'cardClass' => 'operator-me-card', 'titleClass' => 'operator-me-card__title', 'titleTag' => 'h2'])
+        @include('operatori.partials.bonus-vanzari', ['bonus' => $bonusVanzari ?? null, 'cardClass' => 'operator-me-card', 'titleClass' => 'operator-me-card__title', 'titleTag' => 'h2'])
       </aside>
 
       <div class="operator-me-main">
@@ -148,6 +150,7 @@
 
         <article class="operator-me-card">
           <h2 class="operator-me-card__title"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Istoric lunar</h2>
+          @php $arePlan = $vanzariLunare1c->contains(fn ($l) => ($l->plan_individual ?? null) !== null); @endphp
           <div class="operator-me-table-wrap">
             <table class="operator-me-table">
               <thead>
@@ -156,6 +159,11 @@
                   <th>Comenzi</th>
                   <th>Vânzări (fără TVA)</th>
                   <th>Profit</th>
+                  <th>Bonus ({{ \App\Support\BonusVanzari::procentLabel() }})</th>
+                  @if($arePlan)
+                  <th>Plan</th>
+                  <th>Îndeplinire</th>
+                  @endif
                 </tr>
               </thead>
               <tbody>
@@ -165,6 +173,11 @@
                   <td>{{ $luna->comenzi }}</td>
                   <td>{{ number_format($luna->vanzari_luna, 2, ',', '.') }} MDL</td>
                   <td class="operator-me-table__profit">{{ number_format($luna->profit, 2, ',', '.') }} MDL</td>
+                  <td>{{ number_format($luna->bonus ?? 0, 2, ',', '.') }} MDL</td>
+                  @if($arePlan)
+                  <td>{{ $luna->plan_individual !== null ? number_format($luna->plan_individual, 2, ',', '.') . ' MDL' : '—' }}</td>
+                  <td>@include('operatori.partials.plan-pct', ['pct' => $luna->indeplinire_plan])</td>
+                  @endif
                 </tr>
                 @endforeach
               </tbody>

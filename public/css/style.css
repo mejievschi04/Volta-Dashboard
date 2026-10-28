@@ -3700,6 +3700,25 @@ select option {
   box-shadow: 0 0 0 2px rgba(255, 238, 0, 0.12);
 }
 
+.raport-lunar-num-input--wide {
+  max-width: 11rem;
+}
+
+.raport-lunar-panel--plan {
+  margin-bottom: clamp(18px, 2.5vw, 24px);
+}
+
+.raport-lunar-plan-split {
+  margin-left: auto;
+}
+
+.raport-lunar-stat__hint {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.75rem;
+  color: var(--text-tertiary, #9ca3af);
+}
+
 .raport-lunar-inputs-form {
   margin-bottom: clamp(18px, 2.5vw, 24px);
 }
