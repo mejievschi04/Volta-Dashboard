@@ -166,6 +166,17 @@
     </div>
   </section>
 
+  @php
+    $vcOk = ($voltachat['status'] ?? '') === 'ok';
+    $vcStatusTexts = [
+      'not_configured' => 'Chaturile nu se completează automat: conexiunea cu VoltaChat nu este configurată (<code>VOLTACHAT_URL</code>, <code>VOLTACHAT_ANALYTICS_TOKEN</code>). Se folosesc valorile salvate.',
+      'unreachable' => 'VoltaChat nu răspunde acum, așa că se folosesc chaturile salvate ultima dată. Reîncarcă pagina peste câteva momente.',
+      'unauthorized' => 'Tokenul VoltaChat este greșit (401); se folosesc chaturile salvate.',
+      'disabled' => 'API-ul de statistici VoltaChat este oprit (503); se folosesc chaturile salvate.',
+      'rate_limited' => 'Prea multe cereri către VoltaChat; se folosesc chaturile salvate. Reîncarcă peste un minut.',
+      'future' => 'Luna aleasă nu a început încă.',
+    ];
+  @endphp
   <form method="post" action="{{ route('rapoarte.raport-lunar.inputs') }}" class="raport-lunar-inputs-form">
     @csrf
     <input type="hidden" name="month" value="{{ $ym }}">
@@ -178,24 +189,49 @@
         <div class="raport-lunar-panel__head">
           <span class="raport-lunar-panel__icon raport-lunar-panel__icon--chat" aria-hidden="true"><i class="fas fa-comments"></i></span>
           <h2 id="raport-chat-h" class="raport-lunar-panel__title">Chaturi</h2>
-          <span class="raport-lunar-panel__tag raport-lunar-panel__tag--soft" title="chaturi / Σ chaturi">Pondere (%)</span>
+          @if($vcOk)
+            <span class="raport-lunar-panel__tag raport-lunar-panel__tag--auto" title="Dialoguri cu clienții din VoltaChat în luna aleasă"><i class="fas fa-bolt" aria-hidden="true"></i> Automat din VoltaChat</span>
+          @else
+            <span class="raport-lunar-panel__tag raport-lunar-panel__tag--soft" title="chaturi / Σ chaturi">Pondere (%)</span>
+          @endif
         </div>
+        @if(!$vcOk)
+          <p class="raport-lunar-vc-note">{!! $vcStatusTexts[$voltachat['status'] ?? ''] ?? 'VoltaChat a răspuns cu o eroare, așa că se folosesc chaturile salvate.' !!}</p>
+        @endif
         <div class="raport-lunar-table-shell">
           <div class="raport-lunar-table-scroll raport-lunar-table-scroll--narrow">
             <table class="raport-lunar-table">
               <thead>
                 <tr>
                   <th>NP</th>
+                  @if($vcOk)
+                    <th>Cont VoltaChat</th>
+                  @endif
                   <th class="text-center">Chaturi</th>
                   <th class="text-center">Pondere (%)</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach($operator_rows as $r)
-                  <tr>
+                  @php $fromVc = $r['chat_source'] === 'voltachat'; @endphp
+                  <tr data-vc-row data-guess-conv="{{ $fromVc && $r['voltachat_mode'] === 'auto' ? (int) $r['chaturi_int'] : '' }}">
                     <td class="text-left raport-lunar-col-np">{{ $r['np'] }}</td>
+                    @if($vcOk)
+                      <td>
+                        <select name="voltachat_id[]" class="raport-lunar-vc-select" data-vc-select aria-label="Cont VoltaChat pentru {{ $r['np'] }}">
+                          <option value="" @selected($r['voltachat_mode'] === 'auto')>Automat{{ $fromVc && $r['voltachat_mode'] === 'auto' && $r['voltachat_name'] ? ' · '.$r['voltachat_name'] : ' (după nume)' }}</option>
+                          <option value="0" @selected($r['voltachat_mode'] === 'manual')>Manual (introduc eu)</option>
+                          @if($r['voltachat_mode'] === 'linked' && !$r['voltachat_name'])
+                            <option value="{{ $r['voltachat_id'] }}" data-conv="0" selected>#{{ $r['voltachat_id'] }} · fără dialoguri luna aceasta</option>
+                          @endif
+                          @foreach($voltachat['operators'] as $vcOp)
+                            <option value="{{ $vcOp['id'] }}" data-conv="{{ $vcOp['conversations'] }}" @selected($r['voltachat_mode'] === 'linked' && $r['voltachat_id'] === $vcOp['id'])>{{ $vcOp['name'] }} · {{ $vcOp['conversations'] }}</option>
+                          @endforeach
+                        </select>
+                      </td>
+                    @endif
                     <td class="text-center">
-                      <input type="number" name="chaturi[]" class="raport-lunar-num-input" min="0" max="99999999" step="1" value="{{ (int) $r['chaturi_int'] }}" inputmode="numeric" aria-label="Chaturi {{ $r['np'] }}">
+                      <input type="number" name="chaturi[]" class="raport-lunar-num-input" min="0" max="99999999" step="1" value="{{ (int) $r['chaturi_int'] }}" inputmode="numeric" aria-label="Chaturi {{ $r['np'] }}" data-vc-input @if($fromVc) readonly title="Preluat automat din VoltaChat" @endif>
                     </td>
                     <td class="text-center raport-lunar-mono raport-lunar-col-muted">{{ $r['pondere_chaturi'] !== '' ? $r['pondere_chaturi'] : '—' }}</td>
                   </tr>
@@ -204,6 +240,13 @@
             </table>
           </div>
         </div>
+        @if($vcOk && count($voltachat['unmatched']) > 0)
+          <p class="raport-lunar-vc-note">
+            <strong>Conturi VoltaChat fără operator potrivit:</strong>
+            @foreach($voltachat['unmatched'] as $u){{ $u['name'] }} ({{ $u['conversations'] }}){{ $loop->last ? '' : ', ' }}@endforeach.
+            Alege-le manual în coloana „Cont VoltaChat” și salvează.
+          </p>
+        @endif
       </section>
 
       <section class="raport-lunar-panel raport-lunar-panel--compact" aria-labelledby="raport-apel-h">
@@ -281,7 +324,7 @@
       <button type="submit" class="btn raport-lunar-btn-icon">
         <i class="fas fa-save" aria-hidden="true"></i><span>Salvează chaturi, apeluri și planuri</span>
       </button>
-      <p class="raport-lunar-form-hint">După salvare, procentele din TOTAL și foile Excel se recalculează automat. Valorile sunt stocate per lună și per nume operator (din 1C). Lasă planul gol pentru operatorii fără plan.</p>
+      <p class="raport-lunar-form-hint">După salvare, procentele din TOTAL și foile Excel se recalculează automat. Valorile sunt stocate per lună și per nume operator (din 1C). Chaturile se preiau automat din VoltaChat (dialoguri cu clienții în luna aleasă); legătura cu contul VoltaChat se salvează și se folosește și în lunile următoare. Lasă planul gol pentru operatorii fără plan.</p>
     </div>
   </form>
   @endif
@@ -323,6 +366,31 @@
 
 @push('scripts')
 <script>
+(function () {
+  document.querySelectorAll('[data-vc-select]').forEach(function (select) {
+    var row = select.closest('[data-vc-row]');
+    var input = row && row.querySelector('[data-vc-input]');
+    if (!input) return;
+    var manualValue = input.value;
+    select.addEventListener('change', function () {
+      var opt = select.options[select.selectedIndex];
+      var conv = opt ? opt.getAttribute('data-conv') : null;
+      var guess = row.getAttribute('data-guess-conv');
+      if (conv !== null) {
+        input.value = conv;
+        input.readOnly = true;
+      } else if (select.value === '' && guess !== '') {
+        input.value = guess;
+        input.readOnly = true;
+      } else {
+        input.value = manualValue;
+        input.readOnly = false;
+        input.focus();
+      }
+    });
+  });
+})();
+
 (function () {
   var splitBtn = document.querySelector('.raport-lunar-plan-split');
   if (!splitBtn) return;

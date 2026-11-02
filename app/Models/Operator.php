@@ -20,11 +20,13 @@ class Operator extends Model
         'activ',
         'photo_profil',
         'photo_coperta',
+        'voltachat_operator_id',
     ];
 
     protected $casts = [
         'data_angajare' => 'date',
         'activ' => 'boolean',
+        'voltachat_operator_id' => 'integer',
     ];
 
     // Relații

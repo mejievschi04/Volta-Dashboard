@@ -24,6 +24,8 @@ use Illuminate\Validation\ValidationException;
  */
 final class CallCenterRaportLunarService
 {
+    public function __construct(private VoltaChatOperatorChats $voltaChat) {}
+
     /** @var array<int, string> */
     private const LUNI = [
         1 => 'Ianuarie', 2 => 'Februarie', 3 => 'Martie', 4 => 'Aprilie',
@@ -155,8 +157,15 @@ final class CallCenterRaportLunarService
                 'pondere_chaturi_value' => null,
                 'pondere_apeluri' => '',
                 'pondere_apeluri_value' => null,
+                'chat_source' => 'manual',
+                'voltachat_id' => null,
+                'voltachat_name' => null,
+                'voltachat_linked' => false,
+                'voltachat_mode' => 'auto',
             ];
         }
+
+        $voltachat = $this->applyVoltaChat($ym, $rows, $inputsByName);
 
         $sumCh = (int) array_sum(array_column($rows, 'chaturi_int'));
         $sumAp = (int) array_sum(array_column($rows, 'apeluri_int'));
@@ -258,6 +267,7 @@ final class CallCenterRaportLunarService
             'luna_label' => LunaRomana::labelFromYm($ym),
             'plan_lunar' => $planLunar,
             'sum_plan_individual' => $sumPlanIndividual,
+            'voltachat' => $voltachat,
             'has_sync' => $sync !== null,
             'sync_vanzari_fara_tva' => $syncFtva,
             'sync_vanzari_cu_tva' => $syncCtva,
@@ -267,6 +277,119 @@ final class CallCenterRaportLunarService
             'vanzari_rows' => $vanzariRows,
             'excel_sheets' => $excelSheets,
         ];
+    }
+
+    /**
+     * Completează chaturile din VoltaChat (dialoguri cu clienții în lună) pentru operatorii potriviți
+     * și le salvează, ca raportul să rămână complet și când VoltaChat nu răspunde.
+     *
+     * @param  list<array<string, mixed>>  $rows
+     * @param  Collection<string, RaportLunarCallCenterInput>  $inputsByName
+     * @return array{status: string, operators: list<array{id: int, name: string, conversations: int}>, unmatched: list<array{id: int, name: string, conversations: int}>}
+     */
+    private function applyVoltaChat(string $ym, array &$rows, Collection $inputsByName): array
+    {
+        $out = ['status' => 'not_configured', 'operators' => [], 'unmatched' => []];
+        if ($rows === []) {
+            return $out;
+        }
+
+        $vc = $this->voltaChat->forMonth($ym);
+        $out['status'] = $vc['status'];
+        $out['operators'] = $vc['operators'];
+        if ($vc['status'] !== 'ok') {
+            return $out;
+        }
+
+        $byId = [];
+        foreach ($vc['operators'] as $op) {
+            $byId[$op['id']] = $op;
+        }
+
+        $links = [];
+        try {
+            foreach (Operator::query()->whereNotNull('voltachat_operator_id')->get(['nume', 'voltachat_operator_id']) as $o) {
+                $links[$this->normalizeOpName((string) $o->nume)] = (int) $o->voltachat_operator_id;
+            }
+        } catch (\Throwable) {
+        }
+
+        $assigned = [];
+        $manual = [];
+        foreach ($rows as $i => $r) {
+            $id = $links[$this->normalizeOpName($r['np'])] ?? null;
+            if ($id === 0) {
+                $manual[$i] = true;
+            } elseif ($id !== null && ! isset($assigned[$id])) {
+                $byId[$id] ??= ['id' => $id, 'name' => '', 'conversations' => 0];
+                $assigned[$id] = $i;
+                $rows[$i]['voltachat_linked'] = true;
+                $rows[$i]['voltachat_mode'] = 'linked';
+            }
+        }
+
+        $freeRows = array_filter($rows, fn ($r, $i) => ! $r['voltachat_linked'] && ! isset($manual[$i]), ARRAY_FILTER_USE_BOTH);
+        $freeOps = array_values(array_filter($vc['operators'], fn ($op) => ! isset($assigned[$op['id']])));
+        $guesses = $this->voltaChat->guessMatches(array_values(array_column($freeRows, 'np')), $freeOps);
+        foreach ($rows as $i => $r) {
+            if (! $r['voltachat_linked'] && ! isset($manual[$i]) && isset($guesses[$r['np']])) {
+                $assigned[$guesses[$r['np']]] = $i;
+            }
+        }
+        foreach ($manual as $i => $_) {
+            $rows[$i]['voltachat_mode'] = 'manual';
+        }
+
+        foreach ($assigned as $id => $i) {
+            $op = $byId[$id];
+            $rows[$i]['chaturi_int'] = $op['conversations'];
+            $rows[$i]['chaturi'] = (string) $op['conversations'];
+            $rows[$i]['chat_source'] = 'voltachat';
+            $rows[$i]['voltachat_id'] = $id;
+            $rows[$i]['voltachat_name'] = $op['name'] !== '' ? $op['name'] : null;
+
+            $stored = $inputsByName->get($rows[$i]['np']);
+            if (! $stored || (int) $stored->chaturi !== $op['conversations']) {
+                try {
+                    RaportLunarCallCenterInput::query()->updateOrCreate(
+                        ['ym' => $ym, 'operator_nume' => $rows[$i]['np']],
+                        ['chaturi' => $op['conversations']]
+                    );
+                } catch (\Throwable) {
+                }
+            }
+        }
+
+        $out['unmatched'] = array_values(array_filter(
+            $vc['operators'],
+            fn ($op) => ! isset($assigned[$op['id']]) && $op['conversations'] > 0
+        ));
+
+        return $out;
+    }
+
+    /**
+     * Salvează legătura operator 1C ↔ operator VoltaChat: null = automat după nume, 0 = manual, >0 = id VoltaChat.
+     *
+     * @param  array<string, ?int>  $links  nume 1C => id VoltaChat
+     */
+    public function saveVoltaChatLinks(array $links): void
+    {
+        if ($links === []) {
+            return;
+        }
+        $operators = Operator::query()->get()->keyBy(fn (Operator $o) => $this->normalizeOpName((string) $o->nume));
+        foreach ($links as $name => $id) {
+            $op = $operators->get($this->normalizeOpName((string) $name));
+            if (! $op) {
+                continue;
+            }
+            $id = $id !== null && $id >= 0 ? $id : null;
+            if ($op->voltachat_operator_id !== $id) {
+                $op->voltachat_operator_id = $id;
+                $op->save();
+            }
+        }
     }
 
     private function loadSync(?string $ym): ?OnecKpiSync

@@ -33,6 +33,8 @@ class RaportLunarController extends Controller
             'apeluri.*' => ['nullable'],
             'plan' => ['nullable', 'array'],
             'plan.*' => ['nullable'],
+            'voltachat_id' => ['nullable', 'array'],
+            'voltachat_id.*' => ['nullable', 'integer', 'min:0'],
         ]);
 
         $ym = $this->raportLunar->normalizeYm($validated['month']);
@@ -88,6 +90,15 @@ class RaportLunarController extends Controller
             $this->raportLunar->saveOperatorInputs($ym, $rows);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withInput()->withErrors($e->errors());
+        }
+
+        if (array_key_exists('voltachat_id', $validated)) {
+            $links = [];
+            foreach ($operators as $i => $name) {
+                $v = $validated['voltachat_id'][$i] ?? null;
+                $links[$name] = $v === null || $v === '' ? null : (int) $v;
+            }
+            $this->raportLunar->saveVoltaChatLinks($links);
         }
 
         return redirect()

@@ -177,7 +177,7 @@
     </section>
   </div>
 
-  @if(request()->routeIs('operatori', 'livrari', 'istoric', 'rapoarte.comparare'))
+  @if(request()->routeIs('operatori', 'livrari', 'istoric', 'rapoarte.comparare', 'rapoarte.raport-lunar'))
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
   <script src="{{ asset('js/excel-export-exceljs.js') }}"></script>
   @endif

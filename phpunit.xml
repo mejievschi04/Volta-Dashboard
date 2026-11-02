@@ -31,5 +31,7 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <env name="VOLTACHAT_URL" value="" force="true"/>
+        <env name="VOLTACHAT_ANALYTICS_TOKEN" value="" force="true"/>
     </php>
 </phpunit>
