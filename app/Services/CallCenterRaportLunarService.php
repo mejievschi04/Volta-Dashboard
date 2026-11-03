@@ -529,9 +529,9 @@ final class CallCenterRaportLunarService
             'TOTAL',
             $sumCh > 0 ? $sumCh : null,
             $sumAp > 0 ? $sumAp : null,
-            null,
+            ($sumCh + $sumAp) > 0 ? 1.0 : null,
             $ftvaFooter,
-            null,
+            ($ftvaFooter !== null && $ftvaFooter > 0) ? 1.0 : null,
             $planFooter,
             $indeplFooter,
         ];
@@ -594,11 +594,11 @@ final class CallCenterRaportLunarService
         }
 
         $int = '#,##0';
-        $pct = '0.00%';
+        $pct = '0%';
         $money = '#,##0.00';
 
         return [
-            ['name' => 'TOTAL', 'aoa' => $totalAoa, 'formats' => [null, $int, $int, $pct, $money, $pct, $money, $pct]],
+            ['name' => 'TOTAL', 'aoa' => $totalAoa, 'formats' => [null, $int, $int, $pct, $money, $pct, $int, $pct]],
             ['name' => 'Chaturi', 'aoa' => $chaturiAoa, 'formats' => [null, $int, $pct]],
             ['name' => 'Apeluri', 'aoa' => $apeluriAoa, 'formats' => [null, $int, $pct]],
             ['name' => 'Vanzari', 'aoa' => $vanzariAoa, 'formats' => [null, $money, $money, $money]],

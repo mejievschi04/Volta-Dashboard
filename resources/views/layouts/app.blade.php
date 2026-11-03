@@ -179,7 +179,7 @@
 
   @if(request()->routeIs('operatori', 'livrari', 'istoric', 'rapoarte.comparare', 'rapoarte.raport-lunar'))
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-  <script src="{{ asset('js/excel-export-exceljs.js') }}"></script>
+  <script src="{{ asset('js/excel-export-exceljs.js') }}?v={{ filemtime(public_path('js/excel-export-exceljs.js')) }}"></script>
   @endif
   <script src="{{ asset('js/volta-chart-theme.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
