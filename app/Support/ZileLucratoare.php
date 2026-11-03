@@ -69,12 +69,12 @@ final class ZileLucratoare
     }
 
     /**
-     * Zile luni–vineri dintr-o lună (YYYY-MM), pentru planul individual al operatorilor.
+     * Zile lucrătoare (luni–sâmbătă) dintr-o lună (YYYY-MM), pentru planul individual al operatorilor.
      * „trecute” = zile încheiate înainte de azi; „ramase” = de azi (inclusiv) până la final de lună.
      *
      * @return array{trecute: int, ramase: int}
      */
-    public static function luniVineriPentruLuna(string $lunaYm, ?string $todayYmd = null): array
+    public static function faraDuminiciPentruLuna(string $lunaYm, ?string $todayYmd = null): array
     {
         $start = \Carbon\CarbonImmutable::createFromFormat('Y-m-d', $lunaYm.'-01')->startOfDay();
         $end = $start->endOfMonth()->startOfDay();
@@ -83,7 +83,7 @@ final class ZileLucratoare
         $trecute = 0;
         $ramase = 0;
         for ($d = $start; $d->lte($end); $d = $d->addDay()) {
-            if ($d->isWeekend()) {
+            if ($d->isSunday()) {
                 continue;
             }
             $d->lt($today) ? $trecute++ : $ramase++;

@@ -40,6 +40,14 @@ class DbDate
             : "YEARWEEK({$column}, 1)";
     }
 
+    /** SQL condition that is true for every day except Sunday. */
+    public static function notSunday(string $column): string
+    {
+        return self::driver() === 'sqlite'
+            ? "CAST(strftime('%w', {$column}) AS INTEGER) != 0"
+            : "DAYOFWEEK({$column}) != 1";
+    }
+
     private static function driver(): string
     {
         return DB::connection()->getDriverName();

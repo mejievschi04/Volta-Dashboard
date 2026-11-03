@@ -103,6 +103,7 @@ class LivrariController extends Controller
                 });
             }
             $this->applyMissingRaionFilter($baseCount, $faraRaion);
+            $baseCount->whereRaw(DbDate::notSunday('data_livrarii'));
             if ($dataDeLa !== null && $dataDeLa !== '' && $dataPana !== null && $dataPana !== '') {
                 $baseCount->whereDate('data_livrarii', '>=', $dataDeLa)->whereDate('data_livrarii', '<=', $dataPana);
             } elseif ($dataLivrarii !== null && $dataLivrarii !== '') {
@@ -138,6 +139,7 @@ class LivrariController extends Controller
                 });
             }
             $this->applyMissingRaionFilter($perOperatorQuery, $faraRaion);
+            $perOperatorQuery->whereRaw(DbDate::notSunday('data_livrarii'));
             $perOperatorRows = $perOperatorQuery->get();
             $users = User::whereIn('id', $perOperatorRows->pluck('user_id'))->get()->keyBy('id');
             $perOperator = $perOperatorRows->map(function ($row) use ($users) {
@@ -563,9 +565,10 @@ class LivrariController extends Controller
      */
     private function buildLivrariOverview($baseQuery, Request $request): array
     {
-        $total = (clone $baseQuery)->count();
+        $total = (clone $baseQuery)->whereRaw(DbDate::notSunday('data_livrarii'))->count();
 
         $topRow = (clone $baseQuery)
+            ->whereRaw(DbDate::notSunday('data_livrarii'))
             ->selectRaw("TRIM(COALESCE(localitate, '')) as localitate_nume, COUNT(*) as total")
             ->whereRaw("TRIM(COALESCE(localitate, '')) != ''")
             ->groupBy(DB::raw("TRIM(COALESCE(localitate, ''))"))
@@ -589,6 +592,7 @@ class LivrariController extends Controller
 
         $rows = (clone $baseQuery)
             ->whereNotNull('data_livrarii')
+            ->whereRaw(DbDate::notSunday('data_livrarii'))
             ->selectRaw($groupExpr . ' as bucket, COUNT(*) as total')
             ->groupBy(DB::raw($groupExpr))
             ->orderBy('bucket')
@@ -610,6 +614,10 @@ class LivrariController extends Controller
             $cursor = $start->copy()->startOfDay();
             $endDay = $end->copy()->startOfDay();
             while ($cursor->lte($endDay)) {
+                if ($cursor->isSunday()) {
+                    $cursor->addDay();
+                    continue;
+                }
                 $key = $cursor->format('Y-m-d');
                 $labels[] = $cursor->format('d.m');
                 $values[] = (int) ($rows->get($key)->total ?? 0);

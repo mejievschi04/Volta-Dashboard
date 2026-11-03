@@ -96,19 +96,22 @@ class IstoricController extends Controller
                     ->first();
                 $totalSesiuni = intval($sesiuniData->total_sesiuni ?? 0);
                 
-                $zileLuna = intval(date('t', strtotime($luna . '-01')));
-                $totalZileComenziZi = $zileLuna;
+                $monthStart = $luna . '-01';
+                $monthEnd = date('Y-m-t', strtotime($monthStart));
+                $totalZileComenziZi = ZileLucratoare::countExcludingSundays($monthStart, $monthEnd);
                 if ($onecSync && $onecSync->period_start && $onecSync->period_end) {
                     $startStr = is_object($onecSync->period_start) ? $onecSync->period_start->format('Y-m-d') : (string) $onecSync->period_start;
                     $endStr = is_object($onecSync->period_end) ? $onecSync->period_end->format('Y-m-d') : (string) $onecSync->period_end;
-                    $totalZileComenziZi = max(1, (int) ((strtotime($endStr) - strtotime($startStr)) / 86400) + 1);
+                    $totalZileComenziZi = max(1, ZileLucratoare::countExcludingSundays($startStr, $endStr));
                 }
                 $comenziZi = $totalZileComenziZi > 0 ? round($comenzi / $totalZileComenziZi, 1) : 0;
                 $conversie = $totalSesiuni > 0 ? round(($comenzi / $totalSesiuni) * 100, 2) : 0;
                 $progresPlan = $planLuna > 0 ? round(($vanzariLuna / $planLuna) * 100, 2) : 0;
                 $diferentaPlan = $vanzariLuna - $planLuna;
                 $cecMediu = $comenzi > 0 ? round($vanzariLuna / $comenzi, 2) : 0;
-                $totalLivrariLuna = Livrare::whereRaw(DbDate::month('data_livrarii') . ' = ?', [$luna])->count();
+                $totalLivrariLuna = Livrare::whereRaw(DbDate::month('data_livrarii') . ' = ?', [$luna])
+                    ->whereRaw(DbDate::notSunday('data_livrarii'))
+                    ->count();
                 $pickup = max(0, $comenzi - $totalLivrariLuna);
                 
                 // Prognoză plan (fără duminici)

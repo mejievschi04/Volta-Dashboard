@@ -8,6 +8,7 @@ use App\Models\PlanVanzari;
 use App\Models\TrafficSource;
 use App\Models\OnecKpiSync;
 use App\Models\Livrare;
+use App\Support\DbDate;
 use App\Support\ZileLucratoare;
 use App\Support\DashboardCache;
 use Illuminate\Support\Facades\Auth;
@@ -58,13 +59,11 @@ class KpiController extends Controller
             $profit = $onecSync ? floatval($onecSync->profit) : 0;
             $comenzi = $onecSync ? intval($onecSync->nr_comenzi) : 0;
 
-            $totalZilePentruComenziZi = intval(date('t', strtotime($luna . '-01')));
+            $totalZilePentruComenziZi = ZileLucratoare::countExcludingSundays($monthStart, $monthEnd);
             if ($onecSync && $onecSync->period_start && $onecSync->period_end) {
                 $startStr = is_object($onecSync->period_start) ? $onecSync->period_start->format('Y-m-d') : (string) $onecSync->period_start;
                 $endStr = is_object($onecSync->period_end) ? $onecSync->period_end->format('Y-m-d') : (string) $onecSync->period_end;
-                $tsStart = strtotime($startStr);
-                $tsEnd = strtotime($endStr);
-                $totalZilePentruComenziZi = max(1, (int) (($tsEnd - $tsStart) / 86400) + 1);
+                $totalZilePentruComenziZi = max(1, ZileLucratoare::countExcludingSundays($startStr, $endStr));
             }
             
             $planData = PlanVanzari::where('an', $an)
@@ -77,18 +76,9 @@ class KpiController extends Controller
                 ->whereBetween('date', [$monthStart, $monthEnd])
                 ->first();
             
-            $zileLuna = intval(date('t', strtotime($luna . '-01')));
-            $lunaSelectata = strtotime($luna . '-01');
-            $lunaCurenta = strtotime(date('Y-m-01'));
-            $ziCurenta = intval(date('d'));
-            
-            if ($lunaSelectata < $lunaCurenta) {
-                $zileTrecute = $zileLuna;
-            } elseif ($lunaSelectata == $lunaCurenta) {
-                $zileTrecute = min($ziCurenta, $zileLuna);
-            } else {
-                $zileTrecute = 0;
-            }
+            $zileLucratoare = ZileLucratoare::pentruLuna($luna);
+            $zileLuna = $zileLucratoare['trecute'] + $zileLucratoare['ramase'];
+            $zileTrecute = $zileLucratoare['trecute'];
             
             $comenziZi = $totalZilePentruComenziZi > 0 ? round($comenzi / $totalZilePentruComenziZi, 1) : 0;
             $totalSesiuni = intval($sesiuniData->total_sesiuni ?? 0);
@@ -97,7 +87,6 @@ class KpiController extends Controller
             $progresPlan = $planLuna > 0 ? round(($vanzariLuna / $planLuna) * 100, 2) : 0;
             $diferentaPlan = $vanzariLuna - $planLuna;
 
-            $zileLucratoare = ZileLucratoare::pentruLuna($luna);
             $zileLucratoareTrecute = $zileLucratoare['trecute'];
             $zileLucratoareRamase = $zileLucratoare['ramase'];
             
@@ -111,7 +100,9 @@ class KpiController extends Controller
                 : 0;
             
             $cecMediu = $comenzi > 0 ? round($vanzariLuna / $comenzi, 2) : 0;
-            $totalLivrariLuna = Livrare::whereBetween('data_livrarii', [$monthStart, $monthEnd])->count();
+            $totalLivrariLuna = Livrare::whereBetween('data_livrarii', [$monthStart, $monthEnd])
+                ->whereRaw(DbDate::notSunday('data_livrarii'))
+                ->count();
             $pickup = max(0, $comenzi - $totalLivrariLuna);
             $progresZilnic = $zileLuna > 0 ? round(($zileTrecute / $zileLuna) * 100, 2) : 0;
             

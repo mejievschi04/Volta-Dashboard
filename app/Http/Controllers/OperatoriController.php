@@ -321,9 +321,12 @@ class OperatoriController extends Controller
         $canEditPhotos = $operatorRecord !== null;
 
         $lunaCurenta = now()->format('Y-m');
-        $nrLivrariTotal = Livrare::where('user_id', $user->id)->count();
+        $nrLivrariTotal = Livrare::where('user_id', $user->id)
+            ->whereRaw(DbDate::notSunday('data_livrarii'))
+            ->count();
         $nrLivrariLunaCurenta = Livrare::where('user_id', $user->id)
             ->whereRaw(DbDate::month('data_livrarii') . ' = ?', [$lunaCurenta])
+            ->whereRaw(DbDate::notSunday('data_livrarii'))
             ->count();
 
         $comenziTotal = $date ? (int) $date['nr_comenzi'] : 0;
@@ -472,9 +475,14 @@ class OperatoriController extends Controller
         }
         $operatorUser = User::whereRaw('LOWER(TRIM(full_name)) = ?', [mb_strtolower($operatorNume)])->first();
         $lunaCurenta = now()->format('Y-m');
-        $nrLivrariTotal = $operatorUser ? Livrare::where('user_id', $operatorUser->id)->count() : 0;
+        $nrLivrariTotal = $operatorUser
+            ? Livrare::where('user_id', $operatorUser->id)->whereRaw(DbDate::notSunday('data_livrarii'))->count()
+            : 0;
         $nrLivrariLunaCurenta = $operatorUser
-            ? Livrare::where('user_id', $operatorUser->id)->whereRaw(DbDate::month('data_livrarii') . ' = ?', [$lunaCurenta])->count()
+            ? Livrare::where('user_id', $operatorUser->id)
+                ->whereRaw(DbDate::month('data_livrarii') . ' = ?', [$lunaCurenta])
+                ->whereRaw(DbDate::notSunday('data_livrarii'))
+                ->count()
             : 0;
         $comenziTotal = $date ? (int) $date['nr_comenzi'] : 0;
         $comenziLunaCurenta = 0;
@@ -561,7 +569,7 @@ class OperatoriController extends Controller
         }
 
         $realizat = (float) optional($vanzariLunare1c->firstWhere('luna', $lunaCurenta))->vanzari_luna;
-        $zile = ZileLucratoare::luniVineriPentruLuna($lunaCurenta);
+        $zile = ZileLucratoare::faraDuminiciPentruLuna($lunaCurenta);
         $rest = max(0.0, $plan - $realizat);
         $prognoza = $zile['trecute'] > 0
             ? $realizat + ($realizat / $zile['trecute']) * $zile['ramase']
