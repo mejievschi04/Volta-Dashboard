@@ -58,7 +58,7 @@ class RaportLunarPlanIndividualTest extends TestCase
 
         $excelRow = collect($data['excel_sheets'][0]['aoa'])->first(fn ($r) => $r[0] === 'Ana Popescu');
         $this->assertSame(200000.0, $excelRow[6]);
-        $this->assertSame(90.0, $excelRow[7]);
+        $this->assertSame(0.9, $excelRow[7]);
 
         $this->actingAs($admin)->get('/rapoarte/raport-lunar?month=2026-10')
             ->assertOk()

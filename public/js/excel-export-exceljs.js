@@ -223,6 +223,8 @@
   function applyTheme(ws, options) {
     const startRow = 4;
     const formatNumbers = !(options && options.coerceNumbers === false);
+    const columnFormats = (options && Array.isArray(options.columnFormats)) ? options.columnFormats : [];
+    const numFmtFor = function (c) { return columnFormats[c - 1] || '#,##0.00'; };
     const border = defaultBorder('334155');
     const altFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argb('F8FAFC') } };
     const whiteFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argb('FFFFFF') } };
@@ -285,7 +287,7 @@
           });
           if (formatNumbers && isNumericValue(cell.value)) {
             cell.alignment = { vertical: 'middle', horizontal: 'right', wrapText: true };
-            cell.numFmt = cell.numFmt || '#,##0.00';
+            cell.numFmt = numFmtFor(c);
           }
         }
         continue;
@@ -308,7 +310,7 @@
           fill: rowFill,
         });
         if (formatNumbers && isNumericValue(cell.value)) {
-          cell.numFmt = cell.numFmt || '#,##0.00';
+          cell.numFmt = numFmtFor(c);
         }
       }
     }
@@ -396,7 +398,8 @@
       await buildStyledWorksheet(wb, name, aoa, {
         title: rawName,
         subtitle: 'Exportat la ' + new Date().toLocaleString('ro-RO'),
-        coerceNumbers: !(s && s.coerceNumbers === false)
+        coerceNumbers: !(s && s.coerceNumbers === false),
+        columnFormats: s && Array.isArray(s.formats) ? s.formats : []
       });
     }
     await downloadWorkbook(wb, fileName || ('export_' + nowStamp()));
