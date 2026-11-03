@@ -501,8 +501,8 @@ final class CallCenterRaportLunarService
         foreach ($operatorRows as $r) {
             $totalAoa[] = [
                 $r['np'],
-                (int) $r['chaturi_int'],
-                (int) $r['apeluri_int'],
+                (int) $r['chaturi_int'] > 0 ? (int) $r['chaturi_int'] : null,
+                (int) $r['apeluri_int'] > 0 ? (int) $r['apeluri_int'] : null,
                 isset($r['aport_activitate_value']) && $r['aport_activitate_value'] !== null
                     ? round((float) $r['aport_activitate_value'], 6)
                     : null,
@@ -539,6 +539,8 @@ final class CallCenterRaportLunarService
         $chaturiAoa = [
             ['CHATURI', '', ''],
             ['', '', ''],
+            ['', '', ''],
+            ['NP', 'Chaturi', 'Pondere (%)'],
         ];
         foreach ($operatorRows as $r) {
             $pond = isset($r['pondere_chaturi_value']) && $r['pondere_chaturi_value'] !== null
@@ -546,7 +548,7 @@ final class CallCenterRaportLunarService
                 : null;
             $chaturiAoa[] = [
                 $r['np'],
-                (int) $r['chaturi_int'],
+                (int) $r['chaturi_int'] > 0 ? (int) $r['chaturi_int'] : null,
                 $pond,
             ];
         }
@@ -557,6 +559,7 @@ final class CallCenterRaportLunarService
             ['APELURI', '', ''],
             ['', '', ''],
             ['', '', ''],
+            ['NP', 'Apeluri', 'Pondere (%)'],
         ];
         foreach ($operatorRows as $r) {
             $pondA = isset($r['pondere_apeluri_value']) && $r['pondere_apeluri_value'] !== null
@@ -564,7 +567,7 @@ final class CallCenterRaportLunarService
                 : null;
             $apeluriAoa[] = [
                 $r['np'],
-                (int) $r['apeluri_int'],
+                (int) $r['apeluri_int'] > 0 ? (int) $r['apeluri_int'] : null,
                 $pondA,
             ];
         }
